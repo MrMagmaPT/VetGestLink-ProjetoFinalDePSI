@@ -45,20 +45,24 @@ class SignupForm extends Model
      */
     public function signup()
     {
-        if (!$this->validate()) {
-            return null;
+        if ($this->validate()) {
+            $user = new User();
+            $user->username = $this->username;
+            $user->email = $this->email;
+            $user->setPassword($this->password);
+            $user->generateAuthKey();
+            $user->generateEmailVerificationToken();
+            $user->save();
+
+            // Atribui a role 'cliente'
+            $auth = Yii::$app->authManager;
+            $userRole = $auth->getRole('cliente');
+            $auth->assign($userRole, $user->getId());
+
+            return $user && $this->sendEmail($user);
         }
-        
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        $user->generateEmailVerificationToken();
-
-        return $user->save() && $this->sendEmail($user);
+        return null;
     }
-
     /**
      * Sends confirmation email to user
      * @param User $user user model to with email should be send
