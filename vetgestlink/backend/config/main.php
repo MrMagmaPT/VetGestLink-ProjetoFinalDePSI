@@ -20,9 +20,9 @@ return [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'loginUrl' => ['site/login'],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
         ],
         'log' => [
@@ -43,6 +43,22 @@ return [
             'rules' => [
             ],
         ],
+    ],
+    'as access' => [
+        'class' => 'yii\filters\AccessControl',
+        'except' => ['site/login', 'site/error'],
+        'rules' => [
+            [
+                'allow' => true,
+                'roles' => ['admin', 'veterinario', 'recepcionista'],
+            ],
+        ],
+        'denyCallback' => function ($rule, $action) {
+            if (Yii::$app->user->isGuest) {
+                return Yii::$app->user->loginRequired();
+            }
+            throw new \yii\web\ForbiddenHttpException('Você não tem permissão para acessar esta página.');
+        },
     ],
     'params' => $params,
 ];

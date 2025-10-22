@@ -76,19 +76,34 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $this->layout = 'blank';
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+
+            // Verifica se tem role permitida
+            $auth = Yii::$app->authManager;
+            $userId = Yii::$app->user->id;
+
+            /// Verifica se o utilizador tem uma das roles permitidas
+            $hasPermission = $auth->checkAccess($userId, 'admin')
+                || $auth->checkAccess($userId, 'veterinario')
+                || $auth->checkAccess($userId, 'recepcionista');
+
+            if (!$hasPermission) {
+                // Faz logout e mostra erro
+                Yii::$app->user->logout();
+                Yii::$app->session->setFlash('showFrontendButton', true); // Flag para mostrar botão
+                return $this->redirect(['site/login']);
+            }
+
             return $this->goBack();
         }
 
         $model->password = '';
-
         return $this->render('login', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Logout action.
