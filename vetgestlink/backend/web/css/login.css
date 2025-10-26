@@ -1,0 +1,200 @@
+/* Centraliza e amplia o card de login */
+.login-page {
+    background: linear-gradient(to bottom, #a8d5ba, #2d5f3f) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Logo centralizado acima do formulário */
+.login-page .login-box::before {
+    content: '';
+    display: block;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 2rem;
+    background-image: url('../images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Aumenta a largura do container principal */
+.login-page .site-login {
+    width: 400px !important;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.login-page .login-box {
+    width: 400px !important;
+    max-width: 90%;
+}
+
+.login-page .card {
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 2px solid #2d5f3f;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.login-page .card-body {
+    padding: 2rem 1.5rem !important;
+}
+
+/* Logo ou título centralizado */
+.login-page h1 {
+    text-align: center;
+    font-size: 1.8rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 2rem !important;
+    color: #1e4d2b;
+}
+
+.login-page .login-box-msg {
+    display: none;
+}
+
+/* Labels */
+.login-page label {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #2d5f3f;
+    margin-bottom: 0.5rem !important;
+    display: block;
+}
+
+/* Inputs com mais largura */
+.login-page .form-control {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 1.25rem !important;
+    height: 44px !important;
+    line-height: 1.5;
+    border: 2px solid #6b9080 !important;
+    border-radius: 5px !important;
+    background: #f9fff9;
+    box-shadow: 0 0 0 transparent;
+    transition: all 0.3s ease;
+    font-weight: 400 !important;
+    width: 100%;
+}
+
+.login-page .form-control:focus {
+    border-color: #2d5f3f !important;
+    box-shadow: 0 0 0 3px rgba(45, 95, 63, 0.1) !important;
+    outline: none;
+    background: #fff;
+}
+
+/* Espaçamento dos campos */
+.login-page .form-group,
+.login-page .mb-3 {
+    margin-bottom: 1.25rem !important;
+}
+
+/* Checkbox */
+.login-page .form-check {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.login-page .form-check-label {
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: #2d5f3f;
+}
+
+.login-page .form-check-input {
+    margin-top: 0.15rem;
+}
+
+.login-page .form-check-input:checked {
+    background-color: #2d5f3f;
+    border-color: #2d5f3f;
+}
+
+/* Botão */
+.login-page .btn-primary {
+    background: linear-gradient(135deg, #3a7f5f, #2d5f3f) !important;
+    border-color: #2d5f3f !important;
+    color: #fff !important;
+    padding: 0.6rem 2rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    height: 44px;
+    border-radius: 5px !important;
+    box-shadow: 0 3px 10px rgba(45, 95, 63, 0.3);
+    text-shadow: none;
+    width: auto;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.login-page .btn-primary:hover {
+    background: linear-gradient(135deg, #2d5f3f, #1e4d2b) !important;
+    border-color: #1e4d2b !important;
+    box-shadow: 0 4px 15px rgba(45, 95, 63, 0.4);
+    transform: translateY(-2px);
+}
+
+.login-page .btn-primary:focus {
+    box-shadow: 0 0 0 3px rgba(45, 95, 63, 0.3) !important;
+}
+
+/* Container do botão alinhado à direita */
+.login-page .row.mb-3:last-child,
+.login-page .d-grid {
+    text-align: right;
+    display: block !important;
+}
+
+/* Links */
+.login-page a {
+    color: #2d5f3f;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.login-page a:hover {
+    color: #1e4d2b;
+    text-decoration: underline;
+}
+
+/* Mensagens de erro */
+.login-page .alert {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+}
+
+.login-page .alert-danger {
+    background-color: #fce4e4;
+    border-color: #c74b4b;
+    color: #8b2020;
+}
+
+/* Responsivo */
+@media (max-width: 576px) {
+    .login-page .login-box::before {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-page .site-login {
+        width: 95% !important;
+    }
+
+    .login-page .login-box {
+        width: 95% !important;
+        margin: 2% auto;
+    }
+
+    .login-page .card-body {
+        padding: 1.5rem 1rem !important;
+    }
+}

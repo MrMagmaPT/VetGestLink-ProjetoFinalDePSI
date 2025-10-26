@@ -10,17 +10,34 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
+    //nome da aplicação
+    'name' => 'VetGestLink',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\ModuleAPI',
+        ],
+    ],
     'components' => [
+        //assetManager com configuração para AdminLTE3
+        'assetManager' => [
+            'bundles' => [
+                'hail812\adminlte3\bundles\AdminLteAsset',
+                'hail812\adminlte3\bundles\PluginAsset',
+            ],
+        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
+            //jsonParser
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
-            'loginUrl' => ['site/login'],
+            'loginUrl' => ['site/login'], // Adicione esta linha
         ],
         'session' => [
             'name' => 'advanced-backend',
@@ -37,10 +54,26 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        //É aqui que se define as regras das urls
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+
+//                'class' => 'yii\rest\UrlRule',
+//                'controller' => 'api/',
+//                'extraPatterns'=>[
+//
+//
+//
+//
+//
+//
+//                ],
+//                'tokens'=>[
+//                    '{id}'=>'<id:\\w+>'
+//                ],
+
             ],
         ],
     ],
@@ -50,7 +83,8 @@ return [
         'rules' => [
             [
                 'allow' => true,
-                'roles' => ['admin', 'veterinario', 'recepcionista'],
+                'roles' => ['backendAccess'], // Usuários autenticados
+
             ],
         ],
         'denyCallback' => function ($rule, $action) {

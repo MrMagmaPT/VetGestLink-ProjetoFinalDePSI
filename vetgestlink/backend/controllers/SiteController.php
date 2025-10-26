@@ -3,6 +3,10 @@
 namespace backend\controllers;
 
 use common\models\LoginForm;
+use common\models\Marcacoes;
+use common\models\Userprofiles;
+use common\models\Animais;
+use common\models\Faturas;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -30,7 +34,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['backendAccess'],
                     ],
                 ],
             ],
@@ -62,7 +66,51 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        // Contar marcações pendentes (ajuste o campo 'estado' conforme sua tabela)
+        $marcacoesPendentes = Marcacoes::find()
+            ->where(['estado' => 'Pendente'])
+            ->count();
+
+        // Contar total de clientes (userprofiles)
+        $totalClientes = Userprofiles::find()->count();
+
+        // Contar total de animais
+        $totalAnimais = Animais::find()->count();
+
+        // Contar marcações de hoje
+        $marcacoesHoje = Marcacoes::find()
+            ->where(['>=', 'data', date('Y-m-d 00:00:00')])
+            ->andWhere(['<', 'data', date('Y-m-d 23:59:59')])
+            ->count();
+
+        // Total de faturas do mês atual
+        $faturasDoMes = Faturas::find()
+            ->where(['>=', 'data', date('Y-m-01')])
+            ->andWhere(['<', 'data', date('Y-m-t 23:59:59')])
+            ->count();
+
+        // Receita total do mês
+        $receitaMensal = Faturas::find()
+            ->where(['>=', 'data', date('Y-m-01')])
+            ->andWhere(['<', 'data', date('Y-m-t 23:59:59')])
+            ->sum('total') ?? 0;
+
+        // Últimas 5 marcações
+        $ultimasMarcacoes = Marcacoes::find()
+            ->with(['animais', 'userprofiles'])
+            ->orderBy(['data' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        return $this->render('index', [
+            'marcacoesPendentes' => $marcacoesPendentes,
+            'totalClientes' => $totalClientes,
+            'totalAnimais' => $totalAnimais,
+            'marcacoesHoje' => $marcacoesHoje,
+            'faturasDoMes' => $faturasDoMes,
+            'receitaMensal' => $receitaMensal,
+            'ultimasMarcacoes' => $ultimasMarcacoes,
+        ]);
     }
 
     /**
@@ -80,18 +128,11 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
             // Verifica se tem role permitida
-            $auth = Yii::$app->authManager;
             $userId = Yii::$app->user->id;
 
-            /// Verifica se o utilizador tem uma das roles permitidas
-            $hasPermission = $auth->checkAccess($userId, 'admin')
-                || $auth->checkAccess($userId, 'veterinario')
-                || $auth->checkAccess($userId, 'recepcionista');
-
-            if (!$hasPermission) {
-                // Faz logout e mostra erro
+            if (!Yii::$app->authManager->checkAccess($userId, 'backendAccess')) {
                 Yii::$app->user->logout();
-                Yii::$app->session->setFlash('showFrontendButton', true); // Flag para mostrar botão
+                Yii::$app->session->setFlash('showFrontendButton', true);
                 return $this->redirect(['site/login']);
             }
 
@@ -103,7 +144,6 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-
 
     /**
      * Logout action.

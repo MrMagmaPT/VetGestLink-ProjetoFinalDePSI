@@ -19,10 +19,10 @@ $this->title = 'Login';
         <?php if (Yii::$app->session->hasFlash('showFrontendButton')): ?>
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                Acesso negado. Esta área é restrita a funcionários.
+                Acesso negado, área restrita somente a funcionários.
                 <hr>
                 <a href="<?= Yii::$app->params['frontendUrl'] ?>" class="btn btn-primary w-100 mt-2">
-                    <i class="bi bi-house-door"></i> Ir para Área de Clientes
+                    <i class="bi bi-house-door"></i>Área de Clientes
                 </a>
             </div>
         <?php endif; ?>
