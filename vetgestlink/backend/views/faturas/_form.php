@@ -22,7 +22,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'userprofiles_id')->textInput() ?>
 
-    <?= $form->field($model, 'eliminado')->textInput() ?>
+    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

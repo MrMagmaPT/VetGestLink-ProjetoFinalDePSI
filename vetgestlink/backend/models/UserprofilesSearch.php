@@ -11,6 +11,14 @@ use common\models\Userprofiles;
  */
 class UserprofilesSearch extends Userprofiles
 {
+    // Atributos públicos para pesquisa de moradas
+    public $morada_rua;
+    public $morada_nporta;
+    public $morada_andar;
+    public $morada_cdpostal;
+    public $morada_cidade;
+    public $morada_localidade;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +26,7 @@ class UserprofilesSearch extends Userprofiles
     {
         return [
             [['id', 'user_id', 'eliminado'], 'integer'],
-            [['nif', 'telemovel'], 'safe'],
+            [['nif', 'telemovel', 'morada_rua', 'morada_nporta', 'morada_andar', 'morada_cdpostal', 'morada_cidade', 'morada_localidade'], 'safe'],
         ];
     }
 
@@ -41,13 +49,40 @@ class UserprofilesSearch extends Userprofiles
      */
     public function search($params, $formName = null)
     {
-        $query = Userprofiles::find();
+        $query = Userprofiles::find()
+            ->joinWith(['moradas']); // Join com a tabela de moradas
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        // Configurar ordenação para campos de moradas
+        $dataProvider->sort->attributes['morada_rua'] = [
+            'asc' => ['moradas.rua' => SORT_ASC],
+            'desc' => ['moradas.rua' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['morada_nporta'] = [
+            'asc' => ['moradas.nporta' => SORT_ASC],
+            'desc' => ['moradas.nporta' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['morada_cdpostal'] = [
+            'asc' => ['moradas.cdpostal' => SORT_ASC],
+            'desc' => ['moradas.cdpostal' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['morada_cidade'] = [
+            'asc' => ['moradas.cidade' => SORT_ASC],
+            'desc' => ['moradas.cidade' => SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['morada_localidade'] = [
+            'asc' => ['moradas.localidade' => SORT_ASC],
+            'desc' => ['moradas.localidade' => SORT_DESC],
+        ];
 
         $this->load($params, $formName);
 
@@ -65,7 +100,13 @@ class UserprofilesSearch extends Userprofiles
         ]);
 
         $query->andFilterWhere(['like', 'nif', $this->nif])
-            ->andFilterWhere(['like', 'telemovel', $this->telemovel]);
+            ->andFilterWhere(['like', 'telemovel', $this->telemovel])
+            ->andFilterWhere(['like', 'moradas.rua', $this->morada_rua])
+            ->andFilterWhere(['like', 'moradas.nporta', $this->morada_nporta])
+            ->andFilterWhere(['like', 'moradas.andar', $this->morada_andar])
+            ->andFilterWhere(['like', 'moradas.cdpostal', $this->morada_cdpostal])
+            ->andFilterWhere(['like', 'moradas.cidade', $this->morada_cidade])
+            ->andFilterWhere(['like', 'moradas.localidade', $this->morada_localidade]);
 
         return $dataProvider;
     }

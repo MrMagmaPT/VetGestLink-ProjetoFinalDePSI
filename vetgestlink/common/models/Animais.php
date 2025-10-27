@@ -49,19 +49,26 @@ class Animais extends \yii\db\ActiveRecord
         return [
             [['notas', 'racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['nome', 'datanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
+            [['nome'], 'required', 'message' => 'O nome não pode estar vazio.'],
+            [['datanascimento'], 'required', 'message' => 'A data de nascimento não pode estar vazia.'],
+            [['peso'], 'required', 'message' => 'O peso não pode estar vazio.'],
+            [['microship'], 'required', 'message' => 'Deve indicar se tem microchip.'],
+            [['sexo'], 'required', 'message' => 'Deve selecionar o sexo.'],
+            [['especies_id'], 'required', 'message' => 'Deve selecionar uma espécie.'],
+            [['userprofiles_id'], 'required', 'message' => 'Deve selecionar um dono.'],
             [['datanascimento'], 'safe'],
-            [['peso'], 'number'],
+            [['peso'], 'number', 'message' => 'O peso deve ser um número válido.'],
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
             [['sexo'], 'string'],
-            [['nome'], 'string', 'max' => 45],
-            [['notas'], 'string', 'max' => 500],
-            ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
+            [['nome'], 'string', 'max' => 45, 'tooLong' => 'O nome não pode ter mais de 45 caracteres.'],
+            [['notas'], 'string', 'max' => 500, 'tooLong' => 'As notas não podem ter mais de 500 caracteres.'],
+            ['sexo', 'in', 'range' => array_keys(self::optsSexo()), 'message' => 'Sexo inválido.'],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especies::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Racas::class, 'targetAttribute' => ['racas_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofiles::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
     }
+
 
     /**
      * {@inheritdoc}

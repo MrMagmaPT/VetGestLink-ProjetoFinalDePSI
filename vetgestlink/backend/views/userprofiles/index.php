@@ -24,24 +24,77 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'nif',
-            'telemovel',
-            'user_id',
-            'eliminado',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Userprofiles $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                    'id',
+                    'nif',
+                    'telemovel',
+                    //user id remover dps na entrega
+                    'user_id',
+                    [
+                            'attribute' => 'morada_rua',
+                            'label' => 'Rua',
+                            'value' => function($model) {
+                                $morada = $model->getMoradas()->one();
+                                return $morada ? $morada->rua : '-';
+                            },
+                    ],
+                    [
+                            'attribute' => 'morada_nporta',
+                            'label' => 'Nº Porta',
+                            'value' => function($model) {
+                                $morada = $model->getMoradas()->one();
+                                return $morada ? $morada->nporta : '-';
+                            },
+                    ],
+                    [
+                            'attribute' => 'morada_cdpostal',
+                            'label' => 'Código Postal',
+                            'value' => function($model) {
+                                $morada = $model->getMoradas()->one();
+                                return $morada ? $morada->cdpostal : '-';
+                            },
+                    ],
+                    [
+                            'attribute' => 'morada_cidade',
+                            'label' => 'Cidade',
+                            'value' => function($model) {
+                                $morada = $model->getMoradas()->one();
+                                return $morada ? $morada->cidade : '-';
+                            },
+                    ],
+                    [
+                            'attribute' => 'morada_localidade',
+                            'label' => 'Localidade',
+                            'value' => function($model) {
+                                $morada = $model->getMoradas()->one();
+                                return $morada ? $morada->localidade : '-';
+                            },
+                    ],
+                    [
+                            'attribute' => 'eliminado',
+                            'label' => 'Eliminado',
+                            'value' => function($model) {
+                                return $model->eliminado == 1 ? 'Sim' : 'Não';
+                            },
+                            'filter' => [
+                                    0 => 'Não',
+                                    1 => 'Sim',
+                            ],
+                    ],
+                    [
+                            'class' => ActionColumn::className(),
+                            'urlCreator' => function ($action, Userprofiles $model, $key, $index, $column) {
+                                return Url::toRoute([$action, 'id' => $model->id]);
+                            }
+                    ],
             ],
-        ],
     ]); ?>
+
+
 
 
 </div>

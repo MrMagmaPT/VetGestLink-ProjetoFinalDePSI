@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /** @var yii\web\View $this */
 /** @var common\models\Medicamentos $model */
@@ -20,9 +21,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'quantidade')->textInput() ?>
 
-    <?= $form->field($model, 'categorias_id')->textInput() ?>
+    <?= $form->field($model, 'categorias_id')->dropDownList(
+            \yii\helpers\ArrayHelper::map(\common\models\Categorias::find()->all(), 'id', 'nome'),
+            ['prompt' => 'Selecione uma categoria']
+    ) ?>
 
-    <?= $form->field($model, 'eliminado')->textInput() ?>
+
+    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

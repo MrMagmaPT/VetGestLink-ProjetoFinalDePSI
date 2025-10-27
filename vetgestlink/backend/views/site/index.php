@@ -56,6 +56,52 @@ $this->title = 'Dashboard';
     </div>
 
     <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3><?= $totalMedicamentos ?></h3>
+                    <p>Medicamentos</p>
+                </div>
+                <div class="icon"><i class="fa fa-medkit"></i></div>
+                <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/medicamentos/index'], ['class' => 'small-box-footer']) ?>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-maroon">
+                <div class="inner">
+                    <h3><?= $totalCategorias ?></h3>
+                    <p>Categorias</p>
+                </div>
+                <div class="icon"><i class="fa fa-tags"></i></div>
+                <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/categorias/index'], ['class' => 'small-box-footer']) ?>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-navy">
+                <div class="inner">
+                    <h3><?= $totalRacas ?></h3>
+                    <p>Raças</p>
+                </div>
+                <div class="icon"><i class="fa fa-list"></i></div>
+                <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/racas/index'], ['class' => 'small-box-footer']) ?>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box bg-olive">
+                <div class="inner">
+                    <h3><?= $totalEspecies ?></h3>
+                    <p>Espécies</p>
+                </div>
+                <div class="icon"><i class="fa fa-paw"></i></div>
+                <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/especies/index'], ['class' => 'small-box-footer']) ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-8">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -81,9 +127,9 @@ $this->title = 'Dashboard';
                                     <td><?= Html::encode($marcacao->userprofiles->nome ?? 'N/A') ?></td>
                                     <td><?= Html::encode($marcacao->tipo) ?></td>
                                     <td>
-                                            <span class="label label-<?= $marcacao->estado === 'Pendente' ? 'warning' : 'success' ?>">
-                                                <?= Html::encode($marcacao->estado) ?>
-                                            </span>
+                                        <span class="label label-<?= $marcacao->estado === 'Pendente' ? 'warning' : 'success' ?>">
+                                            <?= Html::encode($marcacao->estado) ?>
+                                        </span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

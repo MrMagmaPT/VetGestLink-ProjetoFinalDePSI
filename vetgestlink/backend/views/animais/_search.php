@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var backend\models\MarcacoesSearch $model */
+/** @var backend\models\AnimaisSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="marcacoes-search">
+<div class="animais-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,27 +17,23 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'data') ?>
+    <?= $form->field($model, 'nome') ?>
 
-    <?= $form->field($model, 'horainicio') ?>
+    <?= $form->field($model, 'datanascimento') ?>
 
-    <?= $form->field($model, 'horafim') ?>
+    <?= $form->field($model, 'notas') ?>
 
-    <?= $form->field($model, 'created_at') ?>
+    <?= $form->field($model, 'peso') ?>
 
-    <?php // echo $form->field($model, 'updated_at') ?>
+    <?php // echo $form->field($model, 'microship') ?>
 
-    <?php // echo $form->field($model, 'diagnostico') ?>
+    <?php // echo $form->field($model, 'sexo') ?>
 
-    <?php // echo $form->field($model, 'preco') ?>
-
-    <?php // echo $form->field($model, 'estado') ?>
-
-    <?php // echo $form->field($model, 'tipo') ?>
-
-    <?php // echo $form->field($model, 'animais_id') ?>
+    <?php // echo $form->field($model, 'especies_id') ?>
 
     <?php // echo $form->field($model, 'userprofiles_id') ?>
+
+    <?php // echo $form->field($model, 'racas_id') ?>
 
     <?php // echo $form->field($model, 'eliminado') ?>
 

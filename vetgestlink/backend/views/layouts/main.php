@@ -73,17 +73,18 @@ PluginAsset::register($this)->add(['fontawesome']);
                         <?= Html::a('<i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>', ['/site/index'], ['class' => 'nav-link']) ?>
                     </li>
                     <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-users"></i><p>Clientes</p>', ['/clientes/index'], ['class' => 'nav-link']) ?>
+                        <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
                     </li>
                     <li class="nav-item">
                         <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
                     </li>
                     <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Consultas</p>', ['/consultas/index'], ['class' => 'nav-link']) ?>
+                        <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
                     </li>
                     <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-calendar-alt"></i><p>Agenda</p>', ['/agenda/index'], ['class' => 'nav-link']) ?>
+                        <?= Html::a('<i class="nav-icon fas fa-calendar-alt"></i><p>Agenda</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
                     </li>
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cog"></i>

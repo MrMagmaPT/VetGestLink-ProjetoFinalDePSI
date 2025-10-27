@@ -1,10 +1,12 @@
 <?php
 
 use common\models\Racas;
+use common\models\Especies;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 /** @var yii\web\View $this */
 /** @var backend\models\RacasSearch $searchModel */
@@ -31,8 +33,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'nome',
-            'especies_id',
-            'eliminado',
+            [
+                    'attribute' => 'especies_id',
+                    'value' => function($model) {
+                        return $model->especies->nome ?? '-';
+                    },
+                    'filter' => ArrayHelper::map(Especies::find()->where(['eliminado' => 0])->orderBy('nome')->all(), 'id', 'nome'),
+                    'label' => 'Espécie',
+            ],
+            [
+                    'attribute' => 'eliminado',
+                    'value' => function($model) {
+                        return $model->eliminado == 1 ? 'Sim' : 'Não';
+                    },
+                    'filter' => [0 => 'Não', 1 => 'Sim'],
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Racas $model, $key, $index, $column) {
