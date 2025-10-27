@@ -3,9 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\db\ActiveRecord;
-use yii\behaviors\TimestampBehavior;
-use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "userprofiles".
@@ -15,10 +12,9 @@ use yii\web\IdentityInterface;
  * @property string $nif
  * @property string $telemovel
  * @property string $dtanascimento
+ * @property string $dtaregisto
  * @property int $user_id
  * @property int $eliminado
- * @property string $dtaregisto
- * @property string|null $userprofilescol
  *
  * @property Animais[] $animais
  * @property Faturas[] $faturas
@@ -28,20 +24,7 @@ use yii\web\IdentityInterface;
  */
 class Userprofiles extends \yii\db\ActiveRecord
 {
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['dtaregisto'],
-                ],
-                'value' => function() {
-                    return date('Y-m-d H:i:s');
-                },
-            ],
-        ];
-    }
+
 
     /**
      * {@inheritdoc}
@@ -57,12 +40,11 @@ class Userprofiles extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['userprofilescol'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'user_id'], 'required'],
+            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'dtaregisto', 'user_id'], 'required'],
             [['dtanascimento', 'dtaregisto'], 'safe'],
             [['user_id', 'eliminado'], 'integer'],
-            [['nomecompleto', 'userprofilescol'], 'string', 'max' => 45],
+            [['nomecompleto'], 'string', 'max' => 45],
             [['nif', 'telemovel'], 'string', 'max' => 9],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -79,10 +61,9 @@ class Userprofiles extends \yii\db\ActiveRecord
             'nif' => 'Nif',
             'telemovel' => 'Telemovel',
             'dtanascimento' => 'Dtanascimento',
+            'dtaregisto' => 'Dtaregisto',
             'user_id' => 'User ID',
             'eliminado' => 'Eliminado',
-            'dtaregisto' => 'Dtaregisto',
-            'userprofilescol' => 'Userprofilescol',
         ];
     }
 

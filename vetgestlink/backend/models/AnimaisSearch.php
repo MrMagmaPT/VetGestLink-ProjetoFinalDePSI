@@ -18,7 +18,7 @@ class AnimaisSearch extends Animais
     {
         return [
             [['id', 'microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
-            [['nome', 'datanascimento', 'notas', 'sexo'], 'safe'],
+            [['nome', 'dtanascimento', 'notasvet','notasdono', 'sexo'], 'safe'],
             [['peso'], 'number'],
         ];
     }
@@ -61,7 +61,7 @@ class AnimaisSearch extends Animais
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'datanascimento' => $this->datanascimento,
+            '$this->dtanascimento' => $this->dtanascimento,
             'peso' => $this->peso,
             'microship' => $this->microship,
             'especies_id' => $this->especies_id,
@@ -71,7 +71,8 @@ class AnimaisSearch extends Animais
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'notas', $this->notas])
+            ->andFilterWhere(['like', 'notasvet', $this->notasvet])
+            ->andFilterWhere(['like', 'notasdono', $this->notasdono])
             ->andFilterWhere(['like', 'sexo', $this->sexo]);
 
         return $dataProvider;
