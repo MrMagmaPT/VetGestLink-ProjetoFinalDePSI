@@ -21,12 +21,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'dtanascimento') ?>
 
-    <?= $form->field($model, 'notasview') ?>
+    <?= $form->field($model, 'notasvet') ?>
 
     <?= $form->field($model, 'notasdono') ?>
 
     <?= $form->field($model, 'peso') ?>
 
+    //TODO : ajustar conforme a nosssa necessidade
     <?php // echo $form->field($model, 'microship') ?>
 
     <?php // echo $form->field($model, 'sexo') ?>
