@@ -31,7 +31,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['backendAcess'],
+                        'roles' => ['backendAccess'],
                     ],
                 ],
             ],
@@ -118,7 +118,7 @@ class SiteController extends Controller
             $userId = Yii::$app->user->id;
 
             /// Verifica se o utilizador tem uma das roles permitidas
-            $hasPermission = $auth->checkAccess($userId, 'backendAcess');
+            $hasPermission = $auth->checkAccess($userId, 'backendAccess');
 
             if (!$hasPermission) {
                 // Faz logout e mostra erro

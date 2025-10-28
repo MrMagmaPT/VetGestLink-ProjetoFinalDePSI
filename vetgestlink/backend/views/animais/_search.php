@@ -19,9 +19,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nome') ?>
 
-    <?= $form->field($model, 'datanascimento') ?>
+    <?= $form->field($model, 'dtanascimento') ?>
 
-    <?= $form->field($model, 'notas') ?>
+    <?= $form->field($model, 'notasview') ?>
+
+    <?= $form->field($model, 'notasdono') ?>
 
     <?= $form->field($model, 'peso') ?>
 
