@@ -20,7 +20,6 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
 
-
     <?= $form->field($model, 'notasvet')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'notasdono')->textInput(['maxlength' => true]) ?>

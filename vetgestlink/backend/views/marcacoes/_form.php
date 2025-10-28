@@ -14,13 +14,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'data')->textInput() ?>
 
-    <?= $form->field($model, 'horainicio')->textInput() ?>
+    <?= $form->field($model, 'horainicio')->textInput()->label('Hora Inicio') ?>
 
-    <?= $form->field($model, 'horafim')->textInput() ?>
+    <?= $form->field($model, 'horafim')->textInput()->label('Hora fim') ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+    <?= $form->field($model, 'updated_at')->hiddenInput()->label(false); ?>
 
     <?= $form->field($model, 'diagnostico')->textInput(['maxlength' => true]) ?>
 

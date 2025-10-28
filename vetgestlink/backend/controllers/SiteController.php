@@ -31,7 +31,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['backendAccess'],
                     ],
                 ],
             ],
@@ -113,6 +113,20 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Verifica se tem role permitida
+            $auth = Yii::$app->authManager;
+            $userId = Yii::$app->user->id;
+
+            /// Verifica se o utilizador tem uma das roles permitidas
+            $hasPermission = $auth->checkAccess($userId, 'backendAccess');
+
+            if (!$hasPermission) {
+                // Faz logout e mostra erro
+                Yii::$app->user->logout();
+                Yii::$app->session->setFlash('showFrontendButton', true); // Flag para mostrar botão
+                return $this->redirect(['site/login']);
+            }
+
             return $this->goBack();
         }
 

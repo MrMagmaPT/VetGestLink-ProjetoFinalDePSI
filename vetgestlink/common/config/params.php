@@ -9,5 +9,5 @@ return [
 
 
     //para usar na view de login do backend para redirecionar ao frontend
-    'frontendUrl' => 'http://localhost/frontend/web/',
+    'frontendUrl' => '../../../frontend/web/site/login',
 ];

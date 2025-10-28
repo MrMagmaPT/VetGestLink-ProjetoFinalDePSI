@@ -14,11 +14,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true])->label('Nome completo') ?>
+
     <?= $form->field($model, 'telemovel')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
 
-    <?= $form->field($model, 'eliminado')->textInput() ?>
+    <?= $form->field($model, 'user_id')->dropDownList(
+            \yii\helpers\ArrayHelper::map(\common\models\User::find()->all(), 'id', 'username'),
+            ['prompt' => 'Selecione um utilizador']
+    ) ?>
+
+    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
