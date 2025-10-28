@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "userprofiles".
@@ -25,6 +27,18 @@ use Yii;
 class Userprofiles extends \yii\db\ActiveRecord
 {
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'dtaregisto',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
 
     /**
      * {@inheritdoc}
@@ -41,7 +55,7 @@ class Userprofiles extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'dtaregisto', 'user_id'], 'required'],
+            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento','user_id'], 'required'],
             [['dtanascimento', 'dtaregisto'], 'safe'],
             [['user_id', 'eliminado'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
@@ -54,18 +68,18 @@ class Userprofiles extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
     public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'nomecompleto' => 'Nomecompleto',
-            'nif' => 'Nif',
-            'telemovel' => 'Telemovel',
-            'dtanascimento' => 'Dtanascimento',
-            'dtaregisto' => 'Dtaregisto',
-            'user_id' => 'User ID',
-            'eliminado' => 'Eliminado',
-        ];
-    }
+{
+    return [
+        'id' => 'ID',
+        'nomecompleto' => 'Nomecompleto',
+        'nif' => 'Nif',
+        'telemovel' => 'Telemovel',
+        'dtanascimento' => 'Dtanascimento',
+        'dtaregisto' => 'Dtaregisto',
+        'user_id' => 'User ID',
+        'eliminado' => 'Eliminado',
+    ];
+}
 
     /**
      * Gets query for [[Animais]].
