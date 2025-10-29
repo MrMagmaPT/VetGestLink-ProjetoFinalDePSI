@@ -2,21 +2,22 @@
 
 namespace backend\controllers;
 
-use common\models\LoginForm;
 use Yii;
+use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\web\Response;
+use common\models\LoginForm;
+use common\models\Userprofiles;
+use common\models\Animais;
+use common\models\Marcacoes;
+use common\models\Faturas;
+use common\models\Medicamentos;
+use common\models\Categorias;
+use common\models\Racas;
+use common\models\Especies;
 
-/**
- * Site controller
- */
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -43,9 +44,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
@@ -55,21 +53,56 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $totalClientes = Userprofiles::find()->where(['eliminado' => 0])->count();
+        $totalAnimais = Animais::find()->where(['eliminado' => 0])->count();
+        $totalMedicamentos = Medicamentos::find()->where(['eliminado' => 0])->count();
+        $totalCategorias = Categorias::find()->where(['eliminado' => 0])->count();
+        $totalRacas = Racas::find()->where(['eliminado' => 0])->count();
+        $totalEspecies = Especies::find()->where(['eliminado' => 0])->count();
+
+        $marcacoesHoje = Marcacoes::find()
+            ->where(['DATE(data)' => date('Y-m-d')])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $marcacoesPendentes = Marcacoes::find()
+            ->where(['estado' => 'Pendente'])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $ultimasMarcacoes = Marcacoes::find()
+            ->where(['eliminado' => 0])
+            ->orderBy(['data' => SORT_DESC])
+            ->limit(5)
+            ->all();
+
+        $faturasDoMes = Faturas::find()
+            ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $receitaMensal = Faturas::find()
+            ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
+            ->andWhere(['eliminado' => 0])
+            ->sum('total') ?? 0;
+
+        return $this->render('index', [
+            'totalClientes' => $totalClientes,
+            'totalAnimais' => $totalAnimais,
+            'totalMedicamentos' => $totalMedicamentos,
+            'totalCategorias' => $totalCategorias,
+            'totalRacas' => $totalRacas,
+            'totalEspecies' => $totalEspecies,
+            'marcacoesHoje' => $marcacoesHoje,
+            'marcacoesPendentes' => $marcacoesPendentes,
+            'ultimasMarcacoes' => $ultimasMarcacoes,
+            'faturasDoMes' => $faturasDoMes,
+            'receitaMensal' => $receitaMensal,
+        ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string|Response
-     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -84,21 +117,14 @@ class SiteController extends Controller
         }
 
         $model->password = '';
-
         return $this->render('login', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
 }

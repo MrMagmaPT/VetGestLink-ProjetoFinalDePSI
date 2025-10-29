@@ -10,6 +10,8 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    //nome da aplicação
+    'name' => 'VetGestLink',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
