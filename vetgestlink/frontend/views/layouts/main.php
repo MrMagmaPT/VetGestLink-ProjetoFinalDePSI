@@ -20,8 +20,7 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
 
-    <!-- Favicon and Manifest -->
-    <link rel="manifest" href="<?= Yii::getAlias('@web') ?>/site.webmanifest">
+    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= Yii::getAlias('@web') ?>/assets/img/favicon.ico">
 
     <!-- Template CSS -->
@@ -75,29 +74,24 @@ AppAsset::register($this);
                             <div class="main-menu f-right d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a href="<?= Yii::$app->urlManager->createUrl(['site/index']) ?>">Home</a></li>
-                                        <li><a href="<?= Yii::$app->urlManager->createUrl(['site/about']) ?>">About</a></li>
+                                        <li><a href="<?= Yii::$app->urlManager->createUrl(['site/about']) ?>">Sobre</a></li>
                                         <li><a href="<?= Yii::$app->urlManager->createUrl(['site/contact']) ?>">Contact</a></li>
-
                                         <?php if (Yii::$app->user->isGuest): ?>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/signup']) ?>">Signup</a></li>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/login']) ?>">Login</a></li>
                                         <?php else: ?>
-                                            <li><a href="#"><?= Html::encode(Yii::$app->user->identity->username) ?></a>
-                                                <ul class="submenu">
-                                                    <li>
-                                                        <?= Html::beginForm(['/site/logout'], 'post')
-                                                        . Html::submitButton('Logout', ['class' => 'btn btn-link logout text-dark'])
-                                                        . Html::endForm() ?>
-                                                    </li>
-                                                </ul>
-                                            </li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/pagamento']) ?>">Pagamento</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/animais']) ?>">Animais</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/consultas']) ?>">Consultas</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/perfil']) ?>"><?= Html::encode(Yii::$app->user->identity->username) ?></a></li>
                                         <?php endif; ?>
                                     </ul>
                                 </nav>
                             </div>
                             <div class="header-right-btn f-right d-none d-lg-block ml-30">
-                                <a href="#" class="header-btn">01654.066.456</a>
+                                <?php if (Yii::$app->user->isGuest): ?>
+                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/login']) ?>" class="btn">Login/Signup</a>
+                                <?php else: ?>
+                                    <a href="<?= Yii::$app->urlManager->createUrl(['site/logout']) ?>" class="btn">Logout</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -113,13 +107,7 @@ AppAsset::register($this);
 
 <!-- Main content -->
 <main role="main" class="flex-shrink-0 mt-5 pt-5">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => $this->params['breadcrumbs'] ?? [],//bredcrubs para sair?
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+    <?= $content ?>
 </main>
 
 <!-- Footer -->

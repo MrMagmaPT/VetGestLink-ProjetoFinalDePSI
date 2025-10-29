@@ -11,31 +11,66 @@ $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1 class="text-center page-title"><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <div class="site-login d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+        <div class="row w-100" style="max-width: 900px;">
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <!-- LEFT: LOGIN CARD -->
+            <div class="col-lg-6 mb-4 d-flex">
+                <div class="card shadow-lg border-0 rounded-4 flex-fill">
+                    <div class="card-body p-4 d-flex flex-column justify-content-center">
+                        <h2 class="text-center mb-4">Bem-vindo!</h2>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                        <?= $form->field($model, 'username')
+                            ->textInput(['autofocus' => true, 'placeholder' => 'Enter your username'])
+                            ->label(false) ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                        <?= $form->field($model, 'password')
+                            ->passwordInput(['placeholder' => 'Enter your password'])
+                            ->label(false) ?>
 
-                <div class="my-1 mx-0" style="color:#999;">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
+                        <div class="d-flex justify-content-between mb-3">
+                            <?= $form->field($model, 'rememberMe')->checkbox()->label('Remember me') ?>
+                            <small>
+                                <?= Html::a('Forgot Password?', ['site/request-password-reset'], ['class' => 'text-decoration-none']) ?>
+                            </small>
+                        </div>
+
+                        <div class="d-grid mb-3 mt-auto">
+                            <?= Html::submitButton('Login', [
+                                'class' => 'btn btn btn-lg rounded-pill',
+                                'name'  => 'login-button'
+                            ]) ?>
+                        </div>
+
+                        <?php ActiveForm::end(); ?>
+                    </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+            <!-- RIGHT: SIGNUP CARD -->
+            <div class="col-lg-6 mb-4 d-flex">
+                <div class="card shadow-lg border-0 rounded-4 flex-fill">
+                    <div class="card-body p-4 d-flex flex-column justify-content-center text-center">
+                        <h2 class="mb-3">Novo por aqui?</h2>
+                        <p class="text-muted mb-4">
+                            Crie uma conta para gerir os seus animas e reservar consultas.
+                        </p>
+
+                        <div class="d-grid mb-3 mt-auto">
+                            <?= Html::a(
+                                'Create Account',
+                                ['site/signup'],
+                                ['class' => 'btn btn btn-lg rounded-pill px-4']
+                            ) ?>
+                        </div>
+                    </div>
                 </div>
-
-            <?php ActiveForm::end(); ?>
+            </div>
         </div>
     </div>
 </div>
+
