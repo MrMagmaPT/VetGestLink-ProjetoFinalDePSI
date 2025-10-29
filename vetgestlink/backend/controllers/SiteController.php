@@ -55,6 +55,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        $userId = Yii::$app->user->id;
         $totalClientes = Userprofiles::find()->where(['eliminado' => 0])->count();
         $totalAnimais = Animais::find()->where(['eliminado' => 0])->count();
         $totalMedicamentos = Medicamentos::find()->where(['eliminado' => 0])->count();
@@ -88,6 +89,8 @@ class SiteController extends Controller
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
 
+        $userType = $this->getusertype($userId);
+
         return $this->render('index', [
             'totalClientes' => $totalClientes,
             'totalAnimais' => $totalAnimais,
@@ -100,8 +103,23 @@ class SiteController extends Controller
             'ultimasMarcacoes' => $ultimasMarcacoes,
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
+            'usertype' => $userType,
         ]);
     }
+    private function getusertype($userId) {
+
+        $roles = Yii::$app->authManager->getRolesByUser($userId);
+        if (isset($roles['admin'])) {
+            return 1;
+        }
+        if (isset($roles['veterinario'])) {
+            return 2;
+        }
+        if (isset($roles['rececionista'])) {
+            return 3;
+        };
+    }
+
 
     public function actionLogin()
     {
