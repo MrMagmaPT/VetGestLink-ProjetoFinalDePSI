@@ -180,7 +180,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="form-group">
                 <?= Html::submitButton('<i class="glyphicon glyphicon-ok"></i> Criar Conta', [
-                        'class' => 'btn btn-success btn-block btn-lg',
+                        'class' => 'btn btn btn-lg btn-block rounded-pill px-4',
                         'name' => 'signup-button'
                 ]) ?>
             </div>
@@ -189,7 +189,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="text-center" style="margin-top: 20px;">
                 <p class="text-muted">
-                    Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn-link']) ?>
+                    Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn btn-lg rounded-pill px-4']) ?>
                 </p>
             </div>
         </div>

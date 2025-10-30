@@ -124,6 +124,7 @@ class SignupForm extends Model
             $userprofile->user_id = $user->id;
             $userprofile->nomecompleto = $this->nomecompleto;
             $userprofile->dtanascimento = $this->dtanascimento;
+            $userprofile->dtaregisto = date('Y-m-d H:i:s');
             $userprofile->nif = $this->nif;
             $userprofile->telemovel = $this->telemovel;
             $userprofile->eliminado = 0;
