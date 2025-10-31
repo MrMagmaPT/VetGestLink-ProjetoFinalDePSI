@@ -134,8 +134,6 @@ class SignupForm extends Model
                 throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
             }
 
-            Yii::info("Userprofile ID {$userprofile->id} criado");
-
             // 4. Criar Morada
             $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
@@ -149,17 +147,12 @@ class SignupForm extends Model
             $morada->principal = $this->principal ? 1 : 0;
             $morada->eliminado = 0;
 
-            Yii::info("Dados Morada: " . json_encode($morada->attributes));
-
             if (!$morada->save()) {
                 Yii::error("Erro Morada: " . json_encode($morada->errors));
                 throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
             }
 
-            Yii::info("Morada ID {$morada->id} criada");
-
             $transaction->commit();
-            Yii::info("Transação committed");
 
             return $user && $this->sendEmail($user) ? $user : null;
 

@@ -101,6 +101,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+
+    // PARA AUTENTICAÇÃO VIA TOKEN QUERRY PARAM USAR PRA PROTEGER A API
     public static function findIdentityByAccessToken($token, $type = null)
     {
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);

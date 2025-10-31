@@ -18,7 +18,8 @@ class ModuleAPI extends \yii\base\Module
     public function init()
     {
         parent::init();
-
+        //deixar stateless
+        \Yii::$app->user->enableSession = false;
         // custom initialization code goes here
     }
 }
