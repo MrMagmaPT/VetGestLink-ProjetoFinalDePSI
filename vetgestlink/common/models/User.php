@@ -21,7 +21,7 @@ use yii\web\IdentityInterface;
  * @property int $updated_at
  * @property string|null $verification_token
  *
- * @property Userprofiles[] $userprofiles
+ * @property Userprofile[] $userprofile
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -248,8 +248,8 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserprofiles()
+    public function getUserprofile()
     {
-        return $this->hasMany(Userprofiles::class, ['user_id' => 'id']);
+        return $this->hasMany(Userprofile::class, ['user_id' => 'id']);
     }
 }

@@ -78,10 +78,10 @@ AppAsset::register($this);
                                         <li><a href="<?= Yii::$app->urlManager->createUrl(['site/contact']) ?>">Contact</a></li>
                                         <?php if (Yii::$app->user->isGuest): ?>
                                         <?php else: ?>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/pagamento']) ?>">Pagamento</a></li>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/animais']) ?>">Animais</a></li>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/consultas']) ?>">Consultas</a></li>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['site/perfil']) ?>"><?= Html::encode(Yii::$app->user->identity->username) ?></a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['faturas/index']) ?>">Pagamentos & Faturas</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['animais/index']) ?>">Animais</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['marcacoes/incex']) ?>">Marcações</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['user-profile/index']) ?>">Perfil-<?= Html::encode(Yii::$app->user->identity->username) ?></a></li>
                                         <?php endif; ?>
                                     </ul>
                                 </nav>
@@ -121,20 +121,9 @@ AppAsset::register($this);
                         <div class="single-footer-caption mb-30">
                             <!-- logo -->
                             <div class="footer-logo mb-25">
-                                <a href="index.html"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
-                            </div>
-                            <div class="footer-tittle">
-                                <div class="footer-pera">
-                                    <p>Lorem ipsum dolor sit amet, adipiscing elit, sed do eiusmod tempor elit. </p>
-                                </div>
+                                <img src="<?= Yii::getAlias('@web') ?>/assets/img/logo/logo.png" alt="">
                             </div>
                             <!-- social -->
-                            <div class="footer-social">
-                                <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-square"></i></a>
-                                <a href="#"><i class="fab fa-twitter-square"></i></a>
-                                <a href="#"><i class="fab fa-linkedin"></i></a>
-                                <a href="#"><i class="fab fa-pinterest-square"></i></a>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -2,14 +2,15 @@
 
 namespace frontend\controllers;
 
-use app\models\UserProfiles;
+use common\models\Userprofile;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserProfileController implements the CRUD actions for UserProfiles model.
+ * UserProfileController implements the CRUD actions for Userprofile model.
  */
 class UserProfileController extends Controller
 {
@@ -32,14 +33,15 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Lists all UserProfiles models.
+     * Lists all Userprofile models.
      *
      * @return string
      */
     public function actionIndex()
     {
+
         $dataProvider = new ActiveDataProvider([
-            'query' => UserProfiles::find(),
+            'query' => Userprofile::find(),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -58,7 +60,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Displays a single UserProfiles model.
+     * Displays a single Userprofile model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -70,30 +72,9 @@ class UserProfileController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new UserProfiles model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new UserProfiles();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
 
     /**
-     * Updates an existing UserProfiles model.
+     * Updates an existing Userprofile model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -112,30 +93,17 @@ class UserProfileController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing UserProfiles model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
-     * Finds the UserProfiles model based on its primary key value.
+     * Finds the Userprofile model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return UserProfiles the loaded model
+     * @return Userprofile the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = UserProfiles::findOne(['id' => $id])) !== null) {
+        if (($model = Userprofile::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
