@@ -15,7 +15,7 @@
     width: 150px;
     height: 150px;
     margin: 0 auto 2rem;
-    background-image: url('../images/logo.png');
+    background-image: url('../static/img/logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

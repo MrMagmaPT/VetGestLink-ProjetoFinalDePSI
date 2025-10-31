@@ -7,23 +7,23 @@ use yii\web\AssetBundle;
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $baseUrl = '@web/static';
 
     public function init()
     {
         parent::init();
 
         // Automatically load all CSS files (except .map)
-        foreach (glob(Yii::getAlias('@webroot/assets/css/*.css')) as $file) {
+        foreach (glob(Yii::getAlias('@webroot/static/css/*.css')) as $file) {
             if (pathinfo($file, PATHINFO_EXTENSION) === 'css') {
-                $this->css[] = 'assets/css/' . basename($file);
+                $this->css[] = 'css/' . basename($file);
             }
         }
 
-        // Automatically load all JS files (except .map)
-        foreach (glob(Yii::getAlias('@webroot/assets/js/*.js')) as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'js') {
-                $this->js[] = 'assets/js/' . basename($file);
+        // Automatically load all font files
+        foreach (glob(Yii::getAlias('@webroot/static/fonts/*')) as $file) {
+            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['woff', 'woff2', 'ttf', 'otf', 'eot'])) {
+                $this->publishOptions['fonts'][] = 'fonts/' . basename($file);
             }
         }
     }
