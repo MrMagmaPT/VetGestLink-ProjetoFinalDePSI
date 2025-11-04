@@ -98,7 +98,7 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            $user->status = User::STATUS_ACTIVE;
+            //$user->status = User::STATUS_INACTIVE;
             $user->created_at = time();
             $user->updated_at = time();
 
@@ -161,7 +161,7 @@ class SignupForm extends Model
             $transaction->commit();
             Yii::info("Transação committed");
 
-            return $user;
+            return $user && $this->sendEmail($user) ? $user : null;
 
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -169,5 +169,18 @@ class SignupForm extends Model
             Yii::$app->session->setFlash('error', $e->getMessage());
             return null;
         }
+    }
+    protected function sendEmail($user)
+    {
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
+                ['user' => $user]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setTo($this->email)
+            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->send();
     }
 }
