@@ -31,6 +31,13 @@ PluginAsset::register($this)->add(['fontawesome']);
             </li>
         </ul>
 
+        <?php
+        $roles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->id);
+        $roleName = reset($roles)->name ?? 'NULL';
+        echo Html::encode($roleName);
+
+        ?>
+
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <?php if (Yii::$app->user->isGuest): ?>
@@ -72,36 +79,52 @@ PluginAsset::register($this)->add(['fontawesome']);
                     <li class="nav-item">
                         <?= Html::a('<i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>', ['/site/index'], ['class' => 'nav-link']) ?>
                     </li>
-                    <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
-                    </li>
-                    <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
-                    </li>
-                    <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
-                    </li>
-                    <li class="nav-item">
-                        <?= Html::a('<i class="nav-icon fas fa-calendar-alt"></i><p>Agenda</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
-                    </li>
+                    <?php
+                    if ($roleName == "admin") {// Menu items for admin?>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                        </li>
 
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-cog"></i>
-                            <p>
-                                Gestão
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <?= Html::a('<i class="far fa-circle nav-icon"></i><p>Utilizadores</p>', ['/utilizadores/index'], ['class' => 'nav-link']) ?>
-                            </li>
-                            <li class="nav-item">
-                                <?= Html::a('<i class="far fa-circle nav-icon"></i><p>Configurações</p>', ['/configuracoes/index'], ['class' => 'nav-link']) ?>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>
+                                    Gestão
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <?= Html::a('<i class="far fa-circle nav-icon"></i><p>Utilizadores</p>', ['/utilizadores/index'], ['class' => 'nav-link']) ?>
+                                </li>
+                                <li class="nav-item">
+                                    <?= Html::a('<i class="far fa-circle nav-icon"></i><p>Configurações</p>', ['/configuracoes/index'], ['class' => 'nav-link']) ?>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } elseif ($roleName == "veterinario") {?>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                    <?php } elseif ($roleName == "rececionista") { ?>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                        <li class="nav-item">
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                        </li>
+                    <?php }
+                    ?>
+
                 </ul>
             </nav>
         </div>
