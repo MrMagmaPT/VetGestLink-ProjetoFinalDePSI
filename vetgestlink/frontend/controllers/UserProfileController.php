@@ -39,25 +39,23 @@ class UserProfileController extends Controller
      */
     public function actionIndex()
     {
+        $user = Yii::$app->user->identity;
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Userprofile::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $user = \common\models\User::find()
+            ->where(['id' => $user->id])
+            ->with(['userProfile.morada'])
+            ->one();
+
+        $userProfile = $user->userProfile;
+        $morada = $userProfile->morada ?? null;
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'user' => $user,
+            'userProfile' => $userProfile,
+            'morada' => $morada,
         ]);
     }
+
 
     /**
      * Displays a single Userprofile model.

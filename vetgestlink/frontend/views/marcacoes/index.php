@@ -3,50 +3,56 @@
 use common\models\Marcacoes;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Marcacoes';
+$this->title = 'Marcações';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
-<div class="marcacoes-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="marcacoes-index container py-3">
 
-    <p>
-        <?= Html::a('Create Marcacoes', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold"><?= Html::encode($this->title) ?></h1>
+    </div>
 
+    <?php foreach ($dataProvider->models as $model): ?>
+        <div class="card mb-3 shadow-sm">
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            <div class="card-body d-flex justify-content-between">
 
-            'id',
-            'data',
-            'horainicio',
-            'horafim',
-            'created_at',
-            //'updated_at',
-            //'diagnostico',
-            //'preco',
-            //'estado',
-            //'tipo',
-            //'animais_id',
-            //'userprofiles_id',
-            //'eliminado',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Marcacoes $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
-        ],
-    ]); ?>
+                <div>
+                    <h5 class="card-title mb-2">
+                        Marcação #<?= Html::encode($model->id) ?>
+                    </h5>
 
+                    <p class="mb-1">
+                        <strong>📅 Data:</strong>
+                        <?= Html::encode($model->data) ?>
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>🕒 Hora:</strong>
+                        <?= Html::encode($model->horainicio) ?> —
+                        <?= Html::encode($model->horafim) ?>
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        Criado em:
+                        <?= Yii::$app->formatter->asDatetime($model->created_at) ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Pagination -->
+    <div class="mt-4">
+        <?= \yii\widgets\LinkPager::widget([
+            'pagination' => $dataProvider->pagination
+        ]) ?>
+    </div>
 
 </div>

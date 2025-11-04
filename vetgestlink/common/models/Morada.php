@@ -21,7 +21,7 @@ use Yii;
  *
  * @property Userprofiles $userprofiles
  */
-class Moradas extends \yii\db\ActiveRecord
+class Morada extends \yii\db\ActiveRecord
 {
 
 
@@ -73,9 +73,9 @@ class Moradas extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserprofiles()
+    public function getUserProfile()
     {
-        return $this->hasOne(Userprofiles::class, ['id' => 'userprofiles_id']);
+        return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
     }
 
 }

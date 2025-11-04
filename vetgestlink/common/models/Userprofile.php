@@ -103,10 +103,12 @@ class Userprofile extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMoradas()
+    public function getMorada()
     {
-        return $this->hasMany(Morada::class, ['userprofiles_id' => 'id']);
+        // related column => this model column
+        return $this->hasOne(Morada::class, ['userprofiles_id' => 'id']);
     }
+
 
     /**
      * Gets query for [[Notas]].

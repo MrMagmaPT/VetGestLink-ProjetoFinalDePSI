@@ -80,7 +80,7 @@ AppAsset::register($this);
                                         <?php else: ?>
                                             <li><a href="<?= Yii::$app->urlManager->createUrl(['faturas/index']) ?>">Pagamentos & Faturas</a></li>
                                             <li><a href="<?= Yii::$app->urlManager->createUrl(['animais/index']) ?>">Animais</a></li>
-                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['marcacoes/incex']) ?>">Marcações</a></li>
+                                            <li><a href="<?= Yii::$app->urlManager->createUrl(['marcacoes/index']) ?>">Marcações</a></li>
                                             <li><a href="<?= Yii::$app->urlManager->createUrl(['user-profile/index']) ?>">Perfil-<?= Html::encode(Yii::$app->user->identity->username) ?></a></li>
                                         <?php endif; ?>
                                     </ul>

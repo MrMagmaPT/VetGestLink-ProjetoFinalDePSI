@@ -1,53 +1,167 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = 'Profile';
+$this->title = 'Perfil';
 $this->params['breadcrumbs'][] = $this->title;
 
-$user = $dataProvider->getModels();
 ?>
+
+<style>
+    :root {
+        --accent-green: #00d100;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #fff;
+        margin-top: -60px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .profile-label {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .profile-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #212529;
+    }
+
+    .accent-title {
+        color: var(--accent-green);
+        font-weight: 700;
+    }
+
+    .accent-border {
+        border-left: 4px solid var(--accent-green);
+        padding-left: 10px;
+    }
+
+    .card-header-accent {
+        background: var(--accent-green) !important;
+    }
+
+    .edit-button {
+        background-color: var(--accent-green);
+        border-color: var(--accent-green);
+    }
+    .edit-button:hover {
+        background-color: #00b300;
+        border-color: #00b300;
+    }
+</style>
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg border-0 rounded-lg">
-                <div class="card-header bg-dark text-white text-center">
-                    <?= var_dump($user);die; ?>
-                    <h3 class="mt-3 mb-0"><?= Html::encode($user->nomecompleto) ?></h3>
-                    <p class="text-muted mb-2"><?= Html::encode($user->email) ?></p>
+        <div class="col-lg-7">
+
+            <!-- MAIN CARD -->
+            <div class="card shadow border-0 rounded-4">
+
+                <!-- HEADER -->
+                <div class="card-header card-header-accent text-white text-center rounded-top-4 pb-5 position-relative">
+                    <h3 class="mt-3 mb-0"><?= Html::encode($userProfile->nomecompleto) ?></h3>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <h5 class="strong">Email</h5>
-                            <p><strong>Email:</strong> <?= Html::encode($user->email) ?></p>
+
+                <!-- AVATAR -->
+                <div class="text-center">
+                    <img src="/img/avatar.png" class="profile-avatar" alt="Avatar">
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-4">
+
+                    <!-- INFO GROUP -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 accent-border">
+                            <div class="profile-label">Email</div>
+                            <div class="profile-value"><?= Html::encode($user->email) ?></div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <h5 class="strong">Morada</h5>
-                            <p><strong>Morada 1:</strong> <?= Html::encode($userProfile->morada) ?></p>
-                            <p><strong>Morada 2:</strong><?= Html::encode($userProfile->morada2 ?: '<sem dados>') ?></p>
+
+                        <div class="col-md-6 mb-3 accent-border">
+                            <div class="profile-label">NIF</div>
+                            <div class="profile-value"><?= Html::encode($userProfile->nif) ?></div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="strong">Informação adicional</h5>
-                            <p><strong>NIF:</strong> <?= Html::encode($userProfile->nif) ?></p>
-                            <p><strong>Código Postal:</strong> <?= Html::encode($userProfile->codigoPostal) ?></p>
+
+                    <!-- MORADA -->
+                    <h5 class="fw-bold mb-3 accent-title">
+                        <i class="bi bi-geo-alt-fill me-1"></i>Morada
+                    </h5>
+
+                    <?php if ($morada): ?>
+                        <div class="border rounded p-3 mb-4 bg-light">
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Rua</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->rua) ?></div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Nº Porta</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->nporta) ?></div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Andar</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->andar ?: "—") ?></div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Código Postal</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->cdpostal) ?></div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Cidade</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->cidade) ?></div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-6 profile-label">Cx Postal</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->cxpostal ?: "—") ?></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 profile-label">Localidade</div>
+                                <div class="col-6 profile-value"><?= Html::encode($morada->localidade) ?></div>
+                            </div>
+
                         </div>
-                        <div class="col-md-6">
-                            <h5 class="strong">Outros</h5>
-                            <p><strong>Data de criação:</strong> <?= Html::encode(Yii::$app->formatter->asDate($user->created_at, 'long')) ?></p>
+                    <?php else: ?>
+                        <p class="text-muted fst-italic">Sem morada registada</p>
+                    <?php endif; ?>
+
+                    <!-- OTHER INFO -->
+                    <h5 class="fw-bold mb-3 accent-title">
+                        <i class="bi bi-info-circle me-1"></i>Outros
+                    </h5>
+                    <div class="row accent-border">
+                        <div class="col-md-12">
+                            <div class="profile-label">Data de criação</div>
+                            <div class="profile-value">
+                                <?= Html::encode(Yii::$app->formatter->asDate($user->created_at, 'long')) ?>
+                            </div>
                         </div>
                     </div>
+
                 </div>
-                <div class="card-footer text-end bg-light">
-                    <?= Html::a('Editar Perfil', ['profile/edit'], ['class' => 'site-btn']) ?>
+
+                <!-- FOOTER -->
+                <div class="card-footer text-end bg-light rounded-bottom-4">
+                    <?= Html::a('Editar Perfil', ['profile/edit'], ['class' => 'btn ']) ?>
                 </div>
+
             </div>
         </div>
     </div>
