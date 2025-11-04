@@ -2,11 +2,13 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Animais;
 use backend\models\AnimaisSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * AnimaisController implements the CRUD actions for Animais model.
@@ -21,6 +23,16 @@ class AnimaisController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index'],
+                            'allow' => true,
+                            'roles' => ['viewAnimals', 'updateAnimal', 'deleteAnimal', 'createAnimal'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -41,10 +53,23 @@ class AnimaisController extends Controller
         $searchModel = new AnimaisSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+
+        $auth = Yii::$app->authManager;
+        $userId = Yii::$app->user->id;
+
+        /// Verifica se o utilizador tem uma das roles permitidas
+        $hasPermission = $auth->checkAccess($userId, 'viewAnimals');
+
+        if (!$hasPermission) {
+            return $this->redirect(['site/index']);
+        }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+
+
     }
 
     /**
