@@ -1,6 +1,9 @@
 <?php
 
 /** @var yii\web\View $this */
+/** @var common\models\Userprofile $userProfile */
+/** @var common\models\User $user */
+/** @var common\models\Morada|null $morada */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
