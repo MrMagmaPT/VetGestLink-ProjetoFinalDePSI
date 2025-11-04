@@ -1,13 +1,13 @@
 <?php
 
-use common\models\Animais;
+use common\models\Animal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Animais';
+$this->title = 'Animal';
 $this->params['breadcrumbs'][] = $this->title;
 
 $animais = $dataProvider->getModels();

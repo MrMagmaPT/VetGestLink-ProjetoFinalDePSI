@@ -23,9 +23,9 @@ class Sidebar extends Widget
     {
         return [
             ['label' => 'Dashboard', 'url' => ['site/index'], 'icon' => 'fa-home'],
-            ['label' => 'Meus Animais', 'url' => ['animais/index'], 'icon' => 'fa-paw'],
-            ['label' => 'Marcações', 'url' => ['marcacoes/index'], 'icon' => 'fa-calendar-alt'],
-            ['label' => 'Faturas', 'url' => ['faturas/index'], 'icon' => 'fa-file-invoice-dollar'],
+            ['label' => 'Meus Animal', 'url' => ['animal/index'], 'icon' => 'fa-paw'],
+            ['label' => 'Marcações', 'url' => ['marcacao/index'], 'icon' => 'fa-calendar-alt'],
+            ['label' => 'Fatura', 'url' => ['fatura/index'], 'icon' => 'fa-file-invoice-dollar'],
             ['label' => 'Meu Perfil', 'url' => ['user-profile/index'], 'icon' => 'fa-user'],
         ];
     }

@@ -44,7 +44,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['password_reset_token', 'verification_token'], 'default', 'value' => null],
-            [['status'], 'default', 'value' => self::STATUS_ACTIVE],
+            [['status'], 'default', 'value' => self::STATUS_INACTIVE],
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'string', 'max' => 255],
@@ -244,7 +244,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Gets query for [[Userprofiles]].
+     * Gets query for [[Userprofile]].
      *
      * @return \yii\db\ActiveQuery
      */

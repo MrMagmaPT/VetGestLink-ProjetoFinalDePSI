@@ -1,13 +1,13 @@
 <?php
 
-use common\models\Faturas;
+use common\models\Fatura;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Faturas';
+$this->title = 'Fatura';
 $this->params['breadcrumbs'][] = $this->title;
 
 $faturas = $dataProvider->getModels();

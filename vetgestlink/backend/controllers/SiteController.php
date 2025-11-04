@@ -7,14 +7,14 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use common\models\Userprofiles;
-use common\models\Animais;
-use common\models\Marcacoes;
-use common\models\Faturas;
-use common\models\Medicamentos;
-use common\models\Categorias;
-use common\models\Racas;
-use common\models\Especies;
+use common\models\Userprofile;
+use common\models\Animal;
+use common\models\Marcacao;
+use common\models\Fatura;
+use common\models\Medicamento;
+use common\models\Categoria;
+use common\models\Raca;
+use common\models\Especie;
 
 class SiteController extends Controller
 {
@@ -56,35 +56,35 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $userId = Yii::$app->user->id;
-        $totalClientes = Userprofiles::find()->where(['eliminado' => 0])->count();
-        $totalAnimais = Animais::find()->where(['eliminado' => 0])->count();
-        $totalMedicamentos = Medicamentos::find()->where(['eliminado' => 0])->count();
-        $totalCategorias = Categorias::find()->where(['eliminado' => 0])->count();
-        $totalRacas = Racas::find()->where(['eliminado' => 0])->count();
-        $totalEspecies = Especies::find()->where(['eliminado' => 0])->count();
+        $totalClientes = Userprofile::find()->where(['eliminado' => 0])->count();
+        $totalAnimais = Animal::find()->where(['eliminado' => 0])->count();
+        $totalMedicamentos = Medicamento::find()->where(['eliminado' => 0])->count();
+        $totalCategorias = Categoria::find()->where(['eliminado' => 0])->count();
+        $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
+        $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
 
-        $marcacoesHoje = Marcacoes::find()
+        $marcacoesHoje = Marcacao::find()
             ->where(['DATE(data)' => date('Y-m-d')])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $marcacoesPendentes = Marcacoes::find()
+        $marcacoesPendentes = Marcacao::find()
             ->where(['estado' => 'Pendente'])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $ultimasMarcacoes = Marcacoes::find()
+        $ultimasMarcacoes = Marcacao::find()
             ->where(['eliminado' => 0])
             ->orderBy(['data' => SORT_DESC])
             ->limit(5)
             ->all();
 
-        $faturasDoMes = Faturas::find()
+        $faturasDoMes = Fatura::find()
             ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $receitaMensal = Faturas::find()
+        $receitaMensal = Fatura::find()
             ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;

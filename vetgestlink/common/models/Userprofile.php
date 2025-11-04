@@ -3,9 +3,11 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
- * This is the model class for table "userprofiles".
+ * This is the model class for table "userprofile".
  *
  * @property int $id
  * @property string $nomecompleto
@@ -16,15 +18,26 @@ use Yii;
  * @property int $user_id
  * @property int $eliminado
  *
- * @property Animai[] $animais
- * @property Fatura[] $faturas
- * @property Marcaco[] $marcacos
+ * @property Animal[] $animal
+ * @property Fatura[] $fatura
+ * @property Marcacao[] $marcacao
  * @property Morada[] $moradas
- * @property Nota[] $notas
  * @property User $user
  */
 class Userprofile extends \yii\db\ActiveRecord
 {
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'dtaregisto',
+                'updatedAtAttribute' => false,
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
 
 
     /**
@@ -42,7 +55,7 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'dtaregisto', 'user_id'], 'required'],
+            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento','user_id'], 'required'],
             [['dtanascimento', 'dtaregisto'], 'safe'],
             [['user_id', 'eliminado'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
@@ -55,31 +68,31 @@ class Userprofile extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
     public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'nomecompleto' => 'Nomecompleto',
-            'nif' => 'Nif',
-            'telemovel' => 'Telemovel',
-            'dtanascimento' => 'Dtanascimento',
-            'dtaregisto' => 'Dtaregisto',
-            'user_id' => 'User ID',
-            'eliminado' => 'Eliminado',
-        ];
-    }
+{
+    return [
+        'id' => 'ID',
+        'nomecompleto' => 'Nomecompleto',
+        'nif' => 'Nif',
+        'telemovel' => 'Telemovel',
+        'dtanascimento' => 'Dtanascimento',
+        'dtaregisto' => 'Dtaregisto',
+        'user_id' => 'User ID',
+        'eliminado' => 'Eliminado',
+    ];
+}
 
     /**
-     * Gets query for [[Animais]].
+     * Gets query for [[Animal]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getAnimais()
     {
-        return $this->hasMany(Animai::class, ['userprofiles_id' => 'id']);
+        return $this->hasMany(Animal::class, ['userprofiles_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Faturas]].
+     * Gets query for [[Fatura]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -89,33 +102,23 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Marcacos]].
+     * Gets query for [[Marcacao]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMarcacos()
+    public function getMarcacoes()
     {
-        return $this->hasMany(Marcaco::class, ['userprofiles_id' => 'id']);
+        return $this->hasMany(Marcacao::class, ['userprofiles_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Moradas]].
+     * Gets query for [[Morada]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getMoradas()
     {
         return $this->hasMany(Morada::class, ['userprofiles_id' => 'id']);
-    }
-
-    /**
-     * Gets query for [[Notas]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNotas()
-    {
-        return $this->hasMany(Nota::class, ['userprofiles_id' => 'id']);
     }
 
     /**

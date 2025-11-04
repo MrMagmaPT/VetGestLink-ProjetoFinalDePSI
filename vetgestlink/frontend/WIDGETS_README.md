@@ -124,9 +124,9 @@ Breadcrumb personalizado com imagem de fundo.
 **Uso:**
 ```php
 <?= Breadcrumb::widget([
-    'title' => 'Meus Animais',
+    'title' => 'Meus Animal',
     'items' => [
-        ['label' => 'Animais', 'url' => ['animais/index']],
+        ['label' => 'Animal', 'url' => ['animal/index']],
         ['label' => 'Detalhes'],
     ]
 ]) ?>

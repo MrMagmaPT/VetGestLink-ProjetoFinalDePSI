@@ -30,7 +30,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-aqua">
                     <div class="inner"><h3><?= $totalClientes ?></h3><p>Clientes</p></div>
                     <div class="icon"><i class="fa fa-users"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/userprofiles/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/userprofile/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -38,7 +38,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-green">
                     <div class="inner"><h3><?= $totalAnimais ?></h3><p>Animais</p></div>
                     <div class="icon"><i class="fa fa-paw"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/animais/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/animal/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-yellow">
                     <div class="inner"><h3><?= $marcacoesHoje ?></h3><p>Marcações Hoje</p></div>
                     <div class="icon"><i class="fa fa-stethoscope"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoes/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacao/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-red">
                     <div class="inner"><h3><?= $marcacoesPendentes ?></h3><p>Marcações Pendentes</p></div>
                     <div class="icon"><i class="fa fa-calendar"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoes/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacao/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-purple">
                     <div class="inner"><h3><?= $totalMedicamentos ?></h3><p>Medicamentos</p></div>
                     <div class="icon"><i class="fa fa-medkit"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/medicamentos/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/medicamento/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -72,7 +72,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-maroon">
                     <div class="inner"><h3><?= $totalCategorias ?></h3><p>Categorias</p></div>
                     <div class="icon"><i class="fa fa-tags"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/categorias/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/categoria/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-navy">
                     <div class="inner"><h3><?= $totalRacas ?></h3><p>Raças</p></div>
                     <div class="icon"><i class="fa fa-list"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/racas/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/raca/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -88,7 +88,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-olive">
                     <div class="inner"><h3><?= $totalEspecies ?></h3><p>Espécies</p></div>
                     <div class="icon"><i class="fa fa-paw"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/especies/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/especie/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-green">
                     <div class="inner"><h3><?= $totalAnimais ?></h3><p>Animais</p></div>
                     <div class="icon"><i class="fa fa-paw"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/animais/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/animal/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -148,7 +148,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-yellow">
                     <div class="inner"><h3><?= $marcacoesHoje ?></h3><p>Consultas Hoje</p></div>
                     <div class="icon"><i class="fa fa-stethoscope"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoes/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacao/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -156,7 +156,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-purple">
                     <div class="inner"><h3><?= $totalMedicamentos ?></h3><p>Medicamentos</p></div>
                     <div class="icon"><i class="fa fa-medkit"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/medicamentos/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/medicamento/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -164,7 +164,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-navy">
                     <div class="inner"><h3><?= $totalRacas ?></h3><p>Raças</p></div>
                     <div class="icon"><i class="fa fa-list"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/racas/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/raca/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
         </div>
@@ -174,7 +174,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-olive">
                     <div class="inner"><h3><?= $totalEspecies ?></h3><p>Espécies</p></div>
                     <div class="icon"><i class="fa fa-paw"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/especies/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/especie/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
         </div>
@@ -213,7 +213,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-aqua">
                     <div class="inner"><h3><?= $totalClientes ?></h3><p>Clientes</p></div>
                     <div class="icon"><i class="fa fa-users"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/userprofiles/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/userprofile/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -221,7 +221,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-yellow">
                     <div class="inner"><h3><?= $marcacoesHoje ?></h3><p>Marcações Hoje</p></div>
                     <div class="icon"><i class="fa fa-stethoscope"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoes/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacao/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
 
@@ -229,7 +229,7 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                 <div class="small-box bg-red">
                     <div class="inner"><h3><?= $marcacoesPendentes ?></h3><p>Marcações Pendentes</p></div>
                     <div class="icon"><i class="fa fa-calendar"></i></div>
-                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoes/index'], ['class' => 'small-box-footer']) ?>
+                    <?= Html::a('Mais info <i class="fa fa-arrow-circle-right"></i>', ['/marcacoe/index'], ['class' => 'small-box-footer']) ?>
                 </div>
             </div>
         </div>

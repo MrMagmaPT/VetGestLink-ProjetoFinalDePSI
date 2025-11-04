@@ -83,13 +83,13 @@ PluginAsset::register($this)->add(['fontawesome']);
                     <?php
                     if ($roleName == "admin") {// Menu items for admin?>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofile/index'], ['class' => 'nav-link']) ?>
                         </li>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animal</p>', ['/animal/index'], ['class' => 'nav-link']) ?>
                         </li>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacao/index'], ['class' => 'nav-link']) ?>
                         </li>
 
                         <li class="nav-item">
@@ -111,17 +111,17 @@ PluginAsset::register($this)->add(['fontawesome']);
                         </li>
                     <?php } elseif ($roleName == "veterinario") {?>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animais</p>', ['/animais/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-paw"></i><p>Animal</p>', ['/animal/index'], ['class' => 'nav-link']) ?>
                         </li>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacao/index'], ['class' => 'nav-link']) ?>
                         </li>
                     <?php } elseif ($roleName == "rececionista") { ?>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofiles/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>', ['/userprofile/index'], ['class' => 'nav-link']) ?>
                         </li>
                         <li class="nav-item">
-                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacoes/index'], ['class' => 'nav-link']) ?>
+                            <?= Html::a('<i class="nav-icon fas fa-stethoscope"></i><p>Marcações</p>', ['/marcacao/index'], ['class' => 'nav-link']) ?>
                         </li>
                     <?php }
                     ?>

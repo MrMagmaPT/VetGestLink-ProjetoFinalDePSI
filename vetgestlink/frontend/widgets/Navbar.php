@@ -28,9 +28,9 @@ class Navbar extends Widget
 
         if (!Yii::$app->user->isGuest) {
             $items = array_merge($items, [
-                ['label' => 'Pagamentos & Faturas', 'url' => ['faturas/index']],
-                ['label' => 'Animais', 'url' => ['animais/index']],
-                ['label' => 'Marcações', 'url' => ['marcacoes/index']],
+                ['label' => 'Pagamentos & Fatura', 'url' => ['fatura/index']],
+                ['label' => 'Animal', 'url' => ['animal/index']],
+                ['label' => 'Marcações', 'url' => ['marcacao/index']],
                 ['label' => 'Perfil - ' . Yii::$app->user->identity->username, 'url' => ['user-profile/index']],
             ]);
         }

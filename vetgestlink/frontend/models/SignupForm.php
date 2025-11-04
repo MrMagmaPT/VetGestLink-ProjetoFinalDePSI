@@ -5,8 +5,8 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
-use common\models\Userprofiles;
-use common\models\Moradas;
+use common\models\Userprofile;
+use common\models\Morada;
 
 class SignupForm extends Model
 {
@@ -120,7 +120,7 @@ class SignupForm extends Model
                 Yii::warning("Role 'cliente' não encontrada no sistema RBAC");
             }
             // 3. Criar Userprofile
-            $userprofile = new Userprofiles();
+            $userprofile = new Userprofile();
             $userprofile->user_id = $user->id;
             $userprofile->nomecompleto = $this->nomecompleto;
             $userprofile->dtanascimento = $this->dtanascimento;
@@ -137,7 +137,7 @@ class SignupForm extends Model
             Yii::info("Userprofile ID {$userprofile->id} criado");
 
             // 4. Criar Morada
-            $morada = new Moradas();
+            $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
             $morada->rua = $this->rua;
             $morada->nporta = $this->nporta;
