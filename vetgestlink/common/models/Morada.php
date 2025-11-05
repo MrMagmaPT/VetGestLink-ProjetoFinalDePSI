@@ -19,7 +19,7 @@ use Yii;
  * @property int $userprofiles_id
  * @property int $eliminado
  *
- * @property Userprofiles $userprofiles
+ * @property Userprofile $userprofile
  */
 class Morada extends \yii\db\ActiveRecord
 {
@@ -44,7 +44,7 @@ class Morada extends \yii\db\ActiveRecord
             [['rua', 'nporta', 'cdpostal', 'cidade', 'localidade', 'principal', 'userprofiles_id'], 'required'],
             [['principal', 'userprofiles_id', 'eliminado'], 'integer'],
             [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade'], 'string', 'max' => 45],
-            [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofiles::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
+            [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
     }
 
@@ -63,13 +63,13 @@ class Morada extends \yii\db\ActiveRecord
             'cxpostal' => 'Cxpostal',
             'localidade' => 'Localidade',
             'principal' => 'Principal',
-            'userprofiles_id' => 'Userprofiles ID',
+            'userprofiles_id' => 'Userprofile ID',
             'eliminado' => 'Eliminado',
         ];
     }
 
     /**
-     * Gets query for [[Userprofiles]].
+     * Gets query for [[Userprofile]].
      *
      * @return \yii\db\ActiveQuery
      */

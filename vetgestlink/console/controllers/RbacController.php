@@ -63,47 +63,47 @@ class RbacController extends Controller
         //----------------------------------------------------------------
         //GERIR CATEGORIAS DE MEDICAMENTOS (ADMIN)
 
-        // CREATE - Criar categorias de medicamentos (ADMIN)
+        // CREATE - Criar categoria de medicamento (ADMIN)
         $createMedicationCategory = $auth->createPermission('createMedicationCategory');
-        $createMedicationCategory->description = 'Criar categorias de medicamentos';
+        $createMedicationCategory->description = 'Criar categoria de medicamento';
         $auth->add($createMedicationCategory);
 
-        // READ - Visualizar categorias de medicamentos (ADMIN)
+        // READ - Visualizar categoria de medicamento (ADMIN)
         $viewMedicationCategories = $auth->createPermission('viewMedicationCategories');
-        $viewMedicationCategories->description = 'Visualizar categorias de medicamentos';
+        $viewMedicationCategories->description = 'Visualizar categoria de medicamento';
         $auth->add($viewMedicationCategories);
 
-        // UPDATE - Atualizar categorias de medicamentos (ADMIN)
+        // UPDATE - Atualizar categoria de medicamento (ADMIN)
         $updateMedicationCategory = $auth->createPermission('updateMedicationCategory');
-        $updateMedicationCategory->description = 'Atualizar categorias de medicamentos';
+        $updateMedicationCategory->description = 'Atualizar categoria de medicamento';
         $auth->add($updateMedicationCategory);
 
-        // DELETE - Eliminar categorias de medicamentos (ADMIN)
+        // DELETE - Eliminar categoria de medicamento (ADMIN)
         $deleteMedicationCategory = $auth->createPermission('deleteMedicationCategory');
-        $deleteMedicationCategory->description = 'Eliminar categorias de medicamentos';
+        $deleteMedicationCategory->description = 'Eliminar categoria de medicamento';
         $auth->add($deleteMedicationCategory);
 
         //----------------------------------------------------------------
         //GERIR MEDICAMENTOS (ADMIN)
 
-        // CREATE - Criar medicamentos (ADMIN)
+        // CREATE - Criar medicamento (ADMIN)
         $createMedication = $auth->createPermission('createMedication');
-        $createMedication->description = 'Criar medicamentos';
+        $createMedication->description = 'Criar medicamento';
         $auth->add($createMedication);
 
-        // READ - Visualizar medicamentos (ADMIN e VETERINÁRIO)
+        // READ - Visualizar medicamento (ADMIN e VETERINÁRIO)
         $viewMedications = $auth->createPermission('viewMedications');
-        $viewMedications->description = 'Visualizar medicamentos';
+        $viewMedications->description = 'Visualizar medicamento';
         $auth->add($viewMedications);
 
-        // UPDATE - Atualizar medicamentos (ADMIN)
+        // UPDATE - Atualizar medicamento (ADMIN)
         $updateMedication = $auth->createPermission('updateMedication');
-        $updateMedication->description = 'Atualizar medicamentos';
+        $updateMedication->description = 'Atualizar medicamento';
         $auth->add($updateMedication);
 
-        // DELETE - Eliminar medicamentos (ADMIN)
+        // DELETE - Eliminar medicamento (ADMIN)
         $deleteMedication = $auth->createPermission('deleteMedication');
-        $deleteMedication->description = 'Eliminar medicamentos';
+        $deleteMedication->description = 'Eliminar medicamento';
         $auth->add($deleteMedication);
 
         //----------------------------------------------------------------
@@ -140,70 +140,70 @@ class RbacController extends Controller
         //----------------------------------------------------------------
         //GERIR ANIMAIS (VETERINÁRIO)
 
-        // CREATE - Criar animais (VETERINÁRIO)
+        // CREATE - Criar animal (VETERINÁRIO)
         $createAnimal = $auth->createPermission('createAnimal');
-        $createAnimal->description = 'Criar animais';
+        $createAnimal->description = 'Criar animal';
         $auth->add($createAnimal);
 
-        // READ - Visualizar animais (VETERINÁRIO)
+        // READ - Visualizar animal (VETERINÁRIO)
         $viewAnimals = $auth->createPermission('viewAnimals');
-        $viewAnimals->description = 'Visualizar animais';
+        $viewAnimals->description = 'Visualizar animal';
         $auth->add($viewAnimals);
 
-        // UPDATE - Atualizar animais (VETERINÁRIO)
+        // UPDATE - Atualizar animal (VETERINÁRIO)
         $updateAnimal = $auth->createPermission('updateAnimal');
-        $updateAnimal->description = 'Atualizar animais';
+        $updateAnimal->description = 'Atualizar animal';
         $auth->add($updateAnimal);
 
-        // DELETE - Eliminar animais (VETERINÁRIO)
+        // DELETE - Eliminar animal (VETERINÁRIO)
         $deleteAnimal = $auth->createPermission('deleteAnimal');
-        $deleteAnimal->description = 'Eliminar animais';
+        $deleteAnimal->description = 'Eliminar animal';
         $auth->add($deleteAnimal);
 
         //----------------------------------------------------------------
         //GERIR RAÇAS DE ANIMAIS (VETERINÁRIO)
 
-        // CREATE - Criar raças de animais (VETERINÁRIO)
+        // CREATE - Criar raças de animal (VETERINÁRIO)
         $createBreed = $auth->createPermission('createBreed');
-        $createBreed->description = 'Criar raças de animais';
+        $createBreed->description = 'Criar raças de animal';
         $auth->add($createBreed);
 
-        // READ - Visualizar raças de animais (VETERINÁRIO)
+        // READ - Visualizar raças de animal (VETERINÁRIO)
         $viewBreeds = $auth->createPermission('viewBreeds');
-        $viewBreeds->description = 'Visualizar raças de animais';
+        $viewBreeds->description = 'Visualizar raças de animal';
         $auth->add($viewBreeds);
 
-        // UPDATE - Atualizar raças de animais (VETERINÁRIO)
+        // UPDATE - Atualizar raças de animal (VETERINÁRIO)
         $updateBreed = $auth->createPermission('updateBreed');
-        $updateBreed->description = 'Atualizar raças de animais';
+        $updateBreed->description = 'Atualizar raças de animal';
         $auth->add($updateBreed);
 
-        // DELETE - Eliminar raças de animais (VETERINÁRIO)
+        // DELETE - Eliminar raças de animal (VETERINÁRIO)
         $deleteBreed = $auth->createPermission('deleteBreed');
-        $deleteBreed->description = 'Eliminar raças de animais';
+        $deleteBreed->description = 'Eliminar raças de animal';
         $auth->add($deleteBreed);
 
         //----------------------------------------------------------------
         //GERIR ESPÉCIES DE ANIMAIS (VETERINÁRIO)
 
-        // CREATE - Criar espécies de animais (VETERINÁRIO)
+        // CREATE - Criar espécies de animal (VETERINÁRIO)
         $createSpecies = $auth->createPermission('createSpecies');
-        $createSpecies->description = 'Criar espécies de animais';
+        $createSpecies->description = 'Criar espécies de animal';
         $auth->add($createSpecies);
 
-        // READ - Visualizar espécies de animais (VETERINÁRIO)
+        // READ - Visualizar espécies de animal (VETERINÁRIO)
         $viewSpecies = $auth->createPermission('viewSpecies');
-        $viewSpecies->description = 'Visualizar espécies de animais';
+        $viewSpecies->description = 'Visualizar espécies de animal';
         $auth->add($viewSpecies);
 
-        // UPDATE - Atualizar espécies de animais (VETERINÁRIO)
+        // UPDATE - Atualizar espécies de animal (VETERINÁRIO)
         $updateSpecies = $auth->createPermission('updateSpecies');
-        $updateSpecies->description = 'Atualizar espécies de animais';
+        $updateSpecies->description = 'Atualizar espécies de animal';
         $auth->add($updateSpecies);
 
-        // DELETE - Eliminar espécies de animais (VETERINÁRIO)
+        // DELETE - Eliminar espécies de animal (VETERINÁRIO)
         $deleteSpecies = $auth->createPermission('deleteSpecies');
-        $deleteSpecies->description = 'Eliminar espécies de animais';
+        $deleteSpecies->description = 'Eliminar espécies de animal';
         $auth->add($deleteSpecies);
 
         //----------------------------------------------------------------
@@ -278,24 +278,24 @@ class RbacController extends Controller
         //----------------------------------------------------------------
         //GERIR FATURAS (RECECIONISTA)
 
-        // CREATE - Criar faturas (RECECIONISTA)
+        // CREATE - Criar fatura (RECECIONISTA)
         $createInvoice = $auth->createPermission('createInvoice');
-        $createInvoice->description = 'Criar faturas';
+        $createInvoice->description = 'Criar fatura';
         $auth->add($createInvoice);
 
-        // READ - Visualizar faturas (RECECIONISTA e CLIENTE)
+        // READ - Visualizar fatura (RECECIONISTA e CLIENTE)
         $viewInvoices = $auth->createPermission('viewInvoices');
-        $viewInvoices->description = 'Visualizar faturas';
+        $viewInvoices->description = 'Visualizar fatura';
         $auth->add($viewInvoices);
 
-        // UPDATE - Atualizar faturas (RECECIONISTA)
+        // UPDATE - Atualizar fatura (RECECIONISTA)
         $updateInvoice = $auth->createPermission('updateInvoice');
-        $updateInvoice->description = 'Atualizar faturas';
+        $updateInvoice->description = 'Atualizar fatura';
         $auth->add($updateInvoice);
 
-        // DELETE - Eliminar faturas (RECECIONISTA)
+        // DELETE - Eliminar fatura (RECECIONISTA)
         $deleteInvoice = $auth->createPermission('deleteInvoice');
-        $deleteInvoice->description = 'Eliminar faturas';
+        $deleteInvoice->description = 'Eliminar fatura';
         $auth->add($deleteInvoice);
 
         //----------------------------------------------------------------

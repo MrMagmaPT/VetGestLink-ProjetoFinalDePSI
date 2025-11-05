@@ -1,6 +1,6 @@
 <?php
 
-use common\models\Marcacoes;
+use common\models\Marcacao;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -9,7 +9,6 @@ use yii\helpers\Url;
 
 $this->title = 'Marcações';
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 
 <div class="marcacoes-index container py-3">
@@ -48,11 +47,33 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     <?php endforeach; ?>
 
-    <!-- Pagination -->
-    <div class="mt-4">
-        <?= \yii\widgets\LinkPager::widget([
-            'pagination' => $dataProvider->pagination
-        ]) ?>
-    </div>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+
+            'id',
+            'data',
+            'horainicio',
+            'horafim',
+            'created_at',
+            //'updated_at',
+            //'diagnostico',
+            //'preco',
+            //'estado',
+            //'tipo',
+            //'animais_id',
+            //'userprofiles_id',
+            //'eliminado',
+            [
+                'class' => ActionColumn::className(),
+                'urlCreator' => function ($action, Marcacao $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
+                 }
+            ],
+        ],
+    ]); ?>
+
 
 </div>

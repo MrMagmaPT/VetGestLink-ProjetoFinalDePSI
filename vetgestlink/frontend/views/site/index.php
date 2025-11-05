@@ -1,333 +1,157 @@
 <?php
-
 /** @var yii\web\View $this */
-
-$this->title = 'My Yii Application';
+$this->title = 'VetGestLink - Gestão Moderna para Clínicas Veterinárias';
+$logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
 ?>
-<main>
-    <!--? Slider Area Start-->
-    <div class="slider-area">
+<main style="background: #fff;">
+    <!-- Slider Moderno -->
+    <section class="slider-area" style="background: url('<?= Yii::getAlias('@web') ?>/static/img/gallery/section_bg02.png') center center/cover no-repeat;">
         <div class="slider-active dot-style">
-            <!-- Slider Single -->
-            <div class="single-slider d-flex align-items-center slider-height">
+            <div class="single-slider d-flex align-items-center slider-height text-white" style="background: rgba(76,184,138,0.92); min-height: 400px;">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-xl-7 col-lg-8 col-md-10 ">
-                            <!-- Video icon -->
-                            <div class="video-icon">
-                                <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=up68UAfH0d0" data-animation="bounceIn" data-delay=".4s">
-                                    <i class="fas fa-play"></i>
-                                </a>
-                            </div>
+                        <div class="col-lg-7 col-md-8">
                             <div class="hero__caption">
-                                <span data-animation="fadeInUp" data-delay=".3s">We help to groom your pet</span>
-                                <h1 data-animation="fadeInUp" data-delay=".3s">We Care Your Pets.</h1>
-                                <p data-animation="fadeInUp" data-delay=".6s">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sectetur adipisci.</p>
-                                <a href="#" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Contact Now<i class="ti-arrow-right"></i> </a>
+                                <span class="badge mb-2" style="background: #94E2B6; color: #222;" data-animation="fadeInUp" data-delay=".3s">Gestão veterinária eficiente</span>
+                                <h1 class="display-4 fw-bold mb-3" data-animation="fadeInUp" data-delay=".3s" style="color: #fff;">Organize, atenda e cresça com VetGestLink </h1>
+                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #222;">Soluções modernas para clínicas, profissionais e clientes. Tudo num só lugar, com segurança e comodidade.</p>
+                                <a href="#servicos" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;" data-animation="fadeInLeft" data-delay=".3s">Conheça os Serviços <i class="ti-arrow-right"></i></a>
                             </div>
+                        </div>
+                        <div class="col-lg-5 d-none d-lg-block text-center">
+                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;">
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Slider Single -->
-            <div class="single-slider d-flex align-items-center slider-height">
+            <div class="single-slider d-flex align-items-center slider-height text-white" style="background: linear-gradient(90deg, #4CB88A 0%, #94E2B6 100%); min-height: 400px;">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-xl-7 col-lg-8 col-md-10 ">
-                            <!-- Video icon -->
-                            <div class="video-icon">
-                                <a class="popup-video btn-icon" href="https://www.youtube.com/watch?v=1aP-TXUpNoU" data-animation="bounceIn" data-delay=".4s">
-                                    <i class="fas fa-play"></i>
-                                </a>
-                            </div>
+                        <div class="col-lg-7 col-md-8">
                             <div class="hero__caption">
-                                <span data-animation="fadeInUp" data-delay=".3s">We help to groom your pet</span>
-                                <h1 data-animation="fadeInUp" data-delay=".3s">We Care Your Pets.</h1>
-                                <p data-animation="fadeInUp" data-delay=".6s">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna sectetur adipisci.</p>
-                                <a href="#" class="hero-btn" data-animation="fadeInLeft" data-delay=".3s">Contact Now<i class="ti-arrow-right"></i> </a>
+                                <span class="badge mb-2" style="background: #4CB88A; color: #fff;" data-animation="fadeInUp" data-delay=".3s">Tecnologia para veterinários</span>
+                                <h1 class="display-4 fw-bold mb-3" data-animation="fadeInUp" data-delay=".3s" style="color: #fff;">Atenda com segurança e <span style="color:#fff">praticidade</span></h1>
+                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #222;">O sistema que liga profissionais, clínicas e clientes num só local.</p>
+                                <a href="#servicos" class="btn btn-lg shadow" style="background: #4CB88A; color: #fff; border: none;" data-animation="fadeInLeft" data-delay=".3s">Saiba Mais <i class="ti-arrow-right"></i></a>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- slider Social -->
-        <div class="button-text d-none d-md-block">
-            <span>Screll</span>
-        </div>
-    </div>
-    <!-- Slider Area End -->
-    <!--? Our Services Start -->
-    <div class="our-services section-padding30">
-        <div class="container">
-            <div class="row justify-content-sm-center">
-                <div class="cl-xl-7 col-lg-8 col-md-10">
-                    <!-- Section Tittle -->
-                    <div class="section-tittle text-center mb-70">
-                        <span>Our Professional Services</span>
-                        <h2>Best Pet Care Services</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class=" col-lg-4 col-md-6 col-sm-6">
-                    <div class="single-services text-center mb-30">
-                        <div class="services-ion">
-                            <span class="flaticon-animal-kingdom"></span>
-                        </div>
-                        <div class="services-cap">
-                            <h5><a href="#">Pet Boarding</a></h5>
-                            <p>consectetur adipiscing elit, serfd dgo eiusmod tempor incididunt ut ore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=" col-lg-4 col-md-6 col-sm-6">
-                    <div class="single-services text-center mb-30">
-                        <div class="services-ion">
-                            <span class="flaticon-animals"></span>
-                        </div>
-                        <div class="services-cap">
-                            <h5><a href="#">Pet Treatment</a></h5>
-                            <p>consectetur adipiscing elit, serfd dgo eiusmod tempor incididunt ut ore et dolore magna aliqua.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=" col-lg-4 col-md-6 col-sm-6">
-                    <div class="single-services text-center mb-30">
-                        <div class="services-ion">
-                            <span class="flaticon-animals-1"></span>
-                        </div>
-                        <div class="services-cap">
-                            <h5><a href="#">Vaccinations</a></h5>
-                            <p>consectetur adipiscing elit, serfd dgo eiusmod tempor incididunt ut ore et dolore magna aliqua.</p>
+                        <div class="col-lg-5 d-none d-lg-block text-center">
+                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Our Services End -->
-    <!--? About Area Start-->
-    <div class="about-area fix">
-        <!--Right Contents  -->
-        <div class="about-img">
-            <div class="info-man text-center">
-                <div class="head-cap">
-                    <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px">
-                        <path fill-rule="evenodd"  fill="rgb(255, 255, 255)"
-                              d="M24.000,19.000 C21.791,19.000 20.000,17.209 20.000,15.000 C20.000,12.790 21.791,11.000 24.000,11.000 C26.209,11.000 28.000,12.790 28.000,15.000 C28.000,17.209 26.209,19.000 24.000,19.000 ZM24.000,8.000 C21.791,8.000 20.000,6.209 20.000,4.000 C20.000,1.790 21.791,-0.001 24.000,-0.001 C26.209,-0.001 28.000,1.790 28.000,4.000 C28.000,6.209 26.209,8.000 24.000,8.000 ZM14.000,38.999 C11.791,38.999 10.000,37.209 10.000,35.000 C10.000,32.791 11.791,31.000 14.000,31.000 C16.209,31.000 18.000,32.791 18.000,35.000 C18.000,37.209 16.209,38.999 14.000,38.999 ZM14.000,29.000 C11.791,29.000 10.000,27.209 10.000,25.000 C10.000,22.791 11.791,21.000 14.000,21.000 C16.209,21.000 18.000,22.791 18.000,25.000 C18.000,27.209 16.209,29.000 14.000,29.000 ZM14.000,19.000 C11.791,19.000 10.000,17.209 10.000,15.000 C10.000,12.790 11.791,11.000 14.000,11.000 C16.209,11.000 18.000,12.790 18.000,15.000 C18.000,17.209 16.209,19.000 14.000,19.000 ZM14.000,8.000 C11.791,8.000 10.000,6.209 10.000,4.000 C10.000,1.790 11.791,-0.001 14.000,-0.001 C16.209,-0.001 18.000,1.790 18.000,4.000 C18.000,6.209 16.209,8.000 14.000,8.000 ZM4.000,29.000 C1.791,29.000 -0.000,27.209 -0.000,25.000 C-0.000,22.791 1.791,21.000 4.000,21.000 C6.209,21.000 8.000,22.791 8.000,25.000 C8.000,27.209 6.209,29.000 4.000,29.000 ZM4.000,19.000 C1.791,19.000 -0.000,17.209 -0.000,15.000 C-0.000,12.790 1.791,11.000 4.000,11.000 C6.209,11.000 8.000,12.790 8.000,15.000 C8.000,17.209 6.209,19.000 4.000,19.000 ZM4.000,8.000 C1.791,8.000 -0.000,6.209 -0.000,4.000 C-0.000,1.790 1.791,-0.001 4.000,-0.001 C6.209,-0.001 8.000,1.790 8.000,4.000 C8.000,6.209 6.209,8.000 4.000,8.000 ZM24.000,21.000 C26.209,21.000 28.000,22.791 28.000,25.000 C28.000,27.209 26.209,29.000 24.000,29.000 C21.791,29.000 20.000,27.209 20.000,25.000 C20.000,22.791 21.791,21.000 24.000,21.000 Z"/>
-                    </svg>
-                    <h3>354</h3>
-                </div>
-                <p>Success<br>Treatment</p>
-            </div>
-            <div class="info-man info-man2 text-center">
-                <div class="head-cap">
-                    <svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="39px">
-                        <path fill-rule="evenodd"  fill="rgb(255, 255, 255)"
-                              d="M24.000,19.000 C21.791,19.000 20.000,17.209 20.000,15.000 C20.000,12.790 21.791,11.000 24.000,11.000 C26.209,11.000 28.000,12.790 28.000,15.000 C28.000,17.209 26.209,19.000 24.000,19.000 ZM24.000,8.000 C21.791,8.000 20.000,6.209 20.000,4.000 C20.000,1.790 21.791,-0.001 24.000,-0.001 C26.209,-0.001 28.000,1.790 28.000,4.000 C28.000,6.209 26.209,8.000 24.000,8.000 ZM14.000,38.999 C11.791,38.999 10.000,37.209 10.000,35.000 C10.000,32.791 11.791,31.000 14.000,31.000 C16.209,31.000 18.000,32.791 18.000,35.000 C18.000,37.209 16.209,38.999 14.000,38.999 ZM14.000,29.000 C11.791,29.000 10.000,27.209 10.000,25.000 C10.000,22.791 11.791,21.000 14.000,21.000 C16.209,21.000 18.000,22.791 18.000,25.000 C18.000,27.209 16.209,29.000 14.000,29.000 ZM14.000,19.000 C11.791,19.000 10.000,17.209 10.000,15.000 C10.000,12.790 11.791,11.000 14.000,11.000 C16.209,11.000 18.000,12.790 18.000,15.000 C18.000,17.209 16.209,19.000 14.000,19.000 ZM14.000,8.000 C11.791,8.000 10.000,6.209 10.000,4.000 C10.000,1.790 11.791,-0.001 14.000,-0.001 C16.209,-0.001 18.000,1.790 18.000,4.000 C18.000,6.209 16.209,8.000 14.000,8.000 ZM4.000,29.000 C1.791,29.000 -0.000,27.209 -0.000,25.000 C-0.000,22.791 1.791,21.000 4.000,21.000 C6.209,21.000 8.000,22.791 8.000,25.000 C8.000,27.209 6.209,29.000 4.000,29.000 ZM4.000,19.000 C1.791,19.000 -0.000,17.209 -0.000,15.000 C-0.000,12.790 1.791,11.000 4.000,11.000 C6.209,11.000 8.000,12.790 8.000,15.000 C8.000,17.209 6.209,19.000 4.000,19.000 ZM4.000,8.000 C1.791,8.000 -0.000,6.209 -0.000,4.000 C-0.000,1.790 1.791,-0.001 4.000,-0.001 C6.209,-0.001 8.000,1.790 8.000,4.000 C8.000,6.209 6.209,8.000 4.000,8.000 ZM24.000,21.000 C26.209,21.000 28.000,22.791 28.000,25.000 C28.000,27.209 26.209,29.000 24.000,29.000 C21.791,29.000 20.000,27.209 20.000,25.000 C20.000,22.791 21.791,21.000 24.000,21.000 Z"/>
-                    </svg>
-                    <h3>354</h3>
-                </div>
-                <p>Success<br>Treatment</p>
-            </div>
-        </div>
-        <!-- left Contents -->
-        <div class="about-details">
-            <div class="right-caption">
-                <!-- Section Tittle -->
-                <div class="section-tittle mb-50">
-                    <h2>We are commited for<br> better service</h2>
-                </div>
-                <div class="about-more">
-                    <p class="pera-top">Mollit anim laborum duis adseu dolor iuyn voluptcate velit ess <br>cillum dolore egru lofrre dsu.</p>
-                    <p class="mb-65 pera-bottom">Mollit anim laborum.Dvcuis aute serunt  iruxvfg dhjkolohr indd re voluptate velit esscillumlore eu quife nrulla parihatur. Excghcepteur sfwsignjnt occa cupidatat non aute iruxvfg dhjinulpadeserunt moll.</p>
-                    <a href="#" class="btn">Read More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- About Area End-->
-    <!--? Gallery Area Start -->
-    <div class="gallery-area section-padding30">
-        <div class="container fix">
-            <div class="row justify-content-sm-center">
-                <div class="cl-xl-7 col-lg-8 col-md-10">
-                    <!-- Section Tittle -->
-                    <div class="section-tittle text-center mb-70">
-                        <span>Our Recent Photos</span>
-                        <h2>Pets Photo Gallery</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="single-gallery mb-30">
-                        <!-- <a href="assets/img/gallery/gallery1.png" class="img-pop-up">View Project</a> -->
-                        <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery1.png);"></div>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-6 col-sm-6">
-                    <div class="single-gallery mb-30">
-                        <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery2.png);"></div>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-md-6 col-sm-6">
-                    <div class="single-gallery mb-30">
-                        <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery3.png);"></div>
-                    </div>
-                </div>
-                <div class="col-lg-4  col-md-6 col-sm-6">
-                    <div class="single-gallery mb-30">
-                        <div class="gallery-img size-img" style="background-image: url(assets/img/gallery/gallery4.png);"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Gallery Area End -->
+    </section>
 
-    <!--? Testimonial Start -->
-    <div class="testimonial-area testimonial-padding section-bg" data-background="assets/img/gallery/section_bg03.png">
+    <!-- Serviços -->
+    <section id="servicos" class="py-5" style="background: #fff;">
         <div class="container">
-            <!-- Testimonial contents -->
-            <div class="row d-flex justify-content-center">
-                <div class="col-xl-8 col-lg-8 col-md-10">
-                    <div class="h1-testimonial-active dot-style">
-                        <!-- Single Testimonial -->
-                        <div class="single-testimonial text-center">
-                            <div class="testimonial-caption ">
-                                <!-- founder -->
-                                <div class="testimonial-founder">
-                                    <div class="founder-img mb-40">
-                                        <img src="assets/img/gallery/testi-logo.png" alt="">
-                                        <span>Margaret Lawson</span>
-                                        <p>Creative Director</p>
-                                    </div>
-                                </div>
-                                <div class="testimonial-top-cap">
-                                    <p>“I am at an age where I just want to be fit and healthy our bodies are our responsibility! So start caring for your body and it will care for you. Eat clean it will care for you and workout hard.”</p>
-                                </div>
-                            </div>
+            <div class="row mb-5">
+                <div class="col text-center">
+                    <span class="fw-bold" style="color: #4CB88A;">Os Nossos Serviços</span>
+                    <h2 class="fw-bold mb-3" style="color: #4CB88A;">O que oferecemos</h2>
+                    <p class="text-muted">Tudo para facilitar o dia a dia da sua clínica veterinária.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body">
+                            <span class="flaticon-animal-kingdom display-4 mb-3" style="color: #4CB88A;"></span>
+                            <h5 class="fw-bold mb-2" style="color: #4CB88A;">Gestão de Pacientes</h5>
+                            <p class="text-muted">Organize fichas, histórico e marcações de forma simples e rápida.</p>
                         </div>
-                        <!-- Single Testimonial -->
-                        <div class="single-testimonial text-center">
-                            <div class="testimonial-caption ">
-                                <!-- founder -->
-                                <div class="testimonial-founder">
-                                    <div class="founder-img mb-40">
-                                        <img src="assets/img/gallery/testi-logo.png" alt="">
-                                        <span>Margaret Lawson</span>
-                                        <p>Creative Director</p>
-                                    </div>
-                                </div>
-                                <div class="testimonial-top-cap">
-                                    <p>“I am at an age where I just want to be fit and healthy our bodies are our responsibility! So start caring for your body and it will care for you. Eat clean it will care for you and workout hard.”</p>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body">
+                            <span class="flaticon-animals display-4 mb-3" style="color: #94E2B6;"></span>
+                            <h5 class="fw-bold mb-2" style="color: #94E2B6;">Gestão Financeira</h5>
+                            <p class="text-muted">Acompanhe receitas, despesas e relatórios para uma gestão eficiente.</p>
                         </div>
-                        <!-- Single Testimonial -->
-                        <div class="single-testimonial text-center">
-                            <div class="testimonial-caption ">
-                                <!-- founder -->
-                                <div class="testimonial-founder">
-                                    <div class="founder-img mb-40">
-                                        <img src="assets/img/gallery/testi-logo.png" alt="">
-                                        <span>Margaret Lawson</span>
-                                        <p>Creative Director</p>
-                                    </div>
-                                </div>
-                                <div class="testimonial-top-cap">
-                                    <p>“I am at an age where I just want to be fit and healthy our bodies are our responsibility! So start caring for your body and it will care for you. Eat clean it will care for you and workout hard.”</p>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body">
+                            <span class="flaticon-animals-1 display-4 mb-3" style="color: #4CB88A;"></span>
+                            <h5 class="fw-bold mb-2" style="color: #4CB88A;">Comunicação com Clientes</h5>
+                            <p class="text-muted">Envie lembretes, notificações e mantenha o contacto com os seus clientes.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Testimonial End -->
-    <!--? Blog start -->
-    <div class="home_blog-area section-padding30">
+    </section>
+
+    <!-- Sobre Moderno -->
+    <section class="py-5" style="background: #fff;">
         <div class="container">
-            <div class="row justify-content-sm-center">
-                <div class="cl-xl-7 col-lg-8 col-md-10">
-                    <!-- Section Tittle -->
-                    <div class="section-tittle text-center mb-70">
-                        <span>Oure recent news</span>
-                        <h2>Our Recent Blog</h2>
-                    </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <img src="<?= Yii::getAlias('@web') ?>/static/img/about/about_lft.png" alt="Sobre VetGestLink" class="img-fluid rounded shadow">
+                </div>
+                <div class="col-lg-6">
+                    <span class="fw-bold" style="color: #4CB88A;">Sobre o VetGestLink</span>
+                    <h2 class="fw-bold mb-3" style="color: #4CB88A;">Tecnologia e cuidado para clínicas veterinárias</h2>
+                    <p class="text-muted mb-4">A nossa plataforma foi criada para simplificar processos, melhorar o atendimento e impulsionar o crescimento do seu negócio veterinário. Com uma interface intuitiva, recursos completos e apoio dedicado, tem mais tempo para se focar no que importa: cuidar dos animais.</p>
+                    <a href="#" class="btn btn-lg shadow" style="background: #4CB88A; color: #fff; border: none;">Saber Mais</a>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-blogs mb-30">
-                        <div class="blog-img">
-                            <img src="assets/img/gallery/blog1.png" alt="">
+        </div>
+    </section>
+
+    <!-- Testemunhos -->
+    <section class="py-5" style="background: #fff;">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col text-center">
+                    <span class="fw-bold" style="color: #4CB88A;">Testemunhos</span>
+                    <h2 class="fw-bold mb-3" style="color: #4CB88A;">O que dizem os nossos clientes</h2>
+                </div>
+            </div>
+            <div class="testimonial-active h1-testimonial-active dot-style d-flex flex-wrap justify-content-center gap-4">
+                <div class="single-testimonial text-center p-4 mb-4" style="border: 2px solid #94E2B6; border-radius: 1rem;">
+                    <div class="testimonial-caption">
+                        <div class="testimonial-founder mb-3">
+                            <img src="<?= Yii::getAlias('@web') ?>/static/img/gallery/testi-logo.png" alt="Cliente" class="rounded-circle mb-2" style="width: 70px; height: 70px; object-fit: cover; border: 2px solid #4CB88A;">
+                            <span class="fw-bold" style="color: #4CB88A;">Margaret Lawson</span>
+                            <p class="mb-1" style="color: #94E2B6;">Clínica PetCare</p>
                         </div>
-                        <div class="blogs-cap">
-                            <div class="date-info">
-                                <span>Pet food</span>
-                                <p>Nov 30, 2020</p>
-                            </div>
-                            <h4>Amazing Places To Visit In Summer</h4>
-                            <a href="blog_details.html" class="read-more1">Read more</a>
+                        <div class="testimonial-top-cap">
+                            <p class="fst-italic">“O VetGestLink facilitou imenso a rotina da nossa clínica. Atendimento mais rápido e clientes mais satisfeitos!”</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-blogs mb-30">
-                        <div class="blog-img">
-                            <img src="assets/img/gallery/blog2.png" alt="">
+                <div class="single-testimonial text-center p-4 mb-4" style="border: 2px solid #4CB88A; border-radius: 1rem;">
+                    <div class="testimonial-caption">
+                        <div class="testimonial-founder mb-3">
+                            <img src="<?= Yii::getAlias('@web') ?>/static/img/gallery/testi-logo.png" alt="Cliente" class="rounded-circle mb-2" style="width: 70px; height: 70px; object-fit: cover; border: 2px solid #94E2B6;">
+                            <span class="fw-bold" style="color: #94E2B6;">Carlos Silva</span>
+                            <p class="mb-1" style="color: #4CB88A;">Vet Saúde</p>
                         </div>
-                        <div class="blogs-cap">
-                            <div class="date-info">
-                                <span>Pet food</span>
-                                <p>Nov 30, 2020</p>
-                            </div>
-                            <h4>Developing Creativithout Losing Visual</h4>
-                            <a href="blog_details.html" class="read-more1">Read more</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-blogs mb-30">
-                        <div class="blog-img">
-                            <img src="assets/img/gallery/blog3.png" alt="">
-                        </div>
-                        <div class="blogs-cap">
-                            <div class="date-info">
-                                <span>Pet food</span>
-                                <p>Nov 30, 2020</p>
-                            </div>
-                            <h4>Winter Photography Tips from Glenn</h4>
-                            <a href="blog_details.html" class="read-more1">Read more</a>
+                        <div class="testimonial-top-cap">
+                            <p class="fst-italic">“A plataforma é intuitiva e o apoio está sempre disponível. Recomendo a todos os colegas veterinários!”</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Blog End -->
-    <!--? contact-animal-owner Start -->
-    <div class="contact-animal-owner section-bg" data-background="assets/img/gallery/section_bg04.png">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="contact_text text-center">
-                        <div class="section_title text-center">
-                            <h3>Any time you can call us!</h3>
-                            <p>Because we know that even the best technology is only as good as the people behind it. 24/7 tech support.</p>
-                        </div>
-                        <div class="contact_btn d-flex align-items-center justify-content-center">
-                            <a href="contact.html" class="btn white-btn">Contact Us</a>
-                            <p>Or<a href="#"> +880 4664 216</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 text-center" style="background: url('<?= Yii::getAlias('@web') ?>/static/img/gallery/section_bg02.png') center center/cover no-repeat; position: relative; color: #fff;">
+        <div style="position: absolute; inset: 0; background: rgba(76,184,138,0.92); z-index: 1;"></div>
+        <div class="container" style="position: relative; z-index: 2;">
+            <h2 class="fw-bold mb-3">Pronto para modernizar a sua clínica?</h2>
+            <p class="lead mb-4">Experimente o VetGestLink e veja como a tecnologia pode transformar o seu negócio veterinário.</p>
+            <?php
+            use yii\helpers\Url;
+            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/dashboard']);
+            ?>
+            <a href="<?= $ctaUrl ?>" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;">Comece Agora</a>
         </div>
-    </div>
-    <!-- contact-animal-owner End -->
+    </section>
 </main>

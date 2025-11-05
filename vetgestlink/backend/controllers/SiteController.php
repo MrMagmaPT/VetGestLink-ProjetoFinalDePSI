@@ -7,14 +7,14 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use common\models\Userprofiles;
-use common\models\Animais;
-use common\models\Marcacoes;
-use common\models\Faturas;
-use common\models\Medicamentos;
-use common\models\Categorias;
-use common\models\Racas;
-use common\models\Especies;
+use common\models\Userprofile;
+use common\models\Animal;
+use common\models\Marcacao;
+use common\models\Fatura;
+use common\models\Medicamento;
+use common\models\Categoria;
+use common\models\Raca;
+use common\models\Especie;
 
 class SiteController extends Controller
 {
@@ -31,7 +31,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['backendAccess'],
                     ],
                 ],
             ],
@@ -55,38 +55,41 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        $totalClientes = Userprofiles::find()->where(['eliminado' => 0])->count();
-        $totalAnimais = Animais::find()->where(['eliminado' => 0])->count();
-        $totalMedicamentos = Medicamentos::find()->where(['eliminado' => 0])->count();
-        $totalCategorias = Categorias::find()->where(['eliminado' => 0])->count();
-        $totalRacas = Racas::find()->where(['eliminado' => 0])->count();
-        $totalEspecies = Especies::find()->where(['eliminado' => 0])->count();
+        $userId = Yii::$app->user->id;
+        $totalClientes = Userprofile::find()->where(['eliminado' => 0])->count();
+        $totalAnimais = Animal::find()->where(['eliminado' => 0])->count();
+        $totalMedicamentos = Medicamento::find()->where(['eliminado' => 0])->count();
+        $totalCategorias = Categoria::find()->where(['eliminado' => 0])->count();
+        $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
+        $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
 
-        $marcacoesHoje = Marcacoes::find()
+        $marcacoesHoje = Marcacao::find()
             ->where(['DATE(data)' => date('Y-m-d')])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $marcacoesPendentes = Marcacoes::find()
+        $marcacoesPendentes = Marcacao::find()
             ->where(['estado' => 'Pendente'])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $ultimasMarcacoes = Marcacoes::find()
+        $ultimasMarcacoes = Marcacao::find()
             ->where(['eliminado' => 0])
             ->orderBy(['data' => SORT_DESC])
             ->limit(5)
             ->all();
 
-        $faturasDoMes = Faturas::find()
+        $faturasDoMes = Fatura::find()
             ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $receitaMensal = Faturas::find()
+        $receitaMensal = Fatura::find()
             ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
+
+        $userType = $this->getusertype($userId);
 
         return $this->render('index', [
             'totalClientes' => $totalClientes,
@@ -100,8 +103,23 @@ class SiteController extends Controller
             'ultimasMarcacoes' => $ultimasMarcacoes,
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
+            'usertype' => $userType,
         ]);
     }
+    private function getusertype($userId) {
+
+        $roles = Yii::$app->authManager->getRolesByUser($userId);
+        if (isset($roles['admin'])) {
+            return 1;
+        }
+        if (isset($roles['veterinario'])) {
+            return 2;
+        }
+        if (isset($roles['rececionista'])) {
+            return 3;
+        };
+    }
+
 
     public function actionLogin()
     {
@@ -113,6 +131,20 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Verifica se tem role permitida
+            $auth = Yii::$app->authManager;
+            $userId = Yii::$app->user->id;
+
+            /// Verifica se o utilizador tem uma das roles permitidas
+            $hasPermission = $auth->checkAccess($userId, 'backendAccess');
+
+            if (!$hasPermission) {
+                // Faz logout e mostra erro
+                Yii::$app->user->logout();
+                Yii::$app->session->setFlash('showFrontendButton', true); // Flag para mostrar botão
+                return $this->redirect(['site/login']);
+            }
+
             return $this->goBack();
         }
 
