@@ -41,6 +41,7 @@ class UserProfileController extends Controller
     {
         $user = Yii::$app->user->identity;
 
+        //fix porque as tabela esta mal ligada
         $user = \common\models\User::find()
             ->where(['id' => $user->id])
             ->with(['userProfile.morada'])
@@ -55,21 +56,6 @@ class UserProfileController extends Controller
             'morada' => $morada,
         ]);
     }
-
-
-    /**
-     * Displays a single Userprofile model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
 
     /**
      * Updates an existing Userprofile model.

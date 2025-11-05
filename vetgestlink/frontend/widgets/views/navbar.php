@@ -2,20 +2,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-// Caminho do logo
-$logoPath = '/static/img/logo/logo.png';
-
-// Itens do menu padrão
-$menuItems = [
-        ['label' => 'Página Inical', 'url' => Url::home()],
-        ['label' => 'Sobre Nós', 'url' => ['/site/about']],
-        ['label' => 'Contacto', 'url' => ['/site/contact']],
-];
-
-// Adiciona opções extras se o usuário estiver logado
-if (!Yii::$app->user->isGuest) {
-    $menuItems[] = ['label' => 'Perfil', 'url' => ['/user/profile']];
-}
 ?>
 
 <header>
