@@ -42,7 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?php $form = ActiveForm::begin([
                     'id' => 'form-signup',
-                    'options' => ['class' => 'form-horizontal'],
+                    'options' => [
+                        'class' => 'form-horizontal',
+                        'enctype' => 'multipart/form-data'
+                    ],
                     'fieldConfig' => [
                             'template' => "{label}\n{input}\n{error}",
                     ],
@@ -99,6 +102,27 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="col-md-4">
                             <?= $form->field($model, 'nif')->textInput([
                                     'class' => 'form-control',
+                                    'maxlength' => 9,
+                                    'placeholder' => '000000000'
+                            ]) ?>
+                        </div>
+                        <div class="col-md-4">
+                            <?= $form->field($model, 'telemovel')->textInput([
+                                    'class' => 'form-control',
+                                    'maxlength' => 9,
+                                    'placeholder' => '900000000'
+                            ]) ?>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <?= $form->field($model, 'imageFile')->fileInput([
+                            'class' => 'form-control',
+                            'accept' => 'image/png, image/jpeg, image/jpg'
+                        ])->hint('Formatos aceites: PNG, JPG, JPEG (opcional)') ?>
+                    </div>
+                </div>
+            </div>
                                     'maxlength' => 9,
                                     'placeholder' => '000000000'
                             ]) ?>

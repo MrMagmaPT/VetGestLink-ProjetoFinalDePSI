@@ -7,6 +7,7 @@ use yii\base\Model;
 use common\models\User;
 use common\models\Userprofile;
 use common\models\Morada;
+use yii\web\UploadedFile;
 
 class SignupForm extends Model
 {
@@ -25,6 +26,7 @@ class SignupForm extends Model
     public $localidade;
     public $cidade;
     public $principal;
+    public $imageFile;
 
     public function rules()
     {
@@ -57,6 +59,8 @@ class SignupForm extends Model
 
             ['principal', 'boolean'],
             ['principal', 'default', 'value' => 1],
+
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -79,6 +83,7 @@ class SignupForm extends Model
             'localidade' => 'Localidade',
             'cidade' => 'Cidade',
             'principal' => 'Morada Principal',
+            'imageFile' => 'Fotografia de Perfil',
         ];
     }
 
@@ -132,6 +137,13 @@ class SignupForm extends Model
             if (!$userprofile->save()) {
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
                 throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
+            }
+
+            // 3.1 Upload de imagem de perfil (se fornecida)
+            if ($this->imageFile) {
+                $userprofile->imageFile = $this->imageFile;
+                $userprofile->uploadImage();
+                Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
             }
 
             // 4. Criar Morada

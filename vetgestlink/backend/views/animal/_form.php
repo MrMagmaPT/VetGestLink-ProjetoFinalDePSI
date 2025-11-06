@@ -14,11 +14,13 @@ use yii\helpers\ArrayHelper;
 
 <div class="animais-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
+
+    <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
 
     <?= $form->field($model, 'notasvet')->textInput(['maxlength' => true]) ?>
 

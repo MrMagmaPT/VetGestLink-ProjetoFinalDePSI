@@ -7,6 +7,7 @@ use backend\models\UserprofileSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * UserprofileController implements the CRUD actions for Userprofile model.
@@ -71,6 +72,10 @@ class UserprofileController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if ($model->imageFile) {
+                    $model->uploadImage();
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -94,6 +99,11 @@ class UserprofileController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->imageFile) {
+                $model->deleteImage(); // remove imagem antiga
+                $model->uploadImage();
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

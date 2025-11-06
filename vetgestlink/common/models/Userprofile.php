@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "userprofile".
@@ -26,6 +27,10 @@ use yii\db\Expression;
  */
 class Userprofile extends \yii\db\ActiveRecord
 {
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
 
     public function behaviors()
     {
@@ -60,6 +65,7 @@ class Userprofile extends \yii\db\ActiveRecord
             [['user_id', 'eliminado'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
             [['nif', 'telemovel'], 'string', 'max' => 9],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -129,6 +135,51 @@ class Userprofile extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    /**
+     * Upload da imagem do utilizador usando o componente ImageUploader
+     * @return bool
+     */
+    public function uploadImage()
+    {
+        return Yii::$app->imageUploader->upload($this->imageFile, 'users', (string)$this->id);
+    }
+
+    /**
+     * Obter URL da imagem do utilizador
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return Yii::$app->imageUploader->getImageUrl('users', (string)$this->id);
+    }
+
+    /**
+     * Obter URL absoluta da imagem do utilizador (para API)
+     * @return string
+     */
+    public function getImageAbsoluteUrl()
+    {
+        return Yii::$app->imageUploader->getImageAbsoluteUrl('users', (string)$this->id);
+    }
+
+    /**
+     * Deletar imagem do utilizador
+     * @return void
+     */
+    public function deleteImage()
+    {
+        Yii::$app->imageUploader->deleteImage('users', (string)$this->id);
+    }
+
+    /**
+     * Verifica se o utilizador tem imagem
+     * @return bool
+     */
+    public function hasImage()
+    {
+        return Yii::$app->imageUploader->imageExists('users', (string)$this->id);
     }
 
 }

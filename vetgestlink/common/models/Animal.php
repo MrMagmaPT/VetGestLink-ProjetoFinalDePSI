@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "animal".
@@ -27,6 +28,10 @@ use Yii;
  */
 class Animal extends \yii\db\ActiveRecord
 {
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
 
     /**
      * ENUM field values
@@ -58,6 +63,7 @@ class Animal extends \yii\db\ActiveRecord
             [['nome'], 'string', 'max' => 45],
             [['notasvet', 'notasdono'], 'string', 'max' => 500],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Raca::class, 'targetAttribute' => ['racas_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
@@ -170,5 +176,50 @@ class Animal extends \yii\db\ActiveRecord
     public function setSexoToF()
     {
         $this->sexo = self::SEXO_F;
+    }
+
+    /**
+     * Upload da imagem do animal usando o componente ImageUploader
+     * @return bool
+     */
+    public function uploadImage()
+    {
+        return Yii::$app->imageUploader->upload($this->imageFile, 'animais', (string)$this->id);
+    }
+
+    /**
+     * Obter URL da imagem do animal
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return Yii::$app->imageUploader->getImageUrl('animais', (string)$this->id);
+    }
+
+    /**
+     * Obter URL absoluta da imagem do animal (para API)
+     * @return string
+     */
+    public function getImageAbsoluteUrl()
+    {
+        return Yii::$app->imageUploader->getImageAbsoluteUrl('animais', (string)$this->id);
+    }
+
+    /**
+     * Deletar imagem do animal
+     * @return void
+     */
+    public function deleteImage()
+    {
+        Yii::$app->imageUploader->deleteImage('animais', (string)$this->id);
+    }
+
+    /**
+     * Verifica se o animal tem imagem
+     * @return bool
+     */
+    public function hasImage()
+    {
+        return Yii::$app->imageUploader->imageExists('animais', (string)$this->id);
     }
 }

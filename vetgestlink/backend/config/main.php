@@ -13,6 +13,9 @@ return [
     //nome da aplicação
     'name' => 'VetGestLink',
     'bootstrap' => ['log'],
+    'aliases' => [
+        '@uploads' => '@app/../uploads',
+    ],
     'modules' => [
         'api' => [
             'class' => 'backend\modules\api\ModuleAPI',
@@ -59,21 +62,24 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // API de Imagens
+                'api/image/animal/<id:\d+>' => 'api/image/animal',
+                'api/image/user/<id:\d+>' => 'api/image/user',
+                'api/image/serve' => 'api/image/serve',
+                'api/image/animals' => 'api/image/animals',
+                'api/image/users' => 'api/image/users',
 
-//                'class' => 'yii\rest\UrlRule',
-//                'controller' => 'api/',
-//                'extraPatterns'=>[
-//
-//
-//
-//
-//
-//
-//                ],
-//                'tokens'=>[
-//                    '{id}'=>'<id:\\w+>'
-//                ],
-
+                // Outras APIs
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/user'],
+                    'extraPatterns' => [
+                        'POST login' => 'login',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ],
+                ],
             ],
         ],
     ],

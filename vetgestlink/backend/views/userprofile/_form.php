@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="userprofiles-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
 
@@ -19,6 +19,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'telemovel')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
+
+    <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
 
     <?= $form->field($model, 'user_id')->dropDownList(
             \yii\helpers\ArrayHelper::map(\common\models\User::find()->all(), 'id', 'username'),

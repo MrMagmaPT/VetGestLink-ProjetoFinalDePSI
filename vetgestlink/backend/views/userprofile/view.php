@@ -26,6 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <div class="user-image mb-3">
+        <?= Html::img($model->getImageUrl(), ['alt' => $model->nomecompleto, 'class' => 'img-thumbnail', 'style' => 'max-width: 300px']) ?>
+    </div>
+
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
