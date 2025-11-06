@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use common\models\Animal;
+use common\models\Nota;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -85,4 +87,22 @@ class AnimalController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionCreateNota($animal_id)
+    {
+        $model = new Nota();
+        $model->animais_id = $animal_id;
+        $model->userprofiles_id = Yii::$app->user->identity->userProfile->id;
+        $model->create_at = date('Y-m-d H:i:s');
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
+            return $this->redirect(['animal/view', 'id' => $animal_id]);
+        }
+
+        return $this->render('index', [
+            'model' => $model,
+        ]);
+    }
+
 }

@@ -5,13 +5,11 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "animal".
+ * This is the model class for table "animais".
  *
  * @property int $id
  * @property string $nome
  * @property string $dtanascimento
- * @property string|null $notasvet
- * @property string|null $notasdono
  * @property float $peso
  * @property int $microship
  * @property string $sexo
@@ -20,10 +18,11 @@ use Yii;
  * @property int|null $racas_id
  * @property int $eliminado
  *
- * @property Especie $especie
- * @property Marcacao[] $marcacao
- * @property Raca $raca
- * @property Userprofile $userprofile
+ * @property Especie $especies
+ * @property Marcacao[] $marcacoes
+ * @property Nota[] $notas
+ * @property Raca $racas
+ * @property Userprofile $userprofiles
  */
 class Animal extends \yii\db\ActiveRecord
 {
@@ -48,7 +47,7 @@ class Animal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['notasvet', 'notasdono', 'racas_id'], 'default', 'value' => null],
+            [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
             [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
             [['dtanascimento'], 'safe'],
@@ -56,7 +55,6 @@ class Animal extends \yii\db\ActiveRecord
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
             [['sexo'], 'string'],
             [['nome'], 'string', 'max' => 45],
-            [['notasvet', 'notasdono'], 'string', 'max' => 500],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Raca::class, 'targetAttribute' => ['racas_id' => 'id']],
@@ -73,20 +71,18 @@ class Animal extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nome' => 'Nome',
             'dtanascimento' => 'Dtanascimento',
-            'notasvet' => 'Notasvet',
-            'notasdono' => 'Notasdono',
             'peso' => 'Peso',
             'microship' => 'Microship',
             'sexo' => 'Sexo',
-            'especies_id' => 'Especie ID',
-            'userprofiles_id' => 'Userprofile ID',
-            'racas_id' => 'Raca ID',
+            'especies_id' => 'Especies ID',
+            'userprofiles_id' => 'Userprofiles ID',
+            'racas_id' => 'Racas ID',
             'eliminado' => 'Eliminado',
         ];
     }
 
     /**
-     * Gets query for [[Especie]].
+     * Gets query for [[Especies]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -96,7 +92,7 @@ class Animal extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Marcacao]].
+     * Gets query for [[Marcacos]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -106,7 +102,18 @@ class Animal extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Raca]].
+     * Gets query for [[Notas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotas()
+    {
+        return $this->hasMany(Nota::class, ['animais_id' => 'id'])
+            ->orderBy(['create_at' => SORT_DESC]);// ordenar as notas por ordem descendente
+    }
+
+    /**
+     * Gets query for [[Racas]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -116,7 +123,7 @@ class Animal extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Userprofile]].
+     * Gets query for [[Userprofiles]].
      *
      * @return \yii\db\ActiveQuery
      */

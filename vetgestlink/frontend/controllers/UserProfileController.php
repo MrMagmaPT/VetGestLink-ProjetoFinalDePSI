@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use yii\base\Model;
 use common\models\Userprofile;
+use common\models\Morada;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -33,7 +35,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Lists all Userprofile models.
+     * Lists information from Userprofile,User and Morada models to the index page .
      *
      * @return string
      */
@@ -41,21 +43,40 @@ class UserProfileController extends Controller
     {
         $user = Yii::$app->user->identity;
 
-        //fix porque as tabela esta mal ligada
         $user = \common\models\User::find()
             ->where(['id' => $user->id])
-            ->with(['userProfile.morada'])
+            ->with(['userProfile.moradas'])
             ->one();
 
         $userProfile = $user->userProfile;
-        $morada = $userProfile->morada ?? null;
+        $moradas = $userProfile->moradas ?? [];
 
         return $this->render('index', [
             'user' => $user,
             'userProfile' => $userProfile,
-            'morada' => $morada,
+            'moradas' => $moradas,
         ]);
     }
+
+    /**
+     * Go to page edit and loads information to the form.
+     *
+     * @return string
+     */
+    public function actionEdit()
+    {
+        $user = Yii::$app->user->identity;
+        $userProfile = $user->userProfile;
+        $moradas = $userProfile->moradas ?? new \common\models\Morada();
+
+        return $this->render('edit', [
+            'user' => $user,
+            'userProfile' => $userProfile,
+            'moradas' => $moradas,
+        ]);
+    }
+
+
 
     /**
      * Updates an existing Userprofile model.
@@ -64,18 +85,34 @@ class UserProfileController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    public function actionUpdate()
+    {
+        $user = Yii::$app->user->identity;
+        $userProfile = $user->userProfile;
+        $moradas = $userProfile->moradas;
+
+        if (
+            $this->request->isPost &&
+            $userProfile->load($this->request->post())
+        ) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            $userProfile->save(false);
+
+            foreach ($moradas as $morada) {
+                $morada->save(false);
+            }
+
+            Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['index']);
     }
+
+
+
+
 
 
     /**

@@ -69,27 +69,38 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'label' => 'Raça',
                                 'value' => $model->racas->nome ?? 'Não definido',
                             ],
-                            [
-                                'attribute' => 'notasvet',
-                                'label' => 'Notas Veterinário',
-                                'format' => 'ntext',
-                                'value' => $model->notasvet ?: 'Sem notas'
-                            ],
-                            [
-                                'attribute' => 'notasdono',
-                                'label' => 'Notas Dono',
-                                'format' => 'ntext',
-                                'value' => $model->notasdono ?: 'Sem notas',
-                            ],
+
                         ],
                     ]) ?>
+                    <?php if (!empty($model->notas)) : ?>
+                        <h4 class="mt-4">Notas</h4>
+                        <ul>
+                            <?php foreach ($model->notas as $nota): ?>
+                                <li class="list-group-item">
+                                    <strong><?= Yii::$app->formatter->asDate($nota->create_at) ?></strong>
+                                    <br>
+                                    <em><?= Html::encode($nota->userprofiles->nomecompleto ?? 'Desconhecido') ?></em>
+                                    <br>
+                                    <?= Html::encode($nota->nota) ?>
+                                </li>
+
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="text-muted">Sem notas</p>
+                    <?php endif; ?>
 
                     <!-- BUTTONS -->
-                    <div class="d-flex justify-content-center mt-4">
+                    <div class="d-flex justify-content-between mt-4">
                         <?= Html::a('Voltar', ['index'], [
-                            'class' => 'btn btn-secondary'
+                            'class' => 'btn '
+                        ]) ?>
+
+                        <?= Html::a('Nova Nota', ['animal/create-nota', 'animal_id' => $model->id], [
+                            'class' => 'btn '
                         ]) ?>
                     </div>
+
 
                 </div>
             </div>

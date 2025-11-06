@@ -73,7 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <!-- HEADER -->
                 <div class="card-header card-header-accent text-white text-center rounded-top-4 pb-5 position-relative">
-                    <h3 class="mt-3 mb-0"><?= Html::encode($userProfile->nomecompleto) ?></h3>
+                    <h3 class="mt-3 mb-0"><?= Html::encode($user->username) ?></h3>
+                    <h3 class="mt-3 mb-0"><?= Html::encode($user->email) ?></h3>
                 </div>
 
                 <!-- AVATAR -->
@@ -88,12 +89,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 accent-border">
                             <div class="profile-label">Email</div>
-                            <div class="profile-value"><?= Html::encode($user->email) ?></div>
+                            <div class="profile-value"><?= Html::encode($userProfile->nomecompleto) ?></div>
                         </div>
 
                         <div class="col-md-6 mb-3 accent-border">
                             <div class="profile-label">NIF</div>
                             <div class="profile-value"><?= Html::encode($userProfile->nif) ?></div>
+                        </div>
+                        <div class="col-md-6 mb-3 accent-border">
+                            <div class="profile-label">NIF</div>
+                            <div class="profile-value"><?= Html::encode($userProfile->telemovel) ?></div>
                         </div>
                     </div>
 
@@ -102,48 +107,51 @@ $this->params['breadcrumbs'][] = $this->title;
                         <i class="bi bi-geo-alt-fill me-1"></i>Morada
                     </h5>
 
-                    <?php if ($morada): ?>
-                        <div class="border rounded p-3 mb-4 bg-light">
+                    <?php if (!empty($moradas)): ?>
+                        <?php foreach ($moradas as $morada): ?>
+                            <div class="border rounded p-3 mb-4 bg-light">
 
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Rua</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->rua) ?></div>
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Rua</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->rua) ?></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Nº Porta</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->nporta) ?></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Andar</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->andar ?: "—") ?></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Código Postal</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->cdpostal) ?></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Cidade</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->cidade) ?></div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-6 profile-label">Cx Postal</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->cxpostal ?: "—") ?></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6 profile-label">Localidade</div>
+                                    <div class="col-6 profile-value"><?= Html::encode($morada->localidade) ?></div>
+                                </div>
+
                             </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Nº Porta</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->nporta) ?></div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Andar</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->andar ?: "—") ?></div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Código Postal</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->cdpostal) ?></div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Cidade</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->cidade) ?></div>
-                            </div>
-
-                            <div class="row mb-2">
-                                <div class="col-6 profile-label">Cx Postal</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->cxpostal ?: "—") ?></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6 profile-label">Localidade</div>
-                                <div class="col-6 profile-value"><?= Html::encode($morada->localidade) ?></div>
-                            </div>
-
-                        </div>
+                        <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-muted fst-italic">Sem morada registada</p>
+                        <p class="text-muted fst-italic">Sem moradas registadas</p>
                     <?php endif; ?>
+
 
                     <!-- OTHER INFO -->
                     <h5 class="fw-bold mb-3 accent-title">
@@ -162,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <!-- FOOTER -->
                 <div class="card-footer text-end bg-light rounded-bottom-4">
-                    <?= Html::a('Editar Perfil', ['profile/edit'], ['class' => 'btn ']) ?>
+                    <?= Html::a('Editar Perfil', ['user-profile/edit'], ['class' => 'btn ']) ?>
                 </div>
 
             </div>
