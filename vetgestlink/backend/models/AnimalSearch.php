@@ -18,7 +18,7 @@ class AnimalSearch extends Animal
     {
         return [
             [['id', 'microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
-            [['nome', 'dtanascimento', 'notasvet','notasdono', 'sexo'], 'safe'],
+            [['nome', 'dtanascimento', 'sexo'], 'safe'],
             [['peso'], 'number'],
         ];
     }
@@ -71,8 +71,6 @@ class AnimalSearch extends Animal
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'notasvet', $this->notasvet])
-            ->andFilterWhere(['like', 'notasdono', $this->notasdono])
             ->andFilterWhere(['like', 'sexo', $this->sexo]);
 
         return $dataProvider;

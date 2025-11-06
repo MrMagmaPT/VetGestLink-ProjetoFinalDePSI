@@ -29,7 +29,27 @@ class AnimalController extends Controller
                         [
                             'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewAnimals', 'updateAnimal', 'deleteAnimal', 'createAnimal'],
+                            'roles' => ['viewAnimals'],
+                        ],
+                        [
+                            'actions' => ['view'],
+                            'allow' => true,
+                            'roles' => ['viewAnimals'],
+                        ],
+                        [
+                            'actions' => ['create'],
+                            'allow' => true,
+                            'roles' => ['createAnimal'],
+                        ],
+                        [
+                            'actions' => ['update'],
+                            'allow' => true,
+                            'roles' => ['updateAnimal'],
+                        ],
+                        [
+                            'actions' => ['delete'],
+                            'allow' => true,
+                            'roles' => ['deleteAnimal'],
                         ],
                     ],
                 ],
@@ -53,23 +73,10 @@ class AnimalController extends Controller
         $searchModel = new AnimalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-
-        $auth = Yii::$app->authManager;
-        $userId = Yii::$app->user->id;
-
-        /// Verifica se o utilizador tem uma das roles permitidas
-        $hasPermission = $auth->checkAccess($userId, 'viewAnimals');
-
-        if (!$hasPermission) {
-            return $this->redirect(['site/index']);
-        }
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-
-
     }
 
     /**
