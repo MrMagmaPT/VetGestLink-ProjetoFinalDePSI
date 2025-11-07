@@ -192,11 +192,9 @@ Endpoint público para verificar status do servidor.
 
 Endpoints para acesso a imagens de animais e usuários.
 
-| HTTP Verb | Endpoint | Descrição | Parâmetros | Pedido | Resposta (JSON) |
-|-----------|----------|-----------|------------|--------|-----------------|
-| GET | `/image/animal/{id}` | Informações sobre imagem de animal | `id` (path) | - | `{"id": 1, "nome": "Rex", "imageUrl": "/uploads/animais/1.jpg", "imageAbsoluteUrl": "http://localhost/uploads/animais/1.jpg", "hasImage": true}` |
-| GET | `/image/user/{id}` | Informações sobre imagem de usuário | `id` (path) | - | `{"id": 1, "nomecompleto": "Carlos Silva", "imageUrl": "/uploads/users/1.jpg", "imageAbsoluteUrl": "http://localhost/uploads/users/1.jpg", "hasImage": true}` |
-| GET | `/image/serve` | Serve arquivo de imagem | `type` (animal/user), `id` (query) | - | *Arquivo de imagem binário (JPG/PNG)* |
+| HTTP Verb | Endpoint | Descrição         | Parâmetros                        | Pedido                                                                                                                                        | Resposta (JSON)                        |
+|-----------|----------|-------------------|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| GET | `/image` | Devolve a imagem  | `type` (animal/user),`id` (query) | --------------------------------------------------------------------------------------------------------------------------------------------- |  *Arquivo de imagem binário (JPG/PNG)* |
 
 **📱 Utilização na App:**
 - Cards dos animais (foto circular dos pets)
@@ -208,7 +206,7 @@ Endpoints para acesso a imagens de animais e usuários.
 ## 📝 Notas Importantes
 
 ### Autenticação
-- **Endpoints Públicos**: `/auth/*`, `/health`, `/image/*`
+- **Endpoints Públicos**: `/auth/*`, `/health`, `/image/`
 - **Endpoints Protegidos**: `/client/*` - Requerem `access-token` como query parameter
 
 ### Formato de Datas
@@ -286,18 +284,18 @@ POST http://localhost/2_ano_1_semestre/Projeto/vetgestlink/backend/web/api/auth/
 ## 📊 Resumo de Endpoints
 
 | Categoria | Total de Endpoints |
-|-----------|-------------------|
-| Autenticação | 4 |
-| Cliente - Animais | 2 |
-| Cliente - Marcações | 2 |
-| Cliente - Faturas | 4 |
-| Cliente - Métodos Pagamento | 1 |
-| Cliente - Perfil | 2 |
-| Cliente - Moradas | 2 |
-| Cliente - Notas | 4 |
-| Health Check | 1 |
-| Imagens | 3 |
-| **TOTAL** | **25** |
+|-----------|--------------------|
+| Autenticação | 4                  |
+| Cliente - Animais | 2                  |
+| Cliente - Marcações | 2                  |
+| Cliente - Faturas | 4                  |
+| Cliente - Métodos Pagamento | 1                  |
+| Cliente - Perfil | 2                  |
+| Cliente - Moradas | 2                  |
+| Cliente - Notas | 4                  |
+| Health Check | 1                  |
+| Imagens | 1                  |
+| **TOTAL** | **23**             |
 
 ---
 
@@ -334,5 +332,5 @@ curl -X POST "http://localhost/2_ano_1_semestre/Projeto/vetgestlink/backend/web/
 **Documentação atualizada em**: 2025-11-07  
 **Versão da API**: 1.0.0  
 **Projeto**: VetGestLink - Aplicação Mobile  
-**Total de Endpoints Ativos**: 25
+**Total de Endpoints Ativos**: 23
 
