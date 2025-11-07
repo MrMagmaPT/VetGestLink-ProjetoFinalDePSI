@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Fatura;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -140,5 +141,27 @@ class FaturaController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * @param $id
+     * @return mixed*
+     * !!!PARA DEBUG APENAS!!!!
+     */
+    public function actionPay($id)
+    {
+        $model = $this->findModel($id);
+
+        // DEBUG — force mark as paid
+        $model->estado = 1;   // 1 = paid
+        $model->metodospagamentos_id = 1; // temp placeholder method
+
+        if ($model->save(false)) {
+            Yii::$app->session->setFlash('success', 'Fatura paga com sucesso (DEBUG)');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao pagar (DEBUG)');
+        }
+
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 }

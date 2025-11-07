@@ -73,7 +73,7 @@ class Morada extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserprofiles()
+    public function getUserProfile()
     {
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
     }
