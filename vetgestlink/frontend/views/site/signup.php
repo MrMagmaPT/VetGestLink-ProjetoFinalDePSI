@@ -123,20 +123,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
             </div>
-                                    'maxlength' => 9,
-                                    'placeholder' => '000000000'
-                            ]) ?>
-                        </div>
-                        <div class="col-md-4">
-                            <?= $form->field($model, 'telemovel')->textInput([
-                                    'class' => 'form-control',
-                                    'maxlength' => 9,
-                                    'placeholder' => '900000000'
-                            ]) ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Morada -->
             <div class="panel panel-info" style="margin-bottom: 25px;">

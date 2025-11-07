@@ -35,17 +35,54 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'nome',
-            'dtanascimento',
-            'notasvet',
-            'notasdono',
+            [
+                'attribute' => 'dtanascimento',
+                'label' => 'Data de Nascimento',
+            ],
             'peso',
-            'microship',
-            'sexo',
-            'especies_id',
-            'userprofiles_id',
-            'racas_id',
-            'eliminado',
+            [
+                'attribute' => 'microship',
+                'value' => $model->microship ? 'Sim' : 'Não',
+                'label' => 'Microchip',
+            ],
+            [
+                'attribute' => 'sexo',
+                'value' => $model->sexo == 'M' ? 'Macho' : 'Fêmea',
+            ],
+            [
+                'attribute' => 'especies_id',
+                'value' => $model->especies->nome ?? '-',
+                'label' => 'Espécie',
+            ],
+            [
+                'attribute' => 'racas_id',
+                'value' => $model->racas->nome ?? '-',
+                'label' => 'Raça',
+            ],
+            [
+                'attribute' => 'userprofiles_id',
+                'value' => $model->userprofiles->nomecompleto ?? '-',
+                'label' => 'Proprietário',
+            ],
         ],
     ]) ?>
+
+    <h3 class="mt-4">Notas</h3>
+    <?php if (!empty($model->notas)): ?>
+        <div class="list-group">
+            <?php foreach ($model->notas as $nota): ?>
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Nota #<?= $nota->id ?></h5>
+                        <small><?= Yii::$app->formatter->asDatetime($nota->created_at) ?></small>
+                    </div>
+                    <p class="mb-1"><?= Html::encode($nota->nota) ?></p>
+                    <small>Por: <?= Html::encode($nota->userprofiles->nomecompleto ?? 'N/A') ?></small>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <p class="text-muted">Sem notas registadas para este animal.</p>
+    <?php endif; ?>
 
 </div>

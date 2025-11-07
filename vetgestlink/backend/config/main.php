@@ -62,35 +62,67 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // API de Imagens
+                // ==================== API VETGESTLINK ====================
+
+                // AUTENTICAÇÃO (Públicas)
+                'POST auth/login' => 'api/auth/login',
+                'POST auth/logout' => 'api/auth/logout',
+                'POST auth/forgot-password' => 'api/auth/forgot-password',
+                'GET auth/validate-token' => 'api/auth/validate-token',
+
+                // ANIMAIS (Protegidas)
+                'GET client/animal' => 'api/client/animal',
+                'GET client/animal/<id:\d+>' => 'api/client/animal',
+
+                // MARCAÇÕES (Protegidas)
+                'GET client/marcacao' => 'api/client/marcacao',
+                'GET client/marcacao/<id:\d+>' => 'api/client/marcacao',
+
+                // FATURAS (Protegidas)
+                'GET client/fatura' => 'api/client/fatura',
+                'GET client/fatura/<id:\d+>' => 'api/client/fatura',
+                'POST client/fatura/<id:\d+>/pagamento' => 'api/client/pagamento',
+                'GET client/fatura/resumo' => 'api/client/resumo',
+
+                // MÉTODOS DE PAGAMENTO (Protegidas)
+                'GET client/metodos-pagamento' => 'api/client/metodos-pagamento',
+
+                // PERFIL (Protegidas)
+                'GET client/perfil' => 'api/client/perfil',
+                'PUT client/perfil' => 'api/client/update-perfil',
+                'PUT client/morada' => 'api/client/update-morada',
+
+                // NOTAS (Protegidas)
+                'GET client/animal/<animal_id:\d+>/notas' => 'api/client/notas',
+                'POST client/animal/<animal_id:\d+>/notas' => 'api/client/create-nota',
+                'PUT client/notas/<id:\d+>' => 'api/client/update-nota',
+                'DELETE client/notas/<id:\d+>' => 'api/client/delete-nota',
+
+                // HEALTH CHECK (Pública)
+                'GET health' => 'api/health/index',
+
+                // ==================== API DE IMAGENS ====================
+
                 'api/image/animal/<id:\d+>' => 'api/image/animal',
                 'api/image/user/<id:\d+>' => 'api/image/user',
                 'api/image/serve' => 'api/image/serve',
                 'api/image/animals' => 'api/image/animals',
                 'api/image/users' => 'api/image/users',
-
-                // Outras APIs
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => ['api/user'],
-                    'extraPatterns' => [
-                        'POST login' => 'login',
-                    ],
-                    'tokens' => [
-                        '{id}' => '<id:\\w+>'
-                    ],
-                ],
             ],
         ],
     ],
     'as access' => [
         'class' => 'yii\filters\AccessControl',
-        'except' => ['site/login', 'site/error'],
+        'except' => [
+            'site/login',
+            'site/error',
+            // Excluir todas as rotas da API do filtro de acesso
+            'api/*',
+        ],
         'rules' => [
             [
                 'allow' => true,
-                'roles' => ['backendAccess'], // Usuários autenticados
-
+                'roles' => ['backendAccess'], // Usuários autenticados com acesso ao backend
             ],
         ],
         'denyCallback' => function ($rule, $action) {

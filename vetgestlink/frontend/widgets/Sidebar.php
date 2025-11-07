@@ -26,7 +26,7 @@ class Sidebar extends Widget
             ['label' => 'Meus Animal', 'url' => ['animal/index'], 'icon' => 'fa-paw'],
             ['label' => 'Marcações', 'url' => ['marcacao/index'], 'icon' => 'fa-calendar-alt'],
             ['label' => 'Fatura', 'url' => ['fatura/index'], 'icon' => 'fa-file-invoice-dollar'],
-            ['label' => 'Meu Perfil', 'url' => ['user-profile/index'], 'icon' => 'fa-user'],
+            ['label' => 'Meu Perfil', 'url' => ['userprofile/index'], 'icon' => 'fa-user'],
         ];
     }
 

@@ -31,7 +31,7 @@ class ImageUploader extends Component
      * Faz upload de uma imagem
      *
      * @param UploadedFile $file Arquivo a ser enviado
-     * @param string $folder Subpasta dentro de uploads (ex: 'animais')
+     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
      * @param string $filename Nome do arquivo sem extensão
      * @return bool
      */
@@ -63,7 +63,7 @@ class ImageUploader extends Component
     /**
      * Obtém a URL de uma imagem
      *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animais')
+     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
      * @param string $filename Nome do arquivo sem extensão
      * @param string $defaultImage Nome da imagem padrão (opcional)
      * @return string URL da imagem ou imagem padrão
@@ -73,24 +73,24 @@ class ImageUploader extends Component
         foreach (self::ALLOWED_EXTENSIONS as $ext) {
             $path = Yii::getAlias($this->uploadPath) . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
             if (file_exists($path)) {
-                // Retorna URL relativa que funciona em backend e frontend
-                return '/uploads/' . $folder . '/' . $filename . '.' . $ext;
+                // Retorna URL usando @web (baseURL da aplicação atual)
+                return Yii::getAlias('@web/uploads/' . $folder . '/' . $filename . '.' . $ext);
             }
         }
 
         // Retorna imagem padrão
-        return '/images/' . $defaultImage;
+        return Yii::getAlias('@web/images/' . $defaultImage);
     }
 
     /**
      * Obtém a URL absoluta de uma imagem (para uso em API)
      *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animais')
+     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
      * @param string $filename Nome do arquivo sem extensão
      * @param string $defaultImage Nome da imagem padrão (opcional)
      * @return string URL absoluta da imagem
      */
-    public function getImageAbsoluteUrl($folder, $filename, $defaultImage = 'no-image.svg')
+    public function getImageAbsoluteUrl($folder, $filename, $defaultImage = 'no-image.png')
     {
         $relativeUrl = $this->getImageUrl($folder, $filename, $defaultImage);
 
@@ -109,7 +109,7 @@ class ImageUploader extends Component
     /**
      * Deleta uma imagem
      *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animais')
+     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
      * @param string $filename Nome do arquivo sem extensão
      * @return void
      */

@@ -11,8 +11,6 @@ use yii\web\UploadedFile;
  * @property int $id
  * @property string $nome
  * @property string $dtanascimento
- * @property string|null $notasvet
- * @property string|null $notasdono
  * @property float $peso
  * @property int $microship
  * @property string $sexo
@@ -23,6 +21,7 @@ use yii\web\UploadedFile;
  *
  * @property Especie $especie
  * @property Marcacao[] $marcacao
+ * @property Nota[] $notas
  * @property Raca $raca
  * @property Userprofile $userprofile
  */
@@ -44,7 +43,7 @@ class Animal extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'animais';
+        return 'animal';
     }
 
     /**
@@ -53,7 +52,7 @@ class Animal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['notasvet', 'notasdono', 'racas_id'], 'default', 'value' => null],
+            [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
             [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
             [['dtanascimento'], 'safe'],
@@ -61,7 +60,6 @@ class Animal extends \yii\db\ActiveRecord
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
             [['sexo'], 'string'],
             [['nome'], 'string', 'max' => 45],
-            [['notasvet', 'notasdono'], 'string', 'max' => 500],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
@@ -78,15 +76,13 @@ class Animal extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'dtanascimento' => 'Dtanascimento',
-            'notasvet' => 'Notasvet',
-            'notasdono' => 'Notasdono',
+            'dtanascimento' => 'Data de Nascimento',
             'peso' => 'Peso',
-            'microship' => 'Microship',
+            'microship' => 'Microchip',
             'sexo' => 'Sexo',
-            'especies_id' => 'Especie ID',
-            'userprofiles_id' => 'Userprofile ID',
-            'racas_id' => 'Raca ID',
+            'especies_id' => 'Espécie',
+            'userprofiles_id' => 'Proprietário',
+            'racas_id' => 'Raça',
             'eliminado' => 'Eliminado',
         ];
     }
@@ -129,6 +125,16 @@ class Animal extends \yii\db\ActiveRecord
     public function getUserprofiles()
     {
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
+    }
+
+    /**
+     * Gets query for [[Notas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotas()
+    {
+        return $this->hasMany(Nota::class, ['animais_id' => 'id']);
     }
 
 
@@ -184,7 +190,7 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function uploadImage()
     {
-        return Yii::$app->imageUploader->upload($this->imageFile, 'animais', (string)$this->id);
+        return Yii::$app->imageUploader->upload($this->imageFile, 'animal', (string)$this->id);
     }
 
     /**
@@ -193,7 +199,7 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function getImageUrl()
     {
-        return Yii::$app->imageUploader->getImageUrl('animais', (string)$this->id);
+        return Yii::$app->imageUploader->getImageUrl('animal', (string)$this->id);
     }
 
     /**
@@ -202,7 +208,24 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function getImageAbsoluteUrl()
     {
-        return Yii::$app->imageUploader->getImageAbsoluteUrl('animais', (string)$this->id);
+        return Yii::$app->imageUploader->getImageAbsoluteUrl('animal', (string)$this->id);
+    }
+
+    /**
+     * Calcular idade do animal em anos
+     * @return int
+     */
+    public function getIdade()
+    {
+        if (empty($this->datanascimento)) {
+            return 0;
+        }
+
+        $dataNascimento = new \DateTime($this->datanascimento);
+        $hoje = new \DateTime();
+        $idade = $hoje->diff($dataNascimento);
+
+        return $idade->y; // retorna anos
     }
 
     /**
@@ -211,7 +234,7 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function deleteImage()
     {
-        Yii::$app->imageUploader->deleteImage('animais', (string)$this->id);
+        Yii::$app->imageUploader->deleteImage('animal', (string)$this->id);
     }
 
     /**
@@ -220,6 +243,6 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function hasImage()
     {
-        return Yii::$app->imageUploader->imageExists('animais', (string)$this->id);
+        return Yii::$app->imageUploader->imageExists('animal', (string)$this->id);
     }
 }

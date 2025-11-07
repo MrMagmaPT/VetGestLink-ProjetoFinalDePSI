@@ -8,14 +8,13 @@ use yii\db\Expression;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "userprofile".
+ * This is the model class for table "userprofiles".
  *
  * @property int $id
  * @property string $nomecompleto
  * @property string $nif
  * @property string $telemovel
  * @property string $dtanascimento
- * @property string $dtaregisto
  * @property int $user_id
  * @property int $eliminado
  *
@@ -23,6 +22,7 @@ use yii\web\UploadedFile;
  * @property Fatura[] $fatura
  * @property Marcacao[] $marcacao
  * @property Morada[] $moradas
+ * @property Nota[] $notas
  * @property User $user
  */
 class Userprofile extends \yii\db\ActiveRecord
@@ -31,19 +31,6 @@ class Userprofile extends \yii\db\ActiveRecord
      * @var UploadedFile
      */
     public $imageFile;
-
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'dtaregisto',
-                'updatedAtAttribute' => false,
-                'value' => new Expression('NOW()'),
-            ],
-        ];
-    }
-
 
     /**
      * {@inheritdoc}
@@ -60,11 +47,12 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento','user_id'], 'required'],
-            [['dtanascimento', 'dtaregisto'], 'safe'],
+            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'user_id'], 'required'],
+            [['dtanascimento'], 'safe'],
             [['user_id', 'eliminado'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
             [['nif', 'telemovel'], 'string', 'max' => 9],
+            [['nif'], 'unique'],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -74,24 +62,22 @@ class Userprofile extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
     public function attributeLabels()
-{
-    return [
-        'id' => 'ID',
-        'nomecompleto' => 'Nomecompleto',
-        'nif' => 'Nif',
-        'telemovel' => 'Telemovel',
-        'dtanascimento' => 'Dtanascimento',
-        'dtaregisto' => 'Dtaregisto',
-        'user_id' => 'User ID',
-        'eliminado' => 'Eliminado',
-    ];
-}
+    {
+        return [
+            'id' => 'ID',
+            'nomecompleto' => 'Nome Completo',
+            'nif' => 'NIF',
+            'telemovel' => 'Telemóvel',
+            'dtanascimento' => 'Data de Nascimento',
+            'user_id' => 'User ID',
+            'eliminado' => 'Eliminado',
+        ];
+    }
 
     /**
      * Gets query for [[Animal]].
      *
      * @return \yii\db\ActiveQuery
-     */
     public function getAnimais()
     {
         return $this->hasMany(Animal::class, ['userprofiles_id' => 'id']);
@@ -128,6 +114,16 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Notas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNotas()
+    {
+        return $this->hasMany(Nota::class, ['userprofiles_id' => 'id']);
+    }
+
+    /**
      * Gets query for [[User]].
      *
      * @return \yii\db\ActiveQuery
@@ -136,6 +132,7 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
+
 
     /**
      * Upload da imagem do utilizador usando o componente ImageUploader
@@ -182,4 +179,47 @@ class Userprofile extends \yii\db\ActiveRecord
         return Yii::$app->imageUploader->imageExists('users', (string)$this->id);
     }
 
+    /**
+     * Obter data de registo do utilizador (do modelo User)
+     * @param string $format Formato de saída (padrão: 'Y-m-d H:i:s')
+     * @return string|null
+     */
+    public function getCreatedAt($format = 'Y-m-d H:i:s')
+    {
+        if (!$this->user || !$this->user->created_at) {
+            return null;
+        }
+        return date($format, $this->user->created_at);
+    }
+
+    /**
+     * Obter data de última atualização do utilizador (do modelo User)
+     * @param string $format Formato de saída (padrão: 'Y-m-d H:i:s')
+     * @return string|null
+     */
+    public function getUpdatedAt($format = 'Y-m-d H:i:s')
+    {
+        if (!$this->user || !$this->user->updated_at) {
+            return null;
+        }
+        return date($format, $this->user->updated_at);
+    }
+
+    /**
+     * Obter timestamp de registo (para compatibilidade)
+     * @return int|null
+     */
+    public function getCreatedAtTimestamp()
+    {
+        return $this->user ? $this->user->created_at : null;
+    }
+
+    /**
+     * Obter timestamp de atualização (para compatibilidade)
+     * @return int|null
+     */
+    public function getUpdatedAtTimestamp()
+    {
+        return $this->user ? $this->user->updated_at : null;
+    }
 }

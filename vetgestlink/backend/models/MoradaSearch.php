@@ -4,12 +4,12 @@ namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Animal;
+use common\models\Morada;
 
 /**
- * AnimalSearch represents the model behind the search form of `common\models\Animal`.
+ * MoradaSearch represents the model behind the search form of `common\models\Morada`.
  */
-class AnimalSearch extends Animal
+class MoradaSearch extends Morada
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class AnimalSearch extends Animal
     public function rules()
     {
         return [
-            [['id', 'microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
-            [['nome', 'dtanascimento', 'sexo'], 'safe'],
-            [['peso'], 'number'],
+            [['id', 'principal', 'userprofiles_id', 'eliminado'], 'integer'],
+            [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade'], 'safe'],
         ];
     }
 
@@ -42,12 +41,18 @@ class AnimalSearch extends Animal
      */
     public function search($params, $formName = null)
     {
-        $query = Animal::find();
+        $query = Morada::find()->with(['userprofiles']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'principal' => SORT_DESC,
+                    'cidade' => SORT_ASC,
+                ]
+            ],
         ]);
 
         $this->load($params, $formName);
@@ -61,18 +66,20 @@ class AnimalSearch extends Animal
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'dtanascimento' => $this->dtanascimento,
-            'peso' => $this->peso,
-            'microship' => $this->microship,
-            'especies_id' => $this->especies_id,
+            'principal' => $this->principal,
             'userprofiles_id' => $this->userprofiles_id,
-            'racas_id' => $this->racas_id,
             'eliminado' => $this->eliminado,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'sexo', $this->sexo]);
+        $query->andFilterWhere(['like', 'rua', $this->rua])
+            ->andFilterWhere(['like', 'nporta', $this->nporta])
+            ->andFilterWhere(['like', 'andar', $this->andar])
+            ->andFilterWhere(['like', 'cdpostal', $this->cdpostal])
+            ->andFilterWhere(['like', 'cidade', $this->cidade])
+            ->andFilterWhere(['like', 'cxpostal', $this->cxpostal])
+            ->andFilterWhere(['like', 'localidade', $this->localidade]);
 
         return $dataProvider;
     }
 }
+

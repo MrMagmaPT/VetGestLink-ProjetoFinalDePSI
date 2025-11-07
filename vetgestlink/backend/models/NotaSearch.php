@@ -4,12 +4,12 @@ namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Animal;
+use common\models\Nota;
 
 /**
- * AnimalSearch represents the model behind the search form of `common\models\Animal`.
+ * NotaSearch represents the model behind the search form of `common\models\Nota`.
  */
-class AnimalSearch extends Animal
+class NotaSearch extends Nota
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class AnimalSearch extends Animal
     public function rules()
     {
         return [
-            [['id', 'microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
-            [['nome', 'dtanascimento', 'sexo'], 'safe'],
-            [['peso'], 'number'],
+            [['id', 'animais_id', 'userprofiles_id'], 'integer'],
+            [['nota', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -42,12 +41,17 @@ class AnimalSearch extends Animal
      */
     public function search($params, $formName = null)
     {
-        $query = Animal::find();
+        $query = Nota::find()->with(['animal', 'userprofiles']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'created_at' => SORT_DESC,
+                ]
+            ],
         ]);
 
         $this->load($params, $formName);
@@ -61,18 +65,15 @@ class AnimalSearch extends Animal
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'dtanascimento' => $this->dtanascimento,
-            'peso' => $this->peso,
-            'microship' => $this->microship,
-            'especies_id' => $this->especies_id,
+            'animais_id' => $this->animais_id,
             'userprofiles_id' => $this->userprofiles_id,
-            'racas_id' => $this->racas_id,
-            'eliminado' => $this->eliminado,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'sexo', $this->sexo]);
+        $query->andFilterWhere(['like', 'nota', $this->nota])
+            ->andFilterWhere(['>=', 'created_at', $this->created_at ? $this->created_at . ' 00:00:00' : null])
+            ->andFilterWhere(['<=', 'updated_at', $this->updated_at ? $this->updated_at . ' 23:59:59' : null]);
 
         return $dataProvider;
     }
 }
+

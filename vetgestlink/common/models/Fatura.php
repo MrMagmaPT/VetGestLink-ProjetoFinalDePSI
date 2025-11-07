@@ -3,13 +3,16 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "fatura".
  *
  * @property int $id
  * @property float $total
- * @property string $data
+ * @property string $created_at
  * @property int $estado
  * @property int $metodospagamentos_id
  * @property int $userprofiles_id
@@ -21,14 +24,27 @@ use Yii;
  */
 class Fatura extends \yii\db\ActiveRecord
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => false, // Não tem updated_at
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
 
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'faturas';
+        return 'fatura';
     }
 
     /**
@@ -38,9 +54,9 @@ class Fatura extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['total', 'data', 'estado', 'metodospagamentos_id', 'userprofiles_id'], 'required'],
+            [['total', 'estado', 'metodospagamentos_id', 'userprofiles_id'], 'required'],
+            [['created_at'], 'safe'],
             [['total'], 'number'],
-            [['data'], 'safe'],
             [['estado', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
             [['metodospagamentos_id'], 'exist', 'skipOnError' => true, 'targetClass' => Metodopagamento::class, 'targetAttribute' => ['metodospagamentos_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
@@ -55,10 +71,10 @@ class Fatura extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'total' => 'Total',
-            'data' => 'Data',
+            'created_at' => 'Data de Criação',
             'estado' => 'Estado',
-            'metodospagamentos_id' => 'Metodopagamento ID',
-            'userprofiles_id' => 'Userprofile ID',
+            'metodospagamentos_id' => 'Método de Pagamento',
+            'userprofiles_id' => 'Cliente',
             'eliminado' => 'Eliminado',
         ];
     }
@@ -93,4 +109,24 @@ class Fatura extends \yii\db\ActiveRecord
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
     }
 
+    /**
+     * Obter data de criação formatada
+     * @param string $format Formato de saída (padrão: 'Y-m-d H:i:s')
+     * @return string|null
+     */
+    public function getCreatedAtFormatted($format = 'Y-m-d H:i:s')
+    {
+        return $this->created_at ? date($format, $this->created_at) : null;
+    }
+
+
+    /**
+     * Obter data da fatura formatada (alias para created_at)
+     * @param string $format Formato de saída (padrão: 'd/m/Y')
+     * @return string|null
+     */
+    public function getDataFatura($format = 'd/m/Y')
+    {
+        return $this->getCreatedAtFormatted($format);
+    }
 }

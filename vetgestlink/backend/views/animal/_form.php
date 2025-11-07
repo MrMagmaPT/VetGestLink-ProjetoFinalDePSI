@@ -22,9 +22,6 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
 
-    <?= $form->field($model, 'notasvet')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'notasdono')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'peso')->textInput() ?>
 
