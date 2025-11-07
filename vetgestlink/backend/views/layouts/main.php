@@ -108,8 +108,8 @@ $this->beginPage();
                     <li class="nav-item">
                         <?= Html::a(
                             '<i class="nav-icon fas fa-calendar-check"></i><p>Marcações</p>',
-                            ['/marcacoes/index'],
-                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'marcacoes' ? 'active' : '')]
+                            ['/marcacao/index'],
+                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'marcacao' ? 'active' : '')]
                         ) ?>
                     </li>
                     <li class="nav-item">
@@ -125,7 +125,7 @@ $this->beginPage();
                                 <?= Html::a(
                                     '<i class="far fa-circle nav-icon"></i><p>Medicamentos</p>',
                                     ['/medicamentos/index'],
-                                    ['class' => 'nav-link ' . (Yii::$app->controller->id === 'medicamentos' ? 'active' : '')]
+                                    ['class' => 'nav-link ' . (Yii::$app->controller->id === 'medicamento' ? 'active' : '')]
                                 ) ?>
                             </li>
                         </ul>

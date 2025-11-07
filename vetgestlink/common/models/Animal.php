@@ -10,8 +10,6 @@ use Yii;
  * @property int $id
  * @property string $nome
  * @property string $dtanascimento
- * @property string|null $notasvet
- * @property string|null $notasdono
  * @property float $peso
  * @property int $microship
  * @property string $sexo
@@ -48,7 +46,7 @@ class Animal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['notasvet', 'notasdono', 'racas_id'], 'default', 'value' => null],
+            [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
             [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
             [['dtanascimento'], 'safe'],
@@ -56,7 +54,6 @@ class Animal extends \yii\db\ActiveRecord
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
             [['sexo'], 'string'],
             [['nome'], 'string', 'max' => 45],
-            [['notasvet', 'notasdono'], 'string', 'max' => 500],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Raca::class, 'targetAttribute' => ['racas_id' => 'id']],
@@ -73,8 +70,6 @@ class Animal extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nome' => 'Nome',
             'dtanascimento' => 'Dtanascimento',
-            'notasvet' => 'Notasvet',
-            'notasdono' => 'Notasdono',
             'peso' => 'Peso',
             'microship' => 'Microship',
             'sexo' => 'Sexo',
