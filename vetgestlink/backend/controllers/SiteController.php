@@ -79,16 +79,21 @@ class SiteController extends Controller
             ->limit(5)
             ->all();
 
+        // Calcula o início e fim do mês atual em UNIX timestamp
+        $inicio = strtotime(date('Y-m-01 00:00:00')); // primeiro dia do mês, meia-noite
+        $fim = strtotime(date('Y-m-t 23:59:59'));     // último dia do mês, 23:59:59
+
+        // Contagem de faturas do mês
         $faturasDoMes = Fatura::find()
-            ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
+            ->where(['between', 'created_at', $inicio, $fim])
             ->andWhere(['eliminado' => 0])
             ->count();
 
+        // Receita mensal
         $receitaMensal = Fatura::find()
-            ->where(['MONTH(data)' => date('m'), 'YEAR(data)' => date('Y')])
+            ->where(['between', 'created_at', $inicio, $fim])
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
-
         $userType = $this->getusertype($userId);
 
         return $this->render('index', [

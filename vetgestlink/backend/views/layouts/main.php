@@ -124,7 +124,7 @@ $this->beginPage();
                             <li class="nav-item">
                                 <?= Html::a(
                                     '<i class="far fa-circle nav-icon"></i><p>Medicamentos</p>',
-                                    ['/medicamentos/index'],
+                                    ['/medicamento/index'],
                                     ['class' => 'nav-link ' . (Yii::$app->controller->id === 'medicamento' ? 'active' : '')]
                                 ) ?>
                             </li>
