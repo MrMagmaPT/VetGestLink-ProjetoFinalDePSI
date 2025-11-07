@@ -53,7 +53,6 @@ class Animal extends \yii\db\ActiveRecord
     {
         return [
             [['racas_id'], 'default', 'value' => null],
-            [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
             [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
             [['dtanascimento'], 'safe'],
