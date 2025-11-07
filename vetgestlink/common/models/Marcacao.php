@@ -58,7 +58,7 @@ class Marcacao extends \yii\db\ActiveRecord
 
     public static function tableName()
     {
-        return 'marcacao';
+        return 'marcacoes';
     }
 
     /**

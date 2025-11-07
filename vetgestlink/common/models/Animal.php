@@ -43,7 +43,7 @@ class Animal extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'animal';
+        return 'animais';
     }
 
     /**
@@ -137,16 +137,6 @@ class Animal extends \yii\db\ActiveRecord
     public function getUserprofiles()
     {
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
-    }
-
-    /**
-     * Gets query for [[Notas]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNotas()
-    {
-        return $this->hasMany(Nota::class, ['animais_id' => 'id']);
     }
 
 

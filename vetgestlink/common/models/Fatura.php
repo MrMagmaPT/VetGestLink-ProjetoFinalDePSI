@@ -44,7 +44,7 @@ class Fatura extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'fatura';
+        return 'faturas';
     }
 
     /**

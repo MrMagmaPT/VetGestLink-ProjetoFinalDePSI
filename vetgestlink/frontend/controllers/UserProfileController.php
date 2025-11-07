@@ -12,9 +12,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserProfileController implements the CRUD actions for Userprofile model.
+ * UserprofileController implements the CRUD actions for Userprofile model.
  */
-class UserProfileController extends Controller
+class UserprofileController extends Controller
 {
     /**
      * @inheritDoc
@@ -24,6 +24,15 @@ class UserProfileController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => \yii\filters\AccessControl::class,
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -35,11 +44,11 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Lists information from Userprofile,User and Morada models to the index page .
+     * Displays the user profile view.
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionView()
     {
         $user = Yii::$app->user->identity;
 
@@ -48,57 +57,72 @@ class UserProfileController extends Controller
             ->with(['userProfile.moradas'])
             ->one();
 
-        $userProfile = $user->userProfile;
-        $moradas = $userProfile->moradas ?? [];
+        $model = $user->userProfile;
+        $moradas = $model->moradas ?? [];
 
-        return $this->render('index', [
+        return $this->render('view', [
             'user' => $user,
-            'userProfile' => $userProfile,
+            'model' => $model,
             'moradas' => $moradas,
         ]);
     }
 
     /**
-     * Go to page edit and loads information to the form.
+     * Alias for view action to maintain compatibility.
      *
      * @return string
      */
-    public function actionEdit()
+    public function actionIndex()
+    {
+        return $this->actionView();
+    }
+
+    /**
+     * Updates the user profile.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     *
+     * @return string|\yii\web\Response
+     */
+    public function actionUpdate()
     {
         $user = Yii::$app->user->identity;
-        $userProfile = $user->userProfile;
-        $moradas = $userProfile->moradas ?? new \common\models\Morada();
+        $model = $user->userProfile;
+        $moradas = $model->moradas;
 
-        return $this->render('edit', [
-            'user' => $user,
-            'userProfile' => $userProfile,
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            if ($model->save(false)) {
+                foreach ($moradas as $morada) {
+                    $morada->save(false);
+                }
+
+                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                return $this->redirect(['view']);
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
             'moradas' => $moradas,
         ]);
     }
 
-
-
     /**
-     * Updates an existing Userprofile model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
+     * Saves the user profile (POST action).
+     *
+     * @return \yii\web\Response
      */
-
-    public function actionUpdate()
+    public function actionSave()
     {
         $user = Yii::$app->user->identity;
-        $userProfile = $user->userProfile;
-        $moradas = $userProfile->moradas;
+        $model = $user->userProfile;
+        $moradas = $model->moradas;
 
-        if (
-            $this->request->isPost &&
-            $userProfile->load($this->request->post())
-        ) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
             Model::loadMultiple($moradas, $this->request->post());
 
-            $userProfile->save(false);
+            $model->save(false);
 
             foreach ($moradas as $morada) {
                 $morada->save(false);
@@ -107,13 +131,8 @@ class UserProfileController extends Controller
             Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
         }
 
-        return $this->redirect(['index']);
+        return $this->redirect(['view']);
     }
-
-
-
-
-
 
     /**
      * Finds the Userprofile model based on its primary key value.
