@@ -21,7 +21,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'dtanascimento') ?>
 
-
     <?= $form->field($model, 'peso') ?>
 
     <?php // echo $form->field($model, 'microship') ?>

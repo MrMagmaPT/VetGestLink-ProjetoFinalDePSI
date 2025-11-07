@@ -22,7 +22,6 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
 
-
     <?= $form->field($model, 'peso')->textInput() ?>
 
     <?= $form->field($model, 'microship')->dropDownList(
