@@ -4,21 +4,20 @@ namespace backend\widgets;
 
 use yii\base\Widget;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
-class MainCardIndexWidget extends Widget
+class BigCardWidget extends Widget
 {
-    //valor base a ser usado para o card caso nada seja passado por parametros e os caralhos
-
     // Icon que vai ser exibido no card (ex: 'fa-users', 'fa-chart-bar', etc)
     public $icon = 'fa-users';
     //  Class de cor a ser usada pelo icone (ex: 'icon-blue', 'icon-red', etc)
     public $iconColorClass = 'icon-gray';
     // Texto rpincipal exibido no card (ex: "Total Users")
     public $text = 'Card Title';
-    // valor numerico exibido no card ou texto (ex: 150, 75%, etc)
-    public $value = 0;
-    // Url para redirecionamento ao clicar no card
+    // Url para redirecionamento ao clicar no botão de detalhes
     public $url = '/';
+    // Valor principal exibido no card (ex: 1500)
+    public $value = 0;
 
 
     // Rederiza o html do widget e merdas associadas :D
@@ -43,6 +42,5 @@ class MainCardIndexWidget extends Widget
                 </div>
             </div>
         HTML;
-
     }
 }

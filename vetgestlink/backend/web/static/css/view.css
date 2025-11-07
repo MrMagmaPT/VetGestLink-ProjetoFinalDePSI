@@ -1,0 +1,47 @@
+.info-box-custom {
+    border-radius: 10px;
+    padding: 20px;
+}
+.stock-card {
+    text-align: center;
+    padding: 30px;
+    border-radius: 10px;
+    background: #f8f9fa;
+}
+.stock-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 15px;
+}
+.icon-blue { background: #007bff; }
+.icon-orange { background: #ff9800; }
+.icon-red { background: #dc3545; }
+.icon-purple { background: #9333ea; }
+
+.alert-custom {
+    background: #fee;
+    border-left: 4px solid #dc3545;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.quick-action-btn:hover {
+    background: #f8f9fa;
+}

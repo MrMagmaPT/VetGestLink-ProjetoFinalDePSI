@@ -1,5 +1,10 @@
 <?php
 use yii\helpers\Html;
+use backend\widgets\CardsContainerWidget;
+use backend\widgets\BigCardWidget;
+use backend\widgets\QuickActionContainerWidget;
+use backend\widgets\AlertContainerWidget;
+use \backend\widgets\TableWidget;
 
 $this->title = 'Dashboard';
 
@@ -15,58 +20,10 @@ $totalEspecies = $totalEspecies ?? 0;
 $faturasDoMes = $faturasDoMes ?? 0;
 $receitaMensal = $receitaMensal ?? 0;
 $ultimasMarcacoes = $ultimasMarcacoes ?? [];
+
+$this->registerCssFile('@web/static/css/view.css');
+
 ?>
-
-<style>
-    /* Paste your original first style block here */
-    .info-box-custom {
-        border-radius: 10px;
-        padding: 20px;
-    }
-    .stock-card {
-        text-align: center;
-        padding: 30px;
-        border-radius: 10px;
-        background: #f8f9fa;
-    }
-    .stock-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 10px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        color: white;
-        margin-bottom: 15px;
-    }
-    .icon-blue { background: #007bff; }
-    .icon-orange { background: #ff9800; }
-    .icon-red { background: #dc3545; }
-    .icon-purple { background: #9333ea; }
-
-    .alert-custom {
-        background: #fee;
-        border-left: 4px solid #dc3545;
-        padding: 15px;
-        border-radius: 5px;
-    }
-
-    .quick-action-btn {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .quick-action-btn:hover {
-        background: #f8f9fa;
-    }
-</style>
 
 <div class="content-header">
     <div class="container-fluid">
@@ -82,16 +39,16 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
         <?php if ($usertype == 1): ?> <!-- Admin -->
             <div class="row">
                 <?php
-                    echo \backend\widgets\MainCardIndexWidget::widget([
+                    echo BigCardWidget::widget([
                         'icon' => 'fa-pills',
                         'iconColorClass' => 'bg-primary',
-                        'text' => 'Medcicamentos',
+                        'text' => 'Medicamentos',
                         'value' => $totalMedicamentos,
                         'url' => '/medicamento/index',
                     ]);
                 ?>
                 <?php
-                    echo \backend\widgets\MainCardIndexWidget::widget([
+                    echo BigCardWidget::widget([
                         'icon' => 'fa-users',
                         'iconColorClass' => 'icon-purple',
                         'text' => 'Clientes',
@@ -100,96 +57,79 @@ $ultimasMarcacoes = $ultimasMarcacoes ?? [];
                     ]);
                 ?>
             </div>
-
+            <!-- Stock de Inventário -->
             <div class="row mt-4">
-                <div class="col-lg-8 col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h3 class="card-title">Stock de Inventário</h3>
-                            <div class="card-tools">
-                                <?= Html::a('Ver Tudo', ['/medicamento/index'], ['class' => 'btn btn-sm btn-primary']) ?>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="stock-card">
-                                        <div class="stock-icon icon-blue"><i class="fas fa-box"></i></div>
-                                        <h2 class="mb-0"><?= $totalMedicamentos ?></h2>
-                                        <p class="text-muted">Total de Itens</p>
-                                    </div>
-                                </div>
-                                <!-- Add placeholders or dynamic counts for low/critical stock as needed -->
-                                <div class="col-md-4">
-                                    <div class="stock-card">
-                                        <div class="stock-icon icon-orange"><i class="fas fa-box-open"></i></div>
-                                        <h2 class="mb-0">8</h2>
-                                        <p class="text-muted">Stock Baixo</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="stock-card">
-                                        <div class="stock-icon icon-red"><i class="fas fa-exclamation-triangle"></i></div>
-                                        <h2 class="mb-0">3</h2>
-                                        <p class="text-muted">Crítico</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <?php
+                echo CardsContainerWidget::widget([
+                    'text' => 'Stock de Inventário',
+                    'url' => '/medicamento/index',
+                    'buttontext' => 'Ver Tudo',
+                    'buttonclass' => 'btn btn-sm btn-primary',
+                    'cards' => [
+                        [
+                            'value' => 3,
+                            'text' => 'Crítico',
+                            'icon' => 'fa-skull-crossbones',
+                            'iconColorClass' => 'icon-red',
+                        ],
+                        [
+                            'value' => 5,
+                            'text' => 'Baixo',
+                            'icon' => 'fa-exclamation-triangle',
+                            'iconColorClass' => 'icon-orange',
+                        ],
+                        [
+                            'value' => $totalMedicamentos,
+                            'text' => 'Em Estoque',
+                            'icon' => 'fa-check-circle',
+                            'iconColorClass' => 'icon-blue',
+                        ],
+                    ],
+                ]);
 
+            ?>
                 <div class="col-lg-4 col-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header"><h3 class="card-title">Ações Rápidas</h3></div>
-                        <div class="card-body">
-                            <?= Html::a('<i class="fas fa-user-plus"></i> Adicionar Utilizador', ['/userprofile/create'], ['class' => 'quick-action-btn']) ?>
-                            <?= Html::a('<i class="fas fa-pills"></i> Adicionar Medicamento', ['/medicamento/create'], ['class' => 'quick-action-btn']) ?>
-                        </div>
-                    </div>
 
-                    <div class="card shadow-sm mt-3">
-                        <div class="card-header"><h3 class="card-title">Alertas</h3></div>
-                        <div class="card-body">
-                            <div class="alert-custom">
-                                <i class="fas fa-exclamation-circle text-danger"></i>
-                                <strong>Alerta de Stock Baixo</strong><br>
-                                <small>Vacina anti-rábica com stock reduzido</small>
-                            </div>
-                        </div>
-                    </div>
+                    <?php
+                        echo QuickActionContainerWidget::widget([
+                            'text' => 'Ações Rápidas',
+                            'options' => [
+                                ['text' => 'Adicionar Utilizador', 'icon' => 'fa-user-plus', 'url' => '/userprofile/create'],
+                                ['text' => 'Adicionar Medicamento', 'icon' => 'fa-pills', 'url' => '/medicamento/create'],
+                            ],
+                        ]);
+
+                        echo AlertContainerWidget::widget([
+                            'text' => 'Alertas',
+                            'options' => [
+                                [
+                                    'title' => 'Alerta de Stock Baixo',
+                                    'message' => 'Vacina anti-rábica com stock reduzido',
+                                    'icon' => 'fa-exclamation-circle',
+                                    'class' => 'text-danger',
+                                ],
+                                [
+                                    'title' => 'Alerta de Stock Baixo',
+                                    'message' => 'Vacina anti-rábica com stock reduzido',
+                                    'icon' => 'fa-exclamation-circle',
+                                    'class' => 'text-danger',
+                                ],
+                            ],
+                        ]);
+                    ?>
                 </div>
             </div>
 
             <!-- Últimas marcações table -->
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header"><h3 class="card-title">Últimas Marcações</h3></div>
-                        <div class="card-body">
-                            <?php if (!empty($ultimasMarcacoes)): ?>
-                                <table class="table table-striped">
-                                    <thead><tr>
-                                        <th>Data</th><th>Animal</th><th>Cliente</th><th>Tipo</th><th>Estado</th>
-                                    </tr></thead>
-                                    <tbody>
-                                    <?php foreach ($ultimasMarcacoes as $marcacao): ?>
-                                        <tr>
-                                            <td><?= Yii::$app->formatter->asDatetime($marcacao->data, 'dd/MM/yyyy HH:mm') ?></td>
-                                            <td><?= Html::encode($marcacao->animais->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->userprofiles->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->tipo) ?></td>
-                                            <td><span class="label label-<?= $marcacao->estado === 'Pendente' ? 'warning' : 'success' ?>"><?= Html::encode($marcacao->estado) ?></span></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php else: ?>
-                                <p class="text-muted">Nenhuma marcação registrada.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+            <div class=".col-md-12">
+                <?php
+                    echo TableWidget::widget([
+                        'title' => 'Marcações',
+                        'content' => [
+
+                        ],
+                    ]);
+                ?>
             </div>
         <?php endif; ?>
 
