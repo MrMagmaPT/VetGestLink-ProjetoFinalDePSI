@@ -1,5 +1,4 @@
 <?php
-
 namespace common\models;
 
 use Yii;
@@ -18,9 +17,9 @@ use yii\web\UploadedFile;
  * @property int $user_id
  * @property int $eliminado
  *
- * @property Animal[] $animal
- * @property Fatura[] $fatura
- * @property Marcacao[] $marcacao
+ * @property Animal[] $animais
+ * @property Fatura[] $faturas
+ * @property Marcacao[] $marcacoes
  * @property Morada[] $moradas
  * @property Nota[] $notas
  * @property User $user
@@ -75,7 +74,7 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Animal]].
+     * Gets query for [[Animais]].
      *
      * @return \yii\db\ActiveQuery
     public function getAnimais()
@@ -84,7 +83,7 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Fatura]].
+     * Gets query for [[Faturas]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -94,7 +93,7 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Marcacao]].
+     * Gets query for [[Marcacos]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -104,7 +103,7 @@ class Userprofile extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Morada]].
+     * Gets query for [[Moradas]].
      *
      * @return \yii\db\ActiveQuery
      */

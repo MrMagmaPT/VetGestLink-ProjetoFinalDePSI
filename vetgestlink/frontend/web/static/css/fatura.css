@@ -1,0 +1,13 @@
+/* ========================================
+   Fatura - Estilos
+   ======================================== */
+
+.faturas-view .fatura-card {
+    border-radius: var(--border-radius-xl);
+}
+
+.faturas-view .fatura-header {
+    background: var(--primary-green);
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+}
+

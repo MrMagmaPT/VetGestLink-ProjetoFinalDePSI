@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use yii\base\Model;
 use common\models\Userprofile;
+use common\models\Morada;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -10,9 +12,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserProfileController implements the CRUD actions for Userprofile model.
+ * UserprofileController implements the CRUD actions for Userprofile model.
  */
-class UserProfileController extends Controller
+class UserprofileController extends Controller
 {
     /**
      * @inheritDoc
@@ -22,6 +24,15 @@ class UserProfileController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => \yii\filters\AccessControl::class,
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -33,66 +44,95 @@ class UserProfileController extends Controller
     }
 
     /**
-     * Lists all Userprofile models.
+     * Displays the user profile view.
+     *
+     * @return string
+     */
+    public function actionView()
+    {
+        $user = Yii::$app->user->identity;
+
+        $user = \common\models\User::find()
+            ->where(['id' => $user->id])
+            ->with(['userProfile.moradas'])
+            ->one();
+
+        $model = $user->userProfile;
+        $moradas = $model->moradas ?? [];
+
+        return $this->render('view', [
+            'user' => $user,
+            'model' => $model,
+            'moradas' => $moradas,
+        ]);
+    }
+
+    /**
+     * Alias for view action to maintain compatibility.
      *
      * @return string
      */
     public function actionIndex()
     {
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => Userprofile::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->actionView();
     }
 
     /**
-     * Displays a single Userprofile model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-
-    /**
-     * Updates an existing Userprofile model.
+     * Updates the user profile.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     *
      * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
+        $user = Yii::$app->user->identity;
+        $model = $user->userProfile;
+        $moradas = $model->moradas;
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            if ($model->save(false)) {
+                foreach ($moradas as $morada) {
+                    $morada->save(false);
+                }
+
+                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                return $this->redirect(['view']);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'moradas' => $moradas,
         ]);
     }
 
+    /**
+     * Saves the user profile (POST action).
+     *
+     * @return \yii\web\Response
+     */
+    public function actionSave()
+    {
+        $user = Yii::$app->user->identity;
+        $model = $user->userProfile;
+        $moradas = $model->moradas;
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            $model->save(false);
+
+            foreach ($moradas as $morada) {
+                $morada->save(false);
+            }
+
+            Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
+        }
+
+        return $this->redirect(['view']);
+    }
 
     /**
      * Finds the Userprofile model based on its primary key value.

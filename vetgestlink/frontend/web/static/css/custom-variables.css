@@ -1,0 +1,67 @@
+/* ========================================
+   VetGestLink - Variáveis Globais
+   ======================================== */
+
+:root {
+    /* Cores principais do projeto */
+    --primary-green: #4CB88A;
+    --secondary-green: #94E2B6;
+    --primary-green-hover: #3da074;
+    --secondary-green-hover: #7dd19f;
+
+    /* Cores de suporte */
+    --dark-gray: #212529;
+    --light-gray: #6c757d;
+    --bg-light: #f8f9fa;
+    --white: #fff;
+
+    /* Bordas e sombras */
+    --border-radius: 8px;
+    --border-radius-lg: 15px;
+    --border-radius-xl: 20px;
+    --box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    --box-shadow-sm: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Botões principais */
+.btn-accent,
+.btn-primary-custom {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: var(--white);
+    font-weight: bold;
+    border-radius: var(--border-radius);
+}
+
+.btn-accent:hover,
+.btn-primary-custom:hover {
+    background-color: var(--primary-green-hover);
+    border-color: var(--primary-green-hover);
+    color: var(--white);
+}
+
+.btn-secondary-custom {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+    color: var(--dark-gray);
+    font-weight: bold;
+    border-radius: var(--border-radius);
+}
+
+.btn-secondary-custom:hover {
+    background-color: var(--secondary-green-hover);
+    border-color: var(--secondary-green-hover);
+    color: var(--dark-gray);
+}
+
+/* Cards */
+.card-custom {
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-sm);
+}
+
+/* Form controls */
+.form-control {
+    border-radius: var(--border-radius) !important;
+}
+

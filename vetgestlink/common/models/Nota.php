@@ -12,7 +12,6 @@ use yii\db\Expression;
  * @property int $id
  * @property string $nota
  * @property string $created_at
- * @property string $updated_at
  * @property int $userprofiles_id
  * @property int $animais_id
  *
@@ -30,7 +29,7 @@ class Nota extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
+                'updatedAtAttribute' => false,
                 'value' => new Expression('NOW()'),
             ],
         ];
