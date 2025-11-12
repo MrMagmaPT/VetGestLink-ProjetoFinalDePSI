@@ -12,6 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'created_at')->Input('int')->label(false) ?>
+
+    <?= $form->field($model, 'updated_at')->Input('int')->label(false); ?>
+
     <!-- Date input using HTML5 'date' type -->
     <?= $form->field($model, 'data')->input('date') ?>
 
@@ -22,7 +26,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'diagnostico')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'preco')->input('number', ['step' => '0.01', 'min' => 0]) ?>
 
     <?= $form->field($model, 'estado')->dropDownList([
         'pendente' => 'Pendente',
@@ -35,6 +38,19 @@ use yii\widgets\ActiveForm;
         'cirurgia' => 'Cirurgia',
         'operacao' => 'Operacao',
     ], ['prompt' => '']) ?>
+
+    <?php
+    $tipo_marcacao = $form->field($model, 'tipo');
+    if ($tipo_marcacao == 'cirurgia') {
+        $form->field($model, 'preco')->hiddenInput(['value' => 200])->label(false);
+    } else if ($tipo_marcacao == 'consulta') {
+        $form->field($model, 'preco')->hiddenInput(['value' => 30])->label(false);
+
+    } else if ($tipo_marcacao == 'operacao') {
+        $form->field($model, 'preco')->hiddenInput(['value' => 100])->label(false);
+
+    }
+    ?>
 
     <?= $form->field($model, 'animais_id')->input('number') ?>
 

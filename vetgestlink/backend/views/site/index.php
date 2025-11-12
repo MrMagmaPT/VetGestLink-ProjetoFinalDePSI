@@ -125,9 +125,7 @@ $this->registerCssFile('@web/static/css/view.css');
                 <?php
                     echo TableWidget::widget([
                         'title' => 'Marcações',
-                        'content' => [
-
-                        ],
+                        'content' => [$marcacoesHoje],
                     ]);
                 ?>
             </div>

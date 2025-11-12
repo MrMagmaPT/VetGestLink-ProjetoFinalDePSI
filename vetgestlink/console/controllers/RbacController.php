@@ -305,6 +305,7 @@ class RbacController extends Controller
         $editOwnerNotes = $auth->createPermission('editOwnerNotes');
         $editOwnerNotes->description = 'Editar notas dono do seu animal';
         $auth->add($editOwnerNotes);
+
         //----------------------------------------------------------------
         //GERIR IMAGENS (VETERINÁRIO, RECECIONISTA, CLIENTE)
 
@@ -331,9 +332,46 @@ class RbacController extends Controller
         $auth->add($backendAccess);
 
         //========================================================================
+        //========================================================================
+        //Roles:
+
+        //administrador
+        $admin = $auth->createRole('admin');
+        $auth->add($admin);
+
+        $auth->addChild($admin, $createUser);
+        $auth->addChild($admin, $viewUsers);
+        $auth->addChild($admin, $updateUser);
+
+        $auth->addChild($admin, $deleteUser);
+
+        $auth->addChild($admin, $createPaymentMethod);
+        $auth->addChild($admin, $viewPaymentMethods);
+        $auth->addChild($admin, $updatePaymentMethod);
+        $auth->addChild($admin, $deletePaymentMethod);
+
+        $auth->addChild($admin, $createMedicationCategory);
+        $auth->addChild($admin, $viewMedicationCategories);
+        $auth->addChild($admin, $updateMedicationCategory);
+        $auth->addChild($admin, $deleteMedicationCategory);
+
+        $auth->addChild($admin, $createMedication);
+        $auth->addChild($admin, $viewMedications);
+        $auth->addChild($admin, $updateMedication);
+        $auth->addChild($admin, $deleteMedication);
+
+        $auth->addChild($admin, $viewImages);
+        $auth->addChild($admin, $updateAnimalImage);
+        $auth->addChild($admin, $updateUserImage);
+
+        $auth->addChild($admin, $backendAccess);
+
+        //===============================================
         //veterinario
         $veterinario = $auth->createRole('veterinario');
         $auth->add($veterinario);
+        $auth->addChild($veterinario, $viewMedications);
+        $auth->addChild($veterinario, $createAnimal);
 
         $auth->addChild($veterinario, $createConsultation);
         $auth->addChild($veterinario, $viewConsultations);
@@ -358,42 +396,7 @@ class RbacController extends Controller
         $auth->addChild($veterinario, $viewImages);
         $auth->addChild($veterinario, $updateAnimalImage);
 
-        //========================================================================
-        //Roles:
-
-        //administrador
-        $admin = $auth->createRole('admin');
-        $auth->add($admin);
-
-        $auth->addChild($admin, $createUser);
-        $auth->addChild($admin, $viewUsers);
-        $auth->addChild($admin, $updateUser);
-        $auth->addChild($veterinario, $viewMedications);
-
-        $auth->addChild($veterinario, $createAnimal);
-        $auth->addChild($admin, $deleteUser);
-
-        $auth->addChild($admin, $createPaymentMethod);
-        $auth->addChild($admin, $viewPaymentMethods);
-        $auth->addChild($admin, $updatePaymentMethod);
-        $auth->addChild($admin, $deletePaymentMethod);
-
-        $auth->addChild($admin, $createMedicationCategory);
-        $auth->addChild($admin, $viewMedicationCategories);
-        $auth->addChild($admin, $updateMedicationCategory);
-        $auth->addChild($admin, $deleteMedicationCategory);
-
-        $auth->addChild($admin, $createMedication);
-        $auth->addChild($admin, $viewMedications);
-        $auth->addChild($admin, $updateMedication);
-        $auth->addChild($admin, $deleteMedication);
-
-        $auth->addChild($admin, $viewImages);
-        $auth->addChild($admin, $updateAnimalImage);
-        $auth->addChild($admin, $updateUserImage);
-
-        $auth->addChild($admin, $backendAccess);
-
+        $auth->addChild($veterinario, $backendAccess);
         //===============================================
         //rececionista
         $rececionista = $auth->createRole('rececionista');
@@ -455,34 +458,5 @@ class RbacController extends Controller
 
         //Mensagem pra dar feedback que rodou o script
         echo "✅ RBAC inicializado com sucesso ✅\n";
-
-
-        //cria uma pasta no backend/web/uploads que é uma referencia das pastas
-        // vetgestlink/uploads/users/ tem de tambem fazer vetgestlink/uploads/animais/
-
-        // Caminho absoluto para pasta real de uploads
-        $realUploadsPath = realpath('../../uploads');
-        if ($realUploadsPath === false) {
-            mkdir('../../uploads', 0755, true);
-            $realUploadsPath = realpath('../../uploads');
-        }
-
-        // Caminho para pasta que serve de link
-        $baseWebPath = Yii::getAlias('@backend/web');
-        $baseUploadLink = $baseWebPath . '/uploads';
-
-        // Remove pasta uploads existente (se for uma pasta e não já um symlink)
-        if (is_dir($baseUploadLink) && !is_link($baseUploadLink)) {
-            // Só remove se vazio para evitar eliminar ficheiros, ou use com cuidado!
-            rmdir($baseUploadLink);
-        }
-
-        // Cria symlink backend/web/uploads => vetgest/uploads
-        if (!file_exists($baseUploadLink)) {
-            symlink($realUploadsPath, $baseUploadLink, 1);
-            echo "Symlink global 'uploads' criado de $realUploadsPath para $baseUploadLink\n";
-        } else {
-            echo "Symlink global 'uploads' já existe em $baseUploadLink\n";
-        }
     }
 }

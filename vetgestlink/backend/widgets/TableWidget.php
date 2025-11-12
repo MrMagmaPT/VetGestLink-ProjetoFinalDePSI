@@ -26,6 +26,7 @@ class TableWidget extends Widget
 
             foreach ($this->content as $line) {
                 $tableRows .= '<tr>';
+                $keys = array_keys((array) $firstItem);
                 foreach ($keys as $key) {
                     // You can customize this to format datetime, relations, etc
                     $value = is_object($line) ? ($line->$key ?? '') : ($line[$key] ?? '');
