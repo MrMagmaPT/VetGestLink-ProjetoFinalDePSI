@@ -9,7 +9,7 @@ use yii\web\Response;
 /**
  * Controller de Autenticação
  * 
- * Endpoints públicos para login, logout e recuperação de senha.
+ * Endpoint público para login.
  * Utiliza o componente AuthComponent para toda a lógica de autenticação.
  */
 class AuthController extends Controller
@@ -51,8 +51,8 @@ class AuthController extends Controller
     /**
      * Login de cliente
      *
-     * POST /auth/login
-     * Body: {"username": "carlos", "password": "senha123"}
+     * POST /api/auth/login
+     * Body: {"username": "wilson", "password": "12345678"}
      *
      * @return array
      */
@@ -69,13 +69,18 @@ class AuthController extends Controller
         $username = $data['username'] ?? null;
         $password = $data['password'] ?? null;
 
+        // Log da tentativa de login
+        Yii::info("Login attempt for username: " . ($username ?? 'null'), __METHOD__);
+
         try {
             // Delegar ao componente de autenticação
             $result = $this->module->auth->login($username, $password);
 
+            Yii::info("Login successful for: {$username}", __METHOD__);
             return $result;
 
         } catch (\yii\web\UnauthorizedHttpException $e) {
+            Yii::warning("Login unauthorized: " . $e->getMessage() . " for user: {$username}", __METHOD__);
             Yii::$app->response->statusCode = 401;
             return [
                 'success' => false,
@@ -83,6 +88,7 @@ class AuthController extends Controller
             ];
 
         } catch (\yii\web\ForbiddenHttpException $e) {
+            Yii::warning("Login forbidden: " . $e->getMessage() . " for user: {$username}", __METHOD__);
             Yii::$app->response->statusCode = 403;
             return [
                 'success' => false,
@@ -90,101 +96,33 @@ class AuthController extends Controller
             ];
 
         } catch (\Exception $e) {
-            Yii::error("Login error: " . $e->getMessage(), __METHOD__);
+            // Log detalhado do erro
+            Yii::error([
+                'message' => 'Login error: ' . $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'username' => $username,
+            ], __METHOD__);
+
             Yii::$app->response->statusCode = 500;
+
+            // Em desenvolvimento, retornar mais detalhes
+            if (YII_DEBUG) {
+                return [
+                    'success' => false,
+                    'message' => 'Erro interno do servidor',
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ];
+            }
+
             return [
                 'success' => false,
                 'message' => 'Erro interno do servidor'
             ];
         }
-    }
-
-    /**
-     * Logout de cliente
-     *
-     * POST /auth/logout?access-token=xxx
-     *
-     * @return array
-     */
-    public function actionLogout()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $token = Yii::$app->request->get('access-token');
-
-        // Delegar ao componente de autenticação
-        $result = $this->module->auth->logout($token);
-
-        if (!$result['success']) {
-            Yii::$app->response->statusCode = 400;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Recuperar senha
-     *
-     * POST /auth/forgot-password
-     * Body: {"username": "carlos"}
-     *
-     * @return array
-     */
-    public function actionForgotPassword()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $data = Yii::$app->request->post();
-        $username = $data['username'] ?? null;
-
-        // Delegar ao componente de autenticação
-        $result = $this->module->auth->requestPasswordReset($username);
-
-        if (!$result['success']) {
-            Yii::$app->response->statusCode = 400;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Validar token (endpoint auxiliar para debug/testes)
-     *
-     * GET /auth/validate-token?access-token=xxx
-     *
-     * @return array
-     */
-    public function actionValidateToken()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $token = Yii::$app->request->get('access-token');
-
-        if (!$token) {
-            Yii::$app->response->statusCode = 400;
-            return [
-                'success' => false,
-                'message' => 'Token não fornecido'
-            ];
-        }
-
-        $isValid = $this->module->auth->isValidToken($token);
-
-        if (!$isValid) {
-            Yii::$app->response->statusCode = 401;
-            return [
-                'success' => false,
-                'message' => 'Token inválido ou expirado'
-            ];
-        }
-
-        $userInfo = $this->module->auth->getUserInfo($token);
-
-        return [
-            'success' => true,
-            'message' => 'Token válido',
-            'user' => $userInfo
-        ];
     }
 }
 
