@@ -9,7 +9,8 @@ class TableWidget extends Widget
 {
     public $title = 'Card Title';
     public $content = [];
-
+    public $columns = [];
+    public $emptyMessage = 'No data available.';
     public function run()
     {
         $tableHeaders = '';
@@ -17,19 +18,32 @@ class TableWidget extends Widget
 
         if (!empty($this->content)) {
             $firstItem = reset($this->content);
-            if ($firstItem) {
-                $keys = array_keys((array) $firstItem);
-                foreach ($keys as $key) {
-                    $tableHeaders .= '<th>' . Html::encode(ucfirst($key)) . '</th>';
-                }
+            $keysFromFirst = $firstItem ? array_keys((array) $firstItem) : [];
+
+            // usar $this->columns se fornecido, senão usar as chaves do primeiro item
+            $allowedKeys = !empty($this->columns) ? array_values($this->columns) : $keysFromFirst;
+
+            // montar cabeçalhos apenas para as colunas permitidas
+            foreach ($allowedKeys as $key) {
+                $tableHeaders .= '<th>' . Html::encode(ucfirst($key)) . '</th>';
             }
 
             foreach ($this->content as $line) {
                 $tableRows .= '<tr>';
-                $keys = array_keys((array) $firstItem);
-                foreach ($keys as $key) {
-                    // You can customize this to format datetime, relations, etc
-                    $value = is_object($line) ? ($line->$key ?? '') : ($line[$key] ?? '');
+                foreach ($allowedKeys as $key) {
+                    // obter valor (objeto ou array associativo)
+                    $value = '';
+                    if (is_object($line)) {
+                        $value = isset($line->{$key}) ? $line->{$key} : '';
+                    } else {
+                        $value = isset($line[$key]) ? $line[$key] : '';
+                    }
+
+                    // garantir que arrays/objetos não causam "Array to string conversion"
+                    if (is_array($value) || is_object($value)) {
+                        $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+                    }
+
                     $tableRows .= '<td>' . Html::encode((string)$value) . '</td>';
                 }
                 $tableRows .= '</tr>';
@@ -51,7 +65,9 @@ class TableWidget extends Widget
                         </table>
             HTML;
         } else {
-            $output .= '<p class="text-muted">Nenhuma marcação registrada.</p>';
+            $output .= <<<HTML
+                <p class="text-muted">{$this->emptyMessage}</p>
+            HTML;
         }
 
         $output .= <<<HTML

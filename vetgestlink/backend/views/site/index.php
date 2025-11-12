@@ -11,8 +11,8 @@ $this->title = 'Dashboard';
 // Defaults to avoid undefined variables
 $totalClientes = $totalClientes ?? 0;
 $totalAnimais = $totalAnimais ?? 0;
-$marcacoesHoje = $marcacoesHoje ?? 0;
-$marcacoesPendentes = $marcacoesPendentes ?? 0;
+$totalMarcacoesHoje = $totalMarcacoesHoje ?? 0;
+$totalMarcacoesPendentes = $totalMarcacoesPendentes ?? 0;
 $totalMedicamentos = $totalMedicamentos ?? 0;
 $totalCategorias = $totalCategorias ?? 0;
 $totalRacas = $totalRacas ?? 0;
@@ -20,6 +20,7 @@ $totalEspecies = $totalEspecies ?? 0;
 $faturasDoMes = $faturasDoMes ?? 0;
 $receitaMensal = $receitaMensal ?? 0;
 $ultimasMarcacoes = $ultimasMarcacoes ?? [];
+$marcacoesPendentes = $marcacoesPendentes ?? [];
 
 $this->registerCssFile('@web/static/css/view.css');
 
@@ -123,9 +124,13 @@ $this->registerCssFile('@web/static/css/view.css');
             <!-- Últimas marcações table -->
             <div class=".col-md-12">
                 <?php
+                //dd($marcacoesPendentes);
                     echo TableWidget::widget([
                         'title' => 'Marcações',
-                        'content' => [$marcacoesHoje],
+                        'content' => $marcacoesPendentes,
+                        'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
+                        'emptyMessage' => 'Nenhuma marcação pendente.',
+                        'revaluedColumns' => ['animais_id' => 'animalporid(%%)', 'userprofiles_id' => 'userporid(%%)'],
                     ]);
                 ?>
             </div>

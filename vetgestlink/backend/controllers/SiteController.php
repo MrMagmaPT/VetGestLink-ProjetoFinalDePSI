@@ -63,12 +63,12 @@ class SiteController extends Controller
         $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
         $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
 
-        $marcacoesHoje = Marcacao::find()
+        $totalMarcacoesHoje = Marcacao::find()
             ->where(['DATE(data)' => date('Y-m-d')])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $marcacoesPendentes = Marcacao::find()
+        $totalMarcacoesPendentes = Marcacao::find()
             ->where(['estado' => 'Pendente'])
             ->andWhere(['eliminado' => 0])
             ->count();
@@ -77,6 +77,13 @@ class SiteController extends Controller
             ->where(['eliminado' => 0])
             ->orderBy(['data' => SORT_DESC])
             ->limit(5)
+            ->all();
+
+        // Lista de Marcações pendentes
+        $marcacoesPendentes = Marcacao::find()
+            ->where(['estado' => 'Pendente', 'eliminado' => 0])
+            ->asArray()
+            ->distinct()
             ->all();
 
         // Calcula o início e fim do mês atual em UNIX timestamp
@@ -103,12 +110,13 @@ class SiteController extends Controller
             'totalCategorias' => $totalCategorias,
             'totalRacas' => $totalRacas,
             'totalEspecies' => $totalEspecies,
-            'marcacoesHoje' => $marcacoesHoje,
-            'marcacoesPendentes' => $marcacoesPendentes,
+            'totalmarcacoesHoje' => $totalMarcacoesHoje,
+            'totalmarcacoesPendentes' => $totalMarcacoesPendentes,
             'ultimasMarcacoes' => $ultimasMarcacoes,
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
             'usertype' => $userType,
+            'marcacoesPendentes' => $marcacoesPendentes,
         ]);
     }
     private function getusertype($userId) {
