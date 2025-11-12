@@ -68,8 +68,6 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
             'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
             'verification_token' => 'Verification Token',
         ];
     }
@@ -250,7 +248,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserProfile()
+    public function getUserprofile()
     {
         return $this->hasOne(Userprofile::class, ['user_id' => 'id']);
     }

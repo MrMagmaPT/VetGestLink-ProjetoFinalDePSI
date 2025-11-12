@@ -18,22 +18,34 @@ class ImageUploader extends Component
 
     /**
      * Pasta base para upload de imagens
-     * Agora usa pasta compartilhada na raiz do projeto
+     * Usa caminho absoluto da raiz do projeto
      */
-    public $uploadPath = '@app/../uploads';
+    public $uploadPath;
 
     /**
      * Pasta para imagens padrão
      */
-    public $defaultImagePath = '@app/../uploads/defaults';
+    public $defaultImagePath;
+
+    /**
+     * Inicialização do componente
+     */
+    public function init()
+    {
+        parent::init();
+
+        // Define caminho absoluto para a pasta uploads na raiz do projeto
+        if ($this->uploadPath === null) {
+            $this->uploadPath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'uploads';
+        }
+
+        if ($this->defaultImagePath === null) {
+            $this->defaultImagePath = $this->uploadPath . DIRECTORY_SEPARATOR . 'defaults';
+        }
+    }
 
     /**
      * Faz upload de uma imagem
-     *
-     * @param UploadedFile $file Arquivo a ser enviado
-     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
-     * @param string $filename Nome do arquivo sem extensão
-     * @return bool
      */
     public function upload($file, $folder, $filename)
     {
@@ -41,60 +53,43 @@ class ImageUploader extends Component
             return false;
         }
 
-        // Valida a extensão
         if (!in_array(strtolower($file->extension), self::ALLOWED_EXTENSIONS)) {
             return false;
         }
 
-        // Cria o diretório se não existir
-        $targetDir = Yii::getAlias($this->uploadPath) . DIRECTORY_SEPARATOR . $folder;
+        $targetDir = $this->uploadPath . DIRECTORY_SEPARATOR . $folder;
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0777, true);
         }
 
-        // Remove arquivo antigo se existir
         $this->deleteImage($folder, $filename);
 
-        // Salva o novo arquivo
         $targetPath = $targetDir . DIRECTORY_SEPARATOR . $filename . '.' . $file->extension;
         return $file->saveAs($targetPath);
     }
 
     /**
      * Obtém a URL de uma imagem
-     *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
-     * @param string $filename Nome do arquivo sem extensão
-     * @param string $defaultImage Nome da imagem padrão (opcional)
-     * @return string URL da imagem ou imagem padrão
      */
-    public function getImageUrl($folder, $filename, $defaultImage = 'no-image.svg')
+    public function getImageUrl($folder, $filename, $defaultImage = 'no-image.png')
     {
         foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = Yii::getAlias($this->uploadPath) . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
+            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
             if (file_exists($path)) {
-                // Retorna URL usando @web (baseURL da aplicação atual)
                 return Yii::getAlias('@web/uploads/' . $folder . '/' . $filename . '.' . $ext);
             }
         }
 
-        // Retorna imagem padrão
         return Yii::getAlias('@web/images/' . $defaultImage);
     }
 
     /**
      * Obtém a URL absoluta de uma imagem (para uso em API)
-     *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
-     * @param string $filename Nome do arquivo sem extensão
-     * @param string $defaultImage Nome da imagem padrão (opcional)
-     * @return string URL absoluta da imagem
      */
     public function getImageAbsoluteUrl($folder, $filename, $defaultImage = 'no-image.png')
     {
         $relativeUrl = $this->getImageUrl($folder, $filename, $defaultImage);
 
-        // Determina o domínio base
         $scheme = isset(Yii::$app->request) && !Yii::$app->request->isConsoleRequest
             ? (Yii::$app->request->isSecureConnection ? 'https' : 'http')
             : 'http';
@@ -108,15 +103,11 @@ class ImageUploader extends Component
 
     /**
      * Deleta uma imagem
-     *
-     * @param string $folder Subpasta dentro de uploads (ex: 'animal')
-     * @param string $filename Nome do arquivo sem extensão
-     * @return void
      */
     public function deleteImage($folder, $filename)
     {
         foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = Yii::getAlias($this->uploadPath) . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
+            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
             if (file_exists($path)) {
                 unlink($path);
             }
@@ -125,9 +116,6 @@ class ImageUploader extends Component
 
     /**
      * Valida se o arquivo é uma imagem válida
-     *
-     * @param UploadedFile $file
-     * @return bool
      */
     public function validateImage($file)
     {
@@ -140,15 +128,11 @@ class ImageUploader extends Component
 
     /**
      * Obtém o caminho físico de uma imagem
-     *
-     * @param string $folder Subpasta dentro de uploads
-     * @param string $filename Nome do arquivo sem extensão
-     * @return string|null
      */
     public function getImagePath($folder, $filename)
     {
         foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = Yii::getAlias($this->uploadPath) . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
+            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
             if (file_exists($path)) {
                 return $path;
             }
@@ -158,14 +142,9 @@ class ImageUploader extends Component
 
     /**
      * Verifica se existe uma imagem
-     *
-     * @param string $folder Subpasta dentro de uploads
-     * @param string $filename Nome do arquivo sem extensão
-     * @return bool
      */
     public function imageExists($folder, $filename)
     {
         return $this->getImagePath($folder, $filename) !== null;
     }
 }
-

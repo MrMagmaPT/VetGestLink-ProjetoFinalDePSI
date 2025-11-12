@@ -83,52 +83,69 @@ class AuthComponent extends Component
 
         // Validar existência e senha
         if (!$user || !$user->validatePassword($password)) {
+            Yii::error("Login failed - Invalid credentials for: {$username}", __METHOD__);
             throw new UnauthorizedHttpException('Credenciais inválidas');
         }
 
         // Verificar status do usuário
         if ($user->status != User::STATUS_ACTIVE) {
+            Yii::error("Login failed - Inactive account for: {$username}", __METHOD__);
             throw new ForbiddenHttpException('Conta inativa');
         }
 
-        // Verificar se o usuário tem a role de cliente (API é apenas para clientes)
+        // Verificar se o usuário tem a role de cliente (APENAS se RBAC estiver configurado)
         if ($this->requiredRole) {
             $auth = Yii::$app->authManager;
-            if (!$auth || !$auth->checkAccess($user->id, $this->requiredRole)) {
-                throw new ForbiddenHttpException(
-                    'Acesso negado. Apenas clientes podem usar a aplicação mobile.'
-                );
+            if ($auth) {
+                // RBAC está configurado, verificar role
+                if (!$auth->checkAccess($user->id, $this->requiredRole)) {
+                    Yii::warning("Login attempt without required role '{$this->requiredRole}' for user: {$username}", __METHOD__);
+                    throw new ForbiddenHttpException(
+                        'Acesso negado. Apenas clientes podem usar a aplicação mobile.'
+                    );
+                }
+            } else {
+                // RBAC não está configurado, apenas logar aviso
+                Yii::warning("RBAC not configured - skipping role check for user: {$username}", __METHOD__);
             }
         }
 
         // Gerar/regenerar auth_key se necessário
         if (empty($user->auth_key)) {
             $user->generateAuthKey();
-            $user->save(false);
+            if (!$user->save(false)) {
+                Yii::error("Failed to generate auth_key for user: {$username}", __METHOD__);
+                throw new \Exception('Erro ao gerar token de autenticação');
+            }
         }
 
         // Buscar userprofile
         $userprofile = $user->userprofile;
 
         if (!$userprofile) {
+            Yii::error("Userprofile not found for user: {$username}", __METHOD__);
             throw new ForbiddenHttpException('Perfil de usuário não encontrado');
         }
 
         // Log de sucesso
-        Yii::info("Login successful for user: {$username}", __METHOD__);
+        Yii::info("Login successful for user: {$username} (ID: {$user->id})", __METHOD__);
 
         // Retornar dados do usuário
         return [
             'success' => true,
             'message' => $this->loginSuccessMessage,
-            'auth_key' => $user->auth_key,
+            'token' => $user->auth_key,
             'user' => [
-                'id' => $userprofile->id,
-                'nomecompleto' => $userprofile->nomecompleto,
+                'id' => $user->id,
                 'username' => $user->username,
                 'email' => $user->email,
+            ],
+            'userprofile' => [
+                'id' => $userprofile->id,
+                'nomecompleto' => $userprofile->nomecompleto,
                 'telemovel' => $userprofile->telemovel,
                 'nif' => $userprofile->nif,
+                'dtanascimento' => $userprofile->dtanascimento,
             ]
         ];
     }

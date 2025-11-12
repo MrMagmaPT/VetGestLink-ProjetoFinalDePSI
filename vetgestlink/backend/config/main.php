@@ -63,51 +63,67 @@ return [
             'showScriptName' => false,
             'rules' => [
                 // ==================== API VETGESTLINK ====================
+                // Controllers: AnimalController, AuthController, EspecieController,
+                //              FaturaController, HealthController, ImageController,
+                //              MarcacaoController, MoradaController, NotaController,
+                //              UserprofileController
 
-                // AUTENTICAÇÃO (Públicas)
-                'POST auth/login' => 'api/auth/login',
-                'POST auth/logout' => 'api/auth/logout',
-                'POST auth/forgot-password' => 'api/auth/forgot-password',
-                'GET auth/validate-token' => 'api/auth/validate-token',
+                // ========== AUTENTICAÇÃO (Públicas - AuthController) ==========
+                'POST api/auth/login' => 'api/auth/login',
+                'POST api/auth/logout' => 'api/auth/logout',
+                'POST api/auth/forgot-password' => 'api/auth/forgot-password',
+                'GET api/auth/validate-token' => 'api/auth/validate-token',
 
-                // ANIMAIS (Protegidas)
-                'GET client/animal' => 'api/client/animal',
-                'GET client/animal/<id:\d+>' => 'api/client/animal',
+                // ========== ANIMAIS (Protegidas - AnimalController) ==========
+                'GET api/animal' => 'api/animal/index',
+                'GET api/animal/<id:\d+>' => 'api/animal/view',
+                'GET api/animal/<id:\d+>/notas' => 'api/animal/notas',
 
-                // MARCAÇÕES (Protegidas)
-                'GET client/marcacao' => 'api/client/marcacao',
-                'GET client/marcacao/<id:\d+>' => 'api/client/marcacao',
+                // ========== ESPÉCIES E RAÇAS (Protegidas - EspecieController) ==========
+                'GET api/especie' => 'api/especie/index',
+                'GET api/especie/<id:\d+>/racas' => 'api/especie/racas',
 
-                // FATURAS (Protegidas)
-                'GET client/fatura' => 'api/client/fatura',
-                'GET client/fatura/<id:\d+>' => 'api/client/fatura',
-                'POST client/fatura/<id:\d+>/pagamento' => 'api/client/pagamento',
-                'GET client/fatura/resumo' => 'api/client/resumo',
+                // ========== MARCAÇÕES (Protegidas - MarcacaoController) ==========
+                'GET api/marcacao' => 'api/marcacao/index',
+                'GET api/marcacao/<id:\d+>' => 'api/marcacao/view',
 
-                // MÉTODOS DE PAGAMENTO (Protegidas)
-                'GET client/metodos-pagamento' => 'api/client/metodos-pagamento',
+                // ========== FATURAS (Protegidas - FaturaController) ==========
+                'GET api/fatura' => 'api/fatura/index',
+                'GET api/fatura/<id:\d+>' => 'api/fatura/view',
+                'POST api/fatura/<id:\d+>/pagamento' => 'api/fatura/pagamento',
+                'GET api/fatura/resumo' => 'api/fatura/resumo',
+                'GET api/fatura/metodos-pagamento' => 'api/fatura/metodos-pagamento',
 
-                // PERFIL (Protegidas)
-                'GET client/perfil' => 'api/client/perfil',
-                'PUT client/perfil' => 'api/client/update-perfil',
-                'PUT client/morada' => 'api/client/update-morada',
+                // ========== MORADAS (Protegidas - MoradaController) ==========
+                'GET api/morada' => 'api/morada/index',
+                'GET api/morada/<id:\d+>' => 'api/morada/view',
+                'GET api/morada/principal' => 'api/morada/principal',
+                'POST api/morada' => 'api/morada/create',
+                'PUT api/morada/<id:\d+>' => 'api/morada/update',
+                'DELETE api/morada/<id:\d+>' => 'api/morada/delete',
 
-                // NOTAS (Protegidas)
-                'GET client/animal/<animal_id:\d+>/notas' => 'api/client/notas',
-                'POST client/animal/<animal_id:\d+>/notas' => 'api/client/create-nota',
-                'PUT client/notas/<id:\d+>' => 'api/client/update-nota',
-                'DELETE client/notas/<id:\d+>' => 'api/client/delete-nota',
+                // ========== NOTAS (Protegidas - NotaController) ==========
+                'GET api/nota' => 'api/nota/index',
+                'GET api/nota/<id:\d+>' => 'api/nota/view',
+                'POST api/nota' => 'api/nota/create',
+                'PUT api/nota/<id:\d+>' => 'api/nota/update',
+                'DELETE api/nota/<id:\d+>' => 'api/nota/delete',
 
-                // HEALTH CHECK (Pública)
-                'GET health' => 'api/health/index',
+                // ========== PERFIL DO USUÁRIO (Protegidas - UserprofileController) ==========
+                'GET api/userprofile' => 'api/userprofile/index',
+                'GET api/userprofile/<id:\d+>' => 'api/userprofile/view',
+                'PUT api/userprofile' => 'api/userprofile/update',
+                'GET api/userprofile/estatisticas' => 'api/userprofile/estatisticas',
 
-                // ==================== API DE IMAGENS ====================
+                // ========== HEALTH CHECK (Pública - HealthController) ==========
+                'GET api/health' => 'api/health/index',
 
-                'api/image/animal/<id:\d+>' => 'api/image/animal',
-                'api/image/user/<id:\d+>' => 'api/image/user',
-                'api/image/serve' => 'api/image/serve',
-                'api/image/animals' => 'api/image/animals',
-                'api/image/users' => 'api/image/users',
+                // ========== IMAGENS (Públicas - ImageController) ==========
+                'GET api/image/animal/<id:\d+>' => 'api/image/animal',
+                'GET api/image/user/<id:\d+>' => 'api/image/user',
+                'GET api/image/serve' => 'api/image/serve',
+                'GET api/image/animals' => 'api/image/animals',
+                'GET api/image/users' => 'api/image/users',
             ],
         ],
     ],
