@@ -10,15 +10,24 @@ $this->title = 'Dashboard';
 
 // Defaults to avoid undefined variables
 $totalClientes = $totalClientes ?? 0;
+
 $totalAnimais = $totalAnimais ?? 0;
+
 $totalMarcacoesHoje = $totalMarcacoesHoje ?? 0;
 $totalMarcacoesPendentes = $totalMarcacoesPendentes ?? 0;
+
 $totalMedicamentos = $totalMedicamentos ?? 0;
+$totalMedicamentosEmStock = $totalMedicamentosEmStock ?? 0;
+$totalMedicamentosBaixoStock = $totalMedicamentosBaixoStock ?? 0;
+$totalMedicamentosCriticoStock = $totalMedicamentosCriticoStock ?? 0;
+$alertasMedicamentosCriticoStock = $alertasMedicamentosCriticoStock ?? [];
+
 $totalCategorias = $totalCategorias ?? 0;
 $totalRacas = $totalRacas ?? 0;
 $totalEspecies = $totalEspecies ?? 0;
 $faturasDoMes = $faturasDoMes ?? 0;
 $receitaMensal = $receitaMensal ?? 0;
+
 $ultimasMarcacoes = $ultimasMarcacoes ?? [];
 $marcacoesPendentes = $marcacoesPendentes ?? [];
 
@@ -68,19 +77,19 @@ $this->registerCssFile('@web/static/css/view.css');
                     'buttonclass' => 'btn btn-sm btn-primary',
                     'cards' => [
                         [
-                            'value' => 3,
+                            'value' => $totalMedicamentosCriticoStock,
                             'text' => 'Crítico',
                             'icon' => 'fa-skull-crossbones',
                             'iconColorClass' => 'icon-red',
                         ],
                         [
-                            'value' => 5,
+                            'value' => $totalMedicamentosBaixoStock,
                             'text' => 'Baixo',
                             'icon' => 'fa-exclamation-triangle',
                             'iconColorClass' => 'icon-orange',
                         ],
                         [
-                            'value' => $totalMedicamentos,
+                            'value' => $totalMedicamentosEmStock,
                             'text' => 'Em Estoque',
                             'icon' => 'fa-check-circle',
                             'iconColorClass' => 'icon-blue',
@@ -99,19 +108,12 @@ $this->registerCssFile('@web/static/css/view.css');
                                 ['text' => 'Adicionar Medicamento', 'icon' => 'fa-pills', 'url' => '/medicamento/create'],
                             ],
                         ]);
-
+                        //dd($alertasMedicamentosCriticoStock);
                         echo AlertContainerWidget::widget([
                             'text' => 'Alertas',
                             'options' => [
                                 [
-                                    'title' => 'Alerta de Stock Baixo',
-                                    'message' => 'Vacina anti-rábica com stock reduzido',
-                                    'icon' => 'fa-exclamation-circle',
-                                    'class' => 'text-danger',
-                                ],
-                                [
-                                    'title' => 'Alerta de Stock Baixo',
-                                    'message' => 'Vacina anti-rábica com stock reduzido',
+                                    'content' => $alertasMedicamentosCriticoStock,
                                     'icon' => 'fa-exclamation-circle',
                                     'class' => 'text-danger',
                                 ],

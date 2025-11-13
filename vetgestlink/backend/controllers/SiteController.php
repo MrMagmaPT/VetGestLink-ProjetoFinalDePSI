@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\debug\components\search\matchers\GreaterThan;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -15,6 +16,7 @@ use common\models\Medicamento;
 use common\models\Categoria;
 use common\models\Raca;
 use common\models\Especie;
+use function PHPUnit\Framework\lessThan;
 
 class SiteController extends Controller
 {
@@ -58,7 +60,39 @@ class SiteController extends Controller
         $userId = Yii::$app->user->id;
         $totalClientes = Userprofile::find()->where(['eliminado' => 0])->count();
         $totalAnimais = Animal::find()->where(['eliminado' => 0])->count();
+
         $totalMedicamentos = Medicamento::find()->where(['eliminado' => 0])->count();
+
+        $totalMedicamentosEmStock = Medicamento::find()
+            ->where(['>', 'quantidade', 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $totalMedicamentosBaixoStock = Medicamento::find()
+            ->where(['between', 'quantidade', 5, 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $totalMedicamentosCriticoStock = Medicamento::find()
+            ->where(['<', 'quantidade', 5])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
+        $NomeQuantMedicamentosCriticoStock = Medicamento::find()
+            ->select(['nome', 'quantidade'])
+            ->where(['eliminado' => 0])
+            ->andWhere(['<', 'quantidade', 5])
+            ->orderBy(['quantidade' => SORT_ASC])
+            ->asArray()
+            ->all();
+
+        $alertasMedicamentosCriticoStock = array_map(function ($m) {
+            return [
+                'title' => $m['nome'],
+                'content' => 'Quantidade critica: ' . $m['quantidade'],
+            ];
+        },$NomeQuantMedicamentosCriticoStock);
+
         $totalCategorias = Categoria::find()->where(['eliminado' => 0])->count();
         $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
         $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
@@ -107,6 +141,10 @@ class SiteController extends Controller
             'totalClientes' => $totalClientes,
             'totalAnimais' => $totalAnimais,
             'totalMedicamentos' => $totalMedicamentos,
+            'totalMedicamentosEmStock' => $totalMedicamentosEmStock,
+            'totalMedicamentosBaixoStock' => $totalMedicamentosBaixoStock,
+            'totalMedicamentosCriticoStock' => $totalMedicamentosCriticoStock,
+            'alertasMedicamentosCriticoStock' => $alertasMedicamentosCriticoStock,
             'totalCategorias' => $totalCategorias,
             'totalRacas' => $totalRacas,
             'totalEspecies' => $totalEspecies,
