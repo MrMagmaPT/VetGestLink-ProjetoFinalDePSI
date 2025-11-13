@@ -130,7 +130,11 @@ $this->registerCssFile('@web/static/css/view.css');
                         'content' => $marcacoesPendentes,
                         'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
                         'emptyMessage' => 'Nenhuma marcação pendente.',
-                        'revaluedColumns' => ['animais_id' => 'animalporid(%%)', 'userprofiles_id' => 'userporid(%%)'],
+                        'revaluedColumns' => [
+                                'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
+                                'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)'
+                        ],
+                        'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
                     ]);
                 ?>
             </div>

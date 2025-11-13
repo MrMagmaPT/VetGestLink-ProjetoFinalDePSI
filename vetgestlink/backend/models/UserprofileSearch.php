@@ -110,4 +110,13 @@ class UserprofileSearch extends Userprofile
 
         return $dataProvider;
     }
+
+    public static function getUserNameById($id)
+    {
+        $userprofile = Userprofile::findOne($id);
+        if ($userprofile && $userprofile->user) {
+            return $userprofile->user->username;
+        }
+        return null;
+    }
 }
