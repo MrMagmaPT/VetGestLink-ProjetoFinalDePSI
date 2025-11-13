@@ -430,6 +430,7 @@ class RbacController extends Controller
         $auth->addChild($veterinario, $cliente);
         $auth->addChild($rececionista, $cliente);
 
+
         //Mensagem pra dar feedback que rodou o script
         echo "✅ RBAC inicializado com sucesso ✅\n";
     }

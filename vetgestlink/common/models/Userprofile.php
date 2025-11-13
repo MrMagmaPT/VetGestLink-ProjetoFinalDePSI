@@ -1,9 +1,8 @@
 <?php
+
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "userprofiles".
@@ -13,13 +12,12 @@ use yii\db\Expression;
  * @property string $nif
  * @property string $telemovel
  * @property string $dtanascimento
- * @property string $dtaregisto
- * @property int $user_id
  * @property int $eliminado
+ * @property int $user_id
  *
  * @property Animal[] $animais
  * @property Fatura[] $faturas
- * @property Marcacao[] $marcacoes
+ * @property Marcacao[] $marcacos
  * @property Morada[] $moradas
  * @property Nota[] $notas
  * @property User $user
@@ -27,17 +25,7 @@ use yii\db\Expression;
 class Userprofile extends \yii\db\ActiveRecord
 {
 
-    public function behaviors()
-    {
-        return [
-            [
-                'class' => TimestampBehavior::class,
-                'createdAtAttribute' => 'dtaregisto',
-                'updatedAtAttribute' => false,
-                'value' => new Expression('NOW()'),
-            ],
-        ];
-    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,11 +41,12 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'dtaregisto', 'user_id'], 'required'],
-            [['dtanascimento', 'dtaregisto'], 'safe'],
-            [['user_id', 'eliminado'], 'integer'],
+            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'user_id'], 'required'],
+            [['dtanascimento'], 'safe'],
+            [['eliminado', 'user_id'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
             [['nif', 'telemovel'], 'string', 'max' => 9],
+            [['nif'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -73,9 +62,8 @@ class Userprofile extends \yii\db\ActiveRecord
             'nif' => 'Nif',
             'telemovel' => 'Telemovel',
             'dtanascimento' => 'Dtanascimento',
-            'dtaregisto' => 'Dtaregisto',
-            'user_id' => 'User ID',
             'eliminado' => 'Eliminado',
+            'user_id' => 'User ID',
         ];
     }
 
@@ -104,7 +92,7 @@ class Userprofile extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMarcacoes()
+    public function getMarcacos()
     {
         return $this->hasMany(Marcacao::class, ['userprofiles_id' => 'id']);
     }

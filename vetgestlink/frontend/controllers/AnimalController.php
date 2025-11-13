@@ -105,4 +105,35 @@ class AnimalController extends Controller
         ]);
     }
 
+    public function actionViewAnimalDetails($id)
+    {
+        $model = $this->findModel($id);
+
+        // Fetch the latest Nota for this animal
+        $latestNota = Nota::find()
+            ->where(['animais_id' => $id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->one();
+
+        return $this->renderAjax('viewAnimalDetails', [
+            'model' => $model,
+            'latestNota' => $latestNota,
+        ]);
+    }
+
+    public function actionViewNotas($animal_id)
+    {
+        $model = $this->findModel($animal_id);
+        $allnotas = Nota::find()
+            ->where(['animais_id' => $animal_id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
+
+        return $this->render('viewNotas', [
+            'model' => $model,
+            'allnotas' => $allnotas,
+        ]);
+    }
+
+
 }

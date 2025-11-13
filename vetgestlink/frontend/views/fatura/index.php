@@ -7,7 +7,7 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Fatura';
+$this->title = 'Faturas';
 $this->params['breadcrumbs'][] = $this->title;
 
 $faturas = $dataProvider->getModels();
@@ -30,7 +30,7 @@ $faturas = $dataProvider->getModels();
 
                         <!-- Date -->
                         <p class="text-muted mb-2">
-                            <strong>Data:</strong> <?= Yii::$app->formatter->asDate($fatura->data, 'php:d/m/Y') ?>
+                            <strong>Data:</strong> <?= Yii::$app->formatter->asDate($fatura->created_at, 'php:d/m/Y') ?>
                         </p>
 
                         <!-- Estado (boolean) -->
@@ -65,5 +65,4 @@ $faturas = $dataProvider->getModels();
             </div>
         <?php endforeach; ?>
     </div>
-
 </div>
