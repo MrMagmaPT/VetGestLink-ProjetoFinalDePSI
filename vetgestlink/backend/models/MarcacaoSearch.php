@@ -18,8 +18,7 @@ class MarcacaoSearch extends Marcacao
     {
         return [
             [['id', 'animais_id', 'userprofiles_id', 'eliminado'], 'integer'],
-            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at', 'diagnostico', 'estado', 'tipo'], 'safe'],
-            [['preco'], 'number'],
+            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at', 'diagnostico', 'estado'], 'safe'],
         ];
     }
 
@@ -66,15 +65,13 @@ class MarcacaoSearch extends Marcacao
             'horafim' => $this->horafim,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'preco' => $this->preco,
             'animais_id' => $this->animais_id,
             'userprofiles_id' => $this->userprofiles_id,
             'eliminado' => $this->eliminado,
         ]);
 
         $query->andFilterWhere(['like', 'diagnostico', $this->diagnostico])
-            ->andFilterWhere(['like', 'estado', $this->estado])
-            ->andFilterWhere(['like', 'tipo', $this->tipo]);
+            ->andFilterWhere(['like', 'estado', $this->estado]);
 
         return $dataProvider;
     }

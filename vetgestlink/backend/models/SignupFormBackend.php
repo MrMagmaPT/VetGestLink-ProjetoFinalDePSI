@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -9,15 +9,20 @@ use common\models\Userprofile;
 use common\models\Morada;
 use yii\web\UploadedFile;
 
-class SignupForm extends Model
+class SignupFormBackend extends Model
 {
+    // User fields
     public $username;
     public $email;
     public $password;
+
+    // Userprofile fields
     public $nomecompleto;
     public $dtanascimento;
     public $nif;
     public $telemovel;
+
+    // Morada fields
     public $rua;
     public $nporta;
     public $andar;
@@ -26,7 +31,12 @@ class SignupForm extends Model
     public $localidade;
     public $cidade;
     public $principal;
+
+    // Profile image
     public $imageFile;
+
+    // Role
+    public $role;
 
     public function rules()
     {
@@ -45,25 +55,26 @@ class SignupForm extends Model
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 
-            ['nomecompleto', 'required'],
-            ['dtanascimento', 'required'],
-            ['nif', 'required'],
+            [['nomecompleto', 'dtanascimento', 'nif', 'telemovel'], 'required'],
+            ['nomecompleto', 'string', 'max' => 45],
+            ['dtanascimento', 'date', 'format' => 'php:Y-m-d'],
             ['nif', 'string', 'length' => 9],
-            ['telemovel', 'required'],
             ['telemovel', 'string', 'length' => 9],
 
-            ['rua', 'required'],
-            ['nporta', 'required'],
-            ['cdpostal', 'required'],
-            ['localidade', 'required'],
-            ['cidade', 'required'],
-            [['andar', 'cxpostal'], 'safe'],
+            [['rua', 'nporta', 'cdpostal', 'localidade', 'cidade'], 'required'],
+
+            // MUDANÇA: Ajustar max para 45 caracteres (conforme tabela)
+            [['rua', 'localidade', 'cidade'], 'string', 'max' => 45],
+            [['nporta', 'andar', 'cxpostal', 'cdpostal'], 'string', 'max' => 45],
+
             ['principal', 'boolean'],
-            ['imageFile', 'file', 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024 * 2], // 2MB
+            ['principal', 'default', 'value' => 1],
+
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            ['role', 'required'],
+            ['role', 'string'],
         ];
     }
-
-
 
 
     public function attributeLabels()
@@ -104,7 +115,8 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            //$user->status = User::STATUS_INACTIVE;
+            //Usuarios Criados pelo backend ficam ativos por defeito
+            $user->status = User::STATUS_ACTIVE;
             $user->created_at = time();
             $user->updated_at = time();
 
@@ -115,15 +127,14 @@ class SignupForm extends Model
 
             Yii::info("User ID {$user->id} criado");
 
-            // 2. Atribuir role "cliente"
+            // 2. Atribuir role selecionada
             $auth = Yii::$app->authManager;
-            $clienteRole = $auth->getRole('cliente');
-
-            if ($clienteRole) {
-                $auth->assign($clienteRole, $user->id);
-                Yii::info("Role 'cliente' atribuída ao User ID {$user->id}");
+            $roleObj = $auth->getRole($this->role);
+            if ($roleObj) {
+                $auth->assign($roleObj, $user->id);
+                Yii::info("Role '{$this->role}' atribuída ao User ID {$user->id}");
             } else {
-                Yii::warning("Role 'cliente' não encontrada no sistema RBAC");
+                Yii::warning("Role '{$this->role}' não encontrada no sistema RBAC");
             }
             // 3. Criar Userprofile
             $userprofile = new Userprofile();
@@ -166,7 +177,7 @@ class SignupForm extends Model
 
             $transaction->commit();
 
-            return $user && $this->sendEmail($user) ? $user : null;
+            return $user;
 
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -175,17 +186,5 @@ class SignupForm extends Model
             return null;
         }
     }
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
-    }
+
 }

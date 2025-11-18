@@ -4,33 +4,101 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var common\models\Userprofile $model */
-/** @var yii\widgets\ActiveForm $form */
+/** @var frontend\models\SignupForm $model */
+/** @var common\models\Userprofile $userprofile */
+/** @var bool $isUpdate */
+
+$isUpdate = isset($isUpdate) && $isUpdate === true;
 ?>
 
-<div class="userprofiles-form">
+<div class="userprofile-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
+    <!-- Dados de Acesso -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Dados de Acesso</h3>
+        </div>
+        <div class="panel-body">
+            <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true])->label('Nome completo') ?>
+            <?php if (!$isUpdate): ?>
+                <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+            <?php endif; ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'telemovel')->textInput(['maxlength' => true]) ?>
+    <!-- Informações Pessoais -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Informações Pessoais</h3>
+        </div>
+        <div class="panel-body">
+            <?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
+            <div class="row">
+                <div class="col-md-4">
+                    <?= $form->field($model, 'dtanascimento')->input('date', [
+                            'max' => date('Y-m-d')
+                    ]) ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($model, 'nif')->textInput(['maxlength' => 9]) ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($model, 'telemovel')->textInput(['maxlength' => 9]) ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
+            <?php if (!$isUpdate): ?>
+                <?= $form->field($model, 'imageFile')->fileInput() ?>
+            <?php endif; ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'user_id')->dropDownList(
-            \yii\helpers\ArrayHelper::map(\common\models\User::find()->all(), 'id', 'username'),
-            ['prompt' => 'Selecione um utilizador']
-    ) ?>
+    <!-- Morada -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Morada</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'rua')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?= $form->field($model, 'nporta')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-3">
+                    <?= $form->field($model, 'andar')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'cdpostal')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'cxpostal')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'localidade')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'cidade')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton($isUpdate ? 'Atualizar' : 'Registar', ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Cancelar', ['view'], ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

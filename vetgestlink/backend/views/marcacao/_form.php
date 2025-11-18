@@ -12,10 +12,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'created_at')->Input('int')->label(false) ?>
-
-    <?= $form->field($model, 'updated_at')->Input('int')->label(false); ?>
-
     <!-- Date input using HTML5 'date' type -->
     <?= $form->field($model, 'data')->input('date') ?>
 
@@ -33,24 +29,7 @@ use yii\widgets\ActiveForm;
         'realizada' => 'Realizada',
     ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'tipo')->dropDownList([
-        'consulta' => 'Consulta',
-        'cirurgia' => 'Cirurgia',
-        'operacao' => 'Operacao',
-    ], ['prompt' => '']) ?>
-
-    <?php
-    $tipo_marcacao = $form->field($model, 'tipo');
-    if ($tipo_marcacao == 'cirurgia') {
-        $form->field($model, 'preco')->hiddenInput(['value' => 200])->label(false);
-    } else if ($tipo_marcacao == 'consulta') {
-        $form->field($model, 'preco')->hiddenInput(['value' => 30])->label(false);
-
-    } else if ($tipo_marcacao == 'operacao') {
-        $form->field($model, 'preco')->hiddenInput(['value' => 100])->label(false);
-
-    }
-    ?>
+    
 
     <?= $form->field($model, 'animais_id')->input('number') ?>
 

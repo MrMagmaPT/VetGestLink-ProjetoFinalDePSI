@@ -75,4 +75,10 @@ class AnimalSearch extends Animal
 
         return $dataProvider;
     }
+
+    public static function getAnimalNameById($id)
+    {
+        $animal = Animal::findOne($id);
+        return $animal ? $animal->nome : null;
+    }
 }
