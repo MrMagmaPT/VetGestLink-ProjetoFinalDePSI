@@ -21,7 +21,10 @@ $moradas = $moradas ?? ($model->moradas ?? [ArrayHelper::toArray($model)]);
                 </span>
                     <div>
                         <div class="small text-muted">Nome Completo</div>
-                        <div class="fw-medium"><?= Html::encode($model->nomecompleto ?? '-') ?></div>
+                        <?= $form->field($model, 'nomecompleto', [
+                                'template' => '{input}{error}',
+                                'options' => ['class' => 'mb-0'],
+                        ])->textInput(['class' => 'form-control border-0 border-bottom rounded-0', 'style' => 'background:transparent;'])->label(false) ?>
                     </div>
                 </div>
             </div>

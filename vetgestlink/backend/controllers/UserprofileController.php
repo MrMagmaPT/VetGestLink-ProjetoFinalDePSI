@@ -6,7 +6,6 @@ use yii\base\Model;
 use common\models\Userprofile;
 use backend\models\UserprofileSearch;
 use yii\web\Controller;
-use common\models\Morada;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
@@ -82,7 +81,7 @@ class UserprofileController extends Controller
         }
 
         return $this->render('create', ['model' => $model]);
-    }   
+    }
 
     /**
      * Updates an existing Userprofile model.
@@ -92,100 +91,44 @@ class UserprofileController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
 
-    public function actionUpdate($id)
+    public function actionUpdate($id = null)
     {
-        $userprofile = Userprofile::findOne($id);
-
-        if (!$userprofile) {
-            throw new NotFoundHttpException('O perfil solicitado não existe.');
+        // se não vier id, usa o perfil do utilizador logado
+        if ($id === null) {
+            $user = Yii::$app->user->identity;
+            if (!$user || !$user->userprofile) {
+                throw new NotFoundHttpException('Perfil não encontrado.');
+            }
+            $model = $user->userprofile;
+        } else {
+            $model = $this->findModel($id);
         }
 
-        // Carregar o user relacionado
-        $user = $userprofile->user;
+        $moradas = $model->moradas ?: [];
 
-        // Carregar a morada principal do userprofile
-        $morada = Morada::find()
-            ->where(['userprofiles_id' => $userprofile->id, 'principal' => 1])
-            ->one();
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                Model::loadMultiple($moradas, $this->request->post());
 
-        if (!$morada) {
-            $morada = new Morada();
-            $morada->userprofile_id = $userprofile->id;
-            $morada->principal = 1;
-        }
+                $valid = $model->validate();
+                $valid = Model::validateMultiple($moradas) && $valid;
 
-        $model = new SignupFormBackend();
+                if ($valid && $model->save()) {
+                    foreach ($moradas as $morada) {
+                        $morada->save();
+                    }
 
-        // Preencher o modelo do formulário
-        $model->username = $user->username;
-        $model->email = $user->email;
-        $model->nomecompleto = $userprofile->nomecompleto;
-        $model->dtanascimento = $userprofile->dtanascimento;
-        $model->nif = $userprofile->nif;
-        $model->telemovel = $userprofile->telemovel;
-
-        // Dados da morada
-        $model->rua = $morada->rua;
-        $model->nporta = $morada->nporta;
-        $model->andar = $morada->andar;
-        $model->cdpostal = $morada->cdpostal;
-        $model->cxpostal = $morada->cxpostal;
-        $model->localidade = $morada->localidade;
-        $model->cidade = $morada->cidade;
-        $model->principal = $morada->principal;
-
-        // Obter a role do utilizador
-        $auth = Yii::$app->authManager;
-        $roles = $auth->getRolesByUser($user->id);
-        $model->role = !empty($roles) ? array_keys($roles)[0] : '';
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                // Atualizar User
-                $user->username = $model->username;
-                $user->email = $model->email;
-                if (!empty($model->password)) {
-                    $user->setPassword($model->password);
+                    Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
-                $user->save();
-
-                // Atualizar Userprofile
-                $userprofile->nomecompleto = $model->nomecompleto;
-                $userprofile->dtanascimento = $model->dtanascimento;
-                $userprofile->nif = $model->nif;
-                $userprofile->telemovel = $model->telemovel;
-                $userprofile->save();
-
-                // Atualizar Morada
-                $morada->rua = $model->rua;
-                $morada->nporta = $model->nporta;
-                $morada->andar = $model->andar;
-                $morada->cdpostal = $model->cdpostal;
-                $morada->cxpostal = $model->cxpostal;
-                $morada->localidade = $model->localidade;
-                $morada->cidade = $model->cidade;
-                $morada->principal = $model->principal;
-                $morada->save();
-
-                $transaction->commit();
-                Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso.');
-                return $this->redirect(['view', 'id' => $userprofile->id]);
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                Yii::$app->session->setFlash('error', 'Erro ao atualizar: ' . $e->getMessage());
             }
         }
 
         return $this->render('update', [
             'model' => $model,
-            'userprofile' => $userprofile
+            'moradas' => $moradas,
         ]);
     }
-
-
-
-
 
     /**
      * Deletes an existing Userprofile model.
@@ -199,6 +142,48 @@ class UserprofileController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Saves the user profile (POST action).
+     *
+     * @return \yii\web\Response
+     */
+    public function actionSave($id = null)
+    {
+        // se vier id, carrega esse perfil; senão usa o do user logado
+        if ($id !== null) {
+            $model = $this->findModel($id);
+        } else {
+            $user = Yii::$app->user->identity;
+            if (!$user || !$user->userprofile) {
+                throw new NotFoundHttpException('Perfil não encontrado.');
+            }
+            $model = $user->userprofile;
+        }
+
+        $moradas = $model->moradas ?: [];
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            $valid = $model->validate();
+            $valid = \yii\base\Model::validateMultiple($moradas) && $valid;
+
+            if ($valid) {
+                $model->save(false);
+                foreach ($moradas as $morada) {
+                    $morada->save(false);
+                }
+                Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Corrija os erros assinalados.');
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
+        }
+
+        return $this->redirect(['update', 'id' => $model->id]);
     }
 
     /**

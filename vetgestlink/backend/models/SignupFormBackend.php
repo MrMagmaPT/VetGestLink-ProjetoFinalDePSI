@@ -11,18 +11,13 @@ use yii\web\UploadedFile;
 
 class SignupFormBackend extends Model
 {
-    // User fields
     public $username;
     public $email;
     public $password;
-
-    // Userprofile fields
     public $nomecompleto;
     public $dtanascimento;
     public $nif;
     public $telemovel;
-
-    // Morada fields
     public $rua;
     public $nporta;
     public $andar;
@@ -31,11 +26,7 @@ class SignupFormBackend extends Model
     public $localidade;
     public $cidade;
     public $principal;
-
-    // Profile image
     public $imageFile;
-
-    // Role
     public $role;
 
     public function rules()
