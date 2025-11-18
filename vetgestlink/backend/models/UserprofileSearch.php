@@ -52,7 +52,7 @@ class UserprofileSearch extends Userprofile
         $query = Userprofile::find()
             ->joinWith(['moradas']); // Join com a tabela de moradas
 
-        // add conditions that should always apply here
+        // add conditions that should always apply her
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
