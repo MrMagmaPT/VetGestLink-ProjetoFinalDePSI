@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\Model;
@@ -9,7 +9,7 @@ use common\models\Userprofile;
 use common\models\Morada;
 use yii\web\UploadedFile;
 
-class SignupForm extends Model
+class SignupFormBackend extends Model
 {
     public $username;
     public $email;
@@ -27,6 +27,7 @@ class SignupForm extends Model
     public $cidade;
     public $principal;
     public $imageFile;
+    public $role;
 
     public function rules()
     {
@@ -61,6 +62,8 @@ class SignupForm extends Model
             ['principal', 'default', 'value' => 1],
 
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            ['role', 'required'],
+            ['role', 'string'],
         ];
     }
 
@@ -103,7 +106,8 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            //$user->status = User::STATUS_INACTIVE;
+            //Usuarios Criados pelo backend ficam ativos por defeito
+            $user->status = User::STATUS_ACTIVE;
             $user->created_at = time();
             $user->updated_at = time();
 
@@ -114,15 +118,14 @@ class SignupForm extends Model
 
             Yii::info("User ID {$user->id} criado");
 
-            // 2. Atribuir role "cliente"
+            // 2. Atribuir role selecionada
             $auth = Yii::$app->authManager;
-            $clienteRole = $auth->getRole('cliente');
-
-            if ($clienteRole) {
-                $auth->assign($clienteRole, $user->id);
-                Yii::info("Role 'cliente' atribuída ao User ID {$user->id}");
+            $roleObj = $auth->getRole($this->role);
+            if ($roleObj) {
+                $auth->assign($roleObj, $user->id);
+                Yii::info("Role '{$this->role}' atribuída ao User ID {$user->id}");
             } else {
-                Yii::warning("Role 'cliente' não encontrada no sistema RBAC");
+                Yii::warning("Role '{$this->role}' não encontrada no sistema RBAC");
             }
             // 3. Criar Userprofile
             $userprofile = new Userprofile();
@@ -165,7 +168,7 @@ class SignupForm extends Model
 
             $transaction->commit();
 
-            return $user && $this->sendEmail($user) ? $user : null;
+            return $user;
 
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -174,17 +177,5 @@ class SignupForm extends Model
             return null;
         }
     }
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
-    }
+
 }

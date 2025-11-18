@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 
 use yii\base\Model;
-use common\models\Userprofile;
+use common\models\userprofile;
 use common\models\Morada;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UserprofileController implements the CRUD actions for Userprofile model.
+ * UserprofileController implements the CRUD actions for userprofile model.
  */
 class UserprofileController extends Controller
 {
@@ -54,10 +54,10 @@ class UserprofileController extends Controller
 
         $user = \common\models\User::find()
             ->where(['id' => $user->id])
-            ->with(['userProfile.moradas'])
+            ->with(['userprofile.moradas'])
             ->one();
 
-        $model = $user->userProfile;
+        $model = $user->userprofile;
         $moradas = $model->moradas ?? [];
 
         return $this->render('view', [
@@ -86,7 +86,7 @@ class UserprofileController extends Controller
     public function actionUpdate()
     {
         $user = Yii::$app->user->identity;
-        $model = $user->userProfile;
+        $model = $user->userprofile;
         $moradas = $model->moradas;
 
         if ($this->request->isPost && $model->load($this->request->post())) {
@@ -116,7 +116,7 @@ class UserprofileController extends Controller
     public function actionSave()
     {
         $user = Yii::$app->user->identity;
-        $model = $user->userProfile;
+        $model = $user->userprofile;
         $moradas = $model->moradas;
 
         if ($this->request->isPost && $model->load($this->request->post())) {
@@ -135,15 +135,15 @@ class UserprofileController extends Controller
     }
 
     /**
-     * Finds the Userprofile model based on its primary key value.
+     * Finds the userprofile model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Userprofile the loaded model
+     * @return userprofile the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Userprofile::findOne(['id' => $id])) !== null) {
+        if (($model = userprofile::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

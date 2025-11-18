@@ -2,12 +2,15 @@
 
 namespace backend\controllers;
 
+use yii\base\Model;
 use common\models\Userprofile;
 use backend\models\UserprofileSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use backend\models\SignupFormBackend;
+use Yii;
 
 /**
  * UserprofileController implements the CRUD actions for Userprofile model.
@@ -68,24 +71,17 @@ class UserprofileController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Userprofile();
+        $model = new SignupFormBackend();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                if ($model->imageFile) {
-                    $model->uploadImage();
-                }
-                return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($user = $model->signup()) {
+                // sucesso
             }
-        } else {
-            $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+        return $this->render('create', ['model' => $model]);
+    }   
 
     /**
      * Updates an existing Userprofile model.
@@ -94,21 +90,29 @@ class UserprofileController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->imageFile) {
-                $model->deleteImage(); // remove imagem antiga
-                $model->uploadImage();
+    public function actionUpdate()
+    {
+        $user = Yii::$app->user->identity;
+        $model = $user->userprofile;
+        $moradas = $model->moradas;
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            Model::loadMultiple($moradas, $this->request->post());
+
+            if ($model->save(false)) {
+                foreach ($moradas as $morada) {
+                    $morada->save(false);
+                }
+
+                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                return $this->redirect(['view']);
             }
-            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'moradas' => $moradas,
         ]);
     }
 

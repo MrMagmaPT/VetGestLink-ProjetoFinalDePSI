@@ -448,13 +448,7 @@ class RbacController extends Controller
         $auth->addChild($cliente, $viewImages);
 
         //===============================================
-        // Herança de Roles
-        $auth->addChild($admin, $veterinario);
-        $auth->addChild($admin, $rececionista);
-        $auth->addChild($admin, $cliente);
 
-        $auth->addChild($veterinario, $cliente);
-        $auth->addChild($rececionista, $cliente);
 
         //Mensagem pra dar feedback que rodou o script
         echo "✅ RBAC inicializado com sucesso ✅\n";

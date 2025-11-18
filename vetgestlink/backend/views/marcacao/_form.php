@@ -29,25 +29,7 @@ use yii\widgets\ActiveForm;
         'realizada' => 'Realizada',
     ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'tipo')->dropDownList([
-        'consulta' => 'Consulta',
-        'cirurgia' => 'Cirurgia',
-        'operacao' => 'Operacao',
-    ], ['prompt' => '']) ?>
-
-    <?php
-
-    $tipo_marcacao = $model->tipo;
-
-    if ($tipo_marcacao == 'cirurgia') {
-        echo $form->field($model, 'preco')->hiddenInput(['value' => 200])->label(false);
-    } else if ($tipo_marcacao == 'consulta') {
-        echo $form->field($model, 'preco')->hiddenInput(['value' => 30])->label(false);
-    } else if ($tipo_marcacao == 'operacao') {
-        echo $form->field($model, 'preco')->hiddenInput(['value' => 100])->label(false);
-
-    }
-    ?>
+    
 
     <?= $form->field($model, 'animais_id')->input('number') ?>
 
