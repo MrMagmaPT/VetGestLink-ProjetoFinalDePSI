@@ -213,23 +213,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <script>
                         function autoFill() {
-                            document.getElementById('signupform-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';
-                            document.getElementById('signupform-nomecompleto').value = 'João Silva Santos';
-                            document.getElementById('signupform-dtanascimento').value = '1990-05-15';
-                            document.getElementById('signupform-nif').value = '123456789';
-                            document.getElementById('signupform-telemovel').value = '912345678';
-                            document.getElementById('signupform-rua').value = 'Rua das Flores';
-                            document.getElementById('signupform-nporta').value = '123';
-                            document.getElementById('signupform-andar').value = '2';
-                            document.getElementById('signupform-cdpostal').value = '1234-567';
-                            document.getElementById('signupform-cxpostal').value = '1000';
-                            document.getElementById('signupform-localidade').value = 'Lisboa';
-                            document.getElementById('signupform-cidade').value = 'Lisboa';
+
+                            document.getElementById('<?= Html::getInputId($model, 'nomecompleto') ?>').value = 'João Silva Santos';
+                            document.getElementById('<?= Html::getInputId($model, 'dtanascimento') ?>').value = '1990-05-15';
+                            document.getElementById('<?= Html::getInputId($model, 'nif') ?>').value = '123456789';
+                            document.getElementById('<?= Html::getInputId($model, 'telemovel') ?>').value = '912345678';
+                            document.getElementById('<?= Html::getInputId($model, 'rua') ?>').value = 'Rua das Flores';
+                            document.getElementById('<?= Html::getInputId($model, 'nporta') ?>').value = '123';
+                            document.getElementById('<?= Html::getInputId($model, 'andar') ?>').value = '2';
+                            document.getElementById('<?= Html::getInputId($model, 'cdpostal') ?>').value = '1234-567';
+                            document.getElementById('<?= Html::getInputId($model, 'cxpostal') ?>').value = '1000';
+                            document.getElementById('<?= Html::getInputId($model, 'localidade') ?>').value = 'Lisboa';
+                            document.getElementById('<?= Html::getInputId($model, 'cidade') ?>').value = 'Lisboa';
+
                         }
                     </script>
                 <?php endif; ?>
-
-
             </div>
         </div>
     </div>

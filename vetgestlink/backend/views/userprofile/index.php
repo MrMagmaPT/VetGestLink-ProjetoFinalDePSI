@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\SerialColumn'],
 
                     'id',
+                    'nomecompleto',
                     'nif',
                     'telemovel',
                     //user id remover dps na entrega

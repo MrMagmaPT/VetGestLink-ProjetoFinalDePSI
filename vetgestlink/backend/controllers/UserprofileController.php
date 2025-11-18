@@ -76,7 +76,8 @@ class UserprofileController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($user = $model->signup()) {
-                // sucesso
+                Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso.');
+                return $this->refresh(); // mantém na mesma página para mostrar o flash
             }
         }
 
