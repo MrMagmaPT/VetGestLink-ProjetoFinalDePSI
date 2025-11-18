@@ -69,8 +69,8 @@ class Marcacao extends \yii\db\ActiveRecord
         return [
             [['diagnostico'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at', 'preco', 'estado', 'tipo', 'animais_id', 'userprofiles_id'], 'required'],
-            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at'], 'safe'],
+            [['data', 'horainicio', 'horafim', 'preco', 'estado', 'tipo', 'animais_id', 'userprofiles_id'], 'required'],
+            [['data', 'horainicio', 'horafim'], 'safe'],
             [['preco'], 'number'],
             [['estado', 'tipo'], 'string'],
             [['animais_id', 'userprofiles_id', 'eliminado'], 'integer'],

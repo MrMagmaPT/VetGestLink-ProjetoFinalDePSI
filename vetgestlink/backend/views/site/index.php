@@ -10,16 +10,26 @@ $this->title = 'Dashboard';
 
 // Defaults to avoid undefined variables
 $totalClientes = $totalClientes ?? 0;
+
 $totalAnimais = $totalAnimais ?? 0;
-$marcacoesHoje = $marcacoesHoje ?? 0;
-$marcacoesPendentes = $marcacoesPendentes ?? 0;
+
+$totalMarcacoesHoje = $totalMarcacoesHoje ?? 0;
+$totalMarcacoesPendentes = $totalMarcacoesPendentes ?? 0;
+
 $totalMedicamentos = $totalMedicamentos ?? 0;
+$totalMedicamentosEmStock = $totalMedicamentosEmStock ?? 0;
+$totalMedicamentosBaixoStock = $totalMedicamentosBaixoStock ?? 0;
+$totalMedicamentosCriticoStock = $totalMedicamentosCriticoStock ?? 0;
+$alertasMedicamentosCriticoStock = $alertasMedicamentosCriticoStock ?? [];
+
 $totalCategorias = $totalCategorias ?? 0;
 $totalRacas = $totalRacas ?? 0;
 $totalEspecies = $totalEspecies ?? 0;
 $faturasDoMes = $faturasDoMes ?? 0;
 $receitaMensal = $receitaMensal ?? 0;
+
 $ultimasMarcacoes = $ultimasMarcacoes ?? [];
+$marcacoesPendentes = $marcacoesPendentes ?? [];
 
 $this->registerCssFile('@web/static/css/view.css');
 
@@ -67,19 +77,19 @@ $this->registerCssFile('@web/static/css/view.css');
                     'buttonclass' => 'btn btn-sm btn-primary',
                     'cards' => [
                         [
-                            'value' => 3,
+                            'value' => $totalMedicamentosCriticoStock,
                             'text' => 'Crítico',
                             'icon' => 'fa-skull-crossbones',
                             'iconColorClass' => 'icon-red',
                         ],
                         [
-                            'value' => 5,
+                            'value' => $totalMedicamentosBaixoStock,
                             'text' => 'Baixo',
                             'icon' => 'fa-exclamation-triangle',
                             'iconColorClass' => 'icon-orange',
                         ],
                         [
-                            'value' => $totalMedicamentos,
+                            'value' => $totalMedicamentosEmStock,
                             'text' => 'Em Estoque',
                             'icon' => 'fa-check-circle',
                             'iconColorClass' => 'icon-blue',
@@ -98,19 +108,12 @@ $this->registerCssFile('@web/static/css/view.css');
                                 ['text' => 'Adicionar Medicamento', 'icon' => 'fa-pills', 'url' => '/medicamento/create'],
                             ],
                         ]);
-
+                        //dd($alertasMedicamentosCriticoStock);
                         echo AlertContainerWidget::widget([
                             'text' => 'Alertas',
                             'options' => [
                                 [
-                                    'title' => 'Alerta de Stock Baixo',
-                                    'message' => 'Vacina anti-rábica com stock reduzido',
-                                    'icon' => 'fa-exclamation-circle',
-                                    'class' => 'text-danger',
-                                ],
-                                [
-                                    'title' => 'Alerta de Stock Baixo',
-                                    'message' => 'Vacina anti-rábica com stock reduzido',
+                                    'content' => $alertasMedicamentosCriticoStock,
                                     'icon' => 'fa-exclamation-circle',
                                     'class' => 'text-danger',
                                 ],
@@ -123,9 +126,17 @@ $this->registerCssFile('@web/static/css/view.css');
             <!-- Últimas marcações table -->
             <div class=".col-md-12">
                 <?php
+                //dd($marcacoesPendentes);
                     echo TableWidget::widget([
                         'title' => 'Marcações',
-                        'content' => [$marcacoesHoje],
+                        'content' => $marcacoesPendentes,
+                        'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
+                        'emptyMessage' => 'Nenhuma marcação pendente.',
+                        'revaluedColumns' => [
+                                'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
+                                'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)'
+                        ],
+                        'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
                     ]);
                 ?>
             </div>
@@ -133,90 +144,72 @@ $this->registerCssFile('@web/static/css/view.css');
 
         <?php if ($usertype == 2): ?> <!-- Veterinarian -->
             <div class="row">
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-green rounded"><i class="fas fa-paw"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Animais</span>
-                            <span class="info-box-number"><?= $totalAnimais ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-green',
+                    'text' => 'Animais',
+                    'value' => $totalAnimais,
+                    'url' => '/animal/index',
+                ]);
 
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-yellow rounded"><i class="fas fa-stethoscope"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Consultas Hoje</span>
-                            <span class="info-box-number"><?= $marcacoesHoje ?></span>
-                        </div>
-                    </div>
-                </div>
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-stethoscope',
+                    'iconColorClass' => 'bg-yellow',
+                    'text' => 'Marcações',
+                    'value' => $totalMarcacoesHoje,
+                    'url' => '/marcacao/index',
+                ]);
+                ?>
             </div>
 
             <div class="row mt-4">
-                <div class="col-lg-8 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon icon-purple rounded"><i class="fas fa-pills"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Medicamentos</span>
-                            <span class="info-box-number"><?= $totalMedicamentos ?></span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-4 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-navy rounded"><i class="fas fa-list"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Raças</span>
-                            <span class="info-box-number"><?= $totalRacas ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-pills',
+                    'iconColorClass' => 'icon-purple',
+                    'text' => 'Medicamentos',
+                    'value' => $totalMedicamentos,
+                    'url' => '/medicamento/index',
+                ]);
+
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-navy',
+                    'text' => 'Raças',
+                    'value' => $totalRacas,
+                    'url' => '/raca/index',
+                ]);
+                ?>
             </div>
 
             <div class="row mt-4">
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-olive rounded"><i class="fas fa-paw"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Espécies</span>
-                            <span class="info-box-number"><?= $totalEspecies ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-olive',
+                    'text' => 'Especies',
+                    'value' => $totalEspecies,
+                    'url' => '/especie/index',
+                ]);
+                ?>
             </div>
 
             <!-- Últimas marcações table -->
             <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header"><h3 class="card-title">Últimas Marcações</h3></div>
-                        <div class="card-body">
-                            <?php if (!empty($ultimasMarcacoes)): ?>
-                                <table class="table table-striped">
-                                    <thead><tr>
-                                        <th>Data</th><th>Animal</th><th>Cliente</th><th>Tipo</th><th>Estado</th>
-                                    </tr></thead>
-                                    <tbody>
-                                    <?php foreach ($ultimasMarcacoes as $marcacao): ?>
-                                        <tr>
-                                            <td><?= Yii::$app->formatter->asDatetime($marcacao->data, 'dd/MM/yyyy HH:mm') ?></td>
-                                            <td><?= Html::encode($marcacao->animais->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->userprofiles->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->tipo) ?></td>
-                                            <td><span class="label label-<?= $marcacao->estado === 'Pendente' ? 'warning' : 'success' ?>"><?= Html::encode($marcacao->estado) ?></span></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php else: ?>
-                                <p class="text-muted">Nenhuma marcação registrada.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo TableWidget::widget([
+                    'title' => 'Marcações',
+                    'content' => $marcacoesPendentes,
+                    'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
+                        'emptyMessage' => 'Nenhuma marcação pendente.',
+                        'revaluedColumns' => [
+                            'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
+                            'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)'
+                        ],
+                    'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
+                ]); ?>
             </div>
         <?php endif; ?>
 

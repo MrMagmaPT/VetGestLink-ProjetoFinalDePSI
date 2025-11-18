@@ -102,8 +102,12 @@ class MarcacaoController extends Controller
         $model = new Marcacao();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            //dd($this->request->post());
+            if ($model->load($this->request->post())){
+                $model->estado = Marcacao::ESTADO_PENDENTE;
+                if($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();
