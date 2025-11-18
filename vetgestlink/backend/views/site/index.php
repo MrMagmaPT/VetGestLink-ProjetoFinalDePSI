@@ -144,90 +144,72 @@ $this->registerCssFile('@web/static/css/view.css');
 
         <?php if ($usertype == 2): ?> <!-- Veterinarian -->
             <div class="row">
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-green rounded"><i class="fas fa-paw"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Animais</span>
-                            <span class="info-box-number"><?= $totalAnimais ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-green',
+                    'text' => 'Animais',
+                    'value' => $totalAnimais,
+                    'url' => '/animal/index',
+                ]);
 
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-yellow rounded"><i class="fas fa-stethoscope"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Consultas Hoje</span>
-                            <span class="info-box-number"><?= $marcacoesHoje ?></span>
-                        </div>
-                    </div>
-                </div>
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-stethoscope',
+                    'iconColorClass' => 'bg-yellow',
+                    'text' => 'Marcações',
+                    'value' => $totalMarcacoesHoje,
+                    'url' => '/marcacao/index',
+                ]);
+                ?>
             </div>
 
             <div class="row mt-4">
-                <div class="col-lg-8 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon icon-purple rounded"><i class="fas fa-pills"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Medicamentos</span>
-                            <span class="info-box-number"><?= $totalMedicamentos ?></span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-4 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-navy rounded"><i class="fas fa-list"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Raças</span>
-                            <span class="info-box-number"><?= $totalRacas ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-pills',
+                    'iconColorClass' => 'icon-purple',
+                    'text' => 'Medicamentos',
+                    'value' => $totalMedicamentos,
+                    'url' => '/medicamento/index',
+                ]);
+
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-navy',
+                    'text' => 'Raças',
+                    'value' => $totalRacas,
+                    'url' => '/raca/index',
+                ]);
+                ?>
             </div>
 
             <div class="row mt-4">
-                <div class="col-lg-6 col-12">
-                    <div class="info-box info-box-custom shadow-sm">
-                        <span class="info-box-icon bg-olive rounded"><i class="fas fa-paw"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Espécies</span>
-                            <span class="info-box-number"><?= $totalEspecies ?></span>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo BigCardWidget::widget([
+                    'icon' => 'fa-paw',
+                    'iconColorClass' => 'bg-olive',
+                    'text' => 'Especies',
+                    'value' => $totalEspecies,
+                    'url' => '/especie/index',
+                ]);
+                ?>
             </div>
 
             <!-- Últimas marcações table -->
             <div class="row mt-4">
-                <div class="col-md-12">
-                    <div class="card shadow-sm">
-                        <div class="card-header"><h3 class="card-title">Últimas Marcações</h3></div>
-                        <div class="card-body">
-                            <?php if (!empty($ultimasMarcacoes)): ?>
-                                <table class="table table-striped">
-                                    <thead><tr>
-                                        <th>Data</th><th>Animal</th><th>Cliente</th><th>Tipo</th><th>Estado</th>
-                                    </tr></thead>
-                                    <tbody>
-                                    <?php foreach ($ultimasMarcacoes as $marcacao): ?>
-                                        <tr>
-                                            <td><?= Yii::$app->formatter->asDatetime($marcacao->data, 'dd/MM/yyyy HH:mm') ?></td>
-                                            <td><?= Html::encode($marcacao->animais->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->userprofiles->nome ?? 'N/A') ?></td>
-                                            <td><?= Html::encode($marcacao->tipo) ?></td>
-                                            <td><span class="label label-<?= $marcacao->estado === 'Pendente' ? 'warning' : 'success' ?>"><?= Html::encode($marcacao->estado) ?></span></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            <?php else: ?>
-                                <p class="text-muted">Nenhuma marcação registrada.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                echo TableWidget::widget([
+                    'title' => 'Marcações',
+                    'content' => $marcacoesPendentes,
+                    'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
+                        'emptyMessage' => 'Nenhuma marcação pendente.',
+                        'revaluedColumns' => [
+                            'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
+                            'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)'
+                        ],
+                    'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
+                ]); ?>
             </div>
         <?php endif; ?>
 
