@@ -2,30 +2,28 @@
 
 namespace frontend\controllers;
 
-use yii\base\Model;
-use common\models\userprofile;
-use common\models\Morada;
 use Yii;
-use yii\data\ActiveDataProvider;
+use yii\base\Model;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use common\models\User;
+use common\models\Userprofile;
+use common\models\Morada;
 
 /**
- * UserprofileController implements the CRUD actions for userprofile model.
+ * UserprofileController implements the CRUD actions for Userprofile model.
  */
 class UserprofileController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
         return array_merge(
             parent::behaviors(),
             [
                 'access' => [
-                    'class' => \yii\filters\AccessControl::class,
+                    'class' => AccessControl::class,
                     'rules' => [
                         [
                             'allow' => true,
@@ -34,7 +32,7 @@ class UserprofileController extends Controller
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
@@ -46,43 +44,58 @@ class UserprofileController extends Controller
     /**
      * Displays the user profile view.
      *
+     * @param int|null $id
      * @return string
+     * @throws NotFoundHttpException
      */
-    public function actionView()
+    public function actionView($id = null)
     {
-        $user = Yii::$app->user->identity;
+        $id = $id ?: Yii::$app->user->id;
 
-        $user = \common\models\User::find()
-            ->where(['id' => $user->id])
-            ->with(['userprofile.moradas'])
-            ->one();
+        // Eager load userprofile e moradas (ajuste aqui se o nome da relação for diferente)
+        $user = User::find()->where(['id' => $id])->with(['userprofile.moradas'])->one();
 
-        $model = $user->userprofile;
-        $moradas = $model->moradas ?? [];
+        if (!$user) {
+            throw new NotFoundHttpException('Utilizador não encontrado.');
+        }
+
+        // garante que temos um Userprofile (pode ser null)
+        $profile = $user->userprofile;
+        if ($profile === null) {
+            $profile = new Userprofile();
+            $profile->user_id = $user->id;
+            $moradas = [];
+        } else {
+            // tenta obter moradas por nomes comuns de relação
+            $moradas = [];
+            // acesso direto: se a relação existir isto traz as moradas (lazy ou eager)
+            if (isset($profile->moradas) && is_array($profile->moradas) && count($profile->moradas)) {
+                $moradas = $profile->moradas;
+            } elseif (isset($profile->enderecos) && is_array($profile->enderecos) && count($profile->enderecos)) {
+                // alternativa: 'enderecos' / 'endereços'
+                $moradas = $profile->enderecos;
+            } elseif (isset($profile->address) && is_array($profile->address) && count($profile->address)) {
+                $moradas = $profile->address;
+            } else {
+                $moradas = [];
+            }
+        }
 
         return $this->render('view', [
             'user' => $user,
-            'model' => $model,
+            'model' => $profile,
             'moradas' => $moradas,
         ]);
     }
 
     /**
-     * Alias for view action to maintain compatibility.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->actionView();
-    }
-
-    /**
      * Updates the user profile.
-     * If update is successful, the browser will be redirected to the 'view' page.
      *
+     * @param int $id
      * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
      */
+
     public function actionUpdate()
     {
         $user = Yii::$app->user->identity;
@@ -108,42 +121,59 @@ class UserprofileController extends Controller
         ]);
     }
 
+
+
     /**
      * Saves the user profile (POST action).
      *
      * @return \yii\web\Response
+     * @throws NotFoundHttpException
      */
     public function actionSave()
     {
         $user = Yii::$app->user->identity;
         $model = $user->userprofile;
-        $moradas = $model->moradas;
+        if ($model === null) {
+            throw new NotFoundHttpException('Perfil não encontrado.');
+        }
+        $moradas = $model->moradas ?? [];
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             Model::loadMultiple($moradas, $this->request->post());
 
-            $model->save(false);
-
-            foreach ($moradas as $morada) {
-                $morada->save(false);
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                if (!$model->save(false)) {
+                    throw new \RuntimeException('Erro ao salvar perfil.');
+                }
+                foreach ($moradas as $morada) {
+                    if (!$morada->save(false)) {
+                        throw new \RuntimeException('Erro ao salvar morada.');
+                    }
+                }
+                $transaction->commit();
+                Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
+            } catch (\Throwable $e) {
+                $transaction->rollBack();
+                Yii::error($e->getMessage(), __METHOD__);
+                Yii::$app->session->setFlash('error', 'Erro ao editar o perfil.');
             }
-
-            Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
         }
 
-        return $this->redirect(['view']);
+        // redirecionar para a view do utilizador atual explicitamente
+        return $this->redirect(['view', 'id' => $user->id ?? null]);
     }
 
     /**
-     * Finds the userprofile model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return userprofile the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * Finds the Userprofile model based on its primary key value.
+     *
+     * @param int $id
+     * @return Userprofile
+     * @throws NotFoundHttpException
      */
     protected function findModel($id)
     {
-        if (($model = userprofile::findOne(['id' => $id])) !== null) {
+        if (($model = Userprofile::findOne($id)) !== null) {
             return $model;
         }
 

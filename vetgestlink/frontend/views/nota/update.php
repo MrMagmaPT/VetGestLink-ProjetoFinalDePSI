@@ -5,11 +5,12 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 
-$this->title = 'Create Nota';
+$this->title = 'Update Nota: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Notas', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="nota-create">
+<div class="nota-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

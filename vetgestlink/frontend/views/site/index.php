@@ -151,7 +151,7 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
             <p class="lead mb-4">Experimente o VetGestLink e veja como a tecnologia pode transformar o seu negócio veterinário.</p>
             <?php
             use yii\helpers\Url;
-            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/dashboard']);
+            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/userprofile/view']);
             ?>
             <a href="<?= $ctaUrl ?>" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;">Comece Agora</a>
         </div>

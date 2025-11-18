@@ -45,24 +45,25 @@ class SignupForm extends Model
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 
-            [['nomecompleto', 'dtanascimento', 'nif', 'telemovel'], 'required'],
-            ['nomecompleto', 'string', 'max' => 45],
-            ['dtanascimento', 'date', 'format' => 'php:Y-m-d'],
+            ['nomecompleto', 'required'],
+            ['dtanascimento', 'required'],
+            ['nif', 'required'],
             ['nif', 'string', 'length' => 9],
+            ['telemovel', 'required'],
             ['telemovel', 'string', 'length' => 9],
 
-            [['rua', 'nporta', 'cdpostal', 'localidade', 'cidade'], 'required'],
-
-            // MUDANÇA: Ajustar max para 45 caracteres (conforme tabela)
-            [['rua', 'localidade', 'cidade'], 'string', 'max' => 45],
-            [['nporta', 'andar', 'cxpostal', 'cdpostal'], 'string', 'max' => 45],
-
+            ['rua', 'required'],
+            ['nporta', 'required'],
+            ['cdpostal', 'required'],
+            ['localidade', 'required'],
+            ['cidade', 'required'],
+            [['andar', 'cxpostal'], 'safe'],
             ['principal', 'boolean'],
-            ['principal', 'default', 'value' => 1],
-
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            ['imageFile', 'file', 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024 * 2], // 2MB
         ];
     }
+
+
 
 
     public function attributeLabels()
