@@ -76,8 +76,21 @@ class AnimalController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        // Fetch the latest Nota for this animal
+        /*$latestNota = Nota::find()
+            ->where(['animais_id' => $id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->one();*/
+
+        //notas já vem ordenado pelo mais recente
+        //é só buscar o primeiro do array
+        $latestNota = $model->notas[0];
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'latestNota' => $latestNota,
         ]);
     }
 
@@ -96,53 +109,4 @@ class AnimalController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    public function actionCreateNota($animal_id)
-    {
-        $model = new Nota();
-        $model->animais_id = $animal_id;
-        $model->userprofiles_id = Yii::$app->user->identity->userProfile->id;
-        $model->created_at = date('Y-m-d H:i:s');
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
-            return $this->redirect(['animal/index', 'id' => $animal_id]);
-        }
-
-        return $this->render('createNota', [
-            'model' => $model,
-        ]);
-    }
-
-    public function actionViewAnimalDetails($id)
-    {
-        $model = $this->findModel($id);
-
-        // Fetch the latest Nota for this animal
-        $latestNota = Nota::find()
-            ->where(['animais_id' => $id])
-            ->orderBy(['created_at' => SORT_DESC])
-            ->one();
-
-        return $this->renderAjax('viewAnimalDetails', [
-            'model' => $model,
-            'latestNota' => $latestNota,
-        ]);
-    }
-
-    public function actionViewNotas($animal_id)
-    {
-        $model = $this->findModel($animal_id);
-        $allnotas = Nota::find()
-            ->where(['animais_id' => $animal_id])
-            ->orderBy(['created_at' => SORT_DESC])
-            ->all();
-
-        return $this->render('viewNotas', [
-            'model' => $model,
-            'allnotas' => $allnotas,
-        ]);
-    }
-
-
 }

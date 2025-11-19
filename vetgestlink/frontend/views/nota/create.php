@@ -1,20 +1,23 @@
 <?php
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-/** @var yii\web\View $this */
-/** @var common\models\Nota $model */
-
-$this->title = 'Create Nota';
-$this->params['breadcrumbs'][] = ['label' => 'Notas', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Nova Nota';
 ?>
-<div class="nota-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="nota-create container py-4">
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <h3 class="mb-3">Adicionar Nota</h3>
+
+    <?php $form = ActiveForm::begin(); ?>
+
+    <?= $form->field($model, 'nota')->textarea(['rows' => 4]) ?>
+
+    <div class="form-group mt-3">
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-accent']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
 
 </div>

@@ -93,7 +93,7 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <img src="<?= Yii::getAlias('@web') ?>/static/img/about/about_lft.png" alt="Sobre VetGestLink" class="img-fluid rounded shadow">
+                    <img src="<?= Yii::getAlias('@web') ?>/static/img/about/blog1.png" alt="Sobre VetGestLink" class="img-fluid rounded shadow">
                 </div>
                 <div class="col-lg-6">
                     <span class="fw-bold" style="color: #4CB88A;">Sobre o VetGestLink</span>

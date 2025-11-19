@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Metodopagamento;
 use common\models\Fatura;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -143,25 +144,39 @@ class FaturaController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    /**
-     * @param $id
-     * @return mixed*
-     * !!!PARA DEBUG APENAS!!!!
-     */
-    public function actionPay($id)
+    public function actionPagar($id)
     {
         $model = $this->findModel($id);
 
-        // DEBUG — force mark as paid
-        $model->estado = 1;   // 1 = paid
-        $model->metodospagamentos_id = 1; // temp placeholder method
+        // Get all payment methods
+        $metodos = \common\models\Metodopagamento::find()->all();
 
-        if ($model->save(false)) {
-            Yii::$app->session->setFlash('success', 'Fatura paga com sucesso (DEBUG)');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao pagar (DEBUG)');
+        // Filter in PHP (no query conditions)
+        $metodos = array_filter($metodos, function ($m) {
+            return $m->vigor == 1;
+        });
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // Redirect after submitting
+            return $this->redirect(['fatura/view', 'id' => $model->id]);
         }
 
-        return $this->redirect(['view', 'id' => $model->id]);
+        return $this->render('pagar', [
+            'model' => $model,
+            'metodos' => $metodos,
+        ]);
     }
+
+    public function actionSucesso($id){
+        $modelo= Fatura::findOne($id);
+        $modelo->estado = 1; //Atualiza estado da fatura como paga
+        $modelo->metodopagamento_id;  //atualiza o metodo de pagamento usado
+        $modelo->save();
+
+        return $this->render('view', [
+            'model' => $modelo,
+        ]);
+    }
+
+
 }

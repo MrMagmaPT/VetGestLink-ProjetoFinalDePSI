@@ -45,16 +45,15 @@ $faturas = $dataProvider->getModels();
 
                             <!-- Ver button -->
                             <?= Html::a('<i class="bi bi-eye"></i> Ver', ['view', 'id' => $fatura->id], [
-                                'class' => 'btn '
+                                'class' => 'btn btn-dark rounded-pill '
                             ]) ?>
 
                             <!-- Pagar button (only if not paid) -->
                             <?php if (!$isPaid): ?>
                                 <?= Html::a('<i class="bi bi-cash-stack"></i> Pagar', ['pagar', 'id' => $fatura->id], [
-                                    'class' => 'btn',
+                                    'class' => 'btn btn-dark rounded-pill',
                                     'data' => [
                                         'method' => 'post',
-                                        'confirm' => 'Tem certeza que deseja marcar esta fatura como paga?',
                                     ],
                                 ]) ?>
                             <?php endif; ?>

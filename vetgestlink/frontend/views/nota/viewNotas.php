@@ -31,6 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     <div class="d-flex justify-content-center mt-3">
-        <?= Html::a("Nova Nota", ['/animal/create-nota', 'animal_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a("Nova Nota", ['/nota/create-nota', 'animal_id' => $model->id], ['class' => 'btn btn-dark rounded-pill']) ?>
     </div>
 </div>

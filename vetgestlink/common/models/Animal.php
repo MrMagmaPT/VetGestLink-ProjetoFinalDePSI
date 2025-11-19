@@ -115,7 +115,7 @@ class Animal extends \yii\db\ActiveRecord
     public function getNotas()
     {
         return $this->hasMany(Nota::class, ['animais_id' => 'id'])
-            ->orderBy(['create_at' => SORT_DESC]);// ordenar as notas por ordem descendente
+            ->orderBy(['created_at' => SORT_DESC]);// ordenar as notas por ordem descendente
     }
 
     /**

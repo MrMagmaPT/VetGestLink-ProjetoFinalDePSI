@@ -39,7 +39,7 @@ class Footer extends Widget
             $this->contactInfo = [
                 ['label' => '+351 234 567 890', 'url' => 'tel:+351234567890'],
                 ['label' => 'contacto@vetgestlink.com', 'url' => 'mailto:contacto@vetgestlink.com'],
-                ['label' => 'Lisboa, Portugal', 'url' => '#'],
+                ['label' => 'Leiria, Portugal', 'url' => '#'],
             ];
         }
     }

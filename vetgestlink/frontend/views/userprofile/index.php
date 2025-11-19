@@ -17,7 +17,6 @@ $user = $dataProvider->getModels();
         <div class="col-md-8">
             <div class="card shadow-lg border-0 rounded-lg">
                 <div class="card-header bg-dark text-white text-center">
-                    <?= var_dump($user);die; ?>
                     <h3 class="mt-3 mb-0"><?= Html::encode($user->nomecompleto) ?></h3>
                     <p class="text-muted mb-2"><?= Html::encode($user->email) ?></p>
                 </div>

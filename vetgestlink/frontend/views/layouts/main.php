@@ -53,8 +53,6 @@ AppAsset::register($this);
 
 <?= Footer::widget() ?>
 
-<?= ScrollToTop::widget() ?>
-
 <?php ThemeScripts::widget(); ?>
 
 <?php $this->endBody() ?>

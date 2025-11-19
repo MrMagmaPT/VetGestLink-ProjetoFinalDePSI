@@ -50,7 +50,7 @@ $this->registerJsFile('@web/static/js/marcacao.js', ['depends' => [\yii\web\YiiA
 
                     <!-- Toggle button with chevron -->
                     <div class="ms-3">
-                        <button class="btn btn-sm btn-outline-secondary toggle-diagnostico"
+                        <button class="btn btn-dark rounded-pill toggle-diagnostico"
                                 type="button"
                                 data-target="#diagnostico-<?= $i ?>"
                                 aria-expanded="false"

@@ -75,12 +75,12 @@ $this->registerCssFile('@web/static/css/fatura.css', ['depends' => [\yii\web\Yii
                 <!-- Footer -->
                 <div class="card-footer bg-light d-flex justify-content-between py-3 rounded-bottom-4">
 
-                    <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+                    <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-dark rounded-pill']) ?>
 
                     <div>
-                        <?php if ($model->estado != 1): ?>
-                            <?= Html::a('Pagar', ['pay', 'id' => $model->id], [
-                                'class' => 'btn btn-accent',
+                        <?php if ($model->estado == 0): ?>
+                            <?= Html::a('Pagar', ['pagar', 'id' => $model->id], [
+                                'class' => 'btn btn-dark rounded-pill',
                             ]) ?>
                         <?php endif; ?>
 
