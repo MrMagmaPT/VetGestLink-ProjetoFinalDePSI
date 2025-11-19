@@ -21,7 +21,6 @@ use yii\db\Expression;
  * @property Linhafatura[] $linhasfaturas
  * @property Metodopagamento $metodospagamentos
  * @property Userprofile $userprofile
-
  */
 class Fatura extends \yii\db\ActiveRecord
 {
