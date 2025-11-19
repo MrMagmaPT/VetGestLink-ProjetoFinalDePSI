@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $nota
- * @property string $create_at
+ * @property string $created_at
  * @property int $userprofiles_id
  * @property int $animais_id
  *
@@ -34,8 +34,8 @@ class Nota extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nota', 'create_at', 'userprofiles_id', 'animais_id'], 'required'],
-            [['create_at'], 'safe'],
+            [['nota', 'created_at', 'userprofiles_id', 'animais_id'], 'required'],
+            [['created_at'], 'safe'],
             [['userprofiles_id', 'animais_id'], 'integer'],
             [['nota'], 'string', 'max' => 500],
             [['animais_id'], 'exist', 'skipOnError' => true, 'targetClass' => Animal::class, 'targetAttribute' => ['animais_id' => 'id']],
@@ -51,7 +51,7 @@ class Nota extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nota' => 'Nota',
-            'create_at' => 'Create At',
+            'created_at' => 'Create At',
             'userprofiles_id' => 'Userprofiles ID',
             'animais_id' => 'Animais ID',
         ];

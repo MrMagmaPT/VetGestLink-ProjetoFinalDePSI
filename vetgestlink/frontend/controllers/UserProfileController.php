@@ -45,15 +45,15 @@ class UserProfileController extends Controller
 
         $user = \common\models\User::find()
             ->where(['id' => $user->id])
-            ->with(['userProfile.moradas'])
+            ->with(['userprofile.moradas'])
             ->one();
 
-        $userProfile = $user->userProfile;
-        $moradas = $userProfile->moradas ?? [];
+        $userprofile = $user->userprofile;
+        $moradas = $userprofile->moradas ?? [];
 
         return $this->render('index', [
             'user' => $user,
-            'userProfile' => $userProfile,
+            'userprofile' => $userprofile,
             'moradas' => $moradas,
         ]);
     }

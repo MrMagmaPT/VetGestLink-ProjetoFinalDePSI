@@ -70,6 +70,7 @@ $this->title = "Fatura # {$model->id}";
                                 'attribute' => 'data',
                                 'format' => ['date', 'php:d/m/Y'],
                                 'label' => 'Data da Fatura',
+                                'value' =>$model->created_at,
                             ],
                             [
                                 'attribute' => 'estado',

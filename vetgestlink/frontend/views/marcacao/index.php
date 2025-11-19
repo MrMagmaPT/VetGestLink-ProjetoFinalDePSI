@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h5 class="card-title mb-2">
-                            Marcação #<?= Html::encode($model->id) ?>
+                            Marcação #<?= Html::encode($model->id) ?> - <?= Html::encode($model->estado) ?>
                         </h5>
 
                         <p class="mb-1">

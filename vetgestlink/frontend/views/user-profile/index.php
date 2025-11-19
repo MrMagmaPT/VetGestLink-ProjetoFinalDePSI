@@ -1,7 +1,7 @@
 <?php
 
 /** @var yii\web\View $this */
-/** @var common\models\Userprofile $userProfile */
+/** @var common\models\Userprofile $userprofile */
 /** @var common\models\User $user */
 /** @var common\models\Morada|null $morada */
 
@@ -89,16 +89,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 accent-border">
                             <div class="profile-label">Email</div>
-                            <div class="profile-value"><?= Html::encode($userProfile->nomecompleto) ?></div>
+                            <div class="profile-value"><?= Html::encode($userprofile->nomecompleto) ?></div>
                         </div>
 
                         <div class="col-md-6 mb-3 accent-border">
                             <div class="profile-label">NIF</div>
-                            <div class="profile-value"><?= Html::encode($userProfile->nif) ?></div>
+                            <div class="profile-value"><?= Html::encode($userprofile->nif) ?></div>
                         </div>
                         <div class="col-md-6 mb-3 accent-border">
                             <div class="profile-label">NIF</div>
-                            <div class="profile-value"><?= Html::encode($userProfile->telemovel) ?></div>
+                            <div class="profile-value"><?= Html::encode($userprofile->telemovel) ?></div>
                         </div>
                     </div>
 

@@ -93,14 +93,14 @@ class AnimalController extends Controller
         $model = new Nota();
         $model->animais_id = $animal_id;
         $model->userprofiles_id = Yii::$app->user->identity->userProfile->id;
-        $model->create_at = date('Y-m-d H:i:s');
+        $model->created_at = date('Y-m-d H:i:s');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
-            return $this->redirect(['animal/view', 'id' => $animal_id]);
+            return $this->redirect(['animal/index', 'id' => $animal_id]);
         }
 
-        return $this->render('index', [
+        return $this->render('createNota', [
             'model' => $model,
         ]);
     }
