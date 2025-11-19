@@ -1,0 +1,7 @@
+# Ignore everything in uploads/users and uploads/animais
+/uploads/users/*
+/uploads/animais/*
+
+# But do not ignore the folders themselves
+!/uploads/users/
+!/uploads/animais/

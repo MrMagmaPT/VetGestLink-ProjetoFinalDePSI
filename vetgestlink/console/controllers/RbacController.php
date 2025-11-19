@@ -306,6 +306,24 @@ class RbacController extends Controller
         $editOwnerNotes->description = 'Editar notas dono do seu animal';
         $auth->add($editOwnerNotes);
 
+        //----------------------------------------------------------------
+        //GERIR IMAGENS (VETERINÁRIO, RECECIONISTA, CLIENTE)
+
+        // READ - Visualizar imagens (Todos os utilizadores autenticados)
+        $viewImages = $auth->createPermission('viewImages');
+        $viewImages->description = 'Visualizar imagens de animal e utilizadores';
+        $auth->add($viewImages);
+
+        // UPDATE - Atualizar imagens de animal (VETERINÁRIO)
+        $updateAnimalImage = $auth->createPermission('updateAnimalImage');
+        $updateAnimalImage->description = 'Atualizar imagens de animal';
+        $auth->add($updateAnimalImage);
+
+        // UPDATE - Atualizar imagens de utilizadores (ADMIN, Próprio utilizador)
+        $updateUserImage = $auth->createPermission('updateUserImage');
+        $updateUserImage->description = 'Atualizar imagens de utilizadores';
+        $auth->add($updateUserImage);
+
         //========================================================================
         //PERMISSOES BACKEND (ADMIN, VETERINARIO, RECECIONISTA):
 
@@ -324,6 +342,7 @@ class RbacController extends Controller
         $auth->addChild($admin, $createUser);
         $auth->addChild($admin, $viewUsers);
         $auth->addChild($admin, $updateUser);
+
         $auth->addChild($admin, $deleteUser);
 
         $auth->addChild($admin, $createPaymentMethod);
@@ -341,12 +360,18 @@ class RbacController extends Controller
         $auth->addChild($admin, $updateMedication);
         $auth->addChild($admin, $deleteMedication);
 
+        $auth->addChild($admin, $viewImages);
+        $auth->addChild($admin, $updateAnimalImage);
+        $auth->addChild($admin, $updateUserImage);
+
         $auth->addChild($admin, $backendAccess);
 
         //===============================================
         //veterinario
         $veterinario = $auth->createRole('veterinario');
         $auth->add($veterinario);
+        $auth->addChild($veterinario, $viewMedications);
+        $auth->addChild($veterinario, $createAnimal);
 
         $auth->addChild($veterinario, $createConsultation);
         $auth->addChild($veterinario, $viewConsultations);
@@ -354,9 +379,6 @@ class RbacController extends Controller
         $auth->addChild($veterinario, $deleteConsultation);
 
         $auth->addChild($veterinario, $assignMedication);
-        $auth->addChild($veterinario, $viewMedications);
-
-        $auth->addChild($veterinario, $createAnimal);
         $auth->addChild($veterinario, $viewAnimals);
         $auth->addChild($veterinario, $updateAnimal);
         $auth->addChild($veterinario, $deleteAnimal);
@@ -371,8 +393,10 @@ class RbacController extends Controller
         $auth->addChild($veterinario, $updateSpecies);
         $auth->addChild($veterinario, $deleteSpecies);
 
-        $auth->addChild($veterinario, $backendAccess);
+        $auth->addChild($veterinario, $viewImages);
+        $auth->addChild($veterinario, $updateAnimalImage);
 
+        $auth->addChild($veterinario, $backendAccess);
         //===============================================
         //rececionista
         $rececionista = $auth->createRole('rececionista');
@@ -390,9 +414,7 @@ class RbacController extends Controller
         $auth->addChild($rececionista, $updateAddress);
         $auth->addChild($rececionista, $deleteAddress);
 
-        $auth->addChild($rececionista, $createClient);
         $auth->addChild($rececionista, $viewClients);
-        $auth->addChild($rececionista, $updateClient);
         $auth->addChild($rececionista, $deleteClient);
 
         $auth->addChild($rececionista, $createInvoice);
@@ -401,6 +423,8 @@ class RbacController extends Controller
         $auth->addChild($rececionista, $deleteInvoice);
 
         $auth->addChild($rececionista, $viewPaymentMethods);
+
+        $auth->addChild($rececionista, $viewImages);
 
         $auth->addChild($rececionista, $backendAccess);
 
@@ -421,14 +445,10 @@ class RbacController extends Controller
 
         $auth->addChild($cliente, $editOwnerNotes);
 
-        //===============================================
-        // Herança de Roles
-        $auth->addChild($admin, $veterinario);
-        $auth->addChild($admin, $rececionista);
-        $auth->addChild($admin, $cliente);
+        $auth->addChild($cliente, $viewImages);
 
-        $auth->addChild($veterinario, $cliente);
-        $auth->addChild($rececionista, $cliente);
+        //===============================================
+
 
 
         //Mensagem pra dar feedback que rodou o script

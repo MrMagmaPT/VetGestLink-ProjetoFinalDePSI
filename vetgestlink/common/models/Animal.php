@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "animais".
@@ -26,6 +27,10 @@ use Yii;
  */
 class Animal extends \yii\db\ActiveRecord
 {
+    /**
+     * @var UploadedFile
+     */
+    public $imageFile;
 
     /**
      * ENUM field values
@@ -56,6 +61,7 @@ class Animal extends \yii\db\ActiveRecord
             [['sexo'], 'string'],
             [['nome'], 'string', 'max' => 45],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
+//            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Raca::class, 'targetAttribute' => ['racas_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
@@ -70,9 +76,9 @@ class Animal extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nome' => 'Nome',
-            'dtanascimento' => 'Dtanascimento',
+            'dtanascimento' => 'Data de Nascimento',
             'peso' => 'Peso',
-            'microship' => 'Microship',
+            'microship' => 'Microchip',
             'sexo' => 'Sexo',
             'especies_id' => 'Especies ID',
             'userprofiles_id' => 'Userprofiles ID',
@@ -177,5 +183,67 @@ class Animal extends \yii\db\ActiveRecord
     public function setSexoToF()
     {
         $this->sexo = self::SEXO_F;
+    }
+
+    /**
+     * Upload da imagem do animal usando o componente ImageUploader
+     * @return bool
+     */
+    public function uploadImage()
+    {
+        return Yii::$app->imageUploader->upload($this->imageFile, 'animal', (string)$this->id);
+    }
+
+    /**
+     * Obter URL da imagem do animal
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        return Yii::$app->imageUploader->getImageUrl('animal', (string)$this->id);
+    }
+
+    /**
+     * Obter URL absoluta da imagem do animal (para API)
+     * @return string
+     */
+    public function getImageAbsoluteUrl()
+    {
+        return Yii::$app->imageUploader->getImageAbsoluteUrl('animal', (string)$this->id);
+    }
+
+    /**
+     * Calcular idade do animal em anos
+     * @return int
+     */
+    public function getIdade()
+    {
+        if (empty($this->datanascimento)) {
+            return 0;
+        }
+
+        $dataNascimento = new \DateTime($this->datanascimento);
+        $hoje = new \DateTime();
+        $idade = $hoje->diff($dataNascimento);
+
+        return $idade->y; // retorna anos
+    }
+
+    /**
+     * Deletar imagem do animal
+     * @return void
+     */
+    public function deleteImage()
+    {
+        Yii::$app->imageUploader->deleteImage('animal', (string)$this->id);
+    }
+
+    /**
+     * Verifica se o animal tem imagem
+     * @return bool
+     */
+    public function hasImage()
+    {
+        return Yii::$app->imageUploader->imageExists('animal', (string)$this->id);
     }
 }

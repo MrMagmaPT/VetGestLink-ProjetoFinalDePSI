@@ -7,6 +7,7 @@ use yii\base\Model;
 use common\models\User;
 use common\models\Userprofile;
 use common\models\Morada;
+use yii\web\UploadedFile;
 
 class SignupForm extends Model
 {
@@ -25,6 +26,7 @@ class SignupForm extends Model
     public $localidade;
     public $cidade;
     public $principal;
+    public $imageFile;
 
     public function rules()
     {
@@ -43,22 +45,25 @@ class SignupForm extends Model
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
 
-            [['nomecompleto', 'dtanascimento', 'nif', 'telemovel'], 'required'],
-            ['nomecompleto', 'string', 'max' => 45],
-            ['dtanascimento', 'date', 'format' => 'php:Y-m-d'],
+            ['nomecompleto', 'required'],
+            ['dtanascimento', 'required'],
+            ['nif', 'required'],
             ['nif', 'string', 'length' => 9],
+            ['telemovel', 'required'],
             ['telemovel', 'string', 'length' => 9],
 
-            [['rua', 'nporta', 'cdpostal', 'localidade', 'cidade'], 'required'],
-
-            // MUDANÇA: Ajustar max para 45 caracteres (conforme tabela)
-            [['rua', 'localidade', 'cidade'], 'string', 'max' => 45],
-            [['nporta', 'andar', 'cxpostal', 'cdpostal'], 'string', 'max' => 45],
-
+            ['rua', 'required'],
+            ['nporta', 'required'],
+            ['cdpostal', 'required'],
+            ['localidade', 'required'],
+            ['cidade', 'required'],
+            [['andar', 'cxpostal'], 'safe'],
             ['principal', 'boolean'],
-            ['principal', 'default', 'value' => 1],
+            ['imageFile', 'file', 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024 * 2], // 2MB
         ];
     }
+
+
 
 
     public function attributeLabels()
@@ -79,6 +84,7 @@ class SignupForm extends Model
             'localidade' => 'Localidade',
             'cidade' => 'Cidade',
             'principal' => 'Morada Principal',
+            'imageFile' => 'Fotografia de Perfil',
         ];
     }
 
@@ -133,7 +139,12 @@ class SignupForm extends Model
                 throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
             }
 
-            Yii::info("Userprofile ID {$userprofile->id} criado");
+            // 3.1 Upload de imagem de perfil (se fornecida)
+            if ($this->imageFile) {
+                $userprofile->imageFile = $this->imageFile;
+                $userprofile->uploadImage();
+                Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
+            }
 
             // 4. Criar Morada
             $morada = new Morada();
@@ -148,17 +159,12 @@ class SignupForm extends Model
             $morada->principal = $this->principal ? 1 : 0;
             $morada->eliminado = 0;
 
-            Yii::info("Dados Morada: " . json_encode($morada->attributes));
-
             if (!$morada->save()) {
                 Yii::error("Erro Morada: " . json_encode($morada->errors));
                 throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
             }
 
-            Yii::info("Morada ID {$morada->id} criada");
-
             $transaction->commit();
-            Yii::info("Transação committed");
 
             return $user && $this->sendEmail($user) ? $user : null;
 

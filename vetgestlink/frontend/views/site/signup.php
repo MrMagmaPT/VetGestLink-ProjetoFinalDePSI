@@ -42,11 +42,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?php $form = ActiveForm::begin([
                     'id' => 'form-signup',
-                    'options' => ['class' => 'form-horizontal'],
+                    'options' => [
+                        'class' => 'form-horizontal',
+                        'enctype' => 'multipart/form-data'
+                    ],
                     'fieldConfig' => [
                             'template' => "{label}\n{input}\n{error}",
                     ],
-            ]); ?>
+            ]); 
+            //DEBUG LOG
+            Yii::error('Entrou no signup', 'signup');
+            ?>
 
             <!-- Dados de Acesso -->
             <div class="panel panel-info" style="margin-bottom: 25px;">
@@ -110,6 +116,13 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'placeholder' => '900000000'
                             ]) ?>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <?= $form->field($model, 'imageFile')->fileInput([
+                            'class' => 'form-control',
+                            'accept' => 'image/png, image/jpeg, image/jpg'
+                        ])->hint('Formatos aceites: PNG, JPG, JPEG (opcional)') ?>
                     </div>
                 </div>
             </div>
@@ -185,12 +198,36 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]) ?>
             </div>
 
+
             <?php ActiveForm::end(); ?>
 
             <div class="text-center" style="margin-top: 20px;">
                 <p class="text-muted">
                     Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn btn-lg rounded-pill px-4']) ?>
                 </p>
+
+                <?php if (YII_DEBUG): ?>
+                    <button type="button" onclick="autoFill()">Auto Fill</button>
+
+                    <script>
+                        function autoFill() {
+                            document.getElementById('signupform-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';
+                            document.getElementById('signupform-nomecompleto').value = 'João Silva Santos';
+                            document.getElementById('signupform-dtanascimento').value = '1990-05-15';
+                            document.getElementById('signupform-nif').value = '123456789';
+                            document.getElementById('signupform-telemovel').value = '912345678';
+                            document.getElementById('signupform-rua').value = 'Rua das Flores';
+                            document.getElementById('signupform-nporta').value = '123';
+                            document.getElementById('signupform-andar').value = '2';
+                            document.getElementById('signupform-cdpostal').value = '1234-567';
+                            document.getElementById('signupform-cxpostal').value = '1000';
+                            document.getElementById('signupform-localidade').value = 'Lisboa';
+                            document.getElementById('signupform-cidade').value = 'Lisboa';
+                        }
+                    </script>
+                <?php endif; ?>
+
+
             </div>
         </div>
     </div>

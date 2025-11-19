@@ -7,23 +7,25 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
     <!-- Slider Moderno -->
     <section class="slider-area" style="background: url('<?= Yii::getAlias('@web') ?>/static/img/gallery/section_bg02.png') center center/cover no-repeat;">
         <div class="slider-active dot-style">
-            <div class="single-slider d-flex align-items-center slider-height text-white" style="background: rgba(76,184,138,0.92); min-height: 400px;">
+            <!-- Slide 1 -->
+            <div class="single-slider d-flex align-items-center slider-height text-white" style="background: linear-gradient(90deg, #4CB88A 0%, #94E2B6 100%); min-height: 400px;">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-7 col-md-8">
                             <div class="hero__caption">
                                 <span class="badge mb-2" style="background: #94E2B6; color: #222;" data-animation="fadeInUp" data-delay=".3s">Gestão veterinária eficiente</span>
                                 <h1 class="display-4 fw-bold mb-3" data-animation="fadeInUp" data-delay=".3s" style="color: #fff;">Organize, atenda e cresça com VetGestLink </h1>
-                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #222;">Soluções modernas para clínicas, profissionais e clientes. Tudo num só lugar, com segurança e comodidade.</p>
+                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #fff;">Soluções modernas para clínicas, profissionais e clientes. Tudo num só lugar, com segurança e comodidade.</p>
                                 <a href="#servicos" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;" data-animation="fadeInLeft" data-delay=".3s">Conheça os Serviços <i class="ti-arrow-right"></i></a>
                             </div>
                         </div>
                         <div class="col-lg-5 d-none d-lg-block text-center">
-                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;">
+                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;" data-animation="fadeInRight" data-delay=".5s">
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Slide 2 -->
             <div class="single-slider d-flex align-items-center slider-height text-white" style="background: linear-gradient(90deg, #4CB88A 0%, #94E2B6 100%); min-height: 400px;">
                 <div class="container">
                     <div class="row align-items-center">
@@ -31,12 +33,12 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
                             <div class="hero__caption">
                                 <span class="badge mb-2" style="background: #4CB88A; color: #fff;" data-animation="fadeInUp" data-delay=".3s">Tecnologia para veterinários</span>
                                 <h1 class="display-4 fw-bold mb-3" data-animation="fadeInUp" data-delay=".3s" style="color: #fff;">Atenda com segurança e <span style="color:#fff">praticidade</span></h1>
-                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #222;">O sistema que liga profissionais, clínicas e clientes num só local.</p>
+                                <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #fff;">O sistema que liga profissionais, clínicas e clientes num só local.</p>
                                 <a href="#servicos" class="btn btn-lg shadow" style="background: #4CB88A; color: #fff; border: none;" data-animation="fadeInLeft" data-delay=".3s">Saiba Mais <i class="ti-arrow-right"></i></a>
                             </div>
                         </div>
                         <div class="col-lg-5 d-none d-lg-block text-center">
-                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;">
+                            <img src="<?= $logoUrl ?>" alt="Logo VetGestLink" class="img-fluid rounded shadow-lg" style="max-height: 220px; background: #fff; padding: 1.5rem;" data-animation="fadeInRight" data-delay=".5s">
                         </div>
                     </div>
                 </div>
@@ -149,7 +151,7 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
             <p class="lead mb-4">Experimente o VetGestLink e veja como a tecnologia pode transformar o seu negócio veterinário.</p>
             <?php
             use yii\helpers\Url;
-            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/dashboard']);
+            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/userprofile/view']);
             ?>
             <a href="<?= $ctaUrl ?>" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;">Comece Agora</a>
         </div>

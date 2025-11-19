@@ -68,8 +68,6 @@ class User extends ActiveRecord implements IdentityInterface
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
             'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
             'verification_token' => 'Verification Token',
         ];
     }
@@ -101,6 +99,8 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
+
+    // PARA AUTENTICAÇÃO VIA TOKEN QUERRY PARAM USAR PRA PROTEGER A API
     public static function findIdentityByAccessToken($token, $type = null)
     {
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);

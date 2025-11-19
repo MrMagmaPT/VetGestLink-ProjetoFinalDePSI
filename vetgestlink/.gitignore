@@ -34,6 +34,45 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 
+# runtime files (cache, logs, debug)
+/backend/runtime/cache/*
+/backend/runtime/debug/*
+/backend/runtime/logs/*
+/frontend/runtime/cache/*
+/frontend/runtime/debug/*
+/frontend/runtime/logs/*
+/console/runtime/*
+
+# web assets (gerados automaticamente)
+/backend/web/assets/*
+/frontend/web/assets/*
+
+# arquivos de teste
+/backend/tests/_output/*
+/frontend/tests/_output/*
+/common/tests/_output/*
+
+# node modules (se usar npm)
+/node_modules
+
+# bower (deprecated, não usar)
+/bower_components
+.bowerrc
+
+# docker (não usado em WAMP)
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# package lock sem package.json
+package-lock.json
+
+# arquivos locais de configuração
+/backend/config/*-local.php
+/frontend/config/*-local.php
+/common/config/*-local.php
+/console/config/*-local.php
+
 # ignore generated files
 
 /frontend/web/index-test.php
@@ -41,3 +80,8 @@ phpunit.phar
 /backend/web/index.php
 /backend/web/index-test.php
 /backend/web/robots.txt
+
+# NOTA: Pasta uploads/ na RAIZ contém as imagens
+# Usar apenas: uploads/ (pasta compartilhada)
+/backend/web/robots.txt
+

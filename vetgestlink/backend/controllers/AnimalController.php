@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\UploadedFile;
 
 /**
  * AnimalController implements the CRUD actions for Animal model.
@@ -29,7 +30,27 @@ class AnimalController extends Controller
                         [
                             'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewAnimals', 'updateAnimal', 'deleteAnimal', 'createAnimal'],
+                            'roles' => ['viewAnimals'],
+                        ],
+                        [
+                            'actions' => ['view'],
+                            'allow' => true,
+                            'roles' => ['viewAnimals'],
+                        ],
+                        [
+                            'actions' => ['create'],
+                            'allow' => true,
+                            'roles' => ['createAnimal'],
+                        ],
+                        [
+                            'actions' => ['update'],
+                            'allow' => true,
+                            'roles' => ['updateAnimal'],
+                        ],
+                        [
+                            'actions' => ['delete'],
+                            'allow' => true,
+                            'roles' => ['deleteAnimal'],
                         ],
                     ],
                 ],
@@ -53,23 +74,10 @@ class AnimalController extends Controller
         $searchModel = new AnimalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
-
-        $auth = Yii::$app->authManager;
-        $userId = Yii::$app->user->id;
-
-        /// Verifica se o utilizador tem uma das roles permitidas
-        $hasPermission = $auth->checkAccess($userId, 'viewAnimals');
-
-        if (!$hasPermission) {
-            return $this->redirect(['site/index']);
-        }
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
-
-
     }
 
     /**
@@ -96,6 +104,10 @@ class AnimalController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if ($model->imageFile) {
+                    $model->uploadImage();
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -119,6 +131,11 @@ class AnimalController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->imageFile) {
+                $model->deleteImage(); // remove imagem antiga
+                $model->uploadImage();
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

@@ -7,39 +7,17 @@ use yii\widgets\DetailView;
 /** @var common\models\Fatura $model */
 
 $this->title = "Fatura # {$model->id}";
+$this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 
 \yii\web\YiiAsset::register($this);
+
+// Register CSS
+$this->registerCssFile('@web/static/css/custom-variables.css', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/static/css/fatura.css', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
-<style>
-    :root {
-        --accent-green: #00d100;
-    }
-
-    .fatura-card {
-        border-radius: 20px;
-    }
-
-    .fatura-header {
-        background: var(--accent-green);
-        border-radius: 20px 20px 0 0;
-    }
-
-    .btn-accent {
-        background-color: var(--accent-green);
-        border-color: var(--accent-green);
-        color: #fff;
-        font-weight: bold;
-    }
-
-    .btn-accent:hover {
-        background-color: #00b300;
-        border-color: #00b300;
-        color: #fff;
-    }
-</style>
-
-<div class="container py-4">
+<div class="faturas-view container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-7">
 
@@ -97,12 +75,12 @@ $this->title = "Fatura # {$model->id}";
                 <!-- Footer -->
                 <div class="card-footer bg-light d-flex justify-content-between py-3 rounded-bottom-4">
 
-                    <?= Html::a('Voltar', ['index'], ['class' => 'btn']) ?>
+                    <?= Html::a('Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
 
                     <div>
                         <?php if ($model->estado != 1): ?>
                             <?= Html::a('Pagar', ['pay', 'id' => $model->id], [
-                                'class' => 'btn',
+                                'class' => 'btn btn-accent',
                             ]) ?>
                         <?php endif; ?>
 
@@ -138,7 +116,7 @@ $this->title = "Fatura # {$model->id}";
                     if ($linha->medicamentos_id) {
                         echo $linha->medicamentos->nome;
                     } elseif ($linha->marcacoes_id) {
-                        echo "Consulta — " . ($linha->marcacoes->descricao ?? "");
+                        echo "Consulta - " . ($linha->marcacoes->descricao ?? "");
                     } else {
                         echo "N/A";
                     }
@@ -153,3 +131,4 @@ $this->title = "Fatura # {$model->id}";
         </tbody>
     </table>
 </div>
+

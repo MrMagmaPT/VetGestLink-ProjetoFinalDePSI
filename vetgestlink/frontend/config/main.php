@@ -13,6 +13,9 @@ return [
     //nome da aplicação
     'name' => 'VetGestLink',
     'controllerNamespace' => 'frontend\controllers',
+    'aliases' => [
+        '@uploads' => '@app/../uploads',
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',

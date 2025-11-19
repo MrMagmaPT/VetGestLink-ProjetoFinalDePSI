@@ -31,16 +31,38 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'nome',
-            'dtanascimento',
-            'notasvet',
-            'notasdono',
+            [
+                'attribute' => 'dtanascimento',
+                'label' => 'Data de Nascimento',
+                'format' => ['date', 'php:d/m/Y'],
+            ],
             'peso',
-            'microship',
-            'sexo',
-            'especies_id',
-            'userprofiles_id',
-            'racas_id',
-            'eliminado',
+            [
+                'attribute' => 'microship',
+                'label' => 'Microchip',
+                'value' => function($model) {
+                    return $model->microship ? 'Sim' : 'Não';
+                },
+                'filter' => [0 => 'Não', 1 => 'Sim'],
+            ],
+            [
+                'attribute' => 'sexo',
+                'filter' => ['M' => 'Macho', 'F' => 'Fêmea'],
+            ],
+            [
+                'attribute' => 'especies_id',
+                'label' => 'Espécie',
+                'value' => function($model) {
+                    return $model->especies->nome ?? '-';
+                },
+            ],
+            [
+                'attribute' => 'userprofiles_id',
+                'label' => 'Proprietário',
+                'value' => function($model) {
+                    return $model->userprofiles->nomecompleto ?? '-';
+                },
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Animal $model, $key, $index, $column) {

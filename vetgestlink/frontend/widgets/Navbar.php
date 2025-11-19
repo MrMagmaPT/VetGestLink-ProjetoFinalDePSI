@@ -7,7 +7,7 @@ use Yii;
 
 class Navbar extends Widget
 {
-    public $logoPath = '/static/img/logo/logo.png'; // Updated to correct path
+    public $logoPath = '/static/img/logo/logo.png';
     public $menuItems = [];
 
     public function init()
@@ -31,7 +31,7 @@ class Navbar extends Widget
                 ['label' => 'Pagamentos & Fatura', 'url' => ['fatura/index']],
                 ['label' => 'Animal', 'url' => ['animal/index']],
                 ['label' => 'Marcações', 'url' => ['marcacao/index']],
-                ['label' => 'Perfil - ' . Yii::$app->user->identity->username, 'url' => ['user-profile/index']],
+                ['label' => 'Perfil - ' . Yii::$app->user->identity->username, 'url' => ['userprofile/view']],
             ]);
         }
 
@@ -46,3 +46,4 @@ class Navbar extends Widget
         ]);
     }
 }
+

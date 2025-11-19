@@ -7,6 +7,7 @@ use backend\models\MarcacaoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * MarcacaoController implements the CRUD actions for Marcacao model.
@@ -21,6 +22,36 @@ class MarcacaoController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'rules' => [
+                        [
+                            'actions' => ['index'],
+                            'allow' => true,
+                            'roles' => ['viewAppointments', 'viewConsultations'],
+                        ],
+                        [
+                            'actions' => ['view'],
+                            'allow' => true,
+                            'roles' => ['viewAppointments', 'viewConsultations'],
+                        ],
+                        [
+                            'actions' => ['create'],
+                            'allow' => true,
+                            'roles' => ['createAppointment', 'createConsultation'],
+                        ],
+                        [
+                            'actions' => ['update'],
+                            'allow' => true,
+                            'roles' => ['updateAppointment', 'updateConsultation'],
+                        ],
+                        [
+                            'actions' => ['delete'],
+                            'allow' => true,
+                            'roles' => ['deleteAppointment', 'deleteConsultation'],
+                        ],
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -30,6 +61,7 @@ class MarcacaoController extends Controller
             ]
         );
     }
+
 
     /**
      * Lists all Marcacao models.
@@ -70,8 +102,12 @@ class MarcacaoController extends Controller
         $model = new Marcacao();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            //dd($this->request->post());
+            if ($model->load($this->request->post())){
+                $model->estado = Marcacao::ESTADO_PENDENTE;
+                if($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();

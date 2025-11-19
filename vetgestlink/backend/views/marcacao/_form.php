@@ -12,27 +12,28 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'data')->textInput() ?>
+    <!-- Date input using HTML5 'date' type -->
+    <?= $form->field($model, 'data')->input('date') ?>
 
-    <?= $form->field($model, 'horainicio')->textInput()->label('Hora Inicio') ?>
+    <!-- Time input using HTML5 'time' type -->
+    <?= $form->field($model, 'horainicio')->input('time')->label('Hora Inicio') ?>
 
-    <?= $form->field($model, 'horafim')->textInput()->label('Hora fim') ?>
-
-    <?= $form->field($model, 'created_at')->hiddenInput()->label(false) ?>
-
-    <?= $form->field($model, 'updated_at')->hiddenInput()->label(false); ?>
+    <?= $form->field($model, 'horafim')->input('time')->label('Hora fim') ?>
 
     <?= $form->field($model, 'diagnostico')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'preco')->textInput() ?>
 
-    <?= $form->field($model, 'estado')->dropDownList([ 'pendente' => 'Pendente', 'cancelada' => 'Cancelada', 'realizada' => 'Realizada', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'estado')->dropDownList([
+        'pendente' => 'Pendente',
+        'cancelada' => 'Cancelada',
+        'realizada' => 'Realizada',
+    ], ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'tipo')->dropDownList([ 'consulta' => 'Consulta', 'cirurgia' => 'Cirurgia', 'operacao' => 'Operacao', ], ['prompt' => '']) ?>
+    
 
-    <?= $form->field($model, 'animais_id')->textInput() ?>
+    <?= $form->field($model, 'animais_id')->input('number') ?>
 
-    <?= $form->field($model, 'userprofiles_id')->textInput() ?>
+    <?= $form->field($model, 'userprofiles_id')->input('number') ?>
 
     <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
 

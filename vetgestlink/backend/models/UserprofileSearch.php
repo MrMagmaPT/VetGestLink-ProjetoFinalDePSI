@@ -52,7 +52,7 @@ class UserprofileSearch extends Userprofile
         $query = Userprofile::find()
             ->joinWith(['moradas']); // Join com a tabela de moradas
 
-        // add conditions that should always apply here
+        // add conditions that should always apply her
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -109,5 +109,14 @@ class UserprofileSearch extends Userprofile
             ->andFilterWhere(['like', 'moradas.localidade', $this->morada_localidade]);
 
         return $dataProvider;
+    }
+
+    public static function getUserNameById($id)
+    {
+        $userprofile = Userprofile::findOne($id);
+        if ($userprofile && $userprofile->user) {
+            return $userprofile->user->username;
+        }
+        return null;
     }
 }

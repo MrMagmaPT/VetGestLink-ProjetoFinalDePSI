@@ -404,7 +404,7 @@ hr {
     top: 0;
     width: 102%;
     height: 102%;
-    background: #00d100;
+    background: #4CB88A;
     z-index: 1;
     border-radius: 5px;
     transition: transform 0.5s;
@@ -549,7 +549,7 @@ hr {
 }
 
 #scrollUp, #back-top {
-    background: #00d100;
+    background: #4CB88A;
     height: 50px;
     width: 50px;
     right: 31px;
@@ -2637,7 +2637,7 @@ hr {
 }
 
 .header-area .main-header .main-menu ul li:hover > a {
-    color: #00d100
+    color: #4CB88A
 }
 
 .header-area .main-header .main-menu ul ul.submenu {

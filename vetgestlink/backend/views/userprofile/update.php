@@ -2,8 +2,10 @@
 
 use yii\helpers\Html;
 
+
 /** @var yii\web\View $this */
 /** @var common\models\Userprofile $model */
+/** @var common\models\Morada[] $moradas */
 
 $this->title = 'Update Userprofile: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Userprofile', 'url' => ['index']];
@@ -16,6 +18,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'moradas' => $moradas,
     ]) ?>
 
 </div>

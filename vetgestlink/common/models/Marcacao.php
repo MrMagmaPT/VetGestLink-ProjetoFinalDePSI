@@ -16,9 +16,7 @@ use yii\db\Expression;
  * @property string $created_at
  * @property string $updated_at
  * @property string|null $diagnostico
- * @property float $preco
  * @property string $estado
- * @property string $tipo
  * @property int $animais_id
  * @property int $userprofiles_id
  * @property int $eliminado
@@ -69,14 +67,12 @@ class Marcacao extends \yii\db\ActiveRecord
         return [
             [['diagnostico'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at', 'preco', 'estado', 'tipo', 'animais_id', 'userprofiles_id'], 'required'],
-            [['data', 'horainicio', 'horafim', 'created_at', 'updated_at'], 'safe'],
-            [['preco'], 'number'],
-            [['estado', 'tipo'], 'string'],
+            [['data', 'horainicio', 'horafim', 'estado', 'animais_id', 'userprofiles_id'], 'required'],
+            [['data', 'horainicio', 'horafim'], 'safe'],
+            [['estado'], 'string'],
             [['animais_id', 'userprofiles_id', 'eliminado'], 'integer'],
             [['diagnostico'], 'string', 'max' => 500],
             ['estado', 'in', 'range' => array_keys(self::optsEstado())],
-            ['tipo', 'in', 'range' => array_keys(self::optsTipo())],
             [['animais_id'], 'exist', 'skipOnError' => true, 'targetClass' => Animal::class, 'targetAttribute' => ['animais_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
@@ -95,9 +91,7 @@ class Marcacao extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'diagnostico' => 'Diagnostico',
-            'preco' => 'Preco',
             'estado' => 'Estado',
-            'tipo' => 'Tipo',
             'animais_id' => 'Animal ID',
             'userprofiles_id' => 'Userprofile ID',
             'eliminado' => 'Eliminado',
@@ -148,18 +142,6 @@ class Marcacao extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * column tipo ENUM value labels
-     * @return string[]
-     */
-    public static function optsTipo()
-    {
-        return [
-            self::TIPO_CONSULTA => 'consulta',
-            self::TIPO_CIRURGIA => 'cirurgia',
-            self::TIPO_OPERACAO => 'operacao',
-        ];
-    }
 
     /**
      * @return string
@@ -208,50 +190,4 @@ class Marcacao extends \yii\db\ActiveRecord
         $this->estado = self::ESTADO_REALIZADA;
     }
 
-    /**
-     * @return string
-     */
-    public function displayTipo()
-    {
-        return self::optsTipo()[$this->tipo];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTipoConsulta()
-    {
-        return $this->tipo === self::TIPO_CONSULTA;
-    }
-
-    public function setTipoToConsulta()
-    {
-        $this->tipo = self::TIPO_CONSULTA;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTipoCirurgia()
-    {
-        return $this->tipo === self::TIPO_CIRURGIA;
-    }
-
-    public function setTipoToCirurgia()
-    {
-        $this->tipo = self::TIPO_CIRURGIA;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTipoOperacao()
-    {
-        return $this->tipo === self::TIPO_OPERACAO;
-    }
-
-    public function setTipoToOperacao()
-    {
-        $this->tipo = self::TIPO_OPERACAO;
-    }
 }
