@@ -41,13 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'body')->textarea(['class' => 'form-control', 'placeholder' => 'Mensagem', 'rows' => 5])->label(false) ?>
             </div>
 
-            <div class="mb-3">
-                <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
-                        'template' => '<div class="row"><div class="col-lg-4">{image}</div><div class="col-lg-8">{input}</div></div>',
-                        'options' => ['class' => 'form-control', 'placeholder' => 'Código de verificação'],
-                ])->label(false) ?>
-            </div>
-
             <div class="d-grid">
                 <?= Html::submitButton('Enviar', ['class' => 'btn btn-primary btn-lg w-100']) ?>
             </div>

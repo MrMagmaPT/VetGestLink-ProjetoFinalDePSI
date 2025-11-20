@@ -1,13 +1,5 @@
-RewriteEngine On
-
-# Se a pasta ou arquivo existe, sirva-o diretamente
+RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Caso contrário, redirecione para index.php
 RewriteRule . index.php
-
-# Servir arquivos da pasta uploads compartilhada
-RewriteCond %{DOCUMENT_ROOT}/../uploads%{REQUEST_URI} -f
-RewriteRule ^uploads/(.*)$ ../uploads/$1 [L]
 
