@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
 
             <div class="mb-3">
-                <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
+                <?= $form->field($model, 'verifyCode')->widget(Captcha::class, config: [
                         'template' => '<div class="row"><div class="col-lg-4">{image}</div><div class="col-lg-8">{input}</div></div>',
                         'options' => ['class' => 'form-control', 'placeholder' => 'Código de verificação'],
                 ])->label(false) ?>
