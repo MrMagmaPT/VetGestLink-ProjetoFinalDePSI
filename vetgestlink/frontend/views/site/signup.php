@@ -206,6 +206,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn btn-lg rounded-pill px-4']) ?>
                 </p>
 
+                //DEBUG LOG
                 <?php if (YII_DEBUG): ?>
                     <button type="button" onclick="autoFill()">Auto Fill</button>
 

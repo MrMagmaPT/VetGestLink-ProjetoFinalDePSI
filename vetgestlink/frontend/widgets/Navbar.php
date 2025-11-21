@@ -21,9 +21,9 @@ class Navbar extends Widget
 
     private function getDefaultMenuItems()
     {
-	$user = Yii::$app->user->identity;
-        $profileId = $user->userprofiles->id ?? null;
 
+        $user = Yii::$app->user->identity;
+        $profileId = $user->userprofiles->id ?? null;
         $items = [
             ['label' => 'Sobre', 'url' => ['site/about']],
             ['label' => 'Contact', 'url' => ['site/contact']],
@@ -38,9 +38,7 @@ class Navbar extends Widget
                 ['label' => 'Pagamentos & Fatura', 'url' => ['fatura/index']],
                 ['label' => 'Animal', 'url' => ['animal/index']],
                 ['label' => 'Marcações', 'url' => ['marcacao/index']],
-
-                // Link do perfil corrigido:
-             	['label' => 'Perfil - ' . $user->username, 'url' => ['userprofile/view', 'id' => $profileId]],
+                ['label' => 'Perfil - ' . $user->username, 'url' => ['userprofile/view', 'id' => $profileId]],
             ]);
         }
 
