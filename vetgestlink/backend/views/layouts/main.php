@@ -150,8 +150,8 @@ $this->beginPage();
     </footer>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Scripts: let Yii asset manager register jQuery and other assets -->
+<!-- If you need CDN versions adjust asset bundles; avoid manual jQuery include here -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
