@@ -2,9 +2,6 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-use backend\widgets\MenuItem;
-use backend\widgets\MenuGroup;
-use backend\controllers\SiteController;
 $this->beginPage();
 ?>
 <!DOCTYPE html>
@@ -39,9 +36,7 @@ $this->beginPage();
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <?php $this->beginBody() ?>
-<?php
-    $usertype = SiteController::export();
-?>
+
 <div class="wrapper">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -71,17 +66,7 @@ $this->beginPage();
             </li>
         </ul>
     </nav>
-    <!--
-    <div class="info">
-        <form action="<?= \yii\helpers\Url::to(['/site/logout']) ?>" method="post">
-            <?= \yii\helpers\Html::submitButton('<i class="fas fa-sign-out-alt"></i> Sair', [
-            'class' => 'nav-link',
-            'style' => 'background:none;border:none;padding:0;'
-            ]) ?>
-            <?= \yii\helpers\Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
-        </form>
-    </div>
-    -->
+
     <!-- Main Sidebar -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
@@ -92,141 +77,6 @@ $this->beginPage();
 
         <!-- Sidebar -->
         <div class="sidebar">
-            <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <?php if ($usertype == 1): ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
-                            'url' => ['/site/index'],
-                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-circle-user"></i><p>Gestao de Utilizadores</p>',
-                            'url' => ['/userprofile/index'],
-                            'active' => Yii::$app->controller->id === 'userprofile' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
-                            'url' => ['/medicamento/index'],
-                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-folder"></i><p>Categoria de Medicamentos</p>',
-                            'url' => ['/categoria/index'],
-                            'active' => Yii::$app->controller->id === 'categoria' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-credit-card"></i><p>Metodos de Pagamentos</p>',
-                            'url' => ['/metodopagamento/index'],
-                            'active' => Yii::$app->controller->id === 'metodopagamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                    <?php endif; ?>
-                    <?php if ($usertype == 2): ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
-                            'url' => ['/site/index'],
-                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-paw"></i><p>Animais</p>',
-                            'url' => ['/animal/index'],
-                            'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-file-lines"></i><p>Consulta</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-calendar"></i><p>Agendamentos</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
-                            'url' => ['/medicamento/index'],
-                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuGroup::widget([
-                            'label' => 'Raças & Espécies',
-                            'icon' => 'nav-icon fas fa-layer-group',
-                            'items' => [
-                                [
-                                    'label' => '<i class="fas nav-icon fa-paw"></i><p>Raças</p>',
-                                    'url' => ['/raca/index'],
-                                    'active' => Yii::$app->controller->id === 'raca',
-                                    'encodeLabel' => false,
-                                ],[
-                                    'label' => '<i class="fas nav-icon fa-layer-group"></i><p>Espécies</p>',
-                                    'url' => ['/especie/index'],
-                                    'active' => Yii::$app->controller->id === 'especie',
-                                    'encodeLabel' => false,
-                                ],
-                            ],
-                        ]) ?>
-                    <?php endif; ?>
-                    <?php if ($usertype == 3): ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
-                            'url' => ['/site/index'],
-                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-paw"></i><p>Animais</p>',
-                            'url' => ['/animal/index'],
-                            'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-file-lines"></i><p>Consulta</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-calendar"></i><p>Agendamentos</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
-                            'url' => ['/medicamento/index'],
-                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuGroup::widget([
-                            'label' => 'Faturas',
-                            'icon' => 'nav-icon fas fa-layer-group',
-                            'items' => [
-                                [
-                                    'label' => '<i class="far nav-icon fa-clock"></i><p>Por Pagar</p>',
-                                    'url' => ['/fatura/index'],
-                                    'active' => Yii::$app->controller->id === 'fatura',
-                                    'encodeLabel' => false,
-                                ],[
-                                    'label' => '<i class="fas nav-icon fa-circle-check"></i><p>Pagas</p>',
-                                    'url' => ['/fatura/index'],
-                                    'active' => Yii::$app->controller->id === 'fatura' && Yii::$app->controller->action->id === 'index',
-                                    'encodeLabel' => false,
-                                ],
-                            ],
-                        ]) ?>
-                    <?php endif; ?>
-                </ul>
-            </nav>
             <!-- User Panel -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
@@ -238,12 +88,60 @@ $this->beginPage();
                     </a>
                 </div>
             </div>
+
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                        <?= Html::a(
+                            '<i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>',
+                            ['/site/index'],
+                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index' ? 'active' : '')]
+                        ) ?>
+                    </li>
+                    <li class="nav-item">
+                        <?= Html::a(
+                            '<i class="nav-icon fas fa-users"></i><p>UserProfiles</p>',
+                            ['/userprofile/index'],
+                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'userprofile' ? 'active' : '')]
+                        ) ?>
+                    </li>
+                    <li class="nav-item">
+                        <?= Html::a(
+                            '<i class="nav-icon fas fa-paw"></i><p>Animal</p>',
+                            ['/animal/index'],
+                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'animal' ? 'active' : '')]
+                        ) ?>
+                    </li>
+                    <li class="nav-item">
+                        <?= Html::a(
+                            '<i class="nav-icon fas fa-calendar-check"></i><p>Marcações</p>',
+                            ['/marcacao/index'],
+                            ['class' => 'nav-link ' . (Yii::$app->controller->id === 'marcacao' ? 'active' : '')]
+                        ) ?>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-cog"></i>
+                            <p>
+                                Gestão
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <?= Html::a(
+                                    '<i class="far fa-circle nav-icon"></i><p>Medicamentos</p>',
+                                    ['/medicamento/index'],
+                                    ['class' => 'nav-link ' . (Yii::$app->controller->id === 'medicamento' ? 'active' : '')]
+                                ) ?>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </aside>
-
-
-
-
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">

@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
             <div>
                 <?php $mid = ArrayHelper::getValue($morada, 'id', null); ?>
                 <?php if ($mid): ?>
-                    <?= Html::a('Editar', ['userprofile/add-morada', 'id' => $mid], ['class' => 'btn btn-sm btn-outline-primary me-2']) ?>
+                    <?= Html::a('Editar', ['userprofile/editar-morada', 'id' => $mid], ['class' => 'btn btn-sm btn-outline-primary me-2']) ?>
                 <?php endif; ?>
 
                 <?php if ($mid && $i !== 0): // só permitir remover moradas secundárias que tenham id ?>
@@ -37,4 +37,3 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 <?php endforeach; ?>
-

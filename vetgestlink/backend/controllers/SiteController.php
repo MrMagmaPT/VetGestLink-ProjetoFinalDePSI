@@ -120,12 +120,6 @@ class SiteController extends Controller
             ->distinct()
             ->all();
 
-        $marcacoesHoje = Marcacao::find()
-            ->where(['DATE(data)' => date('Y-m-d'), 'eliminado' => 0])
-            ->asArray()
-            ->distinct()
-            ->all();
-
         // Calcula o início e fim do mês atual em UNIX timestamp
         $inicio = strtotime(date('Y-m-01 00:00:00')); // primeiro dia do mês, meia-noite
         $fim = strtotime(date('Y-m-t 23:59:59'));     // último dia do mês, 23:59:59
@@ -141,7 +135,6 @@ class SiteController extends Controller
             ->where(['between', 'created_at', $inicio, $fim])
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
-
         $userType = $this->getusertype($userId);
 
         return $this->render('index', [
@@ -152,7 +145,6 @@ class SiteController extends Controller
             'totalMedicamentosBaixoStock' => $totalMedicamentosBaixoStock,
             'totalMedicamentosCriticoStock' => $totalMedicamentosCriticoStock,
             'alertasMedicamentosCriticoStock' => $alertasMedicamentosCriticoStock,
-            'marcacoesHoje' => $marcacoesHoje,
             'totalCategorias' => $totalCategorias,
             'totalRacas' => $totalRacas,
             'totalEspecies' => $totalEspecies,
@@ -165,10 +157,8 @@ class SiteController extends Controller
             'marcacoesPendentes' => $marcacoesPendentes,
         ]);
     }
-    private static function getusertype($userId) {
-        if (!$userId) {
-            return 0;
-        }
+    private function getusertype($userId) {
+
         $roles = Yii::$app->authManager->getRolesByUser($userId);
         if (isset($roles['admin'])) {
             return 1;
@@ -178,12 +168,9 @@ class SiteController extends Controller
         }
         if (isset($roles['rececionista'])) {
             return 3;
-        }
-        return 0;
+        };
     }
-    public static function export() {
-        return self::getusertype(Yii::$app->user->id);
-    }
+
 
     public function actionLogin()
     {

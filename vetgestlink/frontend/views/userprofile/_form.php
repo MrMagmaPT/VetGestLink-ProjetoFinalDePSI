@@ -22,9 +22,15 @@ if (Yii::$app->has('imageUploader')) {
     // $model->foto contém apenas o filename ou null
     $avatarUrl = Yii::$app->imageUploader->getUrl($model->foto);
 } else {
-    // fallback estático (apenas para dev local se o componente não estiver configurado)
+    // fallback: usar alias @uploadsUrl (deve ser configurado em common/config/main.php)
     $currentPhoto = $model->foto ?: ($user->userprofile->foto ?? null);
-    $avatarUrl = '/2_ano_1_semestre/Projeto/vetgestlink/backend/web/uploads/users/' . ltrim($currentPhoto ?? 'default.jpg', '/\\');
+    $uploadsUrl = null;
+    try {
+        $uploadsUrl = Yii::getAlias('@uploadsUrl');
+    } catch (\Exception $e) {
+        $uploadsUrl = '/backend/web/uploads';
+    }
+    $avatarUrl = rtrim($uploadsUrl, '/') . '/users/' . ltrim($currentPhoto ?? 'default.jpg', '/\\');
 }
 ?>
 
@@ -52,7 +58,7 @@ if (Yii::$app->has('imageUploader')) {
     <?php Pjax::end(); ?>
 
     <div class="mb-3">
-        <?= Html::a('+ Adicionar Morada', ['userprofile/add-morada'], ['class' => 'btn btn-sm btn-success']) ?>
+        <?= Html::a('+ Adicionar Morada', ['userprofile/adicionar-morada'], ['class' => 'btn btn-sm btn-success']) ?>
     </div>
 
     <div class="d-flex justify-content-end gap-2">
