@@ -120,6 +120,13 @@ class SiteController extends Controller
             ->distinct()
             ->all();
 
+        $marcacoesHoje = Marcacao::find()
+            ->where(['DATE(data)' => date('Y-m-d'), 'eliminado' => 0])
+            ->asArray()
+            ->distinct()
+            ->all();
+
+
         // Calcula o início e fim do mês atual em UNIX timestamp
         $inicio = strtotime(date('Y-m-01 00:00:00')); // primeiro dia do mês, meia-noite
         $fim = strtotime(date('Y-m-t 23:59:59'));     // último dia do mês, 23:59:59
@@ -150,6 +157,7 @@ class SiteController extends Controller
             'totalEspecies' => $totalEspecies,
             'totalmarcacoesHoje' => $totalMarcacoesHoje,
             'totalmarcacoesPendentes' => $totalMarcacoesPendentes,
+            'marcacoesHoje' => $marcacoesHoje,
             'ultimasMarcacoes' => $ultimasMarcacoes,
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
@@ -157,8 +165,10 @@ class SiteController extends Controller
             'marcacoesPendentes' => $marcacoesPendentes,
         ]);
     }
-    private function getusertype($userId) {
-
+    private static function getusertype($userId) {
+        if (!$userId) {
+            return 0;
+        }
         $roles = Yii::$app->authManager->getRolesByUser($userId);
         if (isset($roles['admin'])) {
             return 1;
@@ -168,7 +178,12 @@ class SiteController extends Controller
         }
         if (isset($roles['rececionista'])) {
             return 3;
-        };
+        }
+        return 0;
+    }
+
+    public static function export() {
+        return self::getusertype(Yii::$app->user->id);
     }
 
 
