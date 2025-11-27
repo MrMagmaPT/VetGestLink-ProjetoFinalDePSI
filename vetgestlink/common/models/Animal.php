@@ -18,6 +18,7 @@ use yii\web\UploadedFile;
  * @property int $userprofiles_id
  * @property int|null $racas_id
  * @property int $eliminado
+ * @property string|null $foto
  *
  * @property Especie $especies
  * @property Marcacao[] $marcacoes
@@ -61,7 +62,7 @@ class Animal extends \yii\db\ActiveRecord
             [['sexo'], 'string'],
             [['nome'], 'string', 'max' => 45],
             ['sexo', 'in', 'range' => array_keys(self::optsSexo())],
-//            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['especies_id'], 'exist', 'skipOnError' => true, 'targetClass' => Especie::class, 'targetAttribute' => ['especies_id' => 'id']],
             [['racas_id'], 'exist', 'skipOnError' => true, 'targetClass' => Raca::class, 'targetAttribute' => ['racas_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
@@ -84,6 +85,8 @@ class Animal extends \yii\db\ActiveRecord
             'userprofiles_id' => 'Userprofiles ID',
             'racas_id' => 'Racas ID',
             'eliminado' => 'Eliminado',
+            'imageFile' => 'Imagem',
+            'foto' => 'Foto',
         ];
     }
 
@@ -191,25 +194,36 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function uploadImage()
     {
-        return Yii::$app->imageUploader->upload($this->imageFile, 'animal', (string)$this->id);
+        if ($this->imageFile) {
+            $data = date('Ymd');
+            $ext = $this->imageFile->extension;
+            $fileName = "animal_{$this->id}_{$data}.{$ext}";
+            $basePath = Yii::getAlias('@uploads') . '/animais/';
+            if (!is_dir($basePath)) {
+                mkdir($basePath, 0775, true);
+            }
+            $fullPath = $basePath . $fileName;
+            if ($this->imageFile->saveAs($fullPath)) {
+                $this->foto = $fileName;
+                return $this->save(false);
+            }
+        }
+        return false;
     }
 
     /**
      * Obter URL da imagem do animal
-     * @return string
+     * @return string|null
      */
     public function getImageUrl()
     {
-        return Yii::$app->imageUploader->getImageUrl('animal', (string)$this->id);
-    }
-
-    /**
-     * Obter URL absoluta da imagem do animal (para API)
-     * @return string
-     */
-    public function getImageAbsoluteUrl()
-    {
-        return Yii::$app->imageUploader->getImageAbsoluteUrl('animal', (string)$this->id);
+        $uploader = new \common\components\ImageUploader([
+            'uploadPath' => '@uploads',
+            'baseUrl' => '@uploadsUrl',
+            'subdir' => 'animais',
+        ]);
+        $file = $this->foto ? $this->foto : 'default.jpg';
+        return $uploader->getUrl('animais/' . $file);
     }
 
     /**
@@ -218,24 +232,30 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function getIdade()
     {
-        if (empty($this->datanascimento)) {
+        if (empty($this->dtanascimento)) {
             return 0;
         }
-
-        $dataNascimento = new \DateTime($this->datanascimento);
+        $dataNascimento = new \DateTime($this->dtanascimento);
         $hoje = new \DateTime();
         $idade = $hoje->diff($dataNascimento);
-
         return $idade->y; // retorna anos
     }
 
     /**
      * Deletar imagem do animal
-     * @return void
      */
     public function deleteImage()
     {
-        Yii::$app->imageUploader->deleteImage('animal', (string)$this->id);
+        if ($this->foto) {
+            $uploader = new \common\components\ImageUploader([
+                'uploadPath' => '@uploads',
+                'baseUrl' => '@uploadsUrl',
+                'subdir' => 'animais',
+            ]);
+            $uploader->delete($this->foto);
+            $this->foto = null;
+            $this->save(false);
+        }
     }
 
     /**
@@ -244,6 +264,6 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function hasImage()
     {
-        return Yii::$app->imageUploader->imageExists('animal', (string)$this->id);
+        return !empty($this->foto);
     }
 }

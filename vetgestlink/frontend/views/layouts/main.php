@@ -28,9 +28,8 @@ AppAsset::register($this);
     <?php $this->registerCsrfMetaTags() ?>
 
     <?php
-    $faviconUrl = Yii::getAlias('@web') . '/static/img/favicon.ico';
+    $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
     ?>
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
 
     <!-- Template CSS -->

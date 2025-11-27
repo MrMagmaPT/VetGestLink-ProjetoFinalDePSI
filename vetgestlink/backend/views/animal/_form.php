@@ -16,13 +16,18 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
+        <?php if ($model->getImageUrl()): ?>
+                <div style="margin-bottom:10px;">
+                        <img src="<?= $model->getImageUrl() ?>" alt="Foto do animal" style="max-width:200px;max-height:200px;" />
+                </div>
+        <?php endif; ?>
+        <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
 
-    <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
+        <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
+        <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
 
-    <?= $form->field($model, 'peso')->textInput() ?>
+        <?= $form->field($model, 'peso')->textInput() ?>
 
     <?= $form->field($model, 'microship')->dropDownList(
             [1 => 'Sim', 0 => 'Não'],

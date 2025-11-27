@@ -23,6 +23,13 @@ $this->beginPage();
     <!-- Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
 
+    <!-- Favicon -->
+    <?php
+    $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
+    ?>
+    <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../../../web/static/css/layout.css">
 
     <?php $this->head() ?>
