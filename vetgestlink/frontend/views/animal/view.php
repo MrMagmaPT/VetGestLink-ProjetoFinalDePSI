@@ -44,7 +44,7 @@ use yii\widgets\DetailView;
 
     <div class="d-flex justify-content-between align-items-center mt-4">
         <h4>Última Nota</h4>
-        <?= Html::a('Ver Notas', ['/nota/view-notas', 'animal_id' => $model->id], ['class' => 'text-decoration-none text-primary']) ?>
+        <?= Html::a('Ver Notas', ['/nota/index', 'animal_id' => $model->id], ['class' => 'text-decoration-none text-primary']) ?>
     </div>
 
     <?php if ($latestNota): ?>
@@ -58,7 +58,7 @@ use yii\widgets\DetailView;
     <?php endif; ?>
 
 
-    <div class="mt-2 d-flex justify-content-center justify-content-between"><?= Html::a("Nova Nota", ['/nota/create', 'animal_id' => $model->id], ['class' => 'btn']) ?>
+    <div class="mt-2 d-flex justify-content-center justify-content-between"><?= Html::a("Nova Nota", ['/nota/create', 'animal_id' => $model->id], ['class' => 'btn btn-dark rounded-pill']) ?>
     </div>
 </div>
 

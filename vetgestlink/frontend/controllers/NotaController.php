@@ -40,14 +40,14 @@ class NotaController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionViewNotas($animal_id)
+    public function actionIndex($animal_id)
     {
         $model = $this->findModel($animal_id);
 
         $animal = Animal::findOne($animal_id);
         $allnotas = $animal->notas;
 
-        return $this->render('viewNotas', [
+        return $this->render('index', [
             'model' => $model,
             'allnotas' => $allnotas,
         ]);
@@ -86,14 +86,20 @@ class NotaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Nota atualizada com sucesso.');
+                return $this->redirect(['nota/index', 'animal_id' => $model->animais_id]);
+            } else {
+                Yii::$app->session->setFlash('danger', 'Erro ao atualizar a nota. Verifique os campos.');
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Deletes an existing Nota model.
@@ -104,9 +110,11 @@ class NotaController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        Yii::$app->session->setFlash('success', 'Nota eliminada com sucesso.');
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['nota/index','animal_id' => $model->animais_id]);
     }
 
     /**

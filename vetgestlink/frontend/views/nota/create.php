@@ -15,7 +15,7 @@ $this->title = 'Nova Nota';
     <?= $form->field($model, 'nota')->textarea(['rows' => 4]) ?>
 
     <div class="form-group mt-3">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-accent']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-dark rounded-pillt']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

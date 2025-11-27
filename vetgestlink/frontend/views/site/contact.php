@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
 
             <div class="d-grid">
-                <?= Html::submitButton('Enviar', ['class' => 'btn btn-primary btn-lg w-100']) ?>
+                <?= Html::submitButton('Enviar', ['class' => 'btn btn-dark rounded-pill']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
