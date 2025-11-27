@@ -1,3 +1,4 @@
+/* CSS */
 main > .container {
     padding: 70px 15px 20px;
 }
@@ -88,3 +89,112 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+/* =========================
+   Ajustes para a sidebar (AdminLTE)
+   - Remove margens/paddings que causam espaço extra entre grupos
+   - Mantém indentação dos sub-itens
+   - Garante que <p> dentro dos links não adiciona margem
+   ========================= */
+
+/* remover margem de parágrafos dentro de links da sidebar */
+.nav-sidebar .nav-link p {
+    margin: 0;
+}
+
+/* remover margens/paddings indesejados no treeview e preservar indent */
+.main-sidebar .nav-treeview,
+.nav-sidebar .nav-treeview {
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 1rem; /* mantém indentação visual */
+}
+
+/* garantir que itens não têm margem inferior extra */
+.nav-sidebar .nav-treeview .nav-item,
+.nav-sidebar .nav-item {
+    margin-bottom: 0;
+}
+
+/* uniformizar padding vertical dos links na sidebar (ajustar conforme gosto) */
+.nav-sidebar .nav-link {
+    padding-top: .45rem;
+    padding-bottom: .45rem;
+}
+
+/* caso os parágrafos internos ainda criem espaço */
+.nav-sidebar .nav-treeview li > a > p {
+    margin: 0;
+    line-height: 1.1;
+    display: inline-block;
+}
+
+/* quando um grupo está aberto, garantir alinhamento correto sem margens extra */
+.nav-item.has-treeview.menu-open > .nav-treeview {
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* =========================
+   Regras mais específicas / !important para sobrepor AdminLTE
+   - Força remoção do padding/margin do UL que aparece em roxo no inspector
+   - Mantém indent mas elimina espaço extra entre grupos
+   ========================= */
+
+/* targets mais específicos para o treeview */
+.main-sidebar .sidebar .nav.nav-pills.nav-sidebar .nav-treeview,
+.main-sidebar .sidebar .nav.nav-pills.nav-sidebar .nav-treeview ul,
+.nav-sidebar .nav.nav-pills .nav-treeview,
+.nav-sidebar ul.nav.nav-treeview,
+ul.nav.nav-treeview {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    border: none !important;
+}
+
+/* garantir que cada li do treeview não introduz padding/margin extra */
+.nav-sidebar .nav-treeview > li,
+.nav-sidebar .nav-treeview li {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* forçar padding vertical controlado nos links dos sub-itens */
+.nav-sidebar .nav-treeview .nav-link {
+    padding-top: .35rem !important;
+    padding-bottom: .35rem !important;
+}
+
+/* se o UL tiver padding-bottom visível, zera explicitamente */
+.nav-item.has-treeview > .nav-treeview,
+.nav-item.has-treeview.menu-open > .nav-treeview {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* se o UL externo (do grupo) estiver a criar espaço por `padding-left` em resoluções específicas,
+   restabelece uma indentação controlada via padding-left apenas quando necessário */
+.nav-sidebar .nav-treeview {
+    padding-left: 1rem !important;
+}
+
+/* garantir que anchors não têm margem que contribua ao gap */
+.nav-sidebar .nav-link,
+.nav-sidebar .nav-treeview .nav-link {
+    margin: 0 !important;
+}
+
+/* fallback: se alguma regra do AdminLTE continuar a sobrepor, descomentar o bloco abaixo (último recurso) */
+
+.nav-sidebar .nav-treeview {
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.ul.nav.nav-treeview {
+    padding-bottom: 0 !important;}

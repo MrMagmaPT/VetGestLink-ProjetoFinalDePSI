@@ -88,132 +88,164 @@ $this->beginPage();
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <?php if ($usertype == 1): ?>
+                    <?php if ($usertype == 1): ?> <!-- Admin -->
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
                             'url' => ['/site/index'],
                             'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-circle-user"></i><p>Gestao de Utilizadores</p>',
+                            'icon' => 'fa fa-circle-user',
+                            'text' => 'Gestao de Utilizadores',
                             'url' => ['/userprofile/index'],
                             'active' => Yii::$app->controller->id === 'userprofile' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
                             'url' => ['/medicamento/index'],
                             'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-folder"></i><p>Categoria de Medicamentos</p>',
+                            'icon' => 'far fa-folder',
+                            'text' => 'Categoria de Medicamentos',
                             'url' => ['/categoria/index'],
                             'active' => Yii::$app->controller->id === 'categoria' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-credit-card"></i><p>Metodos de Pagamentos</p>',
+                            'icon' => 'fa fa-credit-card',
+                            'text' => 'Metodos de Pagamentos',
                             'url' => ['/metodopagamento/index'],
                             'active' => Yii::$app->controller->id === 'metodopagamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                     <?php endif; ?>
-                    <?php if ($usertype == 2): ?>
+                    <?php if ($usertype == 2): ?> <!-- Veterinario -->
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
                             'url' => ['/site/index'],
                             'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-paw"></i><p>Animais</p>',
+                            'icon' => 'fa fa-paw',
+                            'text' => 'Animais',
                             'url' => ['/animal/index'],
                             'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-file-lines"></i><p>Consulta</p>',
+                            'icon' => 'far fa-file-lines',
+                            'text' => 'Consulta',
                             'url' => ['/marcacao/index'],
                             'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-calendar"></i><p>Agendamentos</p>',
+                            'icon' => 'far fa-calendar',
+                            'text' => 'Agendamentos',
                             'url' => ['/marcacao/index'],
                             'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
                             'url' => ['/medicamento/index'],
                             'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuGroup::widget([
-                            'label' => 'Raças & Espécies',
+                            'text' => 'Raças & Espécies',
                             'icon' => 'nav-icon fas fa-layer-group',
-                            'items' => [
+                            'subs' => [
                                 [
-                                    'label' => '<i class="fas nav-icon fa-paw"></i><p>Raças</p>',
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-paw',
+                                    'text' => 'Raças',
                                     'url' => ['/raca/index'],
                                     'active' => Yii::$app->controller->id === 'raca',
-                                    'encodeLabel' => false,
                                 ],[
-                                    'label' => '<i class="fas nav-icon fa-layer-group"></i><p>Espécies</p>',
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-layer-group',
+                                    'text' => 'Espécies',
                                     'url' => ['/especie/index'],
                                     'active' => Yii::$app->controller->id === 'especie',
-                                    'encodeLabel' => false,
                                 ],
                             ],
                         ]) ?>
                     <?php endif; ?>
-                    <?php if ($usertype == 3): ?>
+                    <?php if ($usertype == 3): ?> <!-- Rececionista -->
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-cubes-stacked"></i><p>Dashboard</p>',
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
                             'url' => ['/site/index'],
                             'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-paw"></i><p>Animais</p>',
+                            'icon' => 'fa fa-paw',
+                            'text' => 'Animais',
                             'url' => ['/animal/index'],
                             'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-file-lines"></i><p>Consulta</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon far fa-calendar"></i><p>Agendamentos</p>',
-                            'url' => ['/marcacao/index'],
-                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
-                        ]) ?>
-                        <?= MenuItem::widget([
-                            'label' => '<i class="nav-icon fa fa-pills"></i><p>Medicamentos</p>',
-                            'url' => ['/medicamento/index'],
-                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            'encodeLabel' => false,
                         ]) ?>
                         <?= MenuGroup::widget([
-                            'label' => 'Faturas',
-                            'icon' => 'nav-icon fas fa-layer-group',
-                            'items' => [
+                            'icon' => 'far fa-file-lines',
+                            'text' => 'Consultas',
+                            'subs' => [
                                 [
-                                    'label' => '<i class="far nav-icon fa-clock"></i><p>Por Pagar</p>',
+                                    'type' => '1',
+                                    'icon' => 'fas fa-file-lines',
+                                    'text' => 'Consultas Terminadas',
+                                    'subs' => [
+                                        [
+                                            'type' => '2',
+                                            'icon' => 'fas fa-file-lines',
+                                            'text' => 'Com fatura',
+                                            'url' => ['/marcacao/index'],
+                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                        ],
+                                        [
+                                            'type' => '2',
+                                            'icon' => 'fas fa-file-lines',
+                                            'text' => 'Sem Fatura',
+                                            'url' => ['/marcacao/index'],
+                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'type' => '2',
+                                    'icon' => 'fas fa-file-lines',
+                                    'text' => 'Consultas Canceladas',
+                                    'url' => ['/marcacao/index'],
+                                    'active' => Yii::$app->controller->id === 'marcacao',
+                                ],
+                            ],
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'far fa-calendar',
+                            'text' => 'Agendamentos',
+                            'url' => ['/marcacao/index'],
+                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
+                            'url' => ['/medicamento/index'],
+                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuGroup::widget([
+                            'text' => 'Faturas',
+                            'icon' => 'nav-icon fas fa-layer-group',
+                            'subs' => [
+                                [
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-clock',
+                                    'text' => 'Por Pagar',
                                     'url' => ['/fatura/index'],
                                     'active' => Yii::$app->controller->id === 'fatura',
-                                    'encodeLabel' => false,
                                 ],[
-                                    'label' => '<i class="fas nav-icon fa-circle-check"></i><p>Pagas</p>',
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-circle-check',
+                                    'text' => 'Pagas',
                                     'url' => ['/fatura/index'],
-                                    'active' => Yii::$app->controller->id === 'fatura' && Yii::$app->controller->action->id === 'index',
-                                    'encodeLabel' => false,
+                                    'active' => Yii::$app->controller->id === 'fatura',
                                 ],
                             ],
                         ]) ?>
