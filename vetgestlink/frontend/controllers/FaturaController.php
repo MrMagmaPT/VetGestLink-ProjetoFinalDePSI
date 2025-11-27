@@ -148,17 +148,11 @@ class FaturaController extends Controller
     {
         $model = $this->findModel($id);
 
-        // Get all payment methods
-        $metodos = \common\models\Metodopagamento::find()->all();
+        // filtra apenas em metodos em vigor
+        $metodos = \common\models\Metodopagamento::find()->where(['vigor' => 1])->all();
 
-        // Filter in PHP (no query conditions)
-        $metodos = array_filter($metodos, function ($m) {
-            return $m->vigor == 1;
-        });
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            // Redirect after submitting
-            return $this->redirect(['fatura/view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
+            return $this->redirect(['sucesso', 'id' => $model->id]);
         }
 
         return $this->render('pagar', [
@@ -167,16 +161,28 @@ class FaturaController extends Controller
         ]);
     }
 
-    public function actionSucesso($id){
-        $modelo= Fatura::findOne($id);
-        $modelo->estado = 1; //Atualiza estado da fatura como paga
-        $modelo->metodopagamento_id;  //atualiza o metodo de pagamento usado
-        $modelo->save();
+
+    public function actionSucesso($id)
+    {
+        $modelo = Fatura::findOne($id);
+        if (!$modelo) {
+            Yii::$app->session->setFlash('error', 'Fatura não encontrada.');
+            return $this->redirect(['index']);
+        }
+
+        // Muda para pago
+        $modelo->estado = 1;
+        if ($modelo->save(false)) {
+            Yii::$app->session->setFlash('success', 'Pagamento realizado com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ocorreu um erro ao finalizar o pagamento.');
+        }
 
         return $this->render('view', [
             'model' => $modelo,
         ]);
     }
+
 
 
 }

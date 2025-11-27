@@ -91,6 +91,7 @@ class SignupForm extends Model
     public function signup()
     {
         if (!$this->validate()) {
+            Yii::$app->session->setFlash('danger', 'Existem erros no formulário. Verifique os campos novamente.');
             Yii::error("Validação falhou: " . json_encode($this->errors));
             return null;
         }
@@ -104,27 +105,27 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            //$user->status = User::STATUS_INACTIVE;
             $user->created_at = time();
             $user->updated_at = time();
 
             if (!$user->save()) {
+                $msg = 'Erro ao criar utilizador.';
+                Yii::$app->session->setFlash('danger', $msg);
                 Yii::error("Erro User: " . json_encode($user->errors));
-                throw new \Exception('Erro ao criar User: ' . json_encode($user->errors));
+                $transaction->rollBack();
+                return null;
             }
 
-            Yii::info("User ID {$user->id} criado");
-
-            // 2. Atribuir role "cliente"
+            // 2. Atribuir role
             $auth = Yii::$app->authManager;
             $clienteRole = $auth->getRole('cliente');
 
             if ($clienteRole) {
                 $auth->assign($clienteRole, $user->id);
-                Yii::info("Role 'cliente' atribuída ao User ID {$user->id}");
             } else {
-                Yii::warning("Role 'cliente' não encontrada no sistema RBAC");
+                Yii::$app->session->setFlash('warning', 'A role "cliente" não existe no RBAC.');
             }
+
             // 3. Criar Userprofile
             $userprofile = new Userprofile();
             $userprofile->user_id = $user->id;
@@ -135,15 +136,19 @@ class SignupForm extends Model
             $userprofile->eliminado = 0;
 
             if (!$userprofile->save()) {
+                $msg = 'Erro ao criar o perfil do utilizador.';
+                Yii::$app->session->setFlash('danger', $msg);
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
+                $transaction->rollBack();
+                return null;
             }
 
-            // 3.1 Upload de imagem de perfil (se fornecida)
+            // 3.1 Upload imagem
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
-                $userprofile->uploadImage();
-                Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
+                if (!$userprofile->uploadImage()) {
+                    Yii::$app->session->setFlash('warning', 'Registo concluído, mas falhou o upload da imagem.');
+                }
             }
 
             // 4. Criar Morada
@@ -160,21 +165,30 @@ class SignupForm extends Model
             $morada->eliminado = 0;
 
             if (!$morada->save()) {
+                $msg = 'Erro ao guardar a morada.';
+                Yii::$app->session->setFlash('danger', $msg);
                 Yii::error("Erro Morada: " . json_encode($morada->errors));
-                throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
+                $transaction->rollBack();
+                return null;
             }
 
+            // Tudo OK
             $transaction->commit();
+            Yii::$app->session->setFlash('success', 'Registo efetuado com sucesso! Verifique o seu email para confirmar a conta.');
 
-            return $user && $this->sendEmail($user) ? $user : null;
+            // Enviar email
+            $this->sendEmail($user);
+
+            return $user;
 
         } catch (\Exception $e) {
             $transaction->rollBack();
+            Yii::$app->session->setFlash('danger', 'Ocorreu um erro inesperado. Tente novamente.');
             Yii::error("Rollback: " . $e->getMessage());
-            Yii::$app->session->setFlash('error', $e->getMessage());
             return null;
         }
     }
+
     protected function sendEmail($user)
     {
         return Yii::$app

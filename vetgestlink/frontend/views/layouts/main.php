@@ -48,6 +48,13 @@ AppAsset::register($this);
 
 <!-- Main content -->
 <main role="main" class="flex-shrink-0 mt-5 pt-5">
+    <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
+        <div class="alert alert-<?= $type ?> alert-dismissible fade show mt-2" role="alert">
+            <?= $message ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endforeach; ?>
+
     <?= $content ?>
 </main>
 

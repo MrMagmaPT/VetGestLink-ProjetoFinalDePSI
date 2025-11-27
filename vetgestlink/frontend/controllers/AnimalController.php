@@ -78,15 +78,9 @@ class AnimalController extends Controller
     {
         $model = $this->findModel($id);
 
-        // Fetch the latest Nota for this animal
-        /*$latestNota = Nota::find()
-            ->where(['animais_id' => $id])
-            ->orderBy(['created_at' => SORT_DESC])
-            ->one();*/
-
         //notas já vem ordenado pelo mais recente
         //é só buscar o primeiro do array
-        $latestNota = $model->notas[0];
+        $latestNota = !empty($model->notas) ? $model->notas[0] : null;
 
         return $this->render('view', [
             'model' => $model,

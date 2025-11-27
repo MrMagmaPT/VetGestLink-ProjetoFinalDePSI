@@ -1,5 +1,4 @@
 <?php
-
 namespace frontend\controllers;
 
 use Yii;
@@ -122,13 +121,13 @@ class UserprofileController extends Controller
     }
 
 
-
     /**
      * Saves the user profile (POST action).
      *
      * @return \yii\web\Response
      * @throws NotFoundHttpException
      */
+
     public function actionSave()
     {
         $user = Yii::$app->user->identity;
@@ -141,29 +140,47 @@ class UserprofileController extends Controller
         if ($this->request->isPost && $model->load($this->request->post())) {
             Model::loadMultiple($moradas, $this->request->post());
 
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                if (!$model->save(false)) {
-                    throw new \RuntimeException('Erro ao salvar perfil.');
+            $profileSaved = $model->save(false);
+            $moradasSaved = true;
+            foreach ($moradas as $morada) {
+                if (!$morada->save(false)) {
+                    $moradasSaved = false;
+                    break;
                 }
-                foreach ($moradas as $morada) {
-                    if (!$morada->save(false)) {
-                        throw new \RuntimeException('Erro ao salvar morada.');
-                    }
-                }
-                $transaction->commit();
+            }
+
+            if ($profileSaved && $moradasSaved) {
                 Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
-            } catch (\Throwable $e) {
-                $transaction->rollBack();
-                Yii::error($e->getMessage(), __METHOD__);
+            } else {
                 Yii::$app->session->setFlash('error', 'Erro ao editar o perfil.');
             }
         }
-
         // redirecionar para a view do utilizador atual explicitamente
         return $this->redirect(['view', 'id' => $user->id ?? null]);
     }
 
+
+    /**
+     * Updates the user profile.
+     *
+     * @param int $id
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException
+     */
+
+
+    public function actionNewMorada(){
+        $user = Yii::$app->user->identity;
+        $model = $user->userprofile;
+
+        return $this->redirect(['_formNewMorada', 'id' => $user->id ?? null]);
+    }
+
+    protected function actionnewMoradaHasData($morada)
+    {
+        // adjust attributes you consider required / meaningful
+        return !empty($morada->rua) || !empty($morada->cidade) || !empty($morada->codigo_postal) || !empty($morada->pais);
+    }
     /**
      * Finds the Userprofile model based on its primary key value.
      *

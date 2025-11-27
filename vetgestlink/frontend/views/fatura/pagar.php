@@ -24,27 +24,27 @@ $this->title = "Pagamento";
 
                 <?php $form = ActiveForm::begin(); ?>
 
-                <label class="fw-bold mb-2">Escolha o Método de Pagamento:</label>
+                <?= $form->field($model, 'metodospagamentos_id')->radioList(
+                    \yii\helpers\ArrayHelper::map($metodos, 'id', 'nome'),
+                    [
+                        'item' => function ($index, $label, $name, $checked, $value) {
+                            return "
+                            <label class='list-group-item d-flex align-items-center' style='cursor:pointer;'>
+                                <input type='radio'
+                                       name='$name'
+                                       value='$value'
+                                       class='form-check-input me-3'
+                                       " . ($checked ? "checked" : "") . ">
+                                <div>
+                                    <div class='fw-semibold'>" . Html::encode($label) . "</div>
+                                </div>
+                            </label>
+                            <br>";
+                        },
+                        'encode' => false, // allow HTML inside item
+                    ]
+                )->label('Escolha o Método de Pagamento:') ?>
 
-                <div class="list-group">
-
-                    <?php foreach ($metodos as $m): ?>
-                        <label class="list-group-item d-flex align-items-center" style="cursor:pointer;">
-                            <input
-                                    type="radio"
-                                    name="metodo_id"
-                                    value="<?= $m->id ?>"
-                                    class="form-check-input me-3"
-                                    required
-                            >
-                            <div>
-                                <div class="fw-semibold"><?= Html::encode($m->nome) ?></div>
-                            </div>
-                        </label>
-                    <br>
-                    <?php endforeach; ?>
-
-                </div>
 
                 <div class="text-end mt-4">
                     <?= Html::submitButton("Confirmar Pagamento", [
