@@ -37,6 +37,7 @@ class UserprofileController extends Controller
                     'actions' => [
                         'delete' => ['POST'],
                         'remove-photo' => ['POST'],
+                        'remove-morada' => ['POST'],
                     ],
                 ],
             ]
@@ -68,13 +69,9 @@ class UserprofileController extends Controller
             $profile->user_id = $user->id;
             $moradas = [];
         } else {
-            // tenta obter moradas por nomes comuns de relação
-            $moradas = [];
-            // acesso direto: se a relação existir isto traz as moradas (lazy ou eager)
             // buscar apenas moradas ativas (eliminado = 0)
             $moradas = $profile->getMoradas()->where(['eliminado' => 0])->all();
-            // legacy relations fallbacks: filter them too
-            // if there are other relation names, filter those arrays
+            // legacy fallbacks (se precisar)
             if (empty($moradas)) {
                 if (isset($profile->enderecos) && is_array($profile->enderecos) && count($profile->enderecos)) {
                     foreach ($profile->enderecos as $e) {
@@ -108,47 +105,63 @@ class UserprofileController extends Controller
         $model = $user->userprofile;
         $moradas = $model ? $model->getMoradas()->where(['eliminado' => 0])->all() : [];
 
-        if ($this->request->isPost && $model->load($this->request->post())) {
-            // carregar ficheiro enviado (se houver)
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-            // validar apenas o ficheiro (se enviado)
-            if ($model->imageFile instanceof UploadedFile) {
-                if (!$model->validate(['imageFile'])) {
-                    // render com erros do ficheiro
-                    return $this->render('update', [
-                        'model' => $model,
-                        'moradas' => $moradas,
-                    ]);
-                }
-                // upload (apaga antigo, guarda novo nome em $model->foto)
-                if (!$model->uploadImage()) {
-                    Yii::$app->session->setFlash('error', 'Falha ao gravar a imagem. Tente novamente.');
-                    return $this->render('update', [
-                        'model' => $model,
-                        'moradas' => $moradas,
-                    ]);
+        // handle POST
+        if ($this->request->isPost) {
+            // Support no-JS 'Remover' button: if remover_morada exists, force that Morada[...]..eliminado = 1
+            $removeIndex = Yii::$app->request->post('remover_morada', null);
+            if ($removeIndex !== null) {
+                $post = Yii::$app->request->post();
+                if (!isset($post['Morada'])) $post['Morada'] = [];
+                $post['Morada'][$removeIndex]['eliminado'] = 1;
+                // update body params so later ->post() reads the modified data
+                if (method_exists(Yii::$app->request, 'setBodyParams')) {
+                    Yii::$app->request->setBodyParams($post);
+                } else {
+                    $_POST = $post;
                 }
             }
 
-            // salvar tudo dentro de uma transação: model + moradas (create/update/delete)
-            try {
-                if (!$model->save(false)) {
-                    throw new \Exception('Falha ao salvar perfil');
+            if ($model->load(Yii::$app->request->post())) {
+                // carregar ficheiro enviado (se houver)
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+                // validar apenas o ficheiro (se enviado)
+                if ($model->imageFile instanceof UploadedFile) {
+                    if (!$model->validate(['imageFile'])) {
+                        // render com erros do ficheiro
+                        return $this->render('update', [
+                            'model' => $model,
+                            'moradas' => $moradas,
+                        ]);
+                    }
+                    // upload (apaga antigo, guarda novo nome em $model->foto)
+                    if (!$model->uploadImage()) {
+                        Yii::$app->session->setFlash('error', 'Falha ao gravar a imagem. Tente novamente.');
+                        return $this->render('update', [
+                            'model' => $model,
+                            'moradas' => $moradas,
+                        ]);
+                    }
                 }
 
-                // processar moradas postadas (nova função)
-                $this->savePostedMoradas($model);
+                try {
+                    if (!$model->save(false)) {
+                        throw new \Exception('Falha ao salvar perfil');
+                    }
 
-                Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
-                return $this->redirect(['view']);
-            } catch (\Throwable $e) {
-                Yii::error('Userprofile update failed: ' . $e->getMessage());
-                Yii::$app->session->setFlash('error', 'Erro ao atualizar perfil.');
-                return $this->render('update', [
-                    'model' => $model,
-                    'moradas' => $moradas,
-                ]);
+                    // processar moradas postadas (nova função)
+                    $this->savePostedMoradas($model);
+
+                    Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso.');
+                    return $this->redirect(['view']);
+                } catch (\Throwable $e) {
+                    Yii::error('Userprofile update failed: ' . $e->getMessage());
+                    Yii::$app->session->setFlash('error', 'Erro ao atualizar perfil.');
+                    return $this->render('update', [
+                        'model' => $model,
+                        'moradas' => $moradas,
+                    ]);
+                }
             }
         }
 
@@ -173,37 +186,52 @@ class UserprofileController extends Controller
         }
         $moradas = $model->getMoradas()->where(['eliminado' => 0])->all() ?? [];
 
-        if ($this->request->isPost && $model->load($this->request->post())) {
-            // carregar ficheiro enviado
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-            if ($model->imageFile instanceof UploadedFile) {
-                if (!$model->validate(['imageFile'])) {
-                    // validação falhou: renderizar update com erros
-                    return $this->render('update', [
-                        'model' => $model,
-                        'moradas' => $moradas,
-                    ]);
-                }
-
-                if (!$model->uploadImage()) {
-                    Yii::$app->session->setFlash('error', 'Falha ao gravar a imagem. Tente novamente.');
-                    return $this->render('update', [
-                        'model' => $model,
-                        'moradas' => $moradas,
-                    ]);
+        if ($this->request->isPost) {
+            // same no-JS remover handling as in actionUpdate
+            $removeIndex = Yii::$app->request->post('remover_morada', null);
+            if ($removeIndex !== null) {
+                $post = Yii::$app->request->post();
+                if (!isset($post['Morada'])) $post['Morada'] = [];
+                $post['Morada'][$removeIndex]['eliminado'] = 1;
+                if (method_exists(Yii::$app->request, 'setBodyParams')) {
+                    Yii::$app->request->setBodyParams($post);
+                } else {
+                    $_POST = $post;
                 }
             }
 
-            try {
-                if (!$model->save(false)) {
-                    throw new \Exception('Falha ao salvar perfil');
+            if ($model->load(Yii::$app->request->post())) {
+                // carregar ficheiro enviado
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+                if ($model->imageFile instanceof UploadedFile) {
+                    if (!$model->validate(['imageFile'])) {
+                        // validação falhou: renderizar update com erros
+                        return $this->render('update', [
+                            'model' => $model,
+                            'moradas' => $moradas,
+                        ]);
+                    }
+
+                    if (!$model->uploadImage()) {
+                        Yii::$app->session->setFlash('error', 'Falha ao gravar a imagem. Tente novamente.');
+                        return $this->render('update', [
+                            'model' => $model,
+                            'moradas' => $moradas,
+                        ]);
+                    }
                 }
-                $this->savePostedMoradas($model);
-                Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
-            } catch (\Throwable $e) {
-                Yii::error('Userprofile save failed: ' . $e->getMessage());
-                Yii::$app->session->setFlash('error', 'Erro ao editar o perfil.');
+
+                try {
+                    if (!$model->save(false)) {
+                        throw new \Exception('Falha ao salvar perfil');
+                    }
+                    $this->savePostedMoradas($model);
+                    Yii::$app->session->setFlash('success', 'Perfil editado com sucesso.');
+                } catch (\Throwable $e) {
+                    Yii::error('Userprofile save failed: ' . $e->getMessage());
+                    Yii::$app->session->setFlash('error', 'Erro ao editar o perfil.');
+                }
             }
         }
         // redirecionar para a view do utilizador atual explicitamente
@@ -268,7 +296,7 @@ class UserprofileController extends Controller
 
     /**
      * Process posted Morada data: create, update, mark removed.
-     * Expects POST['Morada'] = array of arrays with keys [id, rua, nporta, andar, cdpostal, cxpostal, localidade]
+     * Expects POST['Morada'] = array of arrays with keys [id, rua, nporta, andar, cdpostal, cxpostal, localidade, eliminado]
      * @param Userprofile $model
      */
     protected function savePostedMoradas(Userprofile $model)
@@ -276,17 +304,25 @@ class UserprofileController extends Controller
         $posted = Yii::$app->request->post('Morada', []);
         $postedIds = [];
 
-        foreach ($posted as $data) {
-            // skip empty blocks
+        foreach ($posted as $i => $data) {
+            // skip empty blocks when no id
             $hasAny = false;
             foreach (['rua','nporta','cdpostal','cidade','localidade'] as $k) {
                 if (!empty($data[$k])) { $hasAny = true; break; }
             }
-            if (!$hasAny) continue;
+            if (empty($data['id']) && !$hasAny) continue;
 
+            // existing morada update / mark eliminado
             if (!empty($data['id'])) {
                 $m = Morada::findOne($data['id']);
                 if ($m && $m->userprofiles_id == $model->id) {
+                    // if client requested elimination, mark and continue
+                    if (!empty($data['eliminado'])) {
+                        $m->eliminado = 1;
+                        $m->save(false);
+                        continue;
+                    }
+
                     // assign only allowed fields
                     $m->rua = $data['rua'] ?? $m->rua;
                     $m->nporta = $data['nporta'] ?? $m->nporta;
@@ -301,6 +337,11 @@ class UserprofileController extends Controller
                     $postedIds[] = $m->id;
                 }
             } else {
+                // new morada: if eliminado flag is set, skip creation (user clicked Remover on empty/new block)
+                if (!empty($data['eliminado'])) {
+                    continue;
+                }
+
                 $m = new Morada();
                 $m->rua = $data['rua'] ?? null;
                 $m->nporta = $data['nporta'] ?? null;
@@ -366,5 +407,46 @@ class UserprofileController extends Controller
         }
 
         return $this->render('add-morada', ['model' => $model, 'profileId' => $profile->id]);
+    }
+
+    /**
+     * Remove a morada (address) by marking it as eliminated.
+     * POST only. Expects ID as a parameter.
+     */
+    public function actionRemoveMorada($id)
+    {
+        $user = Yii::$app->user->identity;
+        $profile = $user->userprofile;
+        if (!$profile) {
+            if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
+                return $this->asJson(['error' => 'Perfil não encontrado.']);
+            }
+            Yii::$app->session->setFlash('error', 'Perfil não encontrado.');
+            return $this->redirect(['update']);
+        }
+
+        $morada = Morada::findOne($id);
+        if (!$morada || $morada->userprofiles_id != $profile->id) {
+            if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
+                return $this->asJson(['error' => 'Morada não encontrada ou sem permissão.']);
+            }
+            Yii::$app->session->setFlash('error', 'Morada não encontrada ou sem permissão.');
+            return $this->redirect(['update']);
+        }
+
+        $morada->eliminado = 1;
+        $morada->save(false);
+
+        // obter lista atualizada de moradas ativas
+        $moradas = $profile->getMoradas()->where(['eliminado' => 0])->all();
+
+        // se for pjax/ajx, retornar apenas o fragmento atualizado
+        if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
+            return $this->renderAjax('_moradas_list', ['moradas' => $moradas]);
+        }
+
+        // fallback: redirect para update
+        Yii::$app->session->setFlash('success', 'Morada removida.');
+        return $this->redirect(['update']);
     }
 }

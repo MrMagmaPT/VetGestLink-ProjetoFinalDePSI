@@ -2,6 +2,7 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
+use yii\widgets\Pjax;
 
 /** @var \yii\web\View $this */
 /** @var common\models\Userprofile $model */
@@ -10,19 +11,19 @@ use yii\helpers\ArrayHelper;
 $user = $user ?? ($model->user ?? null);
 $moradas = $moradas ?? ($model->moradas ?? []);
 
+// Iniciar o ActiveForm com enctype para upload de arquivos
 $form = ActiveForm::begin([
     'id' => 'userprofile-form',
     'options' => ['enctype' => 'multipart/form-data'],
 ]);
 
-// avatar: foto do model > foto do user > default
-$currentPhoto = $model->foto ?: ($user->userprofile->foto ?? null);
-if ($currentPhoto) {
-    $storedPath = (strpos($currentPhoto, '/') !== false) ? $currentPhoto : (Yii::$app->has('imageUploader') ? trim(Yii::$app->imageUploader->subdir, '/\\') . '/' . $currentPhoto : $currentPhoto);
-}
+// avatar: usa o componente imageUploader para construir a URL (o componente já tem defaultImage)
 if (Yii::$app->has('imageUploader')) {
-    $avatarUrl = Yii::$app->imageUploader->getUrl($storedPath ?? (trim(Yii::$app->imageUploader->subdir, '/\\') . '/default.jpg'));
+    // $model->foto contém apenas o filename ou null
+    $avatarUrl = Yii::$app->imageUploader->getUrl($model->foto);
 } else {
+    // fallback estático (apenas para dev local se o componente não estiver configurado)
+    $currentPhoto = $model->foto ?: ($user->userprofile->foto ?? null);
     $avatarUrl = '/2_ano_1_semestre/Projeto/vetgestlink/backend/web/uploads/users/' . ltrim($currentPhoto ?? 'default.jpg', '/\\');
 }
 ?>
@@ -45,32 +46,10 @@ if (Yii::$app->has('imageUploader')) {
         <div class="col-md-6"><?= $form->field($model, 'dtanascimento')->input('date') ?></div>
     </div>
     <hr class="my-4 ">
-    <div id="moradas-list">
-        <?php foreach ($moradas as $i => $morada): ?>
-            <div class="morada-item mb-3 border-bottom pb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <strong>Morada <?= $i === 0 ? 'Principal' : ($i + 1) ?></strong>
-                    <?= Html::hiddenInput("Morada[$i][id]", ArrayHelper::getValue($morada, 'id', '')) ?>
-                    <div>
-                        <?php $mid = ArrayHelper::getValue($morada, 'id', null); ?>
-                        <?php if ($mid): ?>
-                            <?= Html::a('Editar', ['userprofile/add-morada', 'id' => $mid], ['class' => 'btn btn-sm btn-outline-primary me-2']) ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
 
-                <div class="row g-2 mt-2">
-                    <div class="col-md-6"><?= Html::textInput("Morada[$i][rua]", ArrayHelper::getValue($morada, 'rua', ''), ['class' => 'form-control', 'placeholder' => 'Rua', 'readonly' => true]) ?></div>
-                    <div class="col-md-3"><?= Html::textInput("Morada[$i][nporta]", ArrayHelper::getValue($morada, 'nporta', ''), ['class' => 'form-control', 'placeholder' => 'Nº Porta', 'readonly' => true]) ?></div>
-                    <div class="col-md-3"><?= Html::textInput("Morada[$i][andar]", ArrayHelper::getValue($morada, 'andar', ''), ['class' => 'form-control', 'placeholder' => 'Andar', 'readonly' => true]) ?></div>
-                    <div class="col-md-4 mt-2"><?= Html::textInput("Morada[$i][cdpostal]", ArrayHelper::getValue($morada, 'cdpostal', ''), ['class' => 'form-control', 'placeholder' => 'Código Postal', 'readonly' => true]) ?></div>
-                    <div class="col-md-4 mt-2"><?= Html::textInput("Morada[$i][cidade]", ArrayHelper::getValue($morada, 'cidade', ''), ['class' => 'form-control', 'placeholder' => 'Cidade', 'readonly' => true]) ?></div>
-                    <div class="col-md-4 mt-2"><?= Html::textInput("Morada[$i][cxpostal]", ArrayHelper::getValue($morada, 'cxpostal', ''), ['class' => 'form-control', 'placeholder' => 'Cx Postal', 'readonly' => true]) ?></div>
-                    <div class="col-md-4 mt-2"><?= Html::textInput("Morada[$i][localidade]", ArrayHelper::getValue($morada, 'localidade', ''), ['class' => 'form-control', 'placeholder' => 'Localidade', 'readonly' => true]) ?></div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <?php Pjax::begin(['id' => 'pjax-moradas', 'timeout' => 5000]); ?>
+        <?= $this->render('_moradas_list', ['moradas' => $moradas]) ?>
+    <?php Pjax::end(); ?>
 
     <div class="mb-3">
         <?= Html::a('+ Adicionar Morada', ['userprofile/add-morada'], ['class' => 'btn btn-sm btn-success']) ?>

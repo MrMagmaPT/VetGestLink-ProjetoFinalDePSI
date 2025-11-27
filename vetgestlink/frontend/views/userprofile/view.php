@@ -19,11 +19,21 @@ $addr = !empty($moradas) ? ArrayHelper::getValue($moradas, 0, $model) : $model;
 $editId = $model->id ?? $user->id ?? null;
 
 // avatar: usa foto ou default (imageUploader quando disponível)
-$avatarUrl = $model->foto
-    ? $model->getImageUrl()
-    : (Yii::$app->has('imageUploader')
-        ? Yii::$app->imageUploader->getUrl('users/default.jpg')
-        : '/2_ano_1_semestre/Projeto/vetgestlink/backend/web/uploads/users/default.jpg');
+if (Yii::$app->has('imageUploader')) {
+    // imageUploader já devolve a defaultImage quando $model->foto for null/empty
+    $avatarUrl = Yii::$app->imageUploader->getUrl($model->foto);
+} else {
+    // tentar resolver alias @uploadsUrl para uma URL pública; se não existir, usar caminho relativo
+    $uploadsUrl = '@uploadsUrl';
+    try {
+        $resolved = Yii::getAlias($uploadsUrl);
+    } catch (\Exception $e) {
+        $resolved = '/backend/web/uploads';
+    }
+    $avatarUrl = $model->foto
+        ? (rtrim($resolved, '/') . '/users/' . ltrim($model->foto, '/\\'))
+        : (rtrim($resolved, '/') . '/users/default.jpg');
+}
 
 // atributos da imagem
 $imgAttr = [

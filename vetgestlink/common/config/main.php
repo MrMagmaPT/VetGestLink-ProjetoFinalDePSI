@@ -7,8 +7,8 @@ return [
         // Caminho físico absoluto para a pasta de uploads do backend
         '@uploads' => dirname(dirname(__DIR__)) . '/backend/web/uploads',
         // URL pública que aponta para a pasta acima (ajuste se necessário)
-        // Ajustado para o caminho público real no ambiente local. Se usa VirtualHost, pode deixar como '/uploads'.
-        '@uploadsUrl' => '/2_ano_1_semestre/Projeto/vetgestlink/backend/web/uploads',
+        // Usado localmente em WAMP quando o app está em uma subpasta
+        '@uploadsUrl' => '/vetgestlink/backend/web/uploads',
 
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
@@ -17,7 +17,7 @@ return [
             'class' => \yii\caching\FileCache::class,
         ],
         'authManager' => [
-            'class' => 'yii\rbac\DbManager',
+            'class' => 'yii\\rbac\\DbManager',
         ],
         // Componente para gerir uploads de imagem (usa aliases configurados acima)
         'imageUploader' => [
@@ -25,6 +25,7 @@ return [
             'uploadPath' => '@uploads',     // alias para pasta física
             'baseUrl' => '@uploadsUrl',     // alias ou string com a URL pública
             'subdir' => 'users',
+            'defaultImage' => 'default.jpg', // ficheiro dentro de subdir usado quando não existir imagem
         ],
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,

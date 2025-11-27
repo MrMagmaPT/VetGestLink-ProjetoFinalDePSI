@@ -54,10 +54,11 @@ class Fatura extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['total', 'estado', 'metodospagamentos_id', 'userprofiles_id'], 'required'],
+            [['total', 'estado', 'userprofiles_id'], 'required'],
             [['created_at'], 'safe'],
             [['total'], 'number'],
             [['estado', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
+            // exist validator aceita null (não valida quando o valor é null)
             [['metodospagamentos_id'], 'exist', 'skipOnError' => true, 'targetClass' => Metodopagamento::class, 'targetAttribute' => ['metodospagamentos_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
@@ -128,5 +129,23 @@ class Fatura extends \yii\db\ActiveRecord
     public function getDataFatura($format = 'd/m/Y')
     {
         return $this->getCreatedAtFormatted($format);
+    }
+
+    /**
+     * Converte string vazia para null antes da validação.
+     * Isto garante que um campo dropdown com prompt ('') será salvo como NULL na BD.
+     */
+    public function beforeValidate()
+    {
+        if (!parent::beforeValidate()) {
+            return false;
+        }
+
+        // normalizar empty string para null para o campo de método de pagamento
+        if ($this->metodospagamentos_id === '') {
+            $this->metodospagamentos_id = null;
+        }
+
+        return true;
     }
 }

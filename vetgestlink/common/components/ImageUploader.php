@@ -15,6 +15,7 @@ use yii\web\UploadedFile;
  *  - uploadPath (alias para pasta física, ex: '@uploads' => backend/web/uploads)
  *  - baseUrl (URL pública ou alias, ex: '@uploadsUrl' => '/backend/uploads')
  *  - subdir (subpasta dentro de uploadPath, ex: 'users')
+ *  - defaultImage (nome do ficheiro default dentro de subdir, ex: 'default.jpg')
  */
 class ImageUploader extends Component
 {
@@ -24,6 +25,8 @@ class ImageUploader extends Component
     public $baseUrl = '/uploads';
     // subdiretório dentro de uploadPath onde armazenamos ficheiros
     public $subdir = 'users';
+    // nome do ficheiro default (dentro de subdir)
+    public $defaultImage = 'default.jpg';
 
     /**
      * Faz upload de um UploadedFile.
@@ -112,13 +115,23 @@ class ImageUploader extends Component
 
     /**
      * Retorna a URL pública do ficheiro baseado no storedPath (relativo)
-     * @param string $storedPath
+     * @param string|null $storedPath
      * @return string|null
      */
-    public function getUrl($storedPath)
+    public function getUrl($storedPath = null)
     {
-        if (empty($storedPath)){
-            return null;
+        // If no storedPath provided, use configured default image inside subdir
+        if (empty($storedPath)) {
+            $sub = trim((string)$this->subdir, '/\\');
+            $storedPath = ($sub === '') ? $this->defaultImage : $sub . '/' . $this->defaultImage;
+        }
+
+        $storedPath = ltrim($storedPath, '/\\');
+
+        // If storedPath does not contain a directory, prefix the configured subdir
+        $sub = trim((string)$this->subdir, '/\\');
+        if (strpos($storedPath, '/') === false && $sub !== '') {
+            $storedPath = $sub . '/' . $storedPath;
         }
 
         $base = $this->baseUrl;
