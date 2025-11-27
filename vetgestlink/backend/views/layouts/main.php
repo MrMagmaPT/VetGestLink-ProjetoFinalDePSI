@@ -25,8 +25,15 @@ $this->beginPage();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
-    <!-- Custom CSS para o layout-->
-    <?= Html::cssFile(Url::to('@web/static/css/layout.css')) ?>
+
+    <!-- Favicon -->
+    <?php
+    $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
+    ?>
+    <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../../../web/static/css/layout.css">
 
     <?php $this->head() ?>
 </head>
@@ -252,8 +259,8 @@ $this->beginPage();
     </footer>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Scripts: let Yii asset manager register jQuery and other assets -->
+<!-- If you need CDN versions adjust asset bundles; avoid manual jQuery include here -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 

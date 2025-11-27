@@ -30,10 +30,6 @@ class Navbar extends Widget
         ];
 
         if (!Yii::$app->user->isGuest) {
-
-            // tenta obter o perfil (se houver relação user->userprofile em User.php)
-            $profileId = $user->userprofile->id ?? null;
-
             $items = array_merge($items, [
                 ['label' => 'Pagamentos & Fatura', 'url' => ['fatura/index']],
                 ['label' => 'Animal', 'url' => ['animal/index']],

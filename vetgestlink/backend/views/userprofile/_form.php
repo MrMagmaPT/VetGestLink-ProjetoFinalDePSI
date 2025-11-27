@@ -15,12 +15,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <!-- PROFILE -->
+    <!-- USER PROFILE -->
     <h5 class="section-title">Informações pessoais</h5>
 
     <?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'telemovel')->textInput(['maxlength' => true]) ?>
+
 
     <div class="mb-4"></div>
 

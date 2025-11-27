@@ -1,5 +1,4 @@
 <?php
-
 namespace common\components;
 
 use Yii;
@@ -7,144 +6,144 @@ use yii\base\Component;
 use yii\web\UploadedFile;
 
 /**
- * Componente para gerenciamento de upload de imagens
+ * Componente simples para gerir upload e remoção de imagens.
+ * - Guarda ficheiros em `uploadPath` (aceita alias Yii)
+ * - Retorna caminhos relativos para guardar na BD (ex: "users/filename.png")
+ * - `getUrl()` constrói a URL pública a partir de `baseUrl` + caminho relativo
+ *
+ * Propriedades configuráveis no `common/config/main.php`:
+ *  - uploadPath (alias para pasta física, ex: '@uploads' => backend/web/uploads)
+ *  - baseUrl (URL pública ou alias, ex: '@uploadsUrl' => '/backend/uploads')
+ *  - subdir (subpasta dentro de uploadPath, ex: 'users')
+ *  - defaultImage (nome do ficheiro default dentro de subdir, ex: 'default.jpg')
  */
 class ImageUploader extends Component
 {
-    /**
-     * Extensões de imagem permitidas
-     */
-    const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png'];
+    // alias ou caminho físico para a pasta base de uploads
+    public $uploadPath = '@backend/web/uploads';
+    // URL pública correspondente (pode ser alias, ex: '@uploadsUrl')
+    public $baseUrl = '/uploads';
+    // subdiretório dentro de uploadPath onde armazenamos ficheiros
+    public $subdir = 'users';
+    // nome do ficheiro default (dentro de subdir)
+    public $defaultImage = 'default.jpg';
 
     /**
-     * Pasta base para upload de imagens
-     * Usa caminho absoluto da raiz do projeto
+     * Faz upload de um UploadedFile.
+     * @param UploadedFile $file
+     * @param mixed $id opcional - usado para criar nomes únicos (ex: user_123_...)
+     * @return string|false caminho relativo (subdir/name.ext) ou false em falha
      */
-    public $uploadPath;
-
-    /**
-     * Pasta para imagens padrão
-     */
-    public $defaultImagePath;
-
-    /**
-     * Inicialização do componente
-     */
-    public function init()
+    public function upload(UploadedFile $file, $id = null)
     {
-        parent::init();
-
-        // Define caminho absoluto para a pasta uploads na raiz do projeto
-        if ($this->uploadPath === null) {
-            $this->uploadPath = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'uploads';
-        }
-
-        if ($this->defaultImagePath === null) {
-            $this->defaultImagePath = $this->uploadPath . DIRECTORY_SEPARATOR . 'defaults';
-        }
-    }
-
-    /**
-     * Faz upload de uma imagem
-     */
-    public function upload($file, $folder, $filename)
-    {
-        if (!$file) {
+        // valida tipo
+        if (!$file instanceof UploadedFile) {
+            Yii::error('ImageUploader::upload - file is not UploadedFile');
             return false;
         }
 
-        if (!in_array(strtolower($file->extension), self::ALLOWED_EXTENSIONS)) {
+        // resolve alias uploadPath
+        try {
+            $base = Yii::getAlias($this->uploadPath);
+        } catch (\Exception $e) {
+            Yii::error('ImageUploader::upload - invalid uploadPath alias: ' . $e->getMessage());
             return false;
         }
 
-        $targetDir = $this->uploadPath . DIRECTORY_SEPARATOR . $folder;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0777, true);
-        }
+        $sub = trim((string)$this->subdir, '/\\');
+        $dir = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ($sub === '' ? '' : $sub . DIRECTORY_SEPARATOR);
 
-        $this->deleteImage($folder, $filename);
-
-        $targetPath = $targetDir . DIRECTORY_SEPARATOR . $filename . '.' . $file->extension;
-        return $file->saveAs($targetPath);
-    }
-
-    /**
-     * Obtém a URL de uma imagem
-     */
-    public function getImageUrl($folder, $filename, $defaultImage = 'no-image.png')
-    {
-        foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
-            if (file_exists($path)) {
-                return Yii::getAlias('@web/uploads/' . $folder . '/' . $filename . '.' . $ext);
+        // cria diretório se necessário
+        if (!is_dir($dir)) {
+            if (!@mkdir($dir, 0775, true) && !is_dir($dir)) {
+                Yii::error('ImageUploader::upload - failed to create directory: ' . $dir);
+                return false;
             }
         }
 
-        return Yii::getAlias('@web/images/' . $defaultImage);
-    }
-
-    /**
-     * Obtém a URL absoluta de uma imagem (para uso em API)
-     */
-    public function getImageAbsoluteUrl($folder, $filename, $defaultImage = 'no-image.png')
-    {
-        $relativeUrl = $this->getImageUrl($folder, $filename, $defaultImage);
-
-        $scheme = isset(Yii::$app->request) && !Yii::$app->request->isConsoleRequest
-            ? (Yii::$app->request->isSecureConnection ? 'https' : 'http')
-            : 'http';
-
-        $host = isset(Yii::$app->request) && !Yii::$app->request->isConsoleRequest
-            ? Yii::$app->request->hostInfo
-            : 'http://localhost';
-
-        return $host . $relativeUrl;
-    }
-
-    /**
-     * Deleta uma imagem
-     */
-    public function deleteImage($folder, $filename)
-    {
-        foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
-            if (file_exists($path)) {
-                unlink($path);
+        // verifica permissões de escrita
+        if (!is_writable($dir)) {
+            @chmod($dir, 0775);
+            if (!is_writable($dir)) {
+                Yii::error('ImageUploader::upload - directory not writable: ' . $dir);
+                return false;
             }
         }
-    }
 
-    /**
-     * Valida se o arquivo é uma imagem válida
-     */
-    public function validateImage($file)
-    {
-        if (!$file) {
+        $ext = $file->extension ? '.' . $file->extension : '';
+        $name = ($id ? "user_{$id}_" : '') . uniqid() . $ext;
+        $full = $dir . $name;
+
+        // guarda o ficheiro físico
+        if (!$file->saveAs($full)) {
+            Yii::error('ImageUploader::upload - saveAs failed for: ' . $full);
             return false;
         }
 
-        return in_array(strtolower($file->extension), self::ALLOWED_EXTENSIONS);
+        // retorna caminho relativo para armazenamento na BD: "subdir/name.ext" ou apenas "name.ext" se subdir vazio
+        return ($sub === '' ? $name : $sub . '/' . $name);
     }
 
     /**
-     * Obtém o caminho físico de uma imagem
+     * Elimina um ficheiro cujo caminho relativo está armazenado na BD.
+     * @param string $storedPath Ex: 'users/name.png' ou 'name.png'
+     * @return bool
      */
-    public function getImagePath($folder, $filename)
+    public function delete($storedPath)
     {
-        foreach (self::ALLOWED_EXTENSIONS as $ext) {
-            $path = $this->uploadPath . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $filename . '.' . $ext;
-            if (file_exists($path)) {
-                return $path;
+        if (empty($storedPath)) {
+            return false;
+        }
+
+        $storedPath = ltrim($storedPath, "/\\");
+
+        // If storedPath does not contain a directory, prefix the configured subdir
+        $sub = trim((string)$this->subdir, '/\\');
+        if (strpos($storedPath, '/') === false && $sub !== '') {
+            $storedPath = $sub . '/' . $storedPath;
+        }
+
+        try {
+            $full = rtrim(Yii::getAlias($this->uploadPath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $storedPath;
+        } catch (\Exception $e) {
+            Yii::error('ImageUploader::delete - invalid uploadPath alias: ' . $e->getMessage());
+            return false;
+        }
+
+        return is_file($full) ? @unlink($full) : false;
+    }
+
+    /**
+     * Retorna a URL pública do ficheiro baseado no storedPath (relativo)
+     * @param string|null $storedPath
+     * @return string|null
+     */
+    public function getUrl($storedPath = null)
+    {
+        // If no storedPath provided, use configured default image inside subdir
+        if (empty($storedPath)) {
+            $sub = trim((string)$this->subdir, '/\\');
+            $storedPath = ($sub === '') ? $this->defaultImage : $sub . '/' . $this->defaultImage;
+        }
+
+        $storedPath = ltrim($storedPath, '/\\');
+
+        // If storedPath does not contain a directory, prefix the configured subdir
+        $sub = trim((string)$this->subdir, '/\\');
+        if (strpos($storedPath, '/') === false && $sub !== '') {
+            $storedPath = $sub . '/' . $storedPath;
+        }
+
+        $base = $this->baseUrl;
+        if (is_string($base) && strpos($base, '@') === 0) {
+            try {
+                $base = Yii::getAlias($base);
+            } catch (\Exception $e) {
+                Yii::error('ImageUploader::getUrl - invalid baseUrl alias: ' . $e->getMessage());
+                return null;
             }
         }
-        return null;
-    }
 
-    /**
-     * Verifica se existe uma imagem
-     */
-    public function imageExists($folder, $filename)
-    {
-        return $this->getImagePath($folder, $filename) !== null;
+        return rtrim($base, '/') . '/' . ltrim($storedPath, '/');
     }
 }

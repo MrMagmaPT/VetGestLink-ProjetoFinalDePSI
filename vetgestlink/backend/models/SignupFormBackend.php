@@ -97,8 +97,6 @@ class SignupFormBackend extends Model
             return null;
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
-
         try {
             // 1. Criar User
             $user = new User();
@@ -166,13 +164,10 @@ class SignupFormBackend extends Model
                 throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
             }
 
-            $transaction->commit();
-
             return $user;
 
         } catch (\Exception $e) {
-            $transaction->rollBack();
-            Yii::error("Rollback: " . $e->getMessage());
+            Yii::error($e->getMessage());
             Yii::$app->session->setFlash('error', $e->getMessage());
             return null;
         }

@@ -90,12 +90,15 @@ class SignupForm extends Model
 
     public function signup()
     {
+        // Carrega o ficheiro antes da validação para que a regra 'file' funcione
+        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
+
         if (!$this->validate()) {
             Yii::error("Validação falhou: " . json_encode($this->errors));
             return null;
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $uploadedFileName = null;
 
         try {
             // 1. Criar User
@@ -140,11 +143,21 @@ class SignupForm extends Model
                 throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
             }
 
-            // 3.1 Upload de imagem de perfil (se fornecida)
+            // 3. Upload de imagem de perfil (se fornecida)
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
-                $userprofile->uploadImage();
-                Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
+                $uploaded = $userprofile->uploadImage();
+                if ($uploaded) {
+                    $uploadedFileName = $userprofile->foto ?? null;
+                    if (!$userprofile->save(false)) {
+                        Yii::error("Não foi possível guardar o path da imagem no Userprofile: " . json_encode($userprofile->errors));
+                        throw new \Exception('Erro ao guardar caminho da imagem no perfil');
+                    }
+                    Yii::info("Imagem de perfil carregada e caminho guardado para Userprofile ID {$userprofile->id}");
+                } else {
+                    Yii::warning("Upload de imagem falhou para Userprofile ID {$userprofile->id}");
+                    // continuar sem imagem
+                }
             }
 
             // 4. Criar Morada
@@ -165,13 +178,20 @@ class SignupForm extends Model
                 throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
             }
 
-            $transaction->commit();
 
-            return $user && $this->sendEmail($user) ? $user : null;
+            // 5. Enviar email de verificação
+            return $user && $this->sendEmail($user) ? $user : $user;
 
         } catch (\Exception $e) {
-            $transaction->rollBack();
-            Yii::error("Rollback: " . $e->getMessage());
+            Yii::error($e->getMessage());
+            // Apagar ficheiro enviado caso já exista
+            if (!empty($uploadedFileName) && Yii::$app->has('imageUploader')) {
+                try {
+                    Yii::$app->imageUploader->delete($uploadedFileName);
+                } catch (\Throwable $t) {
+                    Yii::error("Falha ao apagar ficheiro após rollback: " . $t->getMessage());
+                }
+            }
             Yii::$app->session->setFlash('error', $e->getMessage());
             return null;
         }

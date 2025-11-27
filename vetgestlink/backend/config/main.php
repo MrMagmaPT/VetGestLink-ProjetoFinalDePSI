@@ -14,7 +14,8 @@ return [
     'name' => 'VetGestLink',
     'bootstrap' => ['log'],
     'aliases' => [
-        '@uploads' => '@app/../uploads',
+        // apontar o alias @uploads para a pasta pública de uploads do backend
+        '@uploads' => '@backend/web/uploads',
     ],
     'modules' => [
         'api' => [
@@ -29,6 +30,7 @@ return [
                 'hail812\adminlte3\bundles\PluginAsset',
             ],
         ],
+        // imageUploader is registered globally in common/config/main.php - no need to redefine here
         'request' => [
             'csrfParam' => '_csrf-backend',
             //jsonParser

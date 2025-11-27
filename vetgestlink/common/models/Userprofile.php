@@ -16,6 +16,7 @@ use yii\web\UploadedFile;
  * @property string $dtanascimento
  * @property int $user_id
  * @property int $eliminado
+ * @property string|null $foto
  *
  * @property Animal[] $animais
  * @property Fatura[] $faturas
@@ -52,7 +53,9 @@ class Userprofile extends \yii\db\ActiveRecord
             [['nomecompleto'], 'string', 'max' => 45],
             [['nif', 'telemovel'], 'string', 'max' => 9],
             [['nif'], 'unique'],
-//            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            [['foto'], 'string', 'max' => 255],
+            // image upload: optional, only PNG/JPG/JPEG, max 2MB
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 2 * 1024 * 1024, 'tooBig' => 'O ficheiro é demasiado grande. Máx 2MB.'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -70,6 +73,7 @@ class Userprofile extends \yii\db\ActiveRecord
             'dtanascimento' => 'Data de Nascimento',
             'user_id' => 'User ID',
             'eliminado' => 'Eliminado',
+            'foto' => 'Foto',
         ];
     }
 
@@ -79,7 +83,7 @@ class Userprofile extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
     public function getAnimais()
     {
-        return $this->hasMany(Animal::class, ['userprofiles_id' => 'id']);
+    return $this->hasMany(Animal::class, ['userprofiles_id' => 'id']);
     }
 
     /**
@@ -131,51 +135,58 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
-
-
     /**
-     * Upload da imagem do utilizador usando o componente ImageUploader
+     * Upload da foto do utilizador usando o componente ImageUploader
      * @return bool
      */
     public function uploadImage()
     {
-        return Yii::$app->imageUploader->upload($this->imageFile, 'users', (string)$this->id);
+        // imageFile pode ser null
+        if (!$this->imageFile instanceof UploadedFile) {
+            return false;
+        }
+
+        // Apaga imagem antiga
+        if (!empty($this->foto)) {
+            Yii::$app->imageUploader->delete($this->foto);
+        }
+
+        // Faz upload usando o componente, retorna 'users/filename.ext' ou false
+        $result = Yii::$app->imageUploader->upload($this->imageFile, $this->id);
+        if ($result) {
+            // Guardar apenas o nome do ficheiro na BD (basename)
+            // Se o componente retornou 'users/name.ext' guardamos apenas 'name.ext'
+            $this->foto = basename($result);
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * Obter URL da imagem do utilizador
-     * @return string
+     * Retorna a URL pública da imagem
      */
     public function getImageUrl()
     {
-        return Yii::$app->imageUploader->getImageUrl('users', (string)$this->id);
-    }
+        // Se não houver foto no perfil, usa default.jpg dentro do subdir configurado no ImageUploader
+        if (empty($this->foto)) {
+            if (!Yii::$app->has('imageUploader')) {
+                return null;
+            }
+            $sub = trim(Yii::$app->imageUploader->subdir, '/');
+            $storedPath = $sub !== '' ? $sub . '/default.jpg' : 'default.jpg';
+        } else {
+            // Se `foto` contém um caminho (ex: 'users/name.png'), usa-o; caso contrário prefixa com o subdir configurado
+            $photo = ltrim($this->foto, "/\\");
+            if (strpos($photo, '/') !== false) {
+                $storedPath = $photo;
+            } else {
+                $sub = trim(Yii::$app->imageUploader->subdir, '/');
+                $storedPath = ($sub !== '' ? $sub . '/' : '') . $photo;
+            }
+        }
 
-    /**
-     * Obter URL absoluta da imagem do utilizador (para API)
-     * @return string
-     */
-    public function getImageAbsoluteUrl()
-    {
-        return Yii::$app->imageUploader->getImageAbsoluteUrl('users', (string)$this->id);
-    }
-
-    /**
-     * Deletar imagem do utilizador
-     * @return void
-     */
-    public function deleteImage()
-    {
-        Yii::$app->imageUploader->deleteImage('users', (string)$this->id);
-    }
-
-    /**
-     * Verifica se o utilizador tem imagem
-     * @return bool
-     */
-    public function hasImage()
-    {
-        return Yii::$app->imageUploader->imageExists('users', (string)$this->id);
+        return Yii::$app->imageUploader->getUrl($storedPath);
     }
 
     /**
