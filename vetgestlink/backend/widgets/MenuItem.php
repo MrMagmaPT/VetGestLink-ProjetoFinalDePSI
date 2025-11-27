@@ -7,19 +7,20 @@ use yii\helpers\Url;
 
 class MenuItem extends Widget
 {
-    public $label;
+    public $icon;
+    public $text;
     public $url = '#';
     public $active = false;
-    public $encodeLabel = false;
 
     public function run()
     {
         $linkClass = trim('nav-link ' . ($this->active ? 'active' : ''));
 
-        $labelHtml = $this->encodeLabel ? Html::encode($this->label) : $this->label;
-        $content = $labelHtml;
+        $label = "<i class='nav-icon {$this->icon}'></i><p>{$this->text}</p>";
 
-        $a = Html::a($content, Url::to($this->url),array_merge(['class' => $linkClass]));
+
+
+        $a = Html::a($label, Url::to($this->url),array_merge(['class' => $linkClass]));
         return Html::tag('li', $a, array_merge(['class' => 'nav-item']));
     }
 }

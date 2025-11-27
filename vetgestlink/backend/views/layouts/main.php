@@ -77,6 +77,173 @@ $this->beginPage();
 
         <!-- Sidebar -->
         <div class="sidebar">
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <?php if ($usertype == 1): ?> <!-- Admin -->
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
+                            'url' => ['/site/index'],
+                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-circle-user',
+                            'text' => 'Gestao de Utilizadores',
+                            'url' => ['/userprofile/index'],
+                            'active' => Yii::$app->controller->id === 'userprofile' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
+                            'url' => ['/medicamento/index'],
+                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'far fa-folder',
+                            'text' => 'Categoria de Medicamentos',
+                            'url' => ['/categoria/index'],
+                            'active' => Yii::$app->controller->id === 'categoria' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-credit-card',
+                            'text' => 'Metodos de Pagamentos',
+                            'url' => ['/metodopagamento/index'],
+                            'active' => Yii::$app->controller->id === 'metodopagamento' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                    <?php endif; ?>
+                    <?php if ($usertype == 2): ?> <!-- Veterinario -->
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
+                            'url' => ['/site/index'],
+                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-paw',
+                            'text' => 'Animais',
+                            'url' => ['/animal/index'],
+                            'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'far fa-file-lines',
+                            'text' => 'Consulta',
+                            'url' => ['/marcacao/index'],
+                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'far fa-calendar',
+                            'text' => 'Agendamentos',
+                            'url' => ['/marcacao/index'],
+                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
+                            'url' => ['/medicamento/index'],
+                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuGroup::widget([
+                            'text' => 'Raças & Espécies',
+                            'icon' => 'nav-icon fas fa-layer-group',
+                            'subs' => [
+                                [
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-paw',
+                                    'text' => 'Raças',
+                                    'url' => ['/raca/index'],
+                                    'active' => Yii::$app->controller->id === 'raca',
+                                ],[
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-layer-group',
+                                    'text' => 'Espécies',
+                                    'url' => ['/especie/index'],
+                                    'active' => Yii::$app->controller->id === 'especie',
+                                ],
+                            ],
+                        ]) ?>
+                    <?php endif; ?>
+                    <?php if ($usertype == 3): ?> <!-- Rececionista -->
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-cubes-stacked',
+                            'text' => 'Dashboard',
+                            'url' => ['/site/index'],
+                            'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-paw',
+                            'text' => 'Animais',
+                            'url' => ['/animal/index'],
+                            'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuGroup::widget([
+                            'icon' => 'far fa-file-lines',
+                            'text' => 'Consultas',
+                            'subs' => [
+                                [
+                                    'type' => '1',
+                                    'icon' => 'fas fa-file-lines',
+                                    'text' => 'Consultas Terminadas',
+                                    'subs' => [
+                                        [
+                                            'type' => '2',
+                                            'icon' => 'fas fa-file-lines',
+                                            'text' => 'Com fatura',
+                                            'url' => ['/marcacao/index'],
+                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                        ],
+                                        [
+                                            'type' => '2',
+                                            'icon' => 'fas fa-file-lines',
+                                            'text' => 'Sem Fatura',
+                                            'url' => ['/marcacao/index'],
+                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'type' => '2',
+                                    'icon' => 'fas fa-file-lines',
+                                    'text' => 'Consultas Canceladas',
+                                    'url' => ['/marcacao/index'],
+                                    'active' => Yii::$app->controller->id === 'marcacao',
+                                ],
+                            ],
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'far fa-calendar',
+                            'text' => 'Agendamentos',
+                            'url' => ['/marcacao/index'],
+                            'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuItem::widget([
+                            'icon' => 'fa fa-pills',
+                            'text' => 'Medicamentos',
+                            'url' => ['/medicamento/index'],
+                            'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
+                        ]) ?>
+                        <?= MenuGroup::widget([
+                            'text' => 'Faturas',
+                            'icon' => 'nav-icon fas fa-layer-group',
+                            'subs' => [
+                                [
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-clock',
+                                    'text' => 'Por Pagar',
+                                    'url' => ['/fatura/index'],
+                                    'active' => Yii::$app->controller->id === 'fatura',
+                                ],[
+                                    'type' =>  '2',
+                                    'icon' => 'fas fa-circle-check',
+                                    'text' => 'Pagas',
+                                    'url' => ['/fatura/index'],
+                                    'active' => Yii::$app->controller->id === 'fatura',
+                                ],
+                            ],
+                        ]) ?>
+                    <?php endif; ?>
+                </ul>
+            </nav>
             <!-- User Panel -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
