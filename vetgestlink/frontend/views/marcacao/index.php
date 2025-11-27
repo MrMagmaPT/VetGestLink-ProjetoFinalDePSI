@@ -14,9 +14,9 @@ $this->registerCssFile('@web/static/css/marcacao.css', ['depends' => [\yii\web\Y
 $this->registerJsFile('@web/static/js/marcacao.js', ['depends' => [\yii\web\YiiAsset::class]]);
 ?>
 
-<div class="marcacoes-index container py-3">
+<div class="container py-3">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-center align-items-center mb-4">
         <h1 class="fw-bold"><?= Html::encode($this->title) ?></h1>
     </div>
 
@@ -28,7 +28,7 @@ $this->registerJsFile('@web/static/js/marcacao.js', ['depends' => [\yii\web\YiiA
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h5 class="card-title mb-2">
-                            Marcação #<?= Html::encode($model->id) ?>
+                            Marcação #<?= Html::encode($model->id) ?> - <?= Html::encode($model->estado) ?>
                         </h5>
 
                         <p class="mb-1">
@@ -50,7 +50,7 @@ $this->registerJsFile('@web/static/js/marcacao.js', ['depends' => [\yii\web\YiiA
 
                     <!-- Toggle button with chevron -->
                     <div class="ms-3">
-                        <button class="btn btn-sm btn-outline-secondary toggle-diagnostico"
+                        <button class="btn btn-dark rounded-pill toggle-diagnostico"
                                 type="button"
                                 data-target="#diagnostico-<?= $i ?>"
                                 aria-expanded="false"

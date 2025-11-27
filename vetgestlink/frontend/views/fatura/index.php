@@ -7,7 +7,7 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Fatura';
+$this->title = 'Faturas';
 $this->params['breadcrumbs'][] = $this->title;
 
 $faturas = $dataProvider->getModels();
@@ -30,7 +30,7 @@ $faturas = $dataProvider->getModels();
 
                         <!-- Date -->
                         <p class="text-muted mb-2">
-                            <strong>Data:</strong> <?= Yii::$app->formatter->asDate($fatura->data, 'php:d/m/Y') ?>
+                            <strong>Data:</strong> <?= Yii::$app->formatter->asDate($fatura->created_at, 'php:d/m/Y') ?>
                         </p>
 
                         <!-- Estado (boolean) -->
@@ -45,16 +45,15 @@ $faturas = $dataProvider->getModels();
 
                             <!-- Ver button -->
                             <?= Html::a('<i class="bi bi-eye"></i> Ver', ['view', 'id' => $fatura->id], [
-                                'class' => 'btn '
+                                'class' => 'btn btn-dark rounded-pill '
                             ]) ?>
 
                             <!-- Pagar button (only if not paid) -->
                             <?php if (!$isPaid): ?>
                                 <?= Html::a('<i class="bi bi-cash-stack"></i> Pagar', ['pagar', 'id' => $fatura->id], [
-                                    'class' => 'btn',
+                                    'class' => 'btn btn-dark rounded-pill',
                                     'data' => [
                                         'method' => 'post',
-                                        'confirm' => 'Tem certeza que deseja marcar esta fatura como paga?',
                                     ],
                                 ]) ?>
                             <?php endif; ?>
@@ -65,5 +64,4 @@ $faturas = $dataProvider->getModels();
             </div>
         <?php endforeach; ?>
     </div>
-
 </div>

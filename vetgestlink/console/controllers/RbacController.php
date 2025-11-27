@@ -450,6 +450,7 @@ class RbacController extends Controller
         //===============================================
 
 
+
         //Mensagem pra dar feedback que rodou o script
         echo "✅ RBAC inicializado com sucesso ✅\n";
     }

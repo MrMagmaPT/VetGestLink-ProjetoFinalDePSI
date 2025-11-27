@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Metodopagamento;
 use common\models\Fatura;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -93,39 +94,6 @@ class FaturaController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Fatura model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Fatura model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
 
     /**
      * Finds the Fatura model based on its primary key value.
@@ -143,25 +111,45 @@ class FaturaController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    /**
-     * @param $id
-     * @return mixed*
-     * !!!PARA DEBUG APENAS!!!!
-     */
-    public function actionPay($id)
+    public function actionPagar($id)
     {
         $model = $this->findModel($id);
 
-        // DEBUG — force mark as paid
-        $model->estado = 1;   // 1 = paid
-        $model->metodospagamentos_id = 1; // temp placeholder method
+        // filtra apenas em metodos em vigor
+        $metodos = \common\models\Metodopagamento::find()->where(['vigor' => 1])->all();
 
-        if ($model->save(false)) {
-            Yii::$app->session->setFlash('success', 'Fatura paga com sucesso (DEBUG)');
-        } else {
-            Yii::$app->session->setFlash('error', 'Erro ao pagar (DEBUG)');
+        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
+            return $this->redirect(['sucesso', 'id' => $model->id]);
         }
 
-        return $this->redirect(['view', 'id' => $model->id]);
+        return $this->render('_pagar', [
+            'model' => $model,
+            'metodos' => $metodos,
+        ]);
     }
+
+
+    public function actionSucesso($id)
+    {
+        $modelo = Fatura::findOne($id);
+        if (!$modelo) {
+            Yii::$app->session->setFlash('error', 'Fatura não encontrada.');
+            return $this->redirect(['index']);
+        }
+
+        // Muda para pago
+        $modelo->estado = 1;
+        if ($modelo->save(false)) {
+            Yii::$app->session->setFlash('success', 'Pagamento realizado com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Ocorreu um erro ao finalizar o pagamento.');
+        }
+
+        return $this->render('view', [
+            'model' => $modelo,
+        ]);
+    }
+
+
+
 }

@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use common\models\Animal;
 use common\models\Nota;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -31,31 +33,6 @@ class NotaController extends Controller
         );
     }
 
-    /**
-     * Lists all Nota models.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Nota::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
 
     /**
      * Displays a single Nota model.
@@ -63,10 +40,16 @@ class NotaController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionIndex($animal_id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $model = $this->findModel($animal_id);
+
+        $animal = Animal::findOne($animal_id);
+        $allnotas = $animal->notas;
+
+        return $this->render('index', [
+            'model' => $model,
+            'allnotas' => $allnotas,
         ]);
     }
 
@@ -75,16 +58,16 @@ class NotaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($animal_id)
     {
         $model = new Nota();
+        $model->animais_id = $animal_id;
+        $model->userprofiles_id = Yii::$app->user->identity->userprofile->id;
+        $model->created_at = date('Y-m-d H:i:s');
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
+            return $this->redirect(['animal/index', 'id' => $animal_id]);
         }
 
         return $this->render('create', [
@@ -103,14 +86,20 @@ class NotaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Nota atualizada com sucesso.');
+                return $this->redirect(['nota/index', 'animal_id' => $model->animais_id]);
+            } else {
+                Yii::$app->session->setFlash('danger', 'Erro ao atualizar a nota. Verifique os campos.');
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
+
 
     /**
      * Deletes an existing Nota model.
@@ -121,9 +110,11 @@ class NotaController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
+        Yii::$app->session->setFlash('success', 'Nota eliminada com sucesso.');
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['nota/index','animal_id' => $model->animais_id]);
     }
 
     /**

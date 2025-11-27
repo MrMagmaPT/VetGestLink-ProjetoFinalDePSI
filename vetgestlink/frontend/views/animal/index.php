@@ -43,7 +43,7 @@ $animais = $dataProvider->getModels();
 
                             <div class="mt-auto d-flex justify-content-center gap-2">
                                 <?= Html::a('Ver Detalhes', ['view', 'id' => $animal->id], [
-                                    'class' => 'btn btn-primary btn-sm'
+                                    'class' => 'btn btn-dark rounded-pill'
                                 ]) ?>
                             </div>
                         </div>

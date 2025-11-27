@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Animal;
+use common\models\Nota;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -75,8 +76,15 @@ class AnimalController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        //notas já vem ordenado pelo mais recente
+        //é só buscar o primeiro do array
+        $latestNota = !empty($model->notas) ? $model->notas[0] : null;
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'latestNota' => $latestNota,
         ]);
     }
 
@@ -95,5 +103,4 @@ class AnimalController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
 }

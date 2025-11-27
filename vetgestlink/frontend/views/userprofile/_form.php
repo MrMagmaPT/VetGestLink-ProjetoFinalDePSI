@@ -1,4 +1,5 @@
 <?php
+
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
@@ -44,6 +45,11 @@ if (Yii::$app->has('imageUploader')) {
             <div id="imageFile-client-error" class="text-danger small" style="display:none;margin-top:.25rem;"></div>
         </div>
     </div>
+    <?php endforeach; ?>
+</div>
+<div class="form-group">
+    <?= Html::a('Adicionar Morada',['/userprofile/newMorada'] ,['class' => 'btn btn-dark rounded-pill']) ?>
+</div>
 
     <div class="row g-3">
         <div class="col-md-6"><?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true]) ?></div>

@@ -19,26 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
 
         <div class="panel-body" style="padding: 30px;">
-            <?php foreach (Yii::$app->session->getAllFlashes() as $type => $messages): ?>
-                <?php
-                $alertType = ($type === 'error') ? 'danger' : $type;
-                $messages = (array) $messages;
-                ?>
-                <div class="alert alert-<?= $alertType ?> alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <?php if (count($messages) > 1): ?>
-                        <ul class="mb-0">
-                            <?php foreach ($messages as $message): ?>
-                                <li><?= Html::encode($message) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <?= Html::encode($messages[0]) ?>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
+
 
             <?php $form = ActiveForm::begin([
                     'id' => 'form-signup',
@@ -47,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'enctype' => 'multipart/form-data'
                     ],
                     'fieldConfig' => [
-                            'template' => "{label}\n{input}\n{error}",
+                            'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
                     ],
             ]); 
             //DEBUG LOG
