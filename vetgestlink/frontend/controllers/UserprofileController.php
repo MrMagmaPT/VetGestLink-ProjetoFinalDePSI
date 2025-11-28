@@ -53,6 +53,7 @@ class UserprofileController extends Controller
      */
     public function actionView($id = null)
     {
+
         // id do utilizador: ou o passado por parâmetro, ou o atual autenticado
         $id = $id ?: Yii::$app->user->id;
         $user = User::find()->where(['id' => $id])->with(['userprofile.moradas'])->one();

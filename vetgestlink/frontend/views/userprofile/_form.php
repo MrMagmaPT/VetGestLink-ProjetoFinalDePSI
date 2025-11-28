@@ -2,37 +2,21 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use yii\widgets\Pjax;
 
 /** @var \yii\web\View $this */
 /** @var common\models\Userprofile $model */
 /** @var array $moradas */
 
-$user = $user ?? ($model->user ?? null);
 $moradas = $moradas ?? ($model->moradas ?? []);
 
-// Iniciar o ActiveForm com enctype para upload de arquivos
+// URL da imagem (o método getImageUrl do modelo trata do default)
+$avatarUrl = $model->getImageUrl();
+
 $form = ActiveForm::begin([
     'id' => 'userprofile-form',
     'options' => ['enctype' => 'multipart/form-data'],
 ]);
-
-// avatar: usa o componente imageUploader para construir a URL (o componente já tem defaultImage)
-if (Yii::$app->has('imageUploader')) {
-    // $model->foto contém apenas o filename ou null
-    $avatarUrl = Yii::$app->imageUploader->getUrl($model->foto);
-} else {
-    // fallback: usar alias @uploadsUrl (deve ser configurado em common/config/main.php)
-    $currentPhoto = $model->foto ?: ($user->userprofile->foto ?? null);
-    $uploadsUrl = null;
-    try {
-        $uploadsUrl = Yii::getAlias('@uploadsUrl');
-    } catch (\Exception $e) {
-        $uploadsUrl = '/backend/web/uploads';
-    }
-    $avatarUrl = rtrim($uploadsUrl, '/') . '/users/' . ltrim($currentPhoto ?? 'default.jpg', '/\\');
-}
 ?>
 
 <div class="userprofile-form">
@@ -45,11 +29,6 @@ if (Yii::$app->has('imageUploader')) {
             <div id="imageFile-client-error" class="text-danger small" style="display:none;margin-top:.25rem;"></div>
         </div>
     </div>
-    <?php endforeach; ?>
-</div>
-<div class="form-group">
-    <?= Html::a('Adicionar Morada',['/userprofile/newMorada'] ,['class' => 'btn btn-dark rounded-pill']) ?>
-</div>
 
     <div class="row g-3">
         <div class="col-md-6"><?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true]) ?></div>
@@ -64,7 +43,7 @@ if (Yii::$app->has('imageUploader')) {
     <?php Pjax::end(); ?>
 
     <div class="mb-3">
-        <?= Html::a('+ Adicionar Morada', ['userprofile/adicionar-morada'], ['class' => 'btn btn-sm btn-success']) ?>
+        <?= Html::a('+ Adicionar Morada', ['userprofile/adicionar-morada', 'id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
     </div>
 
     <div class="d-flex justify-content-end gap-2">
@@ -75,3 +54,21 @@ if (Yii::$app->has('imageUploader')) {
 </div>
 
 <?php ActiveForm::end(); ?>
+
+<?php // script pequeno para preview da imagem (sem validação) ?>
+<?php $this->registerJs(<<<'JS'
+(function(){
+    var input = document.querySelector('#userprofile-imagefile');
+    var img = document.getElementById('avatar-preview');
+    if (!input || !img) return;
+    input.addEventListener('change', function(){
+        var f = this.files && this.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function(e){ img.src = e.target.result; };
+        r.readAsDataURL(f);
+    });
+})();
+JS
+);
+?>

@@ -114,10 +114,8 @@ class SignupForm extends Model
             $user->updated_at = time();
 
             if (!$user->save()) {
-                $msg = 'Erro ao criar utilizador.';
-                Yii::$app->session->setFlash('danger', $msg);
+                Yii::$app->session->setFlash('danger', 'Erro ao criar utilizador.');
                 Yii::error("Erro User: " . json_encode($user->errors));
-                $transaction->rollBack();
                 return null;
             }
 
@@ -141,19 +139,23 @@ class SignupForm extends Model
             $userprofile->eliminado = 0;
 
             if (!$userprofile->save()) {
-                $msg = 'Erro ao criar o perfil do utilizador.';
-                Yii::$app->session->setFlash('danger', $msg);
+                Yii::$app->session->setFlash('danger', 'Erro ao criar o perfil do utilizador.');
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                $transaction->rollBack();
+                // apagar user criado para evitar orfãos
+                try {
+                    $user->delete();
+                } catch (\Throwable $t) {
+                    Yii::error('Falha ao apagar user após erro no perfil: ' . $t->getMessage());
+                }
                 return null;
             }
 
-            // 3. Upload de imagem de perfil (se fornecida)
+            // 4. Upload de imagem de perfil (se fornecida)
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
                 $uploaded = $userprofile->uploadImage();
                 if ($uploaded) {
-                    $uploadedFileName = $userprofile->foto ?? null;
+                    $uploadedFileName = $userprofile->foto ?? null; // já é apenas basename
                     if (!$userprofile->save(false)) {
                         Yii::error("Não foi possível guardar o path da imagem no Userprofile: " . json_encode($userprofile->errors));
                         throw new \Exception('Erro ao guardar caminho da imagem no perfil');
@@ -165,7 +167,7 @@ class SignupForm extends Model
                 }
             }
 
-            // 4. Criar Morada
+            // 5. Criar Morada
             $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
             $morada->rua = $this->rua;
@@ -179,15 +181,19 @@ class SignupForm extends Model
             $morada->eliminado = 0;
 
             if (!$morada->save()) {
-                $msg = 'Erro ao guardar a morada.';
-                Yii::$app->session->setFlash('danger', $msg);
+                Yii::$app->session->setFlash('danger', 'Erro ao guardar a morada.');
                 Yii::error("Erro Morada: " . json_encode($morada->errors));
-                $transaction->rollBack();
+                // apagar dados criados (userprofile e user)
+                try {
+                    $userprofile->delete();
+                    $user->delete();
+                } catch (\Throwable $t) {
+                    Yii::error('Falha ao apagar registos após erro na morada: ' . $t->getMessage());
+                }
                 return null;
             }
 
-
-            // 5. Enviar email de verificação
+            // 6. Enviar email de verificação
             return $user && $this->sendEmail($user) ? $user : $user;
 
         } catch (\Exception $e) {

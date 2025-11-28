@@ -14,8 +14,8 @@ return [
     'name' => 'VetGestLink',
     'controllerNamespace' => 'frontend\controllers',
     'aliases' => [
-        // apontar @uploads para a pasta pública de uploads do backend para manter centralização
-        '@uploads' => '@backend/web/uploads',
+        // apontar @uploads para a pasta pública de uploads do frontend para manter centralização
+        '@uploads' => '@frontend/web/uploads',
     ],
     'components' => [
         'request' => [

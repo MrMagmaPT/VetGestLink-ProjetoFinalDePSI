@@ -7,21 +7,21 @@ use yii\web\UploadedFile;
 
 /**
  * Componente simples para gerir upload e remoção de imagens.
- * - Guarda ficheiros em `uploadPath` (aceita alias Yii)
+ * - Guarda ficheiros em `uploadPath` (aceita alias Yii, por defeito '@uploads')
  * - Retorna caminhos relativos para guardar na BD (ex: "users/filename.png")
  * - `getUrl()` constrói a URL pública a partir de `baseUrl` + caminho relativo
  *
- * Propriedades configuráveis no `common/config/main.php`:
- *  - uploadPath (alias para pasta física, ex: '@uploads' => backend/web/uploads)
- *  - baseUrl (URL pública ou alias, ex: '@uploadsUrl' => '/backend/uploads')
+ * Configurar em `common/config/main.php`:
+ *  - uploadPath (alias para pasta física, ex: '@uploads' => common/uploads)
+ *  - baseUrl (URL pública ou alias, ex: '@uploadsUrl' => '/uploads')
  *  - subdir (subpasta dentro de uploadPath, ex: 'users')
  *  - defaultImage (nome do ficheiro default dentro de subdir, ex: 'default.jpg')
  */
 class ImageUploader extends Component
 {
-    // alias ou caminho físico para a pasta base de uploads
-    public $uploadPath = '@backend/web/uploads';
-    // URL pública correspondente (pode ser alias, ex: '@uploadsUrl')
+    // alias para a pasta base de uploads (por defeito usa '@uploads' = common/uploads)
+    public $uploadPath = '@uploads';
+    // URL pública correspondente (pode ser alias, ex: '@uploadsUrl' => '/uploads')
     public $baseUrl = '/uploads';
     // subdiretório dentro de uploadPath onde armazenamos ficheiros
     public $subdir = 'users';
@@ -36,13 +36,11 @@ class ImageUploader extends Component
      */
     public function upload(UploadedFile $file, $id = null)
     {
-        // valida tipo
         if (!$file instanceof UploadedFile) {
             Yii::error('ImageUploader::upload - file is not UploadedFile');
             return false;
         }
 
-        // resolve alias uploadPath
         try {
             $base = Yii::getAlias($this->uploadPath);
         } catch (\Exception $e) {
@@ -71,16 +69,17 @@ class ImageUploader extends Component
         }
 
         $ext = $file->extension ? '.' . $file->extension : '';
-        $name = ($id ? "user_{$id}_" : '') . uniqid() . $ext;
-        $full = $dir . $name;
+        // gerar nome único; garantir que não colide com defaultImage e não sobrescreve ficheiros existentes
+        do {
+            $name = ($id ? "user_{$id}_" : '') . uniqid() . $ext;
+            $full = $dir . $name;
+        } while (basename($name) === $this->defaultImage || file_exists($full));
 
-        // guarda o ficheiro físico
         if (!$file->saveAs($full)) {
             Yii::error('ImageUploader::upload - saveAs failed for: ' . $full);
             return false;
         }
 
-        // retorna caminho relativo para armazenamento na BD: "subdir/name.ext" ou apenas "name.ext" se subdir vazio
         return ($sub === '' ? $name : $sub . '/' . $name);
     }
 
@@ -95,9 +94,14 @@ class ImageUploader extends Component
             return false;
         }
 
+        // Não permitir apagar o ficheiro default
+        if ($this->isDefault($storedPath)) {
+            Yii::info('ImageUploader::delete - attempted delete of default image, skipping: ' . $storedPath);
+            return false;
+        }
+
         $storedPath = ltrim($storedPath, "/\\");
 
-        // If storedPath does not contain a directory, prefix the configured subdir
         $sub = trim((string)$this->subdir, '/\\');
         if (strpos($storedPath, '/') === false && $sub !== '') {
             $storedPath = $sub . '/' . $storedPath;
@@ -114,13 +118,36 @@ class ImageUploader extends Component
     }
 
     /**
+     * Verifica se o caminho fornecido corresponde ao ficheiro default configurado
+     * Aceita 'default.jpg', 'users/default.jpg' ou caminho relativo
+     * @param string|null $storedPath
+     * @return bool
+     */
+    public function isDefault($storedPath)
+    {
+        if (empty($storedPath)) {
+            return false;
+        }
+
+        $sp = ltrim((string)$storedPath, "/\\");
+        // se veio só basename
+        if (basename($sp) === $this->defaultImage) {
+            return true;
+        }
+
+        // se veio sem subdir, ou com subdir, comparar com subdir/defaultImage
+        $sub = trim((string)$this->subdir, '/\\');
+        $expected = ($sub === '' ? $this->defaultImage : $sub . '/' . $this->defaultImage);
+        return $sp === $expected;
+    }
+
+    /**
      * Retorna a URL pública do ficheiro baseado no storedPath (relativo)
      * @param string|null $storedPath
      * @return string|null
      */
     public function getUrl($storedPath = null)
     {
-        // If no storedPath provided, use configured default image inside subdir
         if (empty($storedPath)) {
             $sub = trim((string)$this->subdir, '/\\');
             $storedPath = ($sub === '') ? $this->defaultImage : $sub . '/' . $this->defaultImage;
@@ -128,7 +155,6 @@ class ImageUploader extends Component
 
         $storedPath = ltrim($storedPath, '/\\');
 
-        // If storedPath does not contain a directory, prefix the configured subdir
         $sub = trim((string)$this->subdir, '/\\');
         if (strpos($storedPath, '/') === false && $sub !== '') {
             $storedPath = $sub . '/' . $storedPath;

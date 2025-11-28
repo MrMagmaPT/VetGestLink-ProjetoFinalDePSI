@@ -110,6 +110,12 @@ class UserprofileController extends Controller
             if ($model->load($this->request->post())) {
                 Model::loadMultiple($moradas, $this->request->post());
 
+                // Processa upload de imagem
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if ($model->imageFile) {
+                    $model->foto = $model->uploadImage();
+                }
+
                 $valid = $model->validate();
                 $valid = Model::validateMultiple($moradas) && $valid;
 

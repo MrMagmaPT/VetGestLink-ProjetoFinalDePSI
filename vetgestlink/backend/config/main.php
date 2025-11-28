@@ -14,8 +14,8 @@ return [
     'name' => 'VetGestLink',
     'bootstrap' => ['log'],
     'aliases' => [
-        // apontar o alias @uploads para a pasta pública de uploads do backend
-        '@uploads' => '@backend/web/uploads',
+        // apontar o alias @uploads para a pasta pública de uploads do frontend
+        '@uploads' => '@frontend/web/uploads',
     ],
     'modules' => [
         'api' => [

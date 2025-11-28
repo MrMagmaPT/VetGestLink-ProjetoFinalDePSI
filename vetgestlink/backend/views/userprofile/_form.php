@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 
 <div class="userprofile-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <!-- USER PROFILE -->
     <h5 class="section-title">Informações pessoais</h5>
@@ -24,6 +24,15 @@ use yii\widgets\ActiveForm;
 
 
     <div class="mb-4"></div>
+
+    <!-- CAMPO DE UPLOAD DE IMAGEM -->
+    <h5 class="section-title">Foto de perfil</h5>
+    <?php if ($model->getImageUrl()): ?>
+        <div class="mb-3">
+            <?= Html::img($model->getImageUrl(), ['alt' => $model->nomecompleto, 'class' => 'img-thumbnail', 'style' => 'max-width: 150px']) ?>
+        </div>
+    <?php endif; ?>
+    <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/*']) ?>
 
     <!-- MORADA -->
     <h5 class="section-title">Morada</h5>
