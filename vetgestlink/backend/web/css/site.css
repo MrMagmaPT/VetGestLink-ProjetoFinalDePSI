@@ -198,3 +198,29 @@ ul.nav.nav-treeview {
 
 .ul.nav.nav-treeview {
     padding-bottom: 0 !important;}
+
+
+
+
+/* Adicionar ao final de `vetgestlink/backend/web/css/site.css` */
+.main-sidebar .sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* garante que a sidebar ocupe toda a altura disponível */
+    padding: 0;
+}
+
+.main-sidebar .user-panel {
+    margin-top: auto; /* empurra o user-panel para o fim da coluna */
+    padding: 0 !important; /* remove qualquer padding extra */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ajustes internos para manter alinhamento consistente */
+.main-sidebar .user-panel .info,
+.main-sidebar .user-panel .image {
+    padding: .35rem 1rem !important;
+    margin: 0;
+}
+
