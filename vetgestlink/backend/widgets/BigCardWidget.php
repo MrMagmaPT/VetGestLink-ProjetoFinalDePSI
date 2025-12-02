@@ -27,12 +27,25 @@ class BigCardWidget extends Widget
         // completo usando o yii para n ser nada hardcoded
         // (ex: http://meusite.com/user/index)
         $encoded_url = Url::to([$this->url]);
+        
+        // Mapeamento de cores(AS cores podem ser ajustadas conforme necessário)//WILSON
+        $colorMap = [
+            'icon-blue' => 'background: #007bff; color: white;',
+            'icon-yellow' => 'background: #ffc107; color: white;',
+            'icon-green' => 'background: #28a745; color: white;',
+            'icon-orange' => 'background: #ff9800; color: white;',
+            'icon-red' => 'background: #dc3545; color: white;',
+            'icon-purple' => 'background: #9333ea; color: white;',
+            'icon-gray' => 'background: #6c757d; color: white;',
+        ];
+        
+        $iconStyle = $colorMap[$this->iconColorClass] ?? 'background: #6c757d; color: white;';
 
         //devolve o card com os elementos que acabamos de adicionar/modificar
         return <<<HTML
             <div class="col-lg-6 col-12" style="cursor:pointer;" onclick="window.location.href='{$encoded_url}';">
                 <div class="info-box info-box-custom shadow-sm">
-                    <span class="info-box-icon {$this->iconColorClass} rounded">
+                    <span class="info-box-icon rounded" style="{$iconStyle}">
                         <i class="fas {$this->icon}"></i>
                     </span>
                     <div class="info-box-content">

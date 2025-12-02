@@ -41,9 +41,17 @@ class MetodopagamentoController extends Controller
         $searchModel = new MetodopagamentoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas
+        $totalCount = Metodopagamento::find()->count();
+        $activeCount = Metodopagamento::find()->where(['vigor' => 1])->count();
+        $inactiveCount = Metodopagamento::find()->where(['vigor' => 0])->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'activeCount' => $activeCount,
+            'inactiveCount' => $inactiveCount,
         ]);
     }
 
@@ -111,8 +119,12 @@ class MetodopagamentoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Soft delete: marcar como eliminado
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Método de pagamento marcado como eliminado.');
         return $this->redirect(['index']);
     }
 

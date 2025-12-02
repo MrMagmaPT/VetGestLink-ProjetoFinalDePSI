@@ -58,30 +58,32 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $userId = Yii::$app->user->id;
+        $userType = $this->getusertype($userId);
+
+        // Estatísticas de Clientes e Animais
         $totalClientes = Userprofile::find()->where(['eliminado' => 0])->count();
         $totalAnimais = Animal::find()->where(['eliminado' => 0])->count();
 
+        // Estatísticas de Medicamentos
         $totalMedicamentos = Medicamento::find()->where(['eliminado' => 0])->count();
-
         $totalMedicamentosEmStock = Medicamento::find()
             ->where(['>', 'quantidade', 9])
             ->andWhere(['eliminado' => 0])
             ->count();
-
         $totalMedicamentosBaixoStock = Medicamento::find()
             ->where(['between', 'quantidade', 5, 9])
             ->andWhere(['eliminado' => 0])
             ->count();
-
         $totalMedicamentosCriticoStock = Medicamento::find()
             ->where(['<', 'quantidade', 5])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $NomeQuantMedicamentosCriticoStock = Medicamento::find()
+        // Alertas de medicamentos críticos
+        $medicamentosCriticos = Medicamento::find()
             ->select(['nome', 'quantidade'])
-            ->where(['eliminado' => 0])
-            ->andWhere(['<', 'quantidade', 5])
+            ->where(['<', 'quantidade', 5])
+            ->andWhere(['eliminado' => 0])
             ->orderBy(['quantidade' => SORT_ASC])
             ->asArray()
             ->all();
@@ -89,62 +91,61 @@ class SiteController extends Controller
         $alertasMedicamentosCriticoStock = array_map(function ($m) {
             return [
                 'title' => $m['nome'],
-                'content' => 'Quantidade critica: ' . $m['quantidade'],
+                'content' => 'Quantidade crítica: ' . $m['quantidade'],
             ];
-        },$NomeQuantMedicamentosCriticoStock);
+        }, $medicamentosCriticos);
 
+        // Estatísticas de Categorias, Raças e Espécies
         $totalCategorias = Categoria::find()->where(['eliminado' => 0])->count();
         $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
         $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
 
-        $totalMarcacoesHoje = Marcacao::find()
-            ->where(['DATE(data)' => date('Y-m-d')])
+        // Estatísticas de Marcações
+        $dataHoje = date('Y-m-d');
+        $totalmarcacoesHoje = Marcacao::find()
+            ->where(['DATE(data)' => $dataHoje])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+        $totalmarcacoesPendentes = Marcacao::find()
+            ->where(['estado' => Marcacao::ESTADO_PENDENTE])
             ->andWhere(['eliminado' => 0])
             ->count();
 
-        $totalMarcacoesPendentes = Marcacao::find()
-            ->where(['estado' => 'Pendente'])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-
+        // Listas de Marcações
         $ultimasMarcacoes = Marcacao::find()
             ->where(['eliminado' => 0])
             ->orderBy(['data' => SORT_DESC])
             ->limit(5)
             ->all();
-
-        // Lista de Marcações pendentes
         $marcacoesPendentes = Marcacao::find()
-            ->where(['estado' => 'Pendente', 'eliminado' => 0])
+            ->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])
             ->asArray()
-            ->distinct()
             ->all();
-
         $marcacoesHoje = Marcacao::find()
-            ->where(['DATE(data)' => date('Y-m-d'), 'eliminado' => 0])
+            ->where(['DATE(data)' => $dataHoje, 'eliminado' => 0])
             ->asArray()
-            ->distinct()
             ->all();
 
+        $totalmarcacoes = Marcacao::find()->where(['eliminado' => 0])->count();
+        
 
-        // Calcula o início e fim do mês atual em UNIX timestamp
-        $inicio = strtotime(date('Y-m-01 00:00:00')); // primeiro dia do mês, meia-noite
-        $fim = strtotime(date('Y-m-t 23:59:59'));     // último dia do mês, 23:59:59
+    
 
-        // Contagem de faturas do mês
+        // Estatísticas Financeiras do Mês
+        $inicioMes = strtotime(date('Y-m-01 00:00:00'));
+        $fimMes = strtotime(date('Y-m-t 23:59:59'));
+
         $faturasDoMes = Fatura::find()
-            ->where(['between', 'created_at', $inicio, $fim])
+            ->where(['between', 'created_at', $inicioMes, $fimMes])
             ->andWhere(['eliminado' => 0])
             ->count();
-
-        // Receita mensal
         $receitaMensal = Fatura::find()
-            ->where(['between', 'created_at', $inicio, $fim])
+            ->where(['between', 'created_at', $inicioMes, $fimMes])
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
-        $userType = $this->getusertype($userId);
 
         return $this->render('index', [
+            'usertype' => $userType,
             'totalClientes' => $totalClientes,
             'totalAnimais' => $totalAnimais,
             'totalMedicamentos' => $totalMedicamentos,
@@ -155,14 +156,14 @@ class SiteController extends Controller
             'totalCategorias' => $totalCategorias,
             'totalRacas' => $totalRacas,
             'totalEspecies' => $totalEspecies,
-            'totalmarcacoesHoje' => $totalMarcacoesHoje,
-            'totalmarcacoesPendentes' => $totalMarcacoesPendentes,
-            'marcacoesHoje' => $marcacoesHoje,
+            'totalmarcacoesHoje' => $totalmarcacoesHoje,
+            'totalmarcacoesPendentes' => $totalmarcacoesPendentes,
             'ultimasMarcacoes' => $ultimasMarcacoes,
+            'marcacoesPendentes' => $marcacoesPendentes,
+            'marcacoesHoje' => $marcacoesHoje,
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
-            'usertype' => $userType,
-            'marcacoesPendentes' => $marcacoesPendentes,
+            'totalmarcacoes' => $totalmarcacoes,
         ]);
     }
     private static function getusertype($userId) {

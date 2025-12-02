@@ -43,7 +43,7 @@ $form = ActiveForm::begin([
     <?php Pjax::end(); ?>
 
     <div class="mb-3">
-        <?= Html::a('+ Adicionar Morada', ['userprofile/adicionar-morada', 'id' => $model->id], ['class' => 'btn btn-sm btn-success']) ?>
+        <?= Html::a('+ Adicionar Morada', ['userprofile/adicionar-morada'], ['class' => 'btn btn-sm btn-success']) ?>
     </div>
 
     <div class="d-flex justify-content-end gap-2">

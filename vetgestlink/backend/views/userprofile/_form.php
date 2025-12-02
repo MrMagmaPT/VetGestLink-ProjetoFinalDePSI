@@ -10,58 +10,187 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-
 <div class="userprofile-form">
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'enctype' => 'multipart/form-data',
+            'class' => 'needs-validation'
+        ]
+    ]); ?>
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <div class="row">
+        <!-- Coluna Esquerda -->
+        <div class="col-md-8">
+            <!-- Card Informações Pessoais -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user text-primary"></i>
+                        Informações Pessoais
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'nomecompleto')->textInput([
+                                'maxlength' => true,
+                                'placeholder' => 'Digite o nome completo',
+                                'class' => 'form-control'
+                            ])->label('<i class="fas fa-user-circle"></i> Nome Completo') ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'nif')->textInput([
+                                'maxlength' => 9,
+                                'placeholder' => '123456789',
+                                'class' => 'form-control'
+                            ])->label('<i class="fas fa-id-card"></i> NIF') ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'telemovel')->textInput([
+                                'maxlength' => 9,
+                                'placeholder' => '910000000',
+                                'class' => 'form-control'
+                            ])->label('<i class="fas fa-phone"></i> Telemóvel') ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- USER PROFILE -->
-    <h5 class="section-title">Informações pessoais</h5>
-
-    <?= $form->field($model, 'nomecompleto')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'nif')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'telemovel')->textInput(['maxlength' => true]) ?>
-
-
-    <div class="mb-4"></div>
-
-    <!-- CAMPO DE UPLOAD DE IMAGEM -->
-    <h5 class="section-title">Foto de perfil</h5>
-    <?php if ($model->getImageUrl()): ?>
-        <div class="mb-3">
-            <?= Html::img($model->getImageUrl(), ['alt' => $model->nomecompleto, 'class' => 'img-thumbnail', 'style' => 'max-width: 150px']) ?>
+            <!-- Card Morada -->
+            <?php if (!empty($moradas)): ?>
+                <?php foreach ($moradas as $i => $morada): ?>
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-map-marker-alt text-danger"></i>
+                                Morada <?= $i + 1 ?>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <?= $form->field($morada, "[$i]rua")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Ex: Rua das Flores',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-road"></i> Rua') ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?= $form->field($morada, "[$i]nporta")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Nº',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-door-open"></i> Nº Porta') ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <?= $form->field($morada, "[$i]andar")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Ex: 2º',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-building"></i> Andar') ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?= $form->field($morada, "[$i]cdpostal")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => '0000-000',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-mail-bulk"></i> Cód. Postal') ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?= $form->field($morada, "[$i]cxpostal")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Cx. Postal',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-inbox"></i> Cx. Postal') ?>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <?= $form->field($morada, "[$i]cidade")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Ex: Lisboa',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-city"></i> Cidade') ?>
+                                </div>
+                                <div class="col-md-6">
+                                    <?= $form->field($morada, "[$i]localidade")->textInput([
+                                        'maxlength' => true,
+                                        'placeholder' => 'Ex: Benfica',
+                                        'class' => 'form-control'
+                                    ])->label('<i class="fas fa-location-dot"></i> Localidade') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-    <?php endif; ?>
-    <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/*']) ?>
 
-    <!-- MORADA -->
-    <h5 class="section-title">Morada</h5>
+        <!-- Coluna Direita -->
+        <div class="col-md-4">
+            <!-- Card Foto de Perfil -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-camera text-success"></i>
+                        Foto de Perfil
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <?php if ($model->getImageUrl()): ?>
+                        <div class="mb-3">
+                            <?= Html::img($model->getImageUrl(), [
+                                'alt' => $model->nomecompleto,
+                                'class' => 'img-thumbnail rounded',
+                                'style' => 'max-width: 100%; height: auto; max-height: 300px;'
+                            ]) ?>
+                        </div>
+                        <p class="text-muted small">
+                            <i class="fas fa-info-circle"></i>
+                            Carregue uma nova imagem para substituir
+                        </p>
+                    <?php else: ?>
+                        <div class="mb-3">
+                            <i class="fas fa-user-circle text-muted" style="font-size: 120px;"></i>
+                        </div>
+                        <p class="text-muted">Nenhuma foto carregada</p>
+                    <?php endif; ?>
+                    
+                    <?= $form->field($model, 'imageFile')->fileInput([
+                        'accept' => 'image/*',
+                        'class' => 'form-control'
+                    ])->label('Selecionar Imagem') ?>
+                    
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i>
+                        Formatos: JPG, PNG, GIF (máx. 2MB)
+                    </small>
+                </div>
+            </div>
 
-    <?php foreach ($moradas as $i => $morada): ?>
-        <div class="rounded p-3 mb-3 border">
-
-            <h6 class="fw-bold">Morada <?= $i + 1 ?></h6>
-
-            <?= $form->field($morada, "[$i]rua")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]nporta")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]andar")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]cdpostal")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]cidade")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]cxpostal")->textInput(['maxlength' => true]) ?>
-            <?= $form->field($morada, "[$i]localidade")->textInput(['maxlength' => true]) ?>
-
+            <!-- Card Ações -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <?= Html::submitButton(
+                            '<i class="fas fa-save"></i> Guardar Alterações',
+                            ['class' => 'btn btn-primary btn-lg']
+                        ) ?>
+                        <?= Html::a(
+                            '<i class="fas fa-times"></i> Cancelar',
+                            ['view', 'id' => $model->id],
+                            ['class' => 'btn btn-secondary btn-lg']
+                        ) ?>
+                    </div>
+                </div>
+            </div>
         </div>
-    <?php endforeach; ?>
-
-    <hr>
-
-    <!-- BUTTONS -->
-    <div class="d-flex justify-content-between">
-        <?= Html::a('Cancelar', ['userprofile/view'], ['class' => 'btn btn-secondary']) ?>
-        <?= Html::submitButton('Guardar Alterações', ['class' => 'btn btn-accent']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>
 

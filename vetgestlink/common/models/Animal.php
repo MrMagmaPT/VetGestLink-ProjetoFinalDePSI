@@ -217,13 +217,19 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function getImageUrl()
     {
+        // se não tiver foto, retorna imagem default
+        if (!$this->foto) {
+            return Yii::getAlias('@web') . '/uploads/animais/default.jpg';
+        }
+        
+        // caso contrário, retorna URL da imagem
         $uploader = new \common\components\ImageUploader([
             'uploadPath' => '@uploads',
             'baseUrl' => '@uploadsUrl',
             'subdir' => 'animais',
         ]);
-        $file = $this->foto ? $this->foto : 'default.jpg';
-        return $uploader->getUrl('animais/' . $file);
+        
+        return $uploader->getUrl('animais/' . $this->foto);
     }
 
     /**

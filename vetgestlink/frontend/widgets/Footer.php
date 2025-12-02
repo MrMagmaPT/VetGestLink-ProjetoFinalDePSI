@@ -2,11 +2,12 @@
 
 namespace frontend\widgets;
 
+use Yii;
 use yii\base\Widget;
 
 class Footer extends Widget
 {
-    public $logoPath = '/static/img/logo/logo.png';
+    public $logoPath = null; // use @logo alias by default
     public $companyLinks = [];
     public $serviceLinks = [];
     public $contactInfo = [];
@@ -46,11 +47,20 @@ class Footer extends Widget
 
     public function run()
     {
+        $logoUrl = $this->getLogoUrl();
         return $this->render('footer', [
-            'logoPath' => $this->logoPath,
+            'logoUrl' => $logoUrl,
             'companyLinks' => $this->companyLinks,
             'serviceLinks' => $this->serviceLinks,
             'contactInfo' => $this->contactInfo,
         ]);
+    }
+
+    protected function getLogoUrl()
+    {
+        $logoPath = $this->logoPath ?? '/static/img/logo/logo.png';
+        $path = Yii::getAlias('@webroot') . $logoPath;
+        $version = (is_file($path) ? filemtime($path) : time());
+        return Yii::getAlias('@web') . $logoPath . '?v=' . $version;
     }
 }

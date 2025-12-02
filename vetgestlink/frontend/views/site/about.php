@@ -22,7 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="row justify-content-center mt-4">
                 <div class="col-auto text-center">
-                    <img src="<?= Yii::getAlias('@web') ?>/static/img/logo/logoOnly.png" alt="Sobre VetGestLink"
+                    <?php
+                    $logoOnlyPath = '/static/img/logo/logoOnly.png';
+                    $logoOnlyFile = Yii::getAlias('@webroot') . $logoOnlyPath;
+                    $logoOnlyVersion = is_file($logoOnlyFile) ? filemtime($logoOnlyFile) : time();
+                    $logoOnlyUrl = Yii::getAlias('@web') . $logoOnlyPath . '?v=' . $logoOnlyVersion;
+                    ?>
+                    <img src="<?= $logoOnlyUrl ?>" alt="Sobre VetGestLink"
                          class="img-fluid rounded shadow-lg" style="max-height: 120px; background: #fff; padding: 1rem;">
                 </div>
             </div>

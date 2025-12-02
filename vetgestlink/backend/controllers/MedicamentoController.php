@@ -73,9 +73,28 @@ class MedicamentoController extends Controller
         $searchModel = new MedicamentoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas
+        $totalCount = Medicamento::find()->where(['eliminado' => 0])->count();
+        $stockCritico = Medicamento::find()
+            ->where(['<', 'quantidade', 5])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+        $stockBaixo = Medicamento::find()
+            ->where(['between', 'quantidade', 5, 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+        $stockBom = Medicamento::find()
+            ->where(['>', 'quantidade', 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'stockCritico' => $stockCritico,
+            'stockBaixo' => $stockBaixo,
+            'stockBom' => $stockBom,
         ]);
     }
 
@@ -143,8 +162,12 @@ class MedicamentoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Soft delete: marcar como eliminado
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Medicamento marcado como eliminado.');
         return $this->redirect(['index']);
     }
 

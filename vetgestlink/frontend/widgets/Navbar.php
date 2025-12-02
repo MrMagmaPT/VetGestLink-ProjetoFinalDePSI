@@ -2,13 +2,14 @@
 
 namespace frontend\widgets;
 
-use yii\base\Widget;
 use Yii;
+use yii\base\Widget;
 
 class Navbar extends Widget
 {
-    public $logoPath = '/static/img/logo/logo.png';
+    public $logoPath = null; // use @logo alias by default
     public $menuItems = [];
+    public $logoUrl = null; // computed in run
 
     public function init()
     {
@@ -43,10 +44,19 @@ class Navbar extends Widget
 
     public function run()
     {
+        $logoUrl = $this->getLogoUrl();
         return $this->render('navbar', [
-            'logoPath' => $this->logoPath,
+            'logoUrl' => $logoUrl,
             'menuItems' => $this->menuItems,
         ]);
+    }
+
+    protected function getLogoUrl()
+    {
+        $logoPath = $this->logoPath ?? '/static/img/logo/logo.png';
+        $path = Yii::getAlias('@webroot') . $logoPath;
+        $version = (is_file($path) ? filemtime($path) : time());
+        return Yii::getAlias('@web') . $logoPath . '?v=' . $version;
     }
 }
 

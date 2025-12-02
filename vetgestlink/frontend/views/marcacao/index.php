@@ -5,76 +5,124 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Marcações';
+$this->title = 'Minhas Marcações';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Register CSS and JS
-$this->registerCssFile('@web/static/css/custom-variables.css', ['depends' => [\yii\web\YiiAsset::class]]);
-$this->registerCssFile('@web/static/css/marcacao.css', ['depends' => [\yii\web\YiiAsset::class]]);
-$this->registerJsFile('@web/static/js/marcacao.js', ['depends' => [\yii\web\YiiAsset::class]]);
+$this->registerCssFile('@web/static/css/marcacao.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+
+$marcacoes = $dataProvider->getModels();
+
+
 ?>
 
-<div class="container py-3">
+<div class="marcacao-index">
+    <div class="container py-4">
 
-    <div class="d-flex justify-content-center align-items-center mb-4">
-        <h1 class="fw-bold"><?= Html::encode($this->title) ?></h1>
-    </div>
-
-    <?php foreach ($dataProvider->models as $i => $model): ?>
-        <div class="card mb-3 shadow-sm">
-
-            <div class="card-body">
-
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h5 class="card-title mb-2">
-                            Marcação #<?= Html::encode($model->id) ?> - <?= Html::encode($model->estado) ?>
-                        </h5>
-
-                        <p class="mb-1">
-                            <strong>📅 Data:</strong>
-                            <?= Html::encode(Yii::$app->formatter->asDate($model->data, 'php:d/m/Y')) ?>
-                        </p>
-
-                        <p class="mb-1">
-                            <strong>🕒 Hora:</strong>
-                            <?= Html::encode($model->horainicio) ?> -
-                            <?= Html::encode($model->horafim) ?>
-                        </p>
-
-                        <p class="text-muted mb-0">
-                            Criado em:
-                            <?= Yii::$app->formatter->asDatetime($model->created_at) ?>
-                        </p>
-                    </div>
-
-                    <!-- Toggle button with chevron -->
-                    <div class="ms-3">
-                        <button class="btn btn-dark rounded-pill toggle-diagnostico"
-                                type="button"
-                                data-target="#diagnostico-<?= $i ?>"
-                                aria-expanded="false"
-                                aria-controls="diagnostico-<?= $i ?>">
-                            <span class="me-2">Ver diagnóstico</span>
-                            <span class="chev" aria-hidden="true">▼</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Collapsible Diagnóstico (initially hidden) -->
-                <div id="diagnostico-<?= $i ?>" class="collapse-custom mt-3" hidden>
-                    <div class="card card-body bg-light border">
-                        <strong>Diagnóstico:</strong>
-                        <p class="mb-0">
-                            <?= $model->diagnostico ? Html::encode($model->diagnostico) : '<em>Sem diagnóstico</em>' ?>
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
+        <div class="text-center mb-4">
+            <h1 class="mb-0">
+                <i class="fas fa-calendar-check text-primary"></i>
+                <?= Html::encode($this->title) ?>
+            </h1>
         </div>
-    <?php endforeach; ?>
 
+        <?php if (empty($marcacoes)): ?>
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i>
+                Nenhuma marcação encontrada.
+            </div>
+        <?php else: ?>
+            <div class="row g-4">
+                <?php foreach ($marcacoes as $index => $marcacao): ?>
+                    <?php
+                    // Determinar cor do badge baseado no estado
+                    $estadoColors = [
+                        'pendente' => 'warning',
+                        'confirmada' => 'info',
+                        'concluída' => 'success',
+                        'cancelada' => 'danger',
+                    ];
+                    $estadoLower = strtolower($marcacao->estado);
+                    $badgeColor = $estadoColors[$estadoLower] ?? 'secondary';
+                    ?>
+                    
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100 border-0">
+                            <div class="card-header bg-white border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                        Marcação #<?= $marcacao->id ?>
+                                    </h5>
+                                    <span class="badge bg-<?= $badgeColor ?>">
+                                        <?= Html::encode($marcacao->estado) ?>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body">
+                                <!-- Informações Principais -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-calendar text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Data</small>
+                                                <strong><?= Yii::$app->formatter->asDate($marcacao->data, 'php:d/m/Y') ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-clock text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Horário</small>
+                                                <strong><?= Html::encode($marcacao->horainicio) ?> - <?= Html::encode($marcacao->horafim) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <?php if ($marcacao->animais): ?>
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-paw text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Animal</small>
+                                                <strong><?= Html::encode($marcacao->animais->nome) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- Diagnóstico (Colapsável com CSS) -->
+                                <?php if ($marcacao->diagnostico): ?>
+                                    <div class="mt-3">
+                                        <input type="checkbox" id="diagnostico-toggle-<?= $index ?>" class="diagnostico-checkbox" hidden>
+                                        <div class="diagnostico-content mt-2">
+                                            <div class="card card-body bg-light">
+                                                <strong class="mb-2 d-block">
+                                                    <i class="fas fa-notes-medical text-primary"></i> Diagnóstico:
+                                                </strong>
+                                                <p class="mb-0"><?= nl2br(Html::encode($marcacao->diagnostico)) ?></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="card-footer bg-light border-top">
+                                <small class="text-muted">
+                                    <i class="far fa-clock"></i>
+                                    Criado em: <?= Yii::$app->formatter->asDatetime($marcacao->created_at, 'php:d/m/Y H:i') ?>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
+
+
 

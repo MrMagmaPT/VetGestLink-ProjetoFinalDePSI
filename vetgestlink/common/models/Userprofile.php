@@ -55,7 +55,7 @@ class Userprofile extends \yii\db\ActiveRecord
             [['nif'], 'unique'],
             [['foto'], 'string', 'max' => 255],
             // image upload: optional, only PNG/JPG/JPEG, max 2MB
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 2 * 1024 * 1024, 'tooBig' => 'O ficheiro é demasiado grande. Máx 2MB.'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 2 * 1024 * 1024, 'tooBig' => 'O ficheiro é demasiado grande. Máx 2MB.', 'checkExtensionByMimeType' => false],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -157,7 +157,7 @@ class Userprofile extends \yii\db\ActiveRecord
             // Guardar apenas o nome do ficheiro na BD (basename)
             // Se o componente retornou 'users/name.ext' guardamos apenas 'name.ext'
             $this->foto = basename($result);
-            return true;
+            return $result; // Retorna o caminho completo para o controller
         }
 
         return false;

@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 ?>
+<?php $logoUrl = $logoUrl ?? Yii::getAlias('@web') . '/static/img/logo/logo.png'; ?>
 
 <header>
     <div class="header-area header-transparent">
@@ -13,7 +14,7 @@ use yii\helpers\Url;
                     <div class="col-xl-2 col-lg-2 col-md-1">
                         <div class="logo">
                             <a href="<?= Url::home() ?>">
-                                <img src="<?= Yii::getAlias('@web') . $logoPath ?>" alt="VetGestLink">
+                                <img src="<?= $logoUrl ?>" alt="VetGestLink" style="max-height: 50px; width: auto;">
                             </a>
                         </div>
                     </div>

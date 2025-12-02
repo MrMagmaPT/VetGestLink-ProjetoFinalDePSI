@@ -7,61 +7,108 @@ use yii\helpers\Url;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Faturas';
+$this->title = 'Minhas Faturas';
 $this->params['breadcrumbs'][] = $this->title;
 
 $faturas = $dataProvider->getModels();
 ?>
 
 <div class="faturas-index">
+    <div class="container py-4">
 
-    <h1 class="text-center mb-4"><?= Html::encode($this->title) ?></h1>
+        <div class="text-center mb-4">
+            <h1 class="mb-0">
+                <i class="fas fa-file-invoice-dollar text-primary"></i>
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
 
-    <div class="row g-4 justify-content-center">
-        <?php foreach ($faturas as $fatura): ?>
-            <div class="col-md-4 col-lg-3">
-                <div class="card shadow-sm h-100 rounded-4">
+        <?php if (empty($faturas)): ?>
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i>
+                Nenhuma fatura encontrada.
+            </div>
+        <?php else: ?>
+            <div class="row g-4">
+                <?php foreach ($faturas as $fatura): ?>
+                    <?php
+                    $isPaid = (bool)$fatura->estado;
+                    $estadoText = $isPaid ? 'Pago' : 'Pendente';
+                    $estadoColor = $isPaid ? 'success' : 'warning';
+                    $estadoIcon = $isPaid ? 'check-circle' : 'clock';
+                    ?>
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card shadow-sm h-100 border-0">
+                            <div class="card-header bg-<?= $estadoColor ?> text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <strong>
+                                        <i class="fas fa-file-invoice"></i>
+                                        Fatura #<?= $fatura->id ?>
+                                    </strong>
+                                    <span>
+                                        <i class="fas fa-<?= $estadoIcon ?>"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                
+                                <!-- Total -->
+                                <div class="text-center mb-3">
+                                    <h3 class="text-<?= $estadoColor ?> mb-0">
+                                        <?= Yii::$app->formatter->asCurrency($fatura->total, 'EUR') ?>
+                                    </h3>
+                                </div>
 
-                    <div class="card-body d-flex flex-column text-center">
+                                <!-- Informações -->
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">
+                                            <i class="far fa-calendar"></i> Data:
+                                        </span>
+                                        <strong><?= Yii::$app->formatter->asDate($fatura->created_at, 'php:d/m/Y') ?></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">
+                                            <i class="fas fa-credit-card"></i> Método:
+                                        </span>
+                                        <strong><?= Html::encode($fatura->metodospagamentos->nome ?? 'N/A') ?></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">
+                                            <i class="fas fa-info-circle"></i> Estado:
+                                        </span>
+                                        <span class="badge bg-<?= $estadoColor ?>">
+                                            <i class="fas fa-<?= $estadoIcon ?>"></i>
+                                            <?= $estadoText ?>
+                                        </span>
+                                    </div>
+                                </div>
 
-                        <!-- ID and Total -->
-                        <h5 class="card-title mb-2">Fatura #<?= $fatura->id ?></h5>
-                        <p class="mb-1"><strong>Total:</strong> <?= Yii::$app->formatter->asCurrency($fatura->total, 'EUR') ?></p>
-
-                        <!-- Date -->
-                        <p class="text-muted mb-2">
-                            <strong>Data:</strong> <?= Yii::$app->formatter->asDate($fatura->created_at, 'php:d/m/Y') ?>
-                        </p>
-
-                        <!-- Estado (boolean) -->
-                        <?php
-                        $isPaid = (bool)$fatura->estado;
-                        $estadoText = $isPaid ? 'Pago' : 'Pendente';
-                        $estadoColor = $isPaid ? 'success' : 'danger';
-                        ?>
-                        <span class="badge bg-<?= $estadoColor ?> mb-3"><?= $estadoText ?></span>
-
-                        <div class="mt-auto d-flex justify-content-center gap-2">
-
-                            <!-- Ver button -->
-                            <?= Html::a('<i class="bi bi-eye"></i> Ver', ['view', 'id' => $fatura->id], [
-                                'class' => 'btn btn-dark rounded-pill '
-                            ]) ?>
-
-                            <!-- Pagar button (only if not paid) -->
-                            <?php if (!$isPaid): ?>
-                                <?= Html::a('<i class="bi bi-cash-stack"></i> Pagar', ['pagar', 'id' => $fatura->id], [
-                                    'class' => 'btn btn-dark rounded-pill',
-                                    'data' => [
-                                        'method' => 'post',
-                                    ],
-                                ]) ?>
-                            <?php endif; ?>
-
+                                <!-- Botões de Ação -->
+                                <div class="mt-auto d-grid gap-2">
+                                    <?= Html::a(
+                                        '<i class="fas fa-eye"></i> Ver Detalhes',
+                                        ['view', 'id' => $fatura->id],
+                                        ['class' => 'btn btn-primary btn-sm']
+                                    ) ?>
+                                    
+                                    <?php if (!$isPaid): ?>
+                                        <?= Html::a(
+                                            '<i class="fas fa-money-bill-wave"></i> Pagar Agora',
+                                            ['pagar', 'id' => $fatura->id],
+                                            [
+                                                'class' => 'btn btn-success btn-sm',
+                                                'data-method' => 'post',
+                                                'data-confirm' => 'Confirma o pagamento desta fatura?'
+                                            ]
+                                        ) ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 </div>
