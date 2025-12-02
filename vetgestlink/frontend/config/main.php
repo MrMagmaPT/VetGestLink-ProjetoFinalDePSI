@@ -16,6 +16,7 @@ return [
     'aliases' => [
         // apontar @uploads para a pasta pública de uploads do frontend para manter centralização
         '@uploads' => '@frontend/web/uploads',
+        // NOTE: Avoid defining '@logo' here, because '@web' may not be available at config time.
     ],
     'components' => [
         'request' => [

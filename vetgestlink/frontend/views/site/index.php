@@ -3,7 +3,10 @@
 /** @var common\models\Servico[] $servicos */
 
 $this->title = 'VetGestLink - Gestão Moderna para Clínicas Veterinárias';
-$logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
+ $logoPath = '/static/img/logo/logo.png';
+$logoFile = Yii::getAlias('@webroot') . $logoPath;
+$logoVersion = is_file($logoFile) ? filemtime($logoFile) : time();
+$logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
 ?>
 <main style="background: #fff;">
     <!-- Slider Moderno -->

@@ -29,8 +29,11 @@ class ThemeAssets extends Widget
         $files = $this->useDefaultCss ? $this->defaultCssFiles : $this->cssFiles;
 
         foreach ($files as $file) {
+            $filePath = \Yii::getAlias('@webroot') . '/static/css/' . $file;
+            $version = is_file($filePath) ? filemtime($filePath) : time();
+            
             $this->view->registerCssFile(
-                \Yii::getAlias('@web') . '/static/css/' . $file,
+                \Yii::getAlias('@web') . '/static/css/' . $file . '?v=' . $version,
                 ['depends' => [\yii\web\JqueryAsset::class]]
             );
         }

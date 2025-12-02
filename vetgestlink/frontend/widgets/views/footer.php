@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 
 // Define default values for variables if not already set
-$logoPath = '/static/img/logo/logo.png';
+$logoUrl = $logoUrl ?? (Yii::getAlias('@web') . '/static/img/logo/logo.png');
 $companyLinks = $companyLinks ?? [
     ['label' => 'Sobre Nós', 'url' => ['/site/about']],
     ['label' => 'Carreiras', 'url' => ['/site/careers']],
@@ -27,7 +27,7 @@ $contactInfo = $contactInfo ?? [
                         <div class="single-footer-caption mb-30">
                             <!-- logo -->
                             <div class="footer-logo mb-25">
-                                <img src="<?= Yii::getAlias('@web') . $logoPath ?>" alt="VetGestLink">
+                                <img src="<?= $logoUrl ?>" alt="VetGestLink" style="max-height: 80px; width: auto;">
                             </div>
                         </div>
                     </div>

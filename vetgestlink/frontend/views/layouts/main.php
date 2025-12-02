@@ -9,7 +9,6 @@ use frontend\widgets\ThemeAssets;
 use frontend\widgets\ThemeScripts;
 use frontend\widgets\Navbar;
 use frontend\widgets\Footer;
-use frontend\widgets\Preloader;
 use frontend\widgets\ScrollToTop;
 
 AppAsset::register($this);
@@ -40,8 +39,6 @@ AppAsset::register($this);
 
 <body class="d-flex flex-column h-100">
 <?php $this->beginBody() ?>
-
-<?= Preloader::widget() ?>
 
 <?= Navbar::widget() ?>
 
