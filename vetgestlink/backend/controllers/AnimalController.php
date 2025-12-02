@@ -74,9 +74,19 @@ class AnimalController extends Controller
         $searchModel = new AnimalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas
+        $totalCount = Animal::find()->where(['eliminado' => 0])->count();
+        $machoCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'M'])->count();
+        $femeaCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'F'])->count();
+        $microchipCount = Animal::find()->where(['eliminado' => 0, 'microship' => 1])->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'machoCount' => $machoCount,
+            'femeaCount' => $femeaCount,
+            'microchipCount' => $microchipCount,
         ]);
     }
 
@@ -153,8 +163,11 @@ class AnimalController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Animal marcado como eliminado.');
         return $this->redirect(['index']);
     }
 

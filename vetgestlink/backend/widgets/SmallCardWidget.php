@@ -23,6 +23,24 @@ class SmallCardWidget extends Widget
     // Rederiza o html do widget e merdas associadas :D
     public function run()
     {
+        // Mapa de cores para os ícones
+        $colorMap = [
+            'icon-blue' => 'background: #007bff; color: white;',
+            'icon-yellow' => 'background: #ffc107; color: white;',
+            'icon-green' => 'background: #28a745; color: white;',
+            'icon-orange' => 'background: #ff9800; color: white;',
+            'icon-red' => 'background: #dc3545; color: white;',
+            'icon-purple' => 'background: #9333ea; color: white;',
+            'icon-gray' => 'background: #6c757d; color: white;',
+            'icon-primary' => 'background: #007bff; color: white;',
+            'icon-success' => 'background: #28a745; color: white;',
+            'icon-secondary' => 'background: #6c757d; color: white;',
+            'icon-pink' => 'background: #e91e63; color: white;',
+        ];
+
+        // Obter o estilo inline para o ícone
+        $iconStyle = $colorMap[$this->iconColorClass] ?? 'background: #6c757d; color: white;';
+
         //url convertido de incompleto (ex: /user/index) para
         // completo usando o yii para n ser nada hardcoded
         // (ex: http://vetgestlink/user/index)
@@ -32,7 +50,7 @@ class SmallCardWidget extends Widget
         return <<<HTML
             <div class="col-lg-3 col-12" style="cursor:pointer;" onclick="window.location.href='{$encoded_url}';">
                 <div class="info-box info-box-custom shadow-sm">
-                    <span class="info-box-icon {$this->iconColorClass} rounded">
+                    <span class="info-box-icon rounded" style="{$iconStyle}">
                         <i class="fas {$this->icon}"></i>
                     </span>
                     <div class="info-box-content">

@@ -13,7 +13,12 @@ $animais = $dataProvider->getModels();
 
 <div class="animal-index">
 
-    <h1 class="text-center mb-4"><?= Html::encode($this->title) ?></h1>
+            <div class="text-center mb-4">
+            <h1 class="mb-0">
+                <i class="fas fa-paw text-primary"></i>
+                <?= Html::encode($this->title) ?>
+            </h1>
+        </div>
 
     <div class="row g-4 justify-content-center">
         <?php if (empty($animais)): ?>
@@ -26,10 +31,7 @@ $animais = $dataProvider->getModels();
                     <div class="card shadow-sm h-100 rounded-4">
 
                         <!-- IMAGE -->
-                        <?php
-                        $foto = $animal->hasImage() ? $animal->getImageUrl() : "/img/default-animal.jpg";
-                        ?>
-                        <img src="<?= Html::encode($foto) ?>" class="card-img-top rounded-top-4" alt="Foto Animal" style="height: 200px; object-fit: cover;">
+                        <img src="<?= Html::encode($animal->getImageUrl()) ?>" class="card-img-top rounded-top-4" alt="Foto Animal" style="height: 200px; object-fit: cover;">
 
                         <div class="card-body text-center d-flex flex-column">
 

@@ -91,6 +91,27 @@ $this->beginPage();
 
             <!-- Sidebar -->
             <div class="sidebar">
+                <!-- User Panel -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #c2c7d0;"></i>
+                    </div>
+                    <div class="info">
+                        <!-- Construir link para o perfil do utilizador -->
+                        <?php if (!Yii::$app->user->isGuest): ?>
+                            <?php 
+                                $userprofile = \common\models\Userprofile::findOne(['user_id' => Yii::$app->user->id]);
+                                $profileUrl = $userprofile ? Url::to(['/userprofile/view', 'id' => $userprofile->id]) : '#';
+                            ?>
+                            <a href="<?= $profileUrl ?>" class="d-block">
+                                <?= Yii::$app->user->identity->username ?>
+                            </a>
+                        <?php else: ?>
+                            <a href="#" class="d-block">Convidado</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -125,6 +146,12 @@ $this->beginPage();
                                     'url' => ['/metodopagamento/index'],
                                     'active' => Yii::$app->controller->id === 'metodopagamento' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
+                            <?= MenuItem::widget([
+                                    'icon' => 'fa fa-concierge-bell',
+                                    'text' => 'Serviços',
+                                    'url' => ['/servico/index'],
+                                    'active' => Yii::$app->controller->id === 'servico' && Yii::$app->controller->action->id === 'index',
+                            ]) ?>
                         <?php endif; ?>
                         <?php if ($usertype == 2): ?> <!-- Veterinario -->
                             <?= MenuItem::widget([
@@ -142,12 +169,6 @@ $this->beginPage();
                             <?= MenuItem::widget([
                                     'icon' => 'far fa-file-lines',
                                     'text' => 'Consulta',
-                                    'url' => ['/marcacao/index'],
-                                    'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
-                            ]) ?>
-                            <?= MenuItem::widget([
-                                    'icon' => 'far fa-calendar',
-                                    'text' => 'Agendamentos',
                                     'url' => ['/marcacao/index'],
                                     'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
@@ -230,12 +251,6 @@ $this->beginPage();
                                     'url' => ['/marcacao/index'],
                                     'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
-                            <?= MenuItem::widget([
-                                    'icon' => 'fa fa-pills',
-                                    'text' => 'Medicamentos',
-                                    'url' => ['/medicamento/index'],
-                                    'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
-                            ]) ?>
                             <?= MenuGroup::widget([
                                     'text' => 'Faturas',
                                     'icon' => 'nav-icon fas fa-layer-group',
@@ -258,29 +273,12 @@ $this->beginPage();
                         <?php endif; ?>
                     </ul>
                 </nav>
-                <!-- User Panel -->
-                <div class="user-panel mt-3 pb-3  mb-3 d-flex" style="padding-top: 100%;">
-                    <div class="image">
-                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #6c757d;"></i>
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">
-                            <?= Yii::$app->user->isGuest ? 'Convidado' : Yii::$app->user->identity->username ?>
-                        </a>
-                    </div>
-                </div>
             </div>
         </aside>
-
-
-
-
-
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             <?= $content ?>
         </div>
-
         <!-- Footer -->
         <footer class="main-footer">
             <strong>VetGestLink &copy; 2025</strong> - Todos os direitos reservados.

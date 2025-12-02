@@ -83,5 +83,16 @@ package-lock.json
 
 # NOTA: Pasta uploads/ na RAIZ contém as imagens
 # Usar apenas: uploads/ (pasta compartilhada)
+# Ignore dynamic image uploads for users and animais; keep only default.jpg
+# Frontend uploads
+/frontend/web/uploads/users/*
+!/frontend/web/uploads/users/default.jpg
+/frontend/web/uploads/animais/*
+!/frontend/web/uploads/animais/default.jpg
+# English folder fallback if used
+/frontend/web/uploads/animals/*
+!/frontend/web/uploads/animals/default.jpg
+
+ # keep robots in place
 /backend/web/robots.txt
 

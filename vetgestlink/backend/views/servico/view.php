@@ -4,10 +4,10 @@ use yii\widgets\DetailView;
 use backend\widgets\SmallCardWidget;
 
 /** @var yii\web\View $this */
-/** @var common\models\Especie $model */
+/** @var common\models\Servico $model */
 
-$this->title = 'Visualizar Espécie';
-$this->params['breadcrumbs'][] = ['label' => 'Espécies', 'url' => ['index']];
+$this->title = 'Visualizar Serviço';
+$this->params['breadcrumbs'][] = ['label' => 'Serviços', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Visualizar';
 ?>
 
@@ -16,14 +16,14 @@ $this->params['breadcrumbs'][] = 'Visualizar';
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">
-                    <i class="fas fa-paw text-primary"></i>
-                    Visualizar Espécie
+                    <i class="fas fa-concierge-bell text-primary"></i>
+                    Visualizar Serviço
                 </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item"><?= Html::a('Espécies', ['index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('Serviços', ['index']) ?></li>
                     <li class="breadcrumb-item active">Visualizar</li>
                 </ol>
             </div>
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = 'Visualizar';
             <div class="col-md-8">
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fas fa-paw"></i> Dados da Espécie</h5>
+                        <h5 class="mb-0"><i class="fas fa-concierge-bell"></i> Dados do Serviço</h5>
                     </div>
                     <div class="card-body">
                         <?= DetailView::widget([
@@ -47,19 +47,26 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                                 'id',
                                 [
                                     'attribute' => 'nome',
-                                    'value' => function ($model) {
+                                    'value' => function($model) {
                                         return '<strong>' . Html::encode($model->nome) . '</strong>';
+                                    },
+                                    'format' => 'raw',
+                                ],
+                                [
+                                    'attribute' => 'valor',
+                                    'value' => function($model) {
+                                        return '<span class="badge bg-success">' . number_format($model->valor, 2) . '€</span>';
                                     },
                                     'format' => 'raw',
                                 ],
                                 [
                                     'attribute' => 'eliminado',
                                     'label' => 'Estado',
-                                    'value' => function ($model) {
+                                    'value' => function($model) {
                                         if ($model->eliminado == 1) {
-                                            return '<span class="badge bg-danger"><i class="fas fa-times"></i> Eliminada</span>';
+                                            return '<span class="badge bg-danger"><i class="fas fa-times"></i> Eliminado</span>';
                                         }
-                                        return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativa</span>';
+                                        return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                                     },
                                     'format' => 'raw',
                                 ],
@@ -78,14 +85,14 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                         <i class="fas fa-cogs"></i> Ações
                     </div>
                     <div class="card-body">
-                                                <div class="d-grid gap-2">
+                        <div class="d-grid gap-2">
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
                                 ['class' => 'btn btn-primary btn-lg']
                             ) ?>
                             <?= Html::a(
-                                '<i class="fas fa-list"></i> Ver Todos',
+                                '<i class="fas fa-list"></i> Ver Todas',
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-lg']
                             ) ?>
@@ -95,7 +102,7 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                                 [
                                     'class' => 'btn btn-danger btn-lg',
                                     'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar este animal?',
+                                        'confirm' => 'Tem a certeza que deseja eliminar esta raça?',
                                         'method' => 'post',
                                     ],
                                 ]

@@ -9,31 +9,24 @@ use backend\widgets\SmallCardWidget;
 
 $this->title = 'Dashboard';
 
-// Defaults to avoid undefined variables
 $totalClientes = $totalClientes ?? 0;
-
 $totalAnimais = $totalAnimais ?? 0;
-
-$ultimasMarcacoes = $ultimasMarcacoes ?? [];
-$marcacoesPendentes = $marcacoesPendentes ?? [];
-$marcacoesHoje = $marcacoesHoje ?? [];
-$totalMarcacoesHoje = $totalMarcacoesHoje ?? 0;
-$totalMarcacoesPendentes = $totalMarcacoesPendentes ?? 0;
-
-
 $totalMedicamentos = $totalMedicamentos ?? 0;
 $totalMedicamentosEmStock = $totalMedicamentosEmStock ?? 0;
 $totalMedicamentosBaixoStock = $totalMedicamentosBaixoStock ?? 0;
 $totalMedicamentosCriticoStock = $totalMedicamentosCriticoStock ?? 0;
 $alertasMedicamentosCriticoStock = $alertasMedicamentosCriticoStock ?? [];
-
 $totalCategorias = $totalCategorias ?? 0;
 $totalRacas = $totalRacas ?? 0;
 $totalEspecies = $totalEspecies ?? 0;
+$totalmarcacoes = $totalmarcacoes ?? 0;
+$totalmarcacoesHoje = $totalmarcacoesHoje ?? 0;
+$totalmarcacoesPendentes = $totalmarcacoesPendentes ?? 0;
+$ultimasMarcacoes = $ultimasMarcacoes ?? [];
+$marcacoesPendentes = $marcacoesPendentes ?? [];
+$marcacoesHoje = $marcacoesHoje ?? [];
 $faturasDoMes = $faturasDoMes ?? 0;
 $receitaMensal = $receitaMensal ?? 0;
-
-
 
 $this->registerCssFile('@web/static/css/view.css');
 
@@ -42,7 +35,10 @@ $this->registerCssFile('@web/static/css/view.css');
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6"><h1 class="m-0">Dashboard</h1></div>
+            <div class="col-sm-6">
+            <h1 class="m-0">
+            <i class="fas fa-tachometer-alt text-primary"></i>    
+            Dashboard</h1></div>
         </div>
     </div>
 </div>
@@ -138,24 +134,24 @@ $this->registerCssFile('@web/static/css/view.css');
                 ]);
                 echo SmallCardWidget::widget([
                         'icon' => 'fa-paw',
-                        'iconColorClass' => 'bg-purple',
+                        'iconColorClass' => 'icon-green',
                         'text' => 'Animais',
                         'value' => $totalAnimais,
                         'url' => '/animal/index',
                 ]);
                 echo SmallCardWidget::widget([
                         'icon' => 'fa-calendar-check',
-                        'iconColorClass' => 'bg-orange',
+                        'iconColorClass' => 'icon-orange',
                         'text' => 'Marcações',
-                        'value' => $totalMarcacoesHoje,
+                        'value' => $totalmarcacoesHoje,
                         'url' => '/marcacao/index',
                 ]);
                 echo SmallCardWidget::widget([
                         'icon' => 'fa-clock',
-                        'iconColorClass' => 'bg-red',
+                        'iconColorClass' => 'icon-red',
                         'text' => 'Marcações Pendentes',
-                        'value' => $totalMarcacoesPendentes,
-                        'url' => '/especie/index',
+                        'value' => $totalmarcacoesPendentes,
+                        'url' => '/marcacao/index',
                 ]);
                 ?>
             </div>
@@ -185,23 +181,33 @@ $this->registerCssFile('@web/static/css/view.css');
                         'url' => '/userprofile/index',
                 ]);
 
-                echo SmallCardWidget::widget([
+                echo BigCardWidget::widget([
+                        'icon' => 'fa-calendar-check',
+                        'iconColorClass' => 'icon-green',
+                        'text' => 'Total de Marcações',
+                        'value' => $totalmarcacoes,
+                        'url' => '/userprofile/index',
+                ]);                
+
+                echo BigCardWidget::widget([
                         'icon' => 'fa-stethoscope',
-                        'iconColorClass' => 'bg-yellow',
+                        'iconColorClass' => 'icon-yellow',
                         'text' => 'Marcações Hoje',
-                        'value' => $totalMarcacoesHoje,
+                        'value' => $totalmarcacoesHoje,
                         'url' => '/marcacao/index',
                 ]);
 
-                echo SmallCardWidget::widget([
+                echo BigCardWidget::widget([
                         'icon' => 'fa-calendar',
-                        'iconColorClass' => 'bg-red',
+                        'iconColorClass' => 'icon-red',
                         'text' => 'Marcações Pendentes',
-                        'value' => $totalMarcacoesPendentes,
+                        'value' => $totalmarcacoesPendentes,
                         'url' => '/marcacao/index',
                 ]);
                 ?>
             </div>
+
+            
 
             <!-- Marcacões de Hoje -->
             <div class=".col-md-12">

@@ -45,9 +45,22 @@ class UserprofileController extends Controller
         $searchModel = new UserprofileSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas para a view Extras
+        $totalCount = $dataProvider->getTotalCount();
+        $activeCount = Userprofile::find()->where(['eliminado' => 0])->count();
+        $deletedCount = Userprofile::find()->where(['eliminado' => 1])->count();
+        $recentCount = Userprofile::find()
+            ->joinWith('user')
+            ->where(['>=', 'user.created_at', strtotime('-30 days')])
+            ->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'activeCount' => $activeCount,
+            'deletedCount' => $deletedCount,
+            'recentCount' => $recentCount,
         ]);
     }
 
@@ -76,7 +89,8 @@ class UserprofileController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($user = $model->signup()) {
-                // sucesso
+                Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso!');
+                return $this->redirect(['view', 'id' => $user->userprofile->id]);
             }
         }
 
@@ -112,8 +126,9 @@ class UserprofileController extends Controller
 
                 // Processa upload de imagem
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                if ($model->imageFile) {
-                    $model->foto = $model->uploadImage();
+                if ($model->imageFile && $model->imageFile->tempName && file_exists($model->imageFile->tempName)) {
+                    // uploadImage() já atualiza o atributo $model->foto internamente
+                    $model->uploadImage();
                 }
 
                 $valid = $model->validate();
@@ -145,8 +160,12 @@ class UserprofileController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Soft delete: marcar como eliminado
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Perfil marcado como eliminado.');
         return $this->redirect(['index']);
     }
 

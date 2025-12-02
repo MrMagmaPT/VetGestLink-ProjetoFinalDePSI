@@ -78,7 +78,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $servicos = \common\models\Servico::find()
+            ->where(['eliminado' => 0])
+            ->orderBy(['nome' => SORT_ASC])
+            ->all();
+
+        return $this->render('index', [
+            'servicos' => $servicos,
+        ]);
     }
 
     /**

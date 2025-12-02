@@ -1,6 +1,6 @@
 <?php
 
-use common\models\Especie;
+use common\models\Servico;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -8,11 +8,11 @@ use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
 
 /** @var yii\web\View $this */
-/** @var backend\models\EspecieSearch $searchModel */
+/** @var backend\models\ServicoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Gestão de Espécies';
-$this->params['breadcrumbs'][] = 'Espécies';
+$this->title = 'Gestão de Serviços';
+$this->params['breadcrumbs'][] = 'Serviços';
 ?>
 
 <div class="content-header">
@@ -20,14 +20,14 @@ $this->params['breadcrumbs'][] = 'Espécies';
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">
-                    <i class="fas fa-paw text-primary"></i>
-                    Espécies
+                    <i class="fas fa-concierge-bell text-primary"></i>
+                    Serviços
                 </h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Espécies</li>
+                    <li class="breadcrumb-item active">Serviços</li>
                 </ol>
             </div>
         </div>
@@ -39,18 +39,25 @@ $this->params['breadcrumbs'][] = 'Espécies';
         <!-- Cards de Estatísticas -->
         <div class="row mb-4">
             <?= BigCardWidget::widget([
-                'icon' => 'fa-paw',
+                'icon' => 'fa-concierge-bell',
                 'iconColorClass' => 'icon-blue',
-                'text' => 'Total de Espécies',
-                'value' => Especie::find()->where(['eliminado' => 0])->count(),
-                'url' => '/especie/index',
+                'text' => 'Total de Serviços',
+                'value' => Servico::find()->where(['eliminado' => 0])->count(),
+                'url' => '/servico/index',
             ]) ?>
             <?= BigCardWidget::widget([
-                'icon' => 'fa-paw',
-                'iconColorClass' => 'icon-red',
-                'text' => 'Eliminadas',
-                'value' => Especie::find()->where(['eliminado' => 1])->count(),
-                'url' => '/especie/index',
+                'icon' => 'fa-euro-sign',
+                'iconColorClass' => 'icon-green',
+                'text' => 'Valor Médio',
+                'value' => number_format(Servico::find()->where(['eliminado' => 0])->average('valor'), 2) . '€',
+                'url' => '/servico/index',
+            ]) ?>
+            <?= BigCardWidget::widget([
+                'icon' => 'fa-concierge-bell',
+                'iconColorClass' => 'icon-gray',
+                'text' => 'Eliminados',
+                'value' => Servico::find()->where(['eliminado' => 1])->count(),
+                'url' => '/servico/index',
             ]) ?>
         </div>
 
@@ -60,10 +67,10 @@ $this->params['breadcrumbs'][] = 'Espécies';
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-list"></i>
-                        Lista de Espécies
+                        Lista de Serviços
                     </h5>
                     <?= Html::a(
-                        '<i class="fas fa-plus"></i> Nova Espécie',
+                        '<i class="fas fa-plus"></i> Novo Serviço',
                         ['create'],
                         ['class' => 'btn btn-success']
                     ) ?>
@@ -91,18 +98,27 @@ $this->params['breadcrumbs'][] = 'Espécies';
                             },
                         ],
                         [
+                            'attribute' => 'valor',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                return '<span class="badge bg-success">' . number_format($model->valor, 2) . '€</span>';
+                            },
+                            'headerOptions' => ['style' => 'width: 120px'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                        ],
+                        [
                             'attribute' => 'eliminado',
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
                                 if ($model->eliminado == 1) {
-                                    return '<span class="badge bg-danger"><i class="fas fa-times"></i> Eliminada</span>';
+                                    return '<span class="badge bg-danger"><i class="fas fa-times"></i> Eliminado</span>';
                                 }
-                                return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativa</span>';
+                                return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
                             'filter' => [
-                                0 => 'Ativa',
-                                1 => 'Eliminada',
+                                0 => 'Ativo',
+                                1 => 'Eliminado',
                             ],
                             'headerOptions' => ['style' => 'width: 120px'],
                             'contentOptions' => ['style' => 'text-align: center'],
@@ -142,13 +158,13 @@ $this->params['breadcrumbs'][] = 'Espécies';
                                             'class' => 'btn btn-sm btn-danger',
                                             'title' => 'Eliminar',
                                             'data-toggle' => 'tooltip',
-                                            'data-confirm' => 'Tem a certeza que deseja eliminar esta espécie?',
+                                            'data-confirm' => 'Tem a certeza que deseja eliminar este serviço?',
                                             'data-method' => 'post',
                                         ]
                                     );
                                 },
                             ],
-                            'urlCreator' => function ($action, Especie $model, $key, $index, $column) {
+                            'urlCreator' => function ($action, Servico $model, $key, $index, $column) {
                                 return Url::toRoute([$action, 'id' => $model->id]);
                             },
                             'headerOptions' => ['style' => 'width: 120px; text-align: center'],

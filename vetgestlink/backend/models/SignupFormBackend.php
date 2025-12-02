@@ -62,7 +62,6 @@ class SignupFormBackend extends Model
             ['principal', 'default', 'value' => 1],
 
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
-            ['role', 'required'],
             ['role', 'string'],
         ];
     }
@@ -116,14 +115,15 @@ class SignupFormBackend extends Model
 
             Yii::info("User ID {$user->id} criado");
 
-            // 2. Atribuir role selecionada
+            // 2. Atribuir role selecionada ou cliente por defeito
             $auth = Yii::$app->authManager;
-            $roleObj = $auth->getRole($this->role);
+            $roleName = $this->role ?: 'cliente'; // Se não foi definida, usa 'cliente'
+            $roleObj = $auth->getRole($roleName);
             if ($roleObj) {
                 $auth->assign($roleObj, $user->id);
-                Yii::info("Role '{$this->role}' atribuída ao User ID {$user->id}");
+                Yii::info("Role '{$roleName}' atribuída ao User ID {$user->id}");
             } else {
-                Yii::warning("Role '{$this->role}' não encontrada no sistema RBAC");
+                Yii::warning("Role '{$roleName}' não encontrada no sistema RBAC");
             }
             // 3. Criar Userprofile
             $userprofile = new Userprofile();

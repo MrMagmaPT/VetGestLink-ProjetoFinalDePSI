@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var common\models\Especie $model */
+/** @var common\models\Servico $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -12,16 +12,27 @@ use yii\widgets\ActiveForm;
     <div class="col-md-8">
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
-                <?php $form = ActiveForm::begin([ 'options' => ['autocomplete' => 'off'] ]); ?>
+                <?php $form = ActiveForm::begin(['options' => ['autocomplete' => 'off']]); ?>
 
                 <div class="row">
                     <div class="col-md-8">
                         <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
                     </div>
                     <div class="col-md-4">
+                        <?= $form->field($model, 'valor')->textInput([
+                            'type' => 'number',
+                            'step' => '0.01',
+                            'min' => '0',
+                            'class' => 'form-control'
+                        ])->label('Valor (€)') ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
                         <?= $form->field($model, 'eliminado')->dropDownList([
-                            0 => 'Ativa',
-                            1 => 'Eliminada',
+                            0 => 'Ativo',
+                            1 => 'Eliminado',
                         ], ['class' => 'form-control']) ?>
                     </div>
                 </div>
@@ -34,6 +45,10 @@ use yii\widgets\ActiveForm;
                 </div>
 
                 <?php ActiveForm::end(); ?>
+
+                <div class="form-group mt-2">
+                    <?= Html::a('<i class="fas fa-arrow-left"></i> Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
+                </div>
             </div>
         </div>
     </div>
@@ -44,9 +59,10 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
-                    <li><i class="fas fa-paw"></i> O campo <strong>Nome</strong> é obrigatório.</li>
-                    <li><i class="fas fa-check"></i> Estado <strong>Ativa</strong> indica espécie disponível.</li>
-                    <li><i class="fas fa-times"></i> Estado <strong>Eliminada</strong> oculta a espécie do sistema.</li>
+                    <li><i class="fas fa-concierge-bell"></i> O campo <strong>Nome</strong> é obrigatório.</li>
+                    <li><i class="fas fa-euro-sign"></i> O <strong>Valor</strong> deve ser um número positivo.</li>
+                    <li><i class="fas fa-check"></i> Estado <strong>Ativo</strong> indica serviço disponível.</li>
+                    <li><i class="fas fa-times"></i> Estado <strong>Eliminado</strong> oculta o serviço do sistema.</li>
                 </ul>
             </div>
         </div>

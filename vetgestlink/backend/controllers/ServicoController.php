@@ -2,17 +2,17 @@
 
 namespace backend\controllers;
 
-use common\models\Medicamento;
-use backend\models\MedicamentoSearch;
+use common\models\Servico;
+use backend\models\ServicoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * MedicamentoController implements the CRUD actions for Medicamento model.
+ * ServicoController implements the CRUD actions for Servico model.
  */
-class MedicamentoController extends Controller
+class ServicoController extends Controller
 {
     /**
      * @inheritDoc
@@ -26,29 +26,8 @@ class MedicamentoController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewMedications'],
-                        ],
-                        [
-                            'actions' => ['view'],
-                            'allow' => true,
-                            'roles' => ['viewMedications'],
-                        ],
-                        [
-                            'actions' => ['create'],
-                            'allow' => true,
-                            'roles' => ['createMedication'],
-                        ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['updateMedication'],
-                        ],
-                        [
-                            'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['deleteMedication'],
+                            'roles' => ['admin'],
                         ],
                     ],
                 ],
@@ -58,48 +37,29 @@ class MedicamentoController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                
             ]
         );
     }
 
-
     /**
-     * Lists all Medicamento models.
+     * Lists all Servico models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new MedicamentoSearch();
+        $searchModel = new ServicoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
-        // Estatísticas
-        $totalCount = Medicamento::find()->where(['eliminado' => 0])->count();
-        $stockCritico = Medicamento::find()
-            ->where(['<', 'quantidade', 5])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $stockBaixo = Medicamento::find()
-            ->where(['between', 'quantidade', 5, 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $stockBom = Medicamento::find()
-            ->where(['>', 'quantidade', 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'totalCount' => $totalCount,
-            'stockCritico' => $stockCritico,
-            'stockBaixo' => $stockBaixo,
-            'stockBom' => $stockBom,
         ]);
     }
 
     /**
-     * Displays a single Medicamento model.
+     * Displays a single Servico model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -112,13 +72,13 @@ class MedicamentoController extends Controller
     }
 
     /**
-     * Creates a new Medicamento model.
+     * Creates a new Servico model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Medicamento();
+        $model = new Servico();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -134,7 +94,7 @@ class MedicamentoController extends Controller
     }
 
     /**
-     * Updates an existing Medicamento model.
+     * Updates an existing Servico model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -154,7 +114,7 @@ class MedicamentoController extends Controller
     }
 
     /**
-     * Deletes an existing Medicamento model.
+     * Deletes an existing Servico model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -162,25 +122,23 @@ class MedicamentoController extends Controller
      */
     public function actionDelete($id)
     {
-        // Soft delete: marcar como eliminado
         $model = $this->findModel($id);
         $model->eliminado = 1;
-        $model->save(false);
+        $model->save();
 
-        Yii::$app->session->setFlash('success', 'Medicamento marcado como eliminado.');
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Medicamento model based on its primary key value.
+     * Finds the Servico model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Medicamento the loaded model
+     * @return Servico the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Medicamento::findOne(['id' => $id])) !== null) {
+        if (($model = Servico::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

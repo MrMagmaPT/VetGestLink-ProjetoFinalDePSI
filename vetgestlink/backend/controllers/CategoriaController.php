@@ -72,9 +72,19 @@ class CategoriaController extends Controller
         $searchModel = new CategoriaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas
+        $totalCount = Categoria::find()->where(['eliminado' => 0])->count();
+        $deletedCount = Categoria::find()->where(['eliminado' => 1])->count();
+        $medicamentosCount = \common\models\Medicamento::find()
+            ->where(['eliminado' => 0])
+            ->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'deletedCount' => $deletedCount,
+            'medicamentosCount' => $medicamentosCount,
         ]);
     }
 
@@ -142,8 +152,12 @@ class CategoriaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Soft delete: marcar como eliminado
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Categoria marcada como eliminada.');
         return $this->redirect(['index']);
     }
 

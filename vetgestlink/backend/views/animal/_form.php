@@ -12,67 +12,165 @@ use yii\helpers\ArrayHelper;
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="animais-form">
-
+<div class="animal-form">
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-        <?php if ($model->getImageUrl()): ?>
-                <div style="margin-bottom:10px;">
-                        <img src="<?= $model->getImageUrl() ?>" alt="Foto do animal" style="max-width:200px;max-height:200px;" />
+    <div class="row">
+        <!-- Coluna Esquerda - Formulário -->
+        <div class="col-md-8">
+            <!-- Card Informações Básicas -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-primary"></i>
+                        Informações Básicas
+                    </h5>
                 </div>
-        <?php endif; ?>
-        <?= $form->field($model, 'imageFile')->fileInput()->label('Fotografia') ?>
+                <div class="card-body">
+                    <?= $form->field($model, 'nome')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Nome do animal'
+                    ]) ?>
 
-        <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'dtanascimento')->input('date', [
+                                'class' => 'form-control',
+                                'max' => date('Y-m-d')
+                            ])->label('Data de Nascimento') ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'peso')->textInput([
+                                'type' => 'number',
+                                'step' => '0.01',
+                                'placeholder' => 'Peso em kg',
+                                'class' => 'form-control text-end'
+                            ]) ?>
+                        </div>
+                    </div>
 
-        <?= $form->field($model, 'dtanascimento')->input('date')->label('Data de nascimento') ?>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'sexo')->dropDownList(
+                                ['M' => 'Macho', 'F' => 'Fêmea'],
+                                ['prompt' => 'Selecione o sexo', 'class' => 'form-control']
+                            ) ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'microship')->dropDownList(
+                                [1 => 'Sim', 0 => 'Não'],
+                                ['prompt' => 'Tem microship?', 'class' => 'form-control']
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <?= $form->field($model, 'peso')->textInput() ?>
+            <!-- Card Classificação -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-paw text-info"></i>
+                        Classificação
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'especies_id')->dropDownList(
+                                ArrayHelper::map(
+                                    Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+                                    'id',
+                                    'nome'
+                                ),
+                                ['prompt' => 'Selecione uma espécie', 'class' => 'form-control']
+                            )->label('Espécie') ?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'racas_id')->dropDownList(
+                                ArrayHelper::map(
+                                    Raca::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+                                    'id',
+                                    'nome'
+                                ),
+                                ['prompt' => 'Selecione uma raça', 'class' => 'form-control']
+                            )->label('Raça') ?>
+                        </div>
+                    </div>
 
-    <?= $form->field($model, 'microship')->dropDownList(
-            [1 => 'Sim', 0 => 'Não'],
-            ['prompt' => 'Tem microship?']
-    ) ?>
+                    <?= $form->field($model, 'userprofiles_id')->dropDownList(
+                        ArrayHelper::map(
+                            Userprofile::find()->where(['eliminado' => 0])->orderBy(['nomecompleto' => SORT_ASC])->all(),
+                            'id',
+                            'nomecompleto'
+                        ),
+                        ['prompt' => 'Selecione o dono', 'class' => 'form-control']
+                    )->label('Dono') ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'sexo')->dropDownList(
-            ['M' => 'Macho', 'F' => 'Fêmea'],
-            ['prompt' => 'Selecione o sexo']
-    ) ?>
+            <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+        </div>
 
-    <?= $form->field($model, 'especies_id')->dropDownList(
-            ArrayHelper::map(
-                    Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                    'id',
-                    'nome'
-            ),
-            ['prompt' => 'Selecione uma espécie']
-    )->label('Espécie') ?>
+        <!-- Coluna Direita - Foto e Ações -->
+        <div class="col-md-4">
+            <!-- Card Fotografia -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-camera text-success"></i>
+                        Fotografia
+                    </h5>
+                </div>
+                <div class="card-body text-center">
+                    <?php if ($model->getImageUrl()): ?>
+                        <div class="mb-3">
+                            <img src="<?= $model->getImageUrl() ?>" 
+                                 alt="Foto do animal" 
+                                 class="img-fluid rounded shadow-sm" 
+                                 style="max-height: 250px; object-fit: cover;" />
+                        </div>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-info-circle"></i> Foto atual
+                        </p>
+                    <?php else: ?>
+                        <div class="mb-3">
+                            <i class="fas fa-image text-muted" style="font-size: 80px;"></i>
+                        </div>
+                        <p class="text-muted small mb-3">Sem fotografia</p>
+                    <?php endif; ?>
 
-    <?= $form->field($model, 'racas_id')->dropDownList(
-            ArrayHelper::map(
-                    Raca::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                    'id',
-                    'nome'
-            ),
-            ['prompt' => 'Selecione uma raça']
-    )->label('Raça') ?>
+                    <?= $form->field($model, 'imageFile')->fileInput([
+                        'accept' => 'image/*',
+                        'class' => 'form-control'
+                    ])->label('Nova Fotografia')->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: JPG, PNG (opcional)</small>') ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'userprofiles_id')->dropDownList(
-            ArrayHelper::map(
-                    Userprofile::find()->orderBy(['nomecompleto' => SORT_ASC])->all(),
-                    'id',
-                    'nomecompleto'
-            ),
-            ['prompt' => 'Selecione um dono']
-    )->label('Dono') ?>
-
-
-    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+            <!-- Card Ações -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks text-secondary"></i>
+                        Ações
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <?= Html::submitButton(
+                            '<i class="fas fa-save"></i> Guardar',
+                            ['class' => 'btn btn-success btn-lg']
+                        ) ?>
+                        <?= Html::a(
+                            '<i class="fas fa-times"></i> Cancelar',
+                            ['index'],
+                            ['class' => 'btn btn-secondary btn-lg']
+                        ) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>
-
 </div>

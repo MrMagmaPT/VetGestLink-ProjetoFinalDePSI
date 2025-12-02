@@ -1,5 +1,7 @@
 <?php
 /** @var yii\web\View $this */
+/** @var common\models\Servico[] $servicos */
+
 $this->title = 'VetGestLink - Gestão Moderna para Clínicas Veterinárias';
 $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
 ?>
@@ -53,37 +55,18 @@ $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
                 <div class="col text-center">
                     <span class="fw-bold" style="color: #4CB88A;">Os Nossos Serviços</span>
                     <h2 class="fw-bold mb-3" style="color: #4CB88A;">O que oferecemos</h2>
-                    <p class="text-muted">Tudo para facilitar o dia a dia da sua clínica veterinária.</p>
+                    <p class="text-muted">Conheça os serviços disponíveis na nossa clínica veterinária.</p>
                 </div>
             </div>
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 text-center">
-                        <div class="card-body">
-                            <span class="flaticon-animal-kingdom display-4 mb-3" style="color: #4CB88A;"></span>
-                            <h5 class="fw-bold mb-2" style="color: #4CB88A;">Gestão de Pacientes</h5>
-                            <p class="text-muted">Organize fichas, histórico e marcações de forma simples e rápida.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 text-center">
-                        <div class="card-body">
-                            <span class="flaticon-animals display-4 mb-3" style="color: #94E2B6;"></span>
-                            <h5 class="fw-bold mb-2" style="color: #94E2B6;">Gestão Financeira</h5>
-                            <p class="text-muted">Acompanhe receitas, despesas e relatórios para uma gestão eficiente.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm h-100 text-center">
-                        <div class="card-body">
-                            <span class="flaticon-animals-1 display-4 mb-3" style="color: #4CB88A;"></span>
-                            <h5 class="fw-bold mb-2" style="color: #4CB88A;">Comunicação com Clientes</h5>
-                            <p class="text-muted">Envie lembretes, notificações e mantenha o contacto com os seus clientes.</p>
-                        </div>
-                    </div>
-                </div>
+                <?= \frontend\widgets\ServicesCardWidget::widget([
+                    'servicos' => $servicos,
+                    'colors' => ['#4CB88A', '#94E2B6', '#6FD4A8'],
+                    'icons' => ['fa-syringe', 'fa-stethoscope', 'fa-heartbeat', 'fa-capsules', 'fa-x-ray', 'fa-microscope'],
+                    'colClass' => 'col-lg-3 col-md-4 col-sm-6',
+                    'iconSize' => 'fa-3x',
+                    'showValue' => true,
+                ]) ?>
             </div>
         </div>
     </section>

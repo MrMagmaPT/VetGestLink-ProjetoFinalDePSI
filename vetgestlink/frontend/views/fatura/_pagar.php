@@ -1,74 +1,109 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use frontend\widgets\PaymentMethodWidget;
 
-/** @var $model app\models\Fatura */
-/** @var $metodos app\models\MetodosPagamentos[] */
+/** @var $model common\models\Fatura */
+/** @var $metodos common\models\Metodopagamento[] */
 
-$this->title = "Pagamento";
+$this->title = "Pagamento da Fatura #" . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Fatura #' . $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = 'Pagamento';
 ?>
 
-<div class="container py-4">
+<div class="fatura-pagar">
+    <div class="container py-4">
 
-    <!-- HEADER -->
-    <div class="text-center mb-4">
-        <h2 class="fw-bold"><?= Html::encode($this->title) ?></h2>
-        <p class="text-muted">Selecione a forma de pagamento pretendida</p>
-    </div>
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">
+                <i class="fas fa-credit-card text-primary"></i>
+                <?= Html::encode($this->title) ?>
+            </h2>
+            <?= Html::a('<i class="fas fa-arrow-left"></i> Voltar', ['view', 'id' => $model->id], ['class' => 'btn btn-secondary']) ?>
+        </div>
 
-    <div class="row justify-content-center">
+        <div class="row">
+            <!-- Coluna Esquerda: Métodos de Pagamento -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-money-check-alt"></i>
+                            Selecione o Método de Pagamento
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <?php $form = ActiveForm::begin(['id' => 'payment-form']); ?>
 
-        <!-- LEFT SIDE: MÉTODOS DE PAGAMENTO -->
-        <div class="col-md-7">
-            <div class="card shadow-sm p-4">
+                        <?= PaymentMethodWidget::widget([
+                            'form' => $form,
+                            'model' => $model,
+                            'attribute' => 'metodospagamentos_id',
+                            'metodos' => $metodos,
+                        ]) ?>
 
-                <?php $form = ActiveForm::begin(); ?>
+                        <div class="d-grid gap-2 mt-4">
+                            <?= Html::submitButton(
+                                '<i class="fas fa-check-circle"></i> Confirmar Pagamento',
+                                ['class' => 'btn btn-success btn-lg']
+                            ) ?>
+                        </div>
 
-                <?= $form->field($model, 'metodospagamentos_id')->radioList(
-                    \yii\helpers\ArrayHelper::map($metodos, 'id', 'nome'),
-                    [
-                        'item' => function ($index, $label, $name, $checked, $value) {
-                            return "
-                            <label class='list-group-item d-flex align-items-center' style='cursor:pointer;'>
-                                <input type='radio'
-                                       name='$name'
-                                       value='$value'
-                                       class='form-check-input me-3'
-                                       " . ($checked ? "checked" : "") . ">
-                                <div>
-                                    <div class='fw-semibold'>" . Html::encode($label) . "</div>
-                                </div>
-                            </label>
-                            <br>";
-                        },
-                        'encode' => false, // allow HTML inside item
-                    ]
-                )->label('Escolha o Método de Pagamento:') ?>
-
-
-                <div class="text-end mt-4">
-                    <?= Html::submitButton("Confirmar Pagamento", [
-                        'class' => 'btn btn-dark rounded-pill'
-                    ]) ?>
+                        <?php ActiveForm::end(); ?>
+                    </div>
                 </div>
+            </div>
 
-                <?php ActiveForm::end(); ?>
+            <!-- Coluna Direita: Resumo da Fatura -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            Resumo da Fatura
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3 pb-3 border-bottom">
+                            <small class="text-muted d-block mb-1">
+                                <i class="fas fa-hashtag"></i> Número da Fatura
+                            </small>
+                            <strong>#<?= $model->id ?></strong>
+                        </div>
 
+                        <div class="mb-3 pb-3 border-bottom">
+                            <small class="text-muted d-block mb-1">
+                                <i class="far fa-calendar"></i> Data de Emissão
+                            </small>
+                            <strong><?= Yii::$app->formatter->asDate($model->created_at, 'php:d/m/Y') ?></strong>
+                        </div>
+
+                        <div class="mb-3 pb-3 border-bottom">
+                            <small class="text-muted d-block mb-1">
+                                <i class="fas fa-user"></i> Cliente
+                            </small>
+                            <strong><?= Html::encode($model->userprofiles->nomecompleto ?? 'N/A') ?></strong>
+                        </div>
+
+                        <div class="text-center pt-3">
+                            <small class="text-muted d-block mb-2">Total a Pagar</small>
+                            <h2 class="text-success mb-0">
+                                <?= Yii::$app->formatter->asCurrency($model->total, 'EUR') ?>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-lock"></i> Pagamento seguro
+                        </small>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- RIGHT SIDE: RESUMO -->
-        <div class="col-md-4 mt-4 mt-md-0">
-            <div class="card shadow-sm p-4">
-                <h5 class="fw-bold">Resumo do Pagamento</h5>
-
-                <p class="mt-3 mb-1 text-muted">Data da Fatura</p>
-                <p class="fw-semibold"><?= Yii::$app->formatter->asDate($model->created_at) ?></p>
-
-                <p class="mt-3 mb-1 text-muted">Total a Pagar</p>
-                <p class="fw-bold fs-4"><?= number_format($model->total, 2) ?> €</p>
-            </div>
-        </div>
-
     </div>
 </div>
+
+<?php
+?>

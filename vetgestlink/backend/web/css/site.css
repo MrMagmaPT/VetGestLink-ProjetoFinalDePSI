@@ -1,200 +1,137 @@
-/* CSS */
 main > .container {
-    padding: 70px 15px 20px;
+  padding: 70px 15px 20px;
 }
-
 .footer {
-    background-color: #f5f5f5;
-    font-size: .9em;
-    height: 60px;
+  background: #f5f5f5;
+  font-size: 0.9em;
+  height: 60px;
 }
-
 .footer > .container {
-    padding-right: 15px;
-    padding-left: 15px;
+  padding: 0 15px;
 }
-
 .not-set {
-    color: #c55;
-    font-style: italic;
+  color: #c55;
+  font-style: italic;
 }
-
-/* add sorting icons to gridview sort links */
-a.asc:after, a.desc:after {
-    content: '';
-    left: 3px;
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border: solid 5px transparent;
-    margin: 4px 4px 2px 4px;
-    background: transparent;
-}
-
-a.asc:after {
-    border-bottom: solid 7px #212529;
-    border-top-width: 0;
-}
-
+a.asc:after,
 a.desc:after {
-    border-top: solid 7px #212529;
-    border-bottom-width: 0;
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border: solid 5px transparent;
+  margin: 4px;
+  background: transparent;
 }
-
+a.asc:after {
+  border-bottom: solid 7px #212529;
+  border-top-width: 0;
+}
+a.desc:after {
+  border-top: solid 7px #212529;
+  border-bottom-width: 0;
+}
 .grid-view th,
 .grid-view td:last-child {
-    white-space: nowrap;
+  white-space: nowrap;
 }
-
 .grid-view .filters input,
 .grid-view .filters select {
-    min-width: 50px;
+  min-width: 50px;
 }
-
 .hint-block {
-    display: block;
-    margin-top: 5px;
-    color: #999;
+  display: block;
+  margin-top: 5px;
+  color: #999;
 }
-
 .error-summary {
-    color: #a94442;
-    background: #fdf7f7;
-    border-left: 3px solid #eed3d7;
-    padding: 10px 20px;
-    margin: 0 0 15px 0;
+  color: #a94442;
+  background: #fdf7f7;
+  border-left: 3px solid #eed3d7;
+  padding: 10px 20px;
+  margin: 0 0 15px;
 }
-
-/* align the logout "link" (button in form) of the navbar */
 .nav li > form > button.logout {
-    padding-top: 7px;
-    color: rgba(255, 255, 255, 0.5);
+  padding-top: 7px;
+  color: rgba(255, 255, 255, 0.5);
 }
-
-@media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 0;
-    }
+@media (max-width: 767px) {
+  .nav li > form > button.logout {
+    display: block;
+    text-align: left;
+    width: 100%;
+    padding: 10px 0;
+  }
 }
-
 .nav > li > form > button.logout:focus,
 .nav > li > form > button.logout:hover {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.75);
 }
-
 .nav > li > form > button.logout:focus {
-    outline: none;
+  outline: none;
 }
 
-/* =========================
-   Ajustes para a sidebar (AdminLTE)
-   - Remove margens/paddings que causam espaço extra entre grupos
-   - Mantém indentação dos sub-itens
-   - Garante que <p> dentro dos links não adiciona margem
-   ========================= */
-
-/* remover margem de parágrafos dentro de links da sidebar */
-.nav-sidebar .nav-link p {
-    margin: 0;
+/* Content wrapper padding */
+.content-wrapper {
+  padding: 30px;
 }
 
-/* remover margens/paddings indesejados no treeview e preservar indent */
-.main-sidebar .nav-treeview,
-.nav-sidebar .nav-treeview {
-    margin: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 1rem; /* mantém indentação visual */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 15px;
+  }
 }
 
-/* garantir que itens não têm margem inferior extra */
-.nav-sidebar .nav-treeview .nav-item,
-.nav-sidebar .nav-item {
-    margin-bottom: 0;
+/* User Panel no topo da sidebar */
+.main-sidebar .user-panel {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.sidebar-collapse .main-sidebar .user-panel .info {
+  display: none;
+}
+.sidebar-collapse .main-sidebar .user-panel {
+  text-align: left;
+  padding: 0.5rem 0 0.5rem 0.8rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+.sidebar-collapse .main-sidebar .user-panel .image {
+  margin: 0 !important;
+  float: none !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.sidebar-collapse .main-sidebar .user-panel .image i {
+  font-size: 1.8rem !important;
+  margin: 0 !important;
+}
+.sidebar-collapse .main-sidebar .user-panel .image img {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
 }
 
-/* uniformizar padding vertical dos links na sidebar (ajustar conforme gosto) */
-.nav-sidebar .nav-link {
-    padding-top: .45rem;
-    padding-bottom: .45rem;
+/* Ajuste da navbar quando sidebar colapsada */
+.sidebar-collapse .main-sidebar .nav-sidebar > .nav-item {
+  text-align: center;
 }
-
-/* caso os parágrafos internos ainda criem espaço */
-.nav-sidebar .nav-treeview li > a > p {
-    margin: 0;
-    line-height: 1.1;
-    display: inline-block;
+.sidebar-collapse .main-sidebar .nav-sidebar > .nav-item > .nav-link {
+  padding-left: 0;
+  padding-right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-/* quando um grupo está aberto, garantir alinhamento correto sem margens extra */
-.nav-item.has-treeview.menu-open > .nav-treeview {
-    margin: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+.sidebar-collapse
+  .main-sidebar
+  .nav-sidebar
+  > .nav-item
+  > .nav-link
+  > .nav-icon {
+  margin: 0 !important;
 }
-
-/* =========================
-   Regras mais específicas / !important para sobrepor AdminLTE
-   - Força remoção do padding/margin do UL que aparece em roxo no inspector
-   - Mantém indent mas elimina espaço extra entre grupos
-   ========================= */
-
-/* targets mais específicos para o treeview */
-.main-sidebar .sidebar .nav.nav-pills.nav-sidebar .nav-treeview,
-.main-sidebar .sidebar .nav.nav-pills.nav-sidebar .nav-treeview ul,
-.nav-sidebar .nav.nav-pills .nav-treeview,
-.nav-sidebar ul.nav.nav-treeview,
-ul.nav.nav-treeview {
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-    border: none !important;
-}
-
-/* garantir que cada li do treeview não introduz padding/margin extra */
-.nav-sidebar .nav-treeview > li,
-.nav-sidebar .nav-treeview li {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* forçar padding vertical controlado nos links dos sub-itens */
-.nav-sidebar .nav-treeview .nav-link {
-    padding-top: .35rem !important;
-    padding-bottom: .35rem !important;
-}
-
-/* se o UL tiver padding-bottom visível, zera explicitamente */
-.nav-item.has-treeview > .nav-treeview,
-.nav-item.has-treeview.menu-open > .nav-treeview {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
-    margin-bottom: 0 !important;
-}
-
-/* se o UL externo (do grupo) estiver a criar espaço por `padding-left` em resoluções específicas,
-   restabelece uma indentação controlada via padding-left apenas quando necessário */
-.nav-sidebar .nav-treeview {
-    padding-left: 1rem !important;
-}
-
-/* garantir que anchors não têm margem que contribua ao gap */
-.nav-sidebar .nav-link,
-.nav-sidebar .nav-treeview .nav-link {
-    margin: 0 !important;
-}
-
-/* fallback: se alguma regra do AdminLTE continuar a sobrepor, descomentar o bloco abaixo (último recurso) */
-
-.nav-sidebar .nav-treeview {
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-.ul.nav.nav-treeview {
-    padding-bottom: 0 !important;}

@@ -73,9 +73,19 @@ class MarcacaoController extends Controller
         $searchModel = new MarcacaoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Estatísticas para a view
+        $totalCount = $dataProvider->getTotalCount();
+        $pendenteCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])->count();
+        $realizadaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_REALIZADA, 'eliminado' => 0])->count();
+        $canceladaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_CANCELADA, 'eliminado' => 0])->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'pendenteCount' => $pendenteCount,
+            'realizadaCount' => $realizadaCount,
+            'canceladaCount' => $canceladaCount,
         ]);
     }
 
