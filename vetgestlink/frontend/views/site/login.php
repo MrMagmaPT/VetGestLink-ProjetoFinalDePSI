@@ -31,11 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?= $form->field($model, 'password')
                             ->passwordInput(['placeholder' => 'Enter your password'])
                             ->label(false) ?>
-
                         <div class="d-flex justify-content-between mb-3">
                             <?= $form->field($model, 'rememberMe')->checkbox()->label('Remember me') ?>
                             <small>
-                                <?= Html::a('Forgot Password?', ['site/request-password-reset'], ['class' => 'text-decoration-none']) ?>
+                                <?= Html::a('Forgot Password?', ['site/request-password-reset'], ['class' => 'text-primary']) ?>
                             </small>
                         </div>
 

@@ -127,9 +127,6 @@ class SiteController extends Controller
             ->all();
 
         $totalmarcacoes = Marcacao::find()->where(['eliminado' => 0])->count();
-        
-
-    
 
         // Estatísticas Financeiras do Mês
         $inicioMes = strtotime(date('Y-m-01 00:00:00'));
