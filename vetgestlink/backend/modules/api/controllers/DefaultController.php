@@ -10,11 +10,21 @@ use yii\web\Controller;
 class DefaultController extends Controller
 {
     /**
-     * Renders the index view for the module
-     * @return string
+     * GET /api
+     * Retorna informações sobre a API
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return [
+            'name' => 'API VetGestLink',
+            'version' => '1.0.0',
+            'status' => 'online',
+            'endpoints' => [
+                '/api/auth/login' => 'autenticação de utilizadores',
+                '/api/auth/logout' => 'autenticação de utilizadores',
+
+            ],
+        ];
     }
+
 }
