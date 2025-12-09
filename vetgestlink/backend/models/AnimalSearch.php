@@ -123,4 +123,8 @@ class AnimalSearch extends Animal
         $animal = Animal::findOne($id);
         return $animal ? $animal->nome : null;
     }
+
+    public static  function getAnimaisListTEST() {
+        return Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all();
+    }
 }

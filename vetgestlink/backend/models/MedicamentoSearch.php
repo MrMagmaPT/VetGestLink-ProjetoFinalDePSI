@@ -95,4 +95,11 @@ class MedicamentoSearch extends Medicamento
         return \yii\helpers\ArrayHelper::map(\common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->all(), 'id', 'nome');
     }
 
+
+    public static function getMedicamentoList() {
+        return Medicamento::find()
+            ->where(['eliminado' => 0])
+            ->orderBy('nome')
+            ->all();
+    }
 }

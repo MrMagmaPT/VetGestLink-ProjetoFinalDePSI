@@ -2,6 +2,8 @@
 
 namespace backend\models;
 
+
+use common\models\Userprofile;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Marcacao;
@@ -75,4 +77,6 @@ class MarcacaoSearch extends Marcacao
 
         return $dataProvider;
     }
+
+
 }

@@ -5,6 +5,10 @@ use yii\widgets\ActiveForm;
 use common\models\Animal;
 use common\models\Userprofile;
 use yii\helpers\ArrayHelper;
+use backend\models\UserprofileSearch;
+use backend\models\AnimalSearch;
+use backend\models\MedicamentoSearch;
+
 
 /** @var yii\web\View $this */
 /** @var common\models\Marcacao $model */
@@ -55,7 +59,7 @@ use yii\helpers\ArrayHelper;
                     <div class="row">
                         <div class="col-md-6">
                             <?= $form->field($model, 'animais_id')->dropDownList(
-                                ArrayHelper::map(Animal::find()->where(['eliminado' => 0])->all(), 'id', 'nome'),
+                                ArrayHelper::map(AnimalSearch::getAnimaisListTEST(), 'id', 'nome'),
                                 [
                                     'prompt' => 'Selecione um animal',
                                     'class' => 'form-control',
@@ -65,7 +69,7 @@ use yii\helpers\ArrayHelper;
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'userprofiles_id')->dropDownList(
-                                ArrayHelper::map(Userprofile::find()->where(['eliminado' => 0])->all(), 'id', 'nomecompleto'),
+                                ArrayHelper::map(UserprofileSearch::getUserListByType('veterinario', 0), 'id', 'nomecompleto'),
                                 [
                                     'prompt' => 'Selecione um veterinário',
                                     'class' => 'form-control',
@@ -86,8 +90,51 @@ use yii\helpers\ArrayHelper;
                     </div>
                 </div>
             </div>
-        </div>
 
+            <!-- Card Medicamentos -->
+            <div class="card shadow-sm mb-4" id="card-medicamentos" style="display: none;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pills text-success"></i>
+                        Medicamentos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Medicamento</th>
+                                <th style="width: 150px;">Quantidade</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach (MedicamentoSearch::getMedicamentoList() as $medicamento): ?>
+                                <tr>
+                                    <td>
+                                        <strong><?= Html::encode($medicamento->nome) ?></strong>
+                                        <?php if ($medicamento->descricao): ?>
+                                            <br><small class="text-muted"><?= Html::encode($medicamento->descricao) ?></small>
+                                        <?php endif; ?>
+                                        <br><small class="text-muted">Stock disponível: <?= $medicamento->quantidade ?></small>
+                                    </td>
+                                    <td>
+                                        <input type="number"
+                                               class="form-control form-control-sm"
+                                               name="medicamentos[<?= $medicamento->id ?>][quantidade]"
+                                               min="0"
+                                               max="<?= $medicamento->quantidade ?>"
+                                               placeholder="0"
+                                               value="0">
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Coluna Direita -->
         <div class="col-md-4">
             <!-- Card Estado -->
@@ -100,13 +147,13 @@ use yii\helpers\ArrayHelper;
                 </div>
                 <div class="card-body">
                     <?= $form->field($model, 'estado')->dropDownList([
-                        'pendente' => 'Pendente',
                         'cancelada' => 'Cancelada',
                         'realizada' => 'Realizada',
                     ], [
                         'prompt' => 'Selecione o estado',
                         'class' => 'form-control',
-                        'required' => true
+                        'required' => true,
+                        'id' => 'estado-dropdown'
                     ])->label('<i class="fas fa-check-circle me-2"></i> Estado') ?>
 
                     <div class="alert alert-info mt-3 small">
@@ -142,6 +189,17 @@ use yii\helpers\ArrayHelper;
                 </div>
             </div>
         </div>
+
+        <?php
+        $this->registerJsFile(
+            '@web/js/marcacao.js',
+            [
+                'depends' => [\yii\web\JqueryAsset::class],
+                'position' => \yii\web\View::POS_END
+            ]
+        );
+        ?>
+
     </div>
 
     <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>

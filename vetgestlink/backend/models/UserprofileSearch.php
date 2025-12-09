@@ -172,4 +172,21 @@ class UserprofileSearch extends Userprofile
             'id', 'nomecompleto'
         );
     }
+
+    public static function getUserListByType(string $type, $eliminadoSN = NULL) {
+        $where = [
+            'auth_assignment.item_name' => $type
+        ];
+
+        if ($eliminadoSN != NULL) {
+            $where['userprofiles.eliminado'] = $eliminadoSN;
+        }
+
+        return Userprofile::find()
+            ->joinWith(['user'])
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+            ->where($where)
+            ->all();
+    }
+
 }

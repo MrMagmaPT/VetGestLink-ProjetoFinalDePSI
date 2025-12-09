@@ -139,14 +139,33 @@ class MarcacaoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        // Buscar medicamentos disponíveis
+        $medicamentos = \backend\models\MedicamentoSearch::find()
+            ->where(['eliminado' => 0])
+            ->orderBy('nome')
+            ->all();
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            if ($model->save()) {
+                // Processar medicamentos selecionados
+                $medicamentosSelecionados = $this->request->post('medicamentos', []);
+
+                foreach ($medicamentosSelecionados as $medicamentoId => $dados) {
+                    if (isset($dados['quantidade']) && $dados['quantidade'] > 0) {
+                        // Atualizar relação MarcacaoMedicamento
+                    }
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'medicamentos' => $medicamentos,
         ]);
     }
+
 
     /**
      * Deletes an existing Marcacao model.
