@@ -73,9 +73,17 @@ class FaturaController extends Controller
         $searchModel = new FaturaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Contadores para cards
+        $totalCount = Fatura::find()->count();
+        $paidCount = Fatura::find()->where(['estado' => 1])->count();
+        $pendingCount = Fatura::find()->where(['estado' => 0])->count();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'paidCount' => $paidCount,
+            'pendingCount' => $pendingCount,
         ]);
     }
 

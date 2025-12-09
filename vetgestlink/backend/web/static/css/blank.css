@@ -1,0 +1,9 @@
+/* Background da pagina login */
+main[role="main"] {
+  background: linear-gradient(
+    90deg,
+    rgb(76, 184, 138) 0%,
+    rgb(148, 226, 182) 100%
+  );
+  min-height: 100vh;
+}

@@ -46,7 +46,7 @@ class UserprofileController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas para a view Extras
-        $totalCount = $dataProvider->getTotalCount();
+        $totalCount = Userprofile::find()->count();
         $activeCount = Userprofile::find()->where(['eliminado' => 0])->count();
         $deletedCount = Userprofile::find()->where(['eliminado' => 1])->count();
         $recentCount = Userprofile::find()
@@ -118,11 +118,19 @@ class UserprofileController extends Controller
             $model = $this->findModel($id);
         }
 
+        // Carrega as moradas associadas
         $moradas = $model->moradas ?: [];
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
+                // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());
+
+                // Definir morada principal
+                $principalIndex = $this->request->post('morada_principal');
+                foreach ($moradas as $i => $morada) {
+                    $morada->principal = ($principalIndex !== null && $principalIndex == $i) ? 1 : 0;
+                }
 
                 // Processa upload de imagem
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
@@ -169,6 +177,23 @@ class UserprofileController extends Controller
         return $this->redirect(['index']);
     }
 
+    /**
+     * Remove a imagem do perfil do utilizador.
+     * @param int $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     */
+    public function actionRemoveImage($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->foto && file_exists(Yii::getAlias('@uploads/') . $model->foto)) {
+            @unlink(Yii::getAlias('@uploads/') . $model->foto);
+        }
+        $model->foto = null;
+        $model->save(false);
+        Yii::$app->session->setFlash('success', 'Imagem de perfil removida com sucesso.');
+        return $this->redirect(['update', 'id' => $model->id]);
+    }
     /**
      * Saves the user profile (POST action).
      *

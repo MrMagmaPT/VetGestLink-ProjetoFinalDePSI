@@ -6,6 +6,9 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use yii\widgets\Pjax;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\ServicoSearch $searchModel */
@@ -15,34 +18,38 @@ $this->title = 'Gestão de Serviços';
 $this->params['breadcrumbs'][] = 'Serviços';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-concierge-bell text-primary"></i>
-                    Serviços
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Serviços</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Serviços',
+    'icon' => 'fa-concierge-bell text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Serviços',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Cards de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-concierge-bell',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Serviços',
                 'value' => Servico::find()->where(['eliminado' => 0])->count(),
+                'url' => '/servico/index',
+            ]) ?>
+            <?= SmallCardWidget::widget([
+                'icon' => 'fa-concierge-bell',
+                'iconColorClass' => 'icon-gray',
+                'text' => 'Eliminados',
+                'value' => Servico::find()->where(['eliminado' => 1])->count(),
                 'url' => '/servico/index',
             ]) ?>
             <?= BigCardWidget::widget([
@@ -52,13 +59,7 @@ $this->params['breadcrumbs'][] = 'Serviços';
                 'value' => number_format(Servico::find()->where(['eliminado' => 0])->average('valor'), 2) . '€',
                 'url' => '/servico/index',
             ]) ?>
-            <?= BigCardWidget::widget([
-                'icon' => 'fa-concierge-bell',
-                'iconColorClass' => 'icon-gray',
-                'text' => 'Eliminados',
-                'value' => Servico::find()->where(['eliminado' => 1])->count(),
-                'url' => '/servico/index',
-            ]) ?>
+
         </div>
 
         <!-- Card Principal com Tabela -->
@@ -75,9 +76,48 @@ $this->params['breadcrumbs'][] = 'Serviços';
                         ['class' => 'btn btn-success']
                     ) ?>
                 </div>
+                <div class="row mb-3 mt-3">
+                    <div class="col-md-6">
+                    <!-- Barra de pesquisa Select2 para Serviço -->
+                    <?= kartik\select2\Select2::widget([
+                        'name' => 'search_servico',
+                        'data' => $searchModel::getServicosList(),
+                        'value' => $searchModel->nome,
+                        'options' => [
+                            'placeholder' => 'Pesquisar serviço...',
+                            'id' => 'servico-search',
+                            'class' => 'form-control form-control-sm',
+                            'style' => 'max-width: 50px; font-size: 0.7rem; display: inline-block; padding: 1px 2px;',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'language' => [
+                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhum serviço encontrado"; }'),
+                            ],
+                            'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                            'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                        ],
+                        'bsVersion' => '5.x',
+                        'pluginEvents' => [
+                            'select2:select' => 'function(e) { 
+                                var nome = e.params.data.id;
+                                window.location.href = "' . Url::to(['index']) . '?ServicoSearch[nome]=" + encodeURIComponent(nome);
+                            }',
+                            'select2:clear' => 'function(e) {
+                                window.location.href = "' . Url::to(['index']) . '";
+                            }',
+                        ],
+                    ]); ?>
+                    </div>
+                </div>
             </div>
             <div class="card-body p-0">
+                <!-- Para não recarregar a página inteira ao filtrar/paginar -->
+                <?php Pjax::begin(['id' => 'servico-grid']); ?>
                 <?= GridView::widget([
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum serviço encontrado para com esse nome.</div>', // mensagem personalizada
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
@@ -87,6 +127,7 @@ $this->params['breadcrumbs'][] = 'Serviços';
                             'headerOptions' => ['style' => 'width: 50px'],
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 120px'],
                             'attribute' => 'nome',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -96,6 +137,8 @@ $this->params['breadcrumbs'][] = 'Serviços';
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false,
+                            
                         ],
                         [
                             'attribute' => 'valor',
@@ -105,8 +148,11 @@ $this->params['breadcrumbs'][] = 'Serviços';
                             },
                             'headerOptions' => ['style' => 'width: 120px'],
                             'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => false,
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 120px'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'eliminado',
                             'label' => 'Estado',
                             'format' => 'raw',
@@ -116,17 +162,31 @@ $this->params['breadcrumbs'][] = 'Serviços';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativo',
-                                1 => 'Eliminado',
-                            ],
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'eliminado',
+                                'data' => [
+                                    0 => 'Ativo',
+                                    1 => 'Eliminado',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -172,6 +232,7 @@ $this->params['breadcrumbs'][] = 'Serviços';
                         ],
                     ],
                 ]); ?>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

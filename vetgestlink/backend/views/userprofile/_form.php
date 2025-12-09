@@ -62,11 +62,20 @@ use yii\widgets\ActiveForm;
             <?php if (!empty($moradas)): ?>
                 <?php foreach ($moradas as $i => $morada): ?>
                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-white">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">
                                 <i class="fas fa-map-marker-alt text-danger"></i>
                                 Morada <?= $i + 1 ?>
                             </h5>
+                            <div>
+                                <?= Html::radio('morada_principal', isset($morada->principal) ? $morada->principal : ($i === 0), [
+                                    'value' => $i,
+                                    'label' => 'Principal',
+                                    'labelOptions' => ['class' => 'ms-2 mb-0'],
+                                    'id' => 'morada-principal-' . $i,
+                                    'class' => 'form-check-input',
+                                ]) ?>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -141,56 +150,74 @@ use yii\widgets\ActiveForm;
                     </h5>
                 </div>
                 <div class="card-body text-center">
-                    <?php if ($model->getImageUrl()): ?>
-                        <div class="mb-3">
-                            <?= Html::img($model->getImageUrl(), [
-                                'alt' => $model->nomecompleto,
-                                'class' => 'img-thumbnail rounded',
-                                'style' => 'max-width: 100%; height: auto; max-height: 300px;'
-                            ]) ?>
-                        </div>
-                        <p class="text-muted small">
-                            <i class="fas fa-info-circle"></i>
-                            Carregue uma nova imagem para substituir
-                        </p>
-                    <?php else: ?>
-                        <div class="mb-3">
+                    <?php \yii\widgets\Pjax::begin(['id' => 'userprofile-image-pjax', 'enablePushState' => false]); ?>
+                    <div class="mb-3">
+                        <?php if ($model->getImageUrl()): ?>
+                            <img id="userprofile-image-preview" src="<?= $model->getImageUrl() ?>" alt="<?= $model->nomecompleto ?>" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px;" />
+                        <?php else: ?>
+                            <img id="userprofile-image-preview" src="" alt="Preview" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px; display: none;" />
                             <i class="fas fa-user-circle text-muted" style="font-size: 120px;"></i>
-                        </div>
-                        <p class="text-muted">Nenhuma foto carregada</p>
-                    <?php endif; ?>
-                    
+                        <?php endif; ?>
+                    </div>
+                    <p class="text-muted small">
+                        <i class="fas fa-info-circle"></i>
+                        Carregue uma nova imagem para substituir
+                    </p>
                     <?= $form->field($model, 'imageFile')->fileInput([
                         'accept' => 'image/*',
-                        'class' => 'form-control'
+                        'class' => 'form-control',
+                        'data-image-preview' => 'userprofile-image-preview',
                     ])->label('Selecionar Imagem') ?>
-                    
                     <small class="text-muted">
                         <i class="fas fa-info-circle"></i>
                         Formatos: JPG, PNG, GIF (máx. 2MB)
                     </small>
+                    <?php \yii\widgets\Pjax::end(); ?>
                 </div>
             </div>
 
             <!-- Card Ações -->
             <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks text-secondary"></i>
+                        Ações
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <?= Html::submitButton(
-                            '<i class="fas fa-save"></i> Guardar Alterações',
-                            ['class' => 'btn btn-primary btn-lg']
-                        ) ?>
-                        <?= Html::a(
-                            '<i class="fas fa-times"></i> Cancelar',
-                            ['view', 'id' => $model->id],
-                            ['class' => 'btn btn-secondary btn-lg']
-                        ) ?>
+                        <div class="btn-group w-100" role="group">
+                            <?= Html::submitButton(
+                                '<i class="fas fa-save"></i> Guardar Alterações',
+                                ['class' => 'btn btn-primary btn-md me-2']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Cancelar',
+                                ['view', 'id' => $model->id],
+                                ['class' => 'btn btn-secondary btn-md me-2']
+                            ) ?>
+                            <?php if ($model->getImageUrl()): ?>
+                                <?php \yii\widgets\Pjax::begin(['id' => 'remove-image-pjax', 'enablePushState' => false]); ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Remover Imagem',
+                                    ['remove-image', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data-confirm' => 'Tem certeza que deseja remover a imagem de perfil?',
+                                        'data-method' => 'post',
+                                        'data-pjax' => 1,
+                                    ]
+                                ) ?>
+                                <?php \yii\widgets\Pjax::end(); ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <?php ActiveForm::end(); ?>
 </div>
+</div>
+
 

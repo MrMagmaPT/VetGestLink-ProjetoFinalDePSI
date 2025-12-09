@@ -65,16 +65,22 @@ use yii\widgets\ActiveForm;
 
             <!-- Card Ações -->
             <div class="card shadow-sm hover-shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs text-secondary me-2"></i>
+                        Ações
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Categoria' : 'Guardar Alterações'),
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times me-2"></i>Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>

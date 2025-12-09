@@ -1,21 +1,41 @@
 <?php
 
 use yii\helpers\Html;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 
-$this->title = 'Update Nota: ' . $model->id;
+$this->title = 'Atualizar Nota: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Notas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
-<div class="nota-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Atualizar Nota',
+    'icon' => 'fa-edit text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Notas',
+            'url' => ['index'],
+        ],
+        [
+            'label' => 'Atualizar',
+        ],
+    ],
+]);
+?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="content">
+    <div class="container-fluid">
+        <?= $this->render('_form', [
+            'model' => $model,
+        ]) ?>
+    </div>
 </div>

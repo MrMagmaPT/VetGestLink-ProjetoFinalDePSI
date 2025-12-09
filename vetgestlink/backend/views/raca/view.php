@@ -24,7 +24,7 @@ $this->registerCssFile('@web/static/css/view.css');
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Raças', ['index']) ?></li>
                     <li class="breadcrumb-item active"><?= Html::encode($model->nome) ?></li>
                 </ol>

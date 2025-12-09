@@ -23,6 +23,48 @@ class AnimalSearch extends Animal
         ];
     }
 
+        /**
+         * Retorna lista de animais ativos para Select2
+         */
+        public static function getActiveAnimalsList()
+        {
+            return \yii\helpers\ArrayHelper::map(
+                Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+                'id',
+                'nome'
+            );
+        }
+
+        /**
+         * Retorna lista de todos os animais para Select2
+         */
+        public static function getAnimaisList()
+        {
+            return \yii\helpers\ArrayHelper::map(
+                Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+                'id',
+                'nome'
+            );
+        }
+
+        /**
+         * Retorna lista de donos ativos com animais para Select2
+         */
+        public static function getActiveOwnersList()
+        {
+            $owners = \common\models\Userprofile::find()
+                ->where(['eliminado' => 0])
+                ->andWhere(['in', 'id',
+                    (new \yii\db\Query())
+                        ->select('userprofiles_id')
+                        ->from('animais')
+                        ->where(['eliminado' => 0])
+                        ->groupBy('userprofiles_id')
+                ])
+                ->orderBy('nomecompleto')
+                ->all();
+            return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
+        }
     /**
      * {@inheritdoc}
      */

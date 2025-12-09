@@ -24,7 +24,7 @@ $this->registerCssFile('@web/static/css/view.css');
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Medicamentos', ['index']) ?></li>
                     <li class="breadcrumb-item active"><?= Html::encode($model->nome) ?></li>
                 </ol>
@@ -136,18 +136,18 @@ $this->registerCssFile('@web/static/css/view.css');
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
+                                ['class' => 'btn btn-primary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
                                 [
-                                    'class' => 'btn btn-danger btn-lg',
+                                    'class' => 'btn btn-danger btn-md',
                                     'data' => [
                                         'confirm' => 'Tem a certeza que deseja eliminar este medicamento?',
                                         'method' => 'post',
@@ -160,16 +160,10 @@ $this->registerCssFile('@web/static/css/view.css');
 
                 <!-- Card Informações Adicionais -->
                 <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-info text-info"></i>
-                            Informações Adicionais
-                        </h5>
-                    </div>
                     <div class="card-body">
                         <p class="mb-2">
                             <i class="fas fa-hashtag text-muted"></i>
-                            <strong>ID:</strong> <?= Html::encode($model->id) ?>
+                            <strong>Legenda do Stock:</strong>
                         </p>
                         <hr>
                         <div class="alert alert-info mb-0">

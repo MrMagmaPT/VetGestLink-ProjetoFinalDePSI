@@ -41,7 +41,7 @@ class NotaSearch extends Nota
      */
     public function search($params, $formName = null)
     {
-        $query = Nota::find()->with(['animal', 'userprofiles']);
+        $query = Nota::find()->with(['animais', 'userprofiles']);
 
         // add conditions that should always apply here
 

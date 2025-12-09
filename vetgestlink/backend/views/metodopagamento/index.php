@@ -6,6 +6,8 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\MetodopagamentoSearch $searchModel */
@@ -18,30 +20,27 @@ $this->title = 'Gestão de Métodos de Pagamento';
 $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-credit-card text-primary"></i>
-                    Métodos de Pagamento
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Métodos de Pagamento</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Métodos de Pagamento',
+    'icon' => 'fa-credit-card text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Métodos de Pagamento',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Card de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-credit-card',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Métodos',
@@ -57,7 +56,7 @@ $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
                 'url' => '/metodopagamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-times-circle',
                 'iconColorClass' => 'icon-red',
                 'text' => 'Métodos Inativos',
@@ -80,11 +79,48 @@ $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
                         ['class' => 'btn btn-success']
                     ) ?>
                 </div>
+                                <div class="row mb-3 mt-3">
+                    <div class="col-md-6">
+                    <!-- Barra de pesquisa Select2 para Método de Pagamento -->
+                    <?= kartik\select2\Select2::widget([
+                        'name' => 'search_metodopagamento',
+                        'data' => $searchModel::getMetodosList(),
+                        'value' => $searchModel->nome,
+                        'options' => [
+                            'placeholder' => 'Pesquisar método...',
+                            'id' => 'metodopagamento-search',
+                            'class' => 'form-control form-control-sm',
+                            'style' => 'max-width: 50px; font-size: 0.7rem; display: inline-block; padding: 1px 2px;',
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'language' => [
+                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhum método encontrado"; }'),
+                            ],
+                            'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                            'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                        ],
+                        'bsVersion' => '5.x',
+                        'pluginEvents' => [
+                            'select2:select' => 'function(e) { 
+                                var nome = e.params.data.id;
+                                window.location.href = "' . Url::to(['index']) . '?MetodopagamentoSearch[nome]=" + encodeURIComponent(nome);
+                            }',
+                            'select2:clear' => 'function(e) {
+                                window.location.href = "' . Url::to(['index']) . '";
+                            }',
+                        ],
+                    ]); ?>
+                    </div>
+                </div>
             </div>
             <div class="card-body p-0">
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum Método de pagamento encontrado com esse nome.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
@@ -95,6 +131,7 @@ $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
                             'attribute' => 'nome',
                             'label' => 'Nome do Método',
                             'format' => 'raw',
+                            'headerOptions' => ['style' => 'width: 100px'],
                             'value' => function($model) {
                                 $icon = 'fa-money-bill';
                                 if (stripos($model->nome, 'cart') !== false) {
@@ -106,15 +143,18 @@ $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
                                 } elseif (stripos($model->nome, 'transfer') !== false) {
                                     $icon = 'fa-exchange-alt';
                                 }
-                                
                                 return Html::a(
                                     '<i class="fas ' . $icon . ' text-primary"></i> <strong>' . Html::encode($model->nome) . '</strong>',
                                     ['view', 'id' => $model->id],
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false,
                         ],
                         [
+                            
+                            'headerOptions' => ['style' => 'width: 100px'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'vigor',
                             'label' => 'Estado',
                             'format' => 'raw',
@@ -124,17 +164,31 @@ $this->params['breadcrumbs'][] = 'Métodos de Pagamento';
                                 }
                                 return '<span class="badge bg-danger"><i class="fas fa-times"></i> Inativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Inativo',
-                                1 => 'Ativo',
-                            ],
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'eliminado',
+                                'data' => [
+                                    0 => 'Ativo',
+                                    1 => 'Eliminado',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(

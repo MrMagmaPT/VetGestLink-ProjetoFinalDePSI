@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = 'Visualizar';
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Serviços', ['index']) ?></li>
                     <li class="breadcrumb-item active">Visualizar</li>
                 </ol>

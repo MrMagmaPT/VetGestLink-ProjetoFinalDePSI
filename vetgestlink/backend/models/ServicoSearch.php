@@ -69,4 +69,23 @@ class ServicoSearch extends Servico
 
         return $dataProvider;
     }
+
+    public static function getServicoNameById($id)
+    {
+        $servico = Servico::findOne($id);
+        return $servico ? $servico->nome : 'Desconhecido';
+    }
+
+    /**
+     * Retorna lista de serviços para Select2 [id => nome]
+     */
+    public static function getServicosList()
+    {
+        return Servico::find()
+            ->select(['nome'])
+            ->where(['eliminado' => 0])
+            ->orderBy(['nome' => SORT_ASC])
+            ->indexBy('nome')
+            ->column();
+    }
 }

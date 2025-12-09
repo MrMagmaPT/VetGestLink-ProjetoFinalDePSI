@@ -72,4 +72,27 @@ class MedicamentoSearch extends Medicamento
 
         return $dataProvider;
     }
+
+    /**
+     * Retorna lista de nomes de medicamentos para Select2
+     */
+    public static function getNomesList()
+    {
+        // Buscar nomes distintos para evitar duplicidade no filtro
+        $nomes = \common\models\Medicamento::find()
+            ->select(['nome'])
+            ->orderBy('nome')
+            ->asArray()
+            ->all();
+        return \yii\helpers\ArrayHelper::map($nomes, 'nome', 'nome');
+    }
+
+    /**
+     * Retorna lista de categorias ativas para Select2
+     */
+    public static function getCategoriasAtivasList()
+    {
+        return \yii\helpers\ArrayHelper::map(\common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->all(), 'id', 'nome');
+    }
+
 }

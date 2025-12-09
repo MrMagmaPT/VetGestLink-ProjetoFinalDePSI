@@ -17,13 +17,15 @@ use yii\db\Expression;
  * @property string $updated_at
  * @property string|null $diagnostico
  * @property string $estado
+ * @property int $servicos_id
  * @property int $animais_id
  * @property int $userprofiles_id
  * @property int $eliminado
  *
- * @property Animal $animal
+ * @property Animal $animais
+ * @property Servico $servicos
  * @property Linhafatura[] $linhasfaturas
- * @property Userprofile $userprofile
+ * @property Userprofile $userprofiles
  */
 class Marcacao extends \yii\db\ActiveRecord
 {
@@ -34,9 +36,6 @@ class Marcacao extends \yii\db\ActiveRecord
     const ESTADO_PENDENTE = 'pendente';
     const ESTADO_CANCELADA = 'cancelada';
     const ESTADO_REALIZADA = 'realizada';
-    const TIPO_CONSULTA = 'consulta';
-    const TIPO_CIRURGIA = 'cirurgia';
-    const TIPO_OPERACAO = 'operacao';
 
     /**
      * {@inheritdoc}
@@ -67,12 +66,19 @@ class Marcacao extends \yii\db\ActiveRecord
         return [
             [['diagnostico'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['data', 'horainicio', 'horafim', 'estado', 'animais_id', 'userprofiles_id'], 'required'],
+            ['data', 'required', 'message' => 'A data da marcação é obrigatória.'],
+            ['horainicio', 'required', 'message' => 'A hora de início é obrigatória.'],
+            ['horafim', 'required', 'message' => 'A hora de fim é obrigatória.'],
+            ['estado', 'required', 'message' => 'O estado da marcação é obrigatório.'],
+            ['servicos_id', 'required', 'message' => 'O serviço é obrigatório.'],
+            ['animais_id', 'required', 'message' => 'O animal é obrigatório.'],
+            ['userprofiles_id', 'required', 'message' => 'O veterinário é obrigatório.'],
             [['data', 'horainicio', 'horafim'], 'safe'],
             [['estado'], 'string'],
-            [['animais_id', 'userprofiles_id', 'eliminado'], 'integer'],
+            [['servicos_id', 'animais_id', 'userprofiles_id', 'eliminado'], 'integer'],
             [['diagnostico'], 'string', 'max' => 500],
             ['estado', 'in', 'range' => array_keys(self::optsEstado())],
+            [['servicos_id'], 'exist', 'skipOnError' => true, 'targetClass' => Servico::class, 'targetAttribute' => ['servicos_id' => 'id']],
             [['animais_id'], 'exist', 'skipOnError' => true, 'targetClass' => Animal::class, 'targetAttribute' => ['animais_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
@@ -86,14 +92,15 @@ class Marcacao extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'data' => 'Data',
-            'horainicio' => 'Horainicio',
-            'horafim' => 'Horafim',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'diagnostico' => 'Diagnostico',
+            'horainicio' => 'Hora Início',
+            'horafim' => 'Hora Fim',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
+            'diagnostico' => 'Diagnóstico',
             'estado' => 'Estado',
-            'animais_id' => 'Animal ID',
-            'userprofiles_id' => 'Userprofile ID',
+            'servicos_id' => 'Serviço',
+            'animais_id' => 'Animal',
+            'userprofiles_id' => 'Cliente',
             'eliminado' => 'Eliminado',
         ];
     }
@@ -126,6 +133,16 @@ class Marcacao extends \yii\db\ActiveRecord
     public function getUserprofiles()
     {
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
+    }
+
+    /**
+     * Gets query for [[Servico]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getServicos()
+    {
+        return $this->hasOne(Servico::class, ['id' => 'servicos_id']);
     }
 
 

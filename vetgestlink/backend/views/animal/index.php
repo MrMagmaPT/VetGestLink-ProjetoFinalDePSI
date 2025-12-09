@@ -1,11 +1,16 @@
 <?php
 
 use common\models\Animal;
+use common\models\Userprofile;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\AnimalSearch $searchModel */
@@ -19,30 +24,27 @@ $this->title = 'Gestão de Animais';
 $this->params['breadcrumbs'][] = 'Animais';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-paw text-primary"></i>
-                    Animais
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Animais</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Animais',
+    'icon' => 'fa-dog text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Animais',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Cards de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-paw',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Animais',
@@ -50,7 +52,7 @@ $this->params['breadcrumbs'][] = 'Animais';
                 'url' => '/animal/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-mars',
                 'iconColorClass' => 'icon-primary',
                 'text' => 'Machos',
@@ -58,7 +60,7 @@ $this->params['breadcrumbs'][] = 'Animais';
                 'url' => '/animal/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-venus',
                 'iconColorClass' => 'icon-pink',
                 'text' => 'Fêmeas',
@@ -66,7 +68,7 @@ $this->params['breadcrumbs'][] = 'Animais';
                 'url' => '/animal/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-microchip',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Com Microchip',
@@ -90,17 +92,23 @@ $this->params['breadcrumbs'][] = 'Animais';
                     ) ?>
                 </div>
             </div>
+            <div class="card-body">
             <div class="card-body p-0">
+                <?php \yii\widgets\Pjax::begin(['id' => 'animal-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum perfil encontrado com esse nome.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 50px'],
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'foto',
                             'label' => 'Foto',
                             'format' => 'raw',
@@ -114,11 +122,11 @@ $this->params['breadcrumbs'][] = 'Animais';
                                 }
                                 return '<i class="fas fa-paw text-muted" style="font-size: 30px;"></i>';
                             },
-                            'headerOptions' => ['style' => 'width: 80px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'enableSorting' => false,
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'nome',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -130,22 +138,25 @@ $this->params['breadcrumbs'][] = 'Animais';
                             },
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'dtanascimento',
                             'label' => 'Data Nasc.',
                             'format' => ['date', 'php:d/m/Y'],
-                            'headerOptions' => ['style' => 'width: 120px'],
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'peso',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return $model->peso ? number_format($model->peso, 2, ',', '.') . ' kg' : '-';
                             },
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: right'],
                         ],
                         [
                             'attribute' => 'sexo',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'format' => 'raw',
                             'value' => function($model) {
                                 if ($model->sexo == 'M') {
@@ -155,12 +166,12 @@ $this->params['breadcrumbs'][] = 'Animais';
                                 }
                                 return '-';
                             },
-                            'filter' => ['M' => 'Macho', 'F' => 'Fêmea'],
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                                'filter' => ['M' => 'Macho', 'F' => 'Fêmea'],
                         ],
                         [
                             'attribute' => 'microship',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Microchip',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -169,28 +180,64 @@ $this->params['breadcrumbs'][] = 'Animais';
                                 }
                                 return '<span class="badge bg-secondary"><i class="fas fa-times"></i> Não</span>';
                             },
-                            'filter' => [0 => 'Não', 1 => 'Sim'],
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                                'filter' => [1 => 'Sim', 0 => 'Não'],
                         ],
                         [
                             'attribute' => 'especies_id',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Espécie',
                             'value' => function($model) {
                                 return $model->especies->nome ?? '-';
                             },
-                            'headerOptions' => ['style' => 'width: 120px'],
-                        ],
+                                'filter' => kartik\select2\Select2::widget([
+                                    'model' => $searchModel,
+                                    'attribute' => 'especies_id',
+                                    'data' => ($especiesList = \common\models\Especie::find()->select(['nome', 'id'])->where(['eliminado' => 0])->indexBy('id')->column()),
+                                    'options' => [
+                                        'placeholder' => 'Espécie...',
+                                        'allowClear' => true,
+                                        'style' => 'width: 120px;',
+                                    ],
+                                    'pluginOptions' => [
+                                        'allowClear' => true,
+                                        'language' => [
+                                            'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
+                                        ],
+                                    ],
+                                    'bsVersion' => '5.x',
+                                ]),
+                            ],
                         [
                             'attribute' => 'userprofiles_id',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Dono',
                             'value' => function($model) {
                                 return $model->userprofiles->nomecompleto ?? '-';
                             },
-                            'headerOptions' => ['style' => 'width: 180px'],
-                        ],
+                                'filter' => kartik\select2\Select2::widget([
+                                    'model' => $searchModel,
+                                    'attribute' => 'userprofiles_id',
+                                    'data' => \backend\models\AnimalSearch::getActiveOwnersList(),
+                                    'options' => [
+                                        'placeholder' => 'Dono...',
+                                        'allowClear' => true,
+                                        'style' => 'width: 120px;',
+                                    ],
+                                    'pluginOptions' => [
+                                        'allowClear' => true,
+                                        'language' => [
+                                            'noResults' => new \yii\web\JsExpression('function() { return "Nenhum dono encontrado"; }'),
+                                        ],
+                                    ],
+                                    'bsVersion' => '5.x',
+                                ]),
+                            ],
                         [
                             'attribute' => 'eliminado',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -199,17 +246,12 @@ $this->params['breadcrumbs'][] = 'Animais';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativo',
-                                1 => 'Eliminado',
-                            ],
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                                'filter' => [0 => 'Ativo', 1 => 'Eliminado'],
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -255,6 +297,7 @@ $this->params['breadcrumbs'][] = 'Animais';
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

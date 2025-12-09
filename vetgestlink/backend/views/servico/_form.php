@@ -36,19 +36,6 @@ use yii\widgets\ActiveForm;
                         ], ['class' => 'form-control']) ?>
                     </div>
                 </div>
-
-                <div class="form-group mt-3">
-                    <?= Html::submitButton(
-                        $model->isNewRecord ? '<i class="fas fa-save"></i> Criar' : '<i class="fas fa-save"></i> Atualizar',
-                        ['class' => 'btn btn-success']
-                    ) ?>
-                </div>
-
-                <?php ActiveForm::end(); ?>
-
-                <div class="form-group mt-2">
-                    <?= Html::a('<i class="fas fa-arrow-left"></i> Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
-                </div>
             </div>
         </div>
     </div>
@@ -66,5 +53,28 @@ use yii\widgets\ActiveForm;
                 </ul>
             </div>
         </div>
+        <!-- Card Ações -->
+        <div class="card shadow-sm hover-shadow">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-tasks text-secondary"></i>
+                    Ações
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <?= Html::submitButton(
+                        '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Serviço' : 'Guardar Alterações'),
+                        ['class' => 'btn btn-success btn-md']
+                    ) ?>
+                    <?= Html::a(
+                        '<i class="fas fa-times me-2"></i>Cancelar',
+                        ['index'],
+                        ['class' => 'btn btn-secondary btn-md']
+                    ) ?>
+                </div>
+            </div>
+        </div>
+        <?php ActiveForm::end(); ?>
     </div>
 </div>

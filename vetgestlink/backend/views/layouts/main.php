@@ -5,6 +5,16 @@ use yii\helpers\Url;
 use backend\widgets\MenuItem;
 use backend\widgets\MenuGroup;
 use backend\controllers\SiteController;
+use common\assets\CommonAsset;
+use kartik\select2\Select2Asset;
+
+//Registar assets comuns()
+CommonAsset::register($this);
+Select2Asset::register($this);
+
+//Pegar o favicon 
+$faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
+
 $this->beginPage();
 ?>
     <!DOCTYPE html>
@@ -12,22 +22,18 @@ $this->beginPage();
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- CSRF Meta Tags -->
         <?= Html::csrfMetaTags() ?>
-        <title><?php echo "Backend -  "; Html::encode($this->title) ?></title>
-
+        <title>
+            <?= Html::encode("Backend " . $this->title) ?>
+        </title>
         <!-- AdminLTE CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <!-- Google Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700">
-        <!-- Custom CSS para o layout-->
-        <?= Html::cssFile(Url::to('@web/static/css/layout.css')) ?>
-
         <!-- Favicon -->
-        <?php
-        $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
-        ?>
         <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
 
         <?php $this->head() ?>
@@ -45,69 +51,81 @@ $this->beginPage();
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="<?= Url::home() ?>" class="nav-link">Home</a>
+                    <a href="<?= Url::home() ?>" class="nav-link">Dashboard</a>
                 </li>
             </ul>
-
+            <!-- Fullscreen-->
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </a>
-                </li>
+                <!-- Logout -->
                 <li class="nav-item">
                     <form action="<?= \yii\helpers\Url::to(['/site/logout']) ?>" method="post">
-                        <?= \yii\helpers\Html::submitButton('<i class="fas fa-sign-out-alt"></i> Sair', [
+                        <?= \yii\helpers\Html::submitButton(
+                            '<i class="fas fa-sign-out-alt"></i> Log Out',
+                            [
                                 'class' => 'nav-link',
                                 'style' => 'background:none;border:none;padding:0;'
                         ]) ?>
                         <?= \yii\helpers\Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
                     </form>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
             </ul>
         </nav>
-        <!--
-    <div class="info">
-        <form action="<?= \yii\helpers\Url::to(['/site/logout']) ?>" method="post">
-            <?= \yii\helpers\Html::submitButton('<i class="fas fa-sign-out-alt"></i> Sair', [
-                'class' => 'nav-link',
-                'style' => 'background:none;border:none;padding:0;'
-        ]) ?>
-            <?= \yii\helpers\Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
-        </form>
-    </div>
-    -->
         <!-- Main Sidebar -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
+            <!-- VetGestLink Logo -->
             <a href="<?= Url::home() ?>" class="brand-link">
-                <i class="fas fa-heartbeat" style="color: #007bff; font-size: 1.8rem;"></i>
-                <span class="brand-text">VetGestLink</span>
+                <img src="<?= $faviconUrl ?>" alt="Logo" class="brand-image">
+                <span class="brand-text text-success"><b>VetGestLink</b></span>
+                <!-- Botão de Logout compacto -->
+                <form action="<?= Url::to(['/site/logout']) ?>" method="post" style="display:inline;">
+                    <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Sair" style="padding:2px 6px; font-size:0.9rem; margin-left:12px;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </form>
             </a>
-
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- User Panel -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #c2c7d0;"></i>
+                <div class="user-panel d-flex" style="padding:4px 4px;">
+                    <div class="image pl-0">
+                        <?php
+                        $userImage = null;
+                        if (!Yii::$app->user->isGuest) {
+                            $userprofile = isset($userprofile) ? $userprofile : \common\models\Userprofile::findOne(['user_id' => Yii::$app->user->id]);
+                            if ($userprofile && !empty($userprofile->getImageUrl())) {
+                                $userImage = $userprofile->getImageUrl();
+                            }
+                        }
+                        ?>
+                        <?php if ($userImage): ?>
+                            <!-- Foi usado Style inline porque através do .css não estava a funcionar -->
+                            <img src="<?= $userImage ?>" alt="User Image" class="img-circle" style="width: 2.5rem; height: 2.5rem; object-fit: cover; margin-left: 8px;">
+                        <?php else: ?>
+                            <i class="fas fa-user-circle" style="font-size: 2.5rem; color: #c2c7d0;"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="info">
                         <!-- Construir link para o perfil do utilizador -->
                         <?php if (!Yii::$app->user->isGuest): ?>
                             <?php 
-                                $userprofile = \common\models\Userprofile::findOne(['user_id' => Yii::$app->user->id]);
-                                $profileUrl = $userprofile ? Url::to(['/userprofile/view', 'id' => $userprofile->id]) : '#';
+                                $profileUrl = isset($userprofile) && $userprofile ? Url::to(['/userprofile/view', 'id' => $userprofile->id]) : '#';
                             ?>
-                            <a href="<?= $profileUrl ?>" class="d-block">
-                                <?= Yii::$app->user->identity->username ?>
-                            </a>
+                            <div class="d-flex align-items-center">
+                                <a href="<?= $profileUrl ?>" class="d-block mr-2">
+                                    <?= Yii::$app->user->identity->username ?>
+                                </a>
+                            </div>
                         <?php else: ?>
                             <a href="#" class="d-block">Convidado</a>
                         <?php endif; ?>
                     </div>
                 </div>
-                
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -212,32 +230,32 @@ $this->beginPage();
                                     'text' => 'Consultas',
                                     'subs' => [
                                             [
-                                                    'type' => '1',
-                                                    'icon' => 'fas fa-file-lines',
-                                                    'text' => 'Consultas Terminadas',
-                                                    'subs' => [
-                                                            [
-                                                                    'type' => '2',
-                                                                    'icon' => 'fas fa-file-lines',
-                                                                    'text' => 'Com fatura',
-                                                                    'url' => ['/marcacao/index'],
-                                                                    'active' => Yii::$app->controller->id === 'marcacao',
-                                                            ],
-                                                            [
-                                                                    'type' => '2',
-                                                                    'icon' => 'fas fa-file-lines',
-                                                                    'text' => 'Sem Fatura',
-                                                                    'url' => ['/marcacao/index'],
-                                                                    'active' => Yii::$app->controller->id === 'marcacao',
-                                                            ],
-                                                    ],
+                                                'type' => '1',
+                                                'icon' => 'fas fa-file-lines',
+                                                'text' => 'Consultas Terminadas',
+                                                'subs' => [
+                                                        [
+                                                            'type' => '2',
+                                                            'icon' => 'fas fa-file-lines',
+                                                            'text' => 'Com fatura',
+                                                            'url' => ['/marcacao/index'],
+                                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                                        ],
+                                                        [
+                                                            'type' => '2',
+                                                            'icon' => 'fas fa-file-lines',
+                                                            'text' => 'Sem Fatura',
+                                                            'url' => ['/marcacao/index'],
+                                                            'active' => Yii::$app->controller->id === 'marcacao',
+                                                        ],
+                                                ],
                                             ],
                                             [
-                                                    'type' => '2',
-                                                    'icon' => 'fas fa-file-lines',
-                                                    'text' => 'Consultas Canceladas',
-                                                    'url' => ['/marcacao/index'],
-                                                    'active' => Yii::$app->controller->id === 'marcacao',
+                                                'type' => '2',
+                                                'icon' => 'fas fa-file-lines',
+                                                'text' => 'Consultas Canceladas',
+                                                'url' => ['/marcacao/index'],
+                                                'active' => Yii::$app->controller->id === 'marcacao',
                                             ],
                                     ],
                             ]) ?>
@@ -252,17 +270,18 @@ $this->beginPage();
                                     'icon' => 'nav-icon fas fa-layer-group',
                                     'subs' => [
                                             [
-                                                    'type' =>  '2',
-                                                    'icon' => 'fas fa-clock',
-                                                    'text' => 'Por Pagar',
-                                                    'url' => ['/fatura/index'],
-                                                    'active' => Yii::$app->controller->id === 'fatura',
-                                            ],[
-                                                    'type' =>  '2',
-                                                    'icon' => 'fas fa-circle-check',
-                                                    'text' => 'Pagas',
-                                                    'url' => ['/fatura/index'],
-                                                    'active' => Yii::$app->controller->id === 'fatura',
+                                                'type' =>  '2',
+                                                'icon' => 'fas fa-clock',
+                                                'text' => 'Por Pagar',
+                                                'url' => ['/fatura/index'],
+                                                'active' => Yii::$app->controller->id === 'fatura',
+                                            ],
+                                            [
+                                                'type' =>  '2',
+                                                'icon' => 'fas fa-circle-check',
+                                                'text' => 'Pagas',
+                                                'url' => ['/fatura/index'],
+                                                'active' => Yii::$app->controller->id === 'fatura',
                                             ],
                                     ],
                             ]) ?>
@@ -276,8 +295,8 @@ $this->beginPage();
             <?= $content ?>
         </div>
         <!-- Footer -->
-        <footer class="main-footer">
-            <strong>VetGestLink &copy; 2025</strong> - Todos os direitos reservados.
+        <footer class="main-footer text-center">
+            <strong >VetGestLink &copy; 2025</strong> - Todos os direitos reservados.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Versão</b> 1.0.0
             </div>
@@ -288,7 +307,6 @@ $this->beginPage();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-
     <?php $this->endBody() ?>
     </body>
     </html>

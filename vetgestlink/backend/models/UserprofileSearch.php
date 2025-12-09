@@ -11,6 +11,17 @@ use common\models\Userprofile;
  */
 class UserprofileSearch extends Userprofile
 {
+    /**
+     * Retorna lista [id => nomecompleto] de donos ativos para Select2
+     */
+    public static function getActiveOwnersList()
+    {
+        $owners = \common\models\Userprofile::find()
+            ->where(['eliminado' => 0])
+            ->orderBy('nomecompleto')
+            ->all();
+        return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
+    }
     // Atributos públicos para pesquisa de moradas
     public $morada_rua;
     public $morada_nporta;
@@ -26,7 +37,7 @@ class UserprofileSearch extends Userprofile
     {
         return [
             [['id', 'user_id', 'eliminado'], 'integer'],
-            [['nif', 'telemovel', 'morada_rua', 'morada_nporta', 'morada_andar', 'morada_cdpostal', 'morada_cidade', 'morada_localidade'], 'safe'],
+            [['nomecompleto','nif', 'telemovel', 'morada_rua', 'morada_nporta', 'morada_andar', 'morada_cdpostal', 'morada_cidade', 'morada_localidade'], 'safe'],
         ];
     }
 
@@ -92,14 +103,15 @@ class UserprofileSearch extends Userprofile
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'userprofiles.id' => $this->id,
+            'nomecompleto' => $this->nomecompleto,
             'user_id' => $this->user_id,
-            'eliminado' => $this->eliminado,
+            'userprofiles.eliminado' => $this->eliminado,
         ]);
 
-        $query->andFilterWhere(['like', 'nif', $this->nif])
+        $query
+            ->andFilterWhere(['like', 'nif', $this->nif])
             ->andFilterWhere(['like', 'telemovel', $this->telemovel])
             ->andFilterWhere(['like', 'moradas.rua', $this->morada_rua])
             ->andFilterWhere(['like', 'moradas.nporta', $this->morada_nporta])
@@ -107,6 +119,7 @@ class UserprofileSearch extends Userprofile
             ->andFilterWhere(['like', 'moradas.cdpostal', $this->morada_cdpostal])
             ->andFilterWhere(['like', 'moradas.cidade', $this->morada_cidade])
             ->andFilterWhere(['like', 'moradas.localidade', $this->morada_localidade]);
+
 
         return $dataProvider;
     }
@@ -118,5 +131,45 @@ class UserprofileSearch extends Userprofile
             return $userprofile->user->username;
         }
         return null;
+    }
+
+    /**
+     * Lista de NIFs únicos para filtro Select2
+     */
+    public function getNifList()
+    {
+        return Userprofile::find()->select(['nif', 'nif'])->where(['eliminado' => 0])->distinct()->indexBy('nif')->column();
+    }
+
+    /**
+     * Lista de telemóveis únicos para filtro Select2
+     */
+    public function getTelemovelList()
+    {
+        return Userprofile::find()->select(['telemovel', 'telemovel'])->where(['eliminado' => 0])->distinct()->indexBy('telemovel')->column();
+    }
+
+    /**
+     * Lista de cidades únicas para filtro Select2
+     */
+    public function getCidadeList()
+    {
+        return \common\models\Morada::find()->select(['cidade', 'cidade'])->where(['eliminado' => 0])->distinct()->indexBy('cidade')->column();
+    }
+
+    /**
+     * Lista de nomes completos únicos para filtro Select2
+     */
+    public function getNomecompletoList()
+    {
+        // Retorna array [id => nomecompleto] para pesquisa pelo nome e envio do ID
+        return \yii\helpers\ArrayHelper::map(
+            Userprofile::find()
+                ->select(['id', 'nomecompleto'])
+                ->orderBy('nomecompleto')
+                ->asArray()
+                ->all(),
+            'id', 'nomecompleto'
+        );
     }
 }

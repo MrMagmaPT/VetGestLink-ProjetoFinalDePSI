@@ -1,11 +1,14 @@
 <?php
-
 use common\models\Medicamento;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\MedicamentoSearch $searchModel */
@@ -19,30 +22,27 @@ $this->title = 'Gestão de Medicamentos';
 $this->params['breadcrumbs'][] = 'Medicamentos';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-pills text-primary"></i>
-                    Medicamentos
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Medicamentos</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Medicamentos',
+    'icon' => 'fa-pills text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Medicamentos',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Card de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-pills',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Medicamentos',
@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                 'url' => '/medicamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-check-circle',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Stock Bom',
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                 'url' => '/medicamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-exclamation-triangle',
                 'iconColorClass' => 'icon-orange',
                 'text' => 'Stock Baixo',
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                 'url' => '/medicamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-skull-crossbones',
                 'iconColorClass' => 'icon-red',
                 'text' => 'Stock Crítico',
@@ -91,14 +91,79 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                 </div>
             </div>
             <div class="card-body p-0">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-3">
+                    <div class="card-body">
+                            <div class="col-md-6 d-flex gap-3" style="padding-bottom: 12px; padding-top: 8px;">
+                                <div style="flex:1;">
+                                    <?= Select2::widget([
+                                        'name' => 'search_nome',
+                                        'data' => $searchModel->getNomesList(),
+                                        'value' => $searchModel->nome,
+                                        'options' => [
+                                            'placeholder' => 'Pesquisar medicação...',
+                                            'id' => 'medicamento-search-nome',
+                                        ],
+                                        'pluginOptions' => [
+                                            'allowClear' => true,
+                                            'language' => [
+                                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhum medicamento encontrado"; }'),
+                                            ],
+                                        ],
+                                        'bsVersion' => '5.x',
+                                        'pluginEvents' => [
+                                            'select2:select' => 'function(e) { 
+                                                var nome = e.params.data.id;
+                                                window.location.href = "' . Url::to(['index']) . '?MedicamentoSearch[nome]=" + nome;
+                                            }',
+                                            'select2:clear' => 'function(e) {
+                                                window.location.href = "' . Url::to(['index']) . '";
+                                            }',
+                                        ],
+                                    ]); ?>
+                                </div>
+                                <!--Categoria Barra de Pesquisa-->
+                                <div style="flex:1;">
+                                    <?= Select2::widget([
+                                        'name' => 'search_categoria',
+                                        'data' => $searchModel->getCategoriasAtivasList(),
+                                        'value' => $searchModel->categorias_id,
+                                        'options' => [
+                                            'placeholder' => 'Pesquisar categoria...',
+                                            'id' => 'medicamento-search-categoria',
+                                        ],
+                                        'pluginOptions' => [
+                                            'allowClear' => true,
+                                            'language' => [
+                                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma categoria encontrada"; }'),
+                                            ],
+                                        ],
+                                        'bsVersion' => '5.x',
+                                        'pluginEvents' => [
+                                            'select2:select' => 'function(e) { 
+                                                var id = e.params.data.id;
+                                                window.location.href = "' . Url::to(['index']) . '?MedicamentoSearch[categorias_id]=" + id;
+                                            }',
+                                            'select2:clear' => 'function(e) {
+                                                window.location.href = "' . Url::to(['index']) . '";
+                                            }',
+                                        ],
+                                    ]); ?>
+                                </div>
+                            </div>
+                    </div>
+                <?php \yii\widgets\Pjax::begin(['id' => 'medicamento-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
+                    //Mudar a mensagem quando não houver resultados
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 50px'],
                         ],
                         [
                             'attribute' => 'nome',
@@ -111,6 +176,7 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false
                         ],
                         [
                             'attribute' => 'descricao',
@@ -120,19 +186,23 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                                     ? substr($model->descricao, 0, 50) . '...' 
                                     : $model->descricao;
                             },
+                            'filter' => false
                         ],
                         [
                             'attribute' => 'preco',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Preço',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<strong>' . number_format($model->preco, 2, ',', '.') . ' €</strong>';
                             },
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: right'],
+                            'filter' => false
                         ],
                         [
                             'attribute' => 'quantidade',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Stock',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -143,19 +213,22 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> ' . $model->quantidade . '</span>';
                             },
-                            'headerOptions' => ['style' => 'width: 100px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => false
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'categorias_id',
                             'label' => 'Categoria',
                             'value' => function($model) {
                                 $categoria = $model->getCategorias()->one();
                                 return $categoria ? $categoria->nome : '-';
                             },
-                            'headerOptions' => ['style' => 'width: 150px'],
+                            'filter' => false,
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'eliminado',
                             'label' => 'Estado',
                             'format' => 'raw',
@@ -165,17 +238,31 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativo',
-                                1 => 'Eliminado',
-                            ],
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'eliminado',
+                                'data' => [
+                                    0 => 'Ativo',
+                                    1 => 'Eliminado',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -221,6 +308,7 @@ $this->params['breadcrumbs'][] = 'Medicamentos';
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

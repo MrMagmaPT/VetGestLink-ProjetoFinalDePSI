@@ -1,21 +1,41 @@
 <?php
 
 use yii\helpers\Html;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Marcacao $model */
 
-$this->title = 'Update Marcacao: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Marcacao', 'url' => ['index']];
+$this->title = 'Atualizar Marcação: ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Marcações', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Atualizar';
 ?>
-<div class="marcacoes-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Atualizar Marcação',
+    'icon' => 'fa-edit text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Marcações',
+            'url' => ['index'],
+        ],
+        [
+            'label' => 'Atualizar',
+        ],
+    ],
+]);
+?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="content">
+    <div class="container-fluid">
+        <?= $this->render('_form', [
+            'model' => $model,
+        ]) ?>
+    </div>
 </div>

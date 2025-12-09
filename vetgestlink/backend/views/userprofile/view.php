@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Perfis', ['index']) ?></li>
                     <li class="breadcrumb-item active"><?= Html::encode($model->nomecompleto) ?></li>
                 </ol>
@@ -89,6 +89,9 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                                 <h5 class="mb-0">
                                     <i class="fas fa-map-marker-alt text-danger"></i>
                                     Morada <?= $i + 1 ?>
+                                    <?php if (isset($morada->principal) && $morada->principal == 1): ?>
+                                        <span class="badge bg-primary ms-2">Principal</span>
+                                    <?php endif; ?>
                                 </h5>
                             </div>
                             <div class="card-body">
@@ -180,34 +183,37 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                             Ações
                         </h5>
                     </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar Perfil',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
-                            ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-list"></i> Ver Todos',
-                                ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
-                            ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-lg',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar este perfil?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar Perfil',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-sm'] // Alterado para btn-sm
+                                ) ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-list"></i> Ver Todos',
+                                    ['index'],
+                                    ['class' => 'btn btn-secondary btn-sm'] // Alterado para btn-sm
+                                ) ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-sm', // Alterado para btn-sm
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar este perfil?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Card Informações do Sistema -->
+                <!--
+                //DEBUG:
+                Informações do Sistema removidas conforme solicitado
+                
+                Card Informações do Sistema 
                 <div class="card shadow-sm">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">
@@ -246,6 +252,7 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                         <?php endif; ?>
                     </div>
                 </div>
+                -->
             </div>
         </div>
     </div>

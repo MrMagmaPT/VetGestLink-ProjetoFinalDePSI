@@ -5,7 +5,11 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\UserprofileSearch $searchModel */
@@ -19,30 +23,27 @@ $this->title = 'Gestão de Perfis de Utilizador';
 $this->params['breadcrumbs'][] = 'Perfis';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-users text-primary"></i>
-                    Perfis de Utilizador
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Perfis</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Perfis de Utilizador',
+    'icon' => 'fa-users text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Perfis',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Card de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-users',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Perfis',
@@ -50,7 +51,7 @@ $this->params['breadcrumbs'][] = 'Perfis';
                 'url' => '/userprofile/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-user-check',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Perfis Ativos',
@@ -58,7 +59,7 @@ $this->params['breadcrumbs'][] = 'Perfis';
                 'url' => '/userprofile/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-user-times',
                 'iconColorClass' => 'icon-yellow',
                 'text' => 'Perfis Eliminados',
@@ -66,7 +67,7 @@ $this->params['breadcrumbs'][] = 'Perfis';
                 'url' => '/userprofile/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-user-plus',
                 'iconColorClass' => 'icon-purple',
                 'text' => 'Novos (30 dias)',
@@ -74,7 +75,6 @@ $this->params['breadcrumbs'][] = 'Perfis';
                 'url' => '/userprofile/index',
             ]) ?>
         </div>
-
         <!-- Card Principal com Tabela -->
         <div class="card shadow-sm">
             <div class="card-header bg-white">
@@ -90,17 +90,58 @@ $this->params['breadcrumbs'][] = 'Perfis';
                     ) ?>
                 </div>
             </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <?= Select2::widget([
+                            'name' => 'search_userprofile',
+                            'data' => $searchModel->getNomecompletoList(), // [id => nomecompleto]
+                            'value' => $searchModel->id,
+                            'options' => [
+                                'placeholder' => 'Pesquisar perfil...',
+                                'id' => 'userprofile-search',
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'language' => [
+                                    'noResults' => new \yii\web\JsExpression('function() { return "Nenhum perfil encontrado"; }'),
+                                ],
+                                'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                                'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                            ],
+                            'bsVersion' => '5.x',
+                            'pluginEvents' => [
+                                'select2:select' => 'function(e) { 
+                                    var id = e.params.data.id;
+                                    window.location.href = "' . Url::to(['index']) . '?UserprofileSearch[id]=" + id;
+                                }',
+                                //Redireciona para a página index sem filtros ao limpar a barra de pesquisa
+                                'select2:clear' => 'function(e) {
+                                    window.location.href = "' . Url::to(['index']) . '";
+                                }',
+                            ],
+                        ]); ?>
+                    </div>
+                </div>
+            </div>
             <div class="card-body p-0">
+                <?php Pjax::begin(['id' => 'userprofile-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum perfil encontrado com esse nome.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 50px'],
+                            'headerOptions' => ['style' => 'width: 20px; text-align: center'],
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'foto',
                             'label' => 'Foto',
                             'format' => 'raw',
@@ -114,11 +155,11 @@ $this->params['breadcrumbs'][] = 'Perfis';
                                 }
                                 return '<i class="fas fa-user-circle text-muted" style="font-size: 40px;"></i>';
                             },
-                            'headerOptions' => ['style' => 'width: 80px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'enableSorting' => false,
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'nomecompleto',
                             'label' => 'Nome Completo',
                             'format' => 'raw',
@@ -129,27 +170,86 @@ $this->params['breadcrumbs'][] = 'Perfis';
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            //Já existe filtro por defeito e desativado para usar o Select2 acima la linha 96
+                            'filter'=> false
+                            
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'nif',
                             'label' => 'NIF',
-                            'headerOptions' => ['style' => 'width: 120px'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nif',
+                                'data' => $searchModel->getNifList(),
+                                'options' => [
+                                    'placeholder' => 'NIF...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum NIF encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'telemovel',
                             'label' => 'Telemóvel',
-                            'headerOptions' => ['style' => 'width: 120px'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'telemovel',
+                                'data' => $searchModel->getTelemovelList(),
+                                'options' => [
+                                    'placeholder' => 'Telemóvel...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum telemóvel encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'morada_cidade',
                             'label' => 'Cidade',
                             'value' => function($model) {
                                 $morada = $model->getMoradas()->one();
                                 return $morada ? $morada->cidade : '-';
                             },
-                            'headerOptions' => ['style' => 'width: 150px'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'morada_cidade',
+                                'data' => $searchModel->getCidadeList(),
+                                'options' => [
+                                    'placeholder' => 'Cidade...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma cidade encontrada"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'eliminado',
                             'label' => 'Estado',
                             'format' => 'raw',
@@ -159,17 +259,31 @@ $this->params['breadcrumbs'][] = 'Perfis';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativo',
-                                1 => 'Eliminado',
-                            ],
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'eliminado',
+                                'data' => [
+                                    0 => 'Ativo',
+                                    1 => 'Eliminado',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -215,9 +329,8 @@ $this->params['breadcrumbs'][] = 'Perfis';
                         ],
                     ],
                 ]); ?>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>
 </div>
-
-

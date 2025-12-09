@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Especie $model */
@@ -8,27 +9,25 @@ $this->title = 'Nova Espécie';
 $this->params['breadcrumbs'][] = ['label' => 'Espécies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = 'Nova';
 ?>
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-paw text-primary"></i>
-                    Nova Espécie
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item"><?= Html::a('Espécies', ['index']) ?></li>
-                    <li class="breadcrumb-item active">Nova</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
-
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Nova Espécie',
+    'icon' => 'fa-dog text-success',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Espécies',
+            'url' => ['index'],
+        ],
+        [
+            'label' => 'Nova Espécie',
+        ],
+    ],
+]); 
+?>
 <div class="content">
     <div class="container-fluid">
         <div class="card shadow-sm">

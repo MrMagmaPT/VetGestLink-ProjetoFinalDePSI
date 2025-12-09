@@ -74,5 +74,18 @@ class MetodopagamentoSearch extends Metodopagamento
 
         return $dataProvider;
     }
+
+        /**
+     * Retorna lista de métodos de pagamento para Select2 [nome => nome]
+     */
+    public static function getMetodosList()
+    {
+        return Metodopagamento::find()
+            ->select(['nome'])
+            ->where(['eliminado' => 0])
+            ->orderBy(['nome' => SORT_ASC])
+            ->indexBy('nome')
+            ->column();
+    }
 }
 

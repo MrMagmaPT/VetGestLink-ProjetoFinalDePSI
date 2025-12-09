@@ -1,20 +1,40 @@
 <?php
 
 use yii\helpers\Html;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $model */
 
-$this->title = 'Create Fatura';
-$this->params['breadcrumbs'][] = ['label' => 'Fatura', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+echo PageHeaderWidget::widget([
+    'title' => 'Nova Fatura',
+    'icon' => 'fa-file-invoice-dollar text-success',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Faturas',
+            'url' => ['index'],
+        ],
+        [
+            'label' => 'Nova',
+        ],
+    ],
+]);
 ?>
-<div class="faturas-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="content">
+    <div class="container-fluid">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-plus"></i> Nova Fatura</h5>
+            </div>
+            <div class="card-body">
+                <?= $this->render('_form', [
+                    'model' => $model,
+                ]) ?>
+            </div>
+        </div>
+    </div>
 </div>

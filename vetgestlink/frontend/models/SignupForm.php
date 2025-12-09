@@ -99,10 +99,25 @@ class SignupForm extends Model
             return null;
         }
 
+
         $uploadedFileName = null;
 
         try {
-            // 1. Criar User
+            // 1. Valida Userprofile antes de criar User
+            $userprofile = new Userprofile();
+            $userprofile->nomecompleto = $this->nomecompleto;
+            $userprofile->dtanascimento = $this->dtanascimento;
+            $userprofile->nif = $this->nif;
+            $userprofile->telemovel = $this->telemovel;
+            $userprofile->eliminado = 0;
+
+            if (!$userprofile->validate()) {
+                Yii::$app->session->setFlash('danger', 'Existem erros no perfil do utilizador. Corrija os campos destacados.');
+                $this->addErrors($userprofile->getErrors());
+                return null;
+            }
+
+            // 2. Criar User
             $user = new User();
             $user->username = $this->username;
             $user->email = $this->email;
@@ -119,7 +134,7 @@ class SignupForm extends Model
                 return null;
             }
 
-            // 2. Atribuir role
+            // 3. Atribuir role
             $auth = Yii::$app->authManager;
             $clienteRole = $auth->getRole('cliente');
 
@@ -129,15 +144,8 @@ class SignupForm extends Model
                 Yii::$app->session->setFlash('warning', 'A role "cliente" não existe no RBAC.');
             }
 
-            // 3. Criar Userprofile
-            $userprofile = new Userprofile();
+            // 4. Salvar Userprofile já validado
             $userprofile->user_id = $user->id;
-            $userprofile->nomecompleto = $this->nomecompleto;
-            $userprofile->dtanascimento = $this->dtanascimento;
-            $userprofile->nif = $this->nif;
-            $userprofile->telemovel = $this->telemovel;
-            $userprofile->eliminado = 0;
-
             if (!$userprofile->save()) {
                 Yii::$app->session->setFlash('danger', 'Erro ao criar o perfil do utilizador.');
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
@@ -150,7 +158,7 @@ class SignupForm extends Model
                 return null;
             }
 
-            // 4. Upload de imagem de perfil (se fornecida)
+            // 5. Upload de imagem de perfil (se fornecida)
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
                 $uploaded = $userprofile->uploadImage();
@@ -167,7 +175,7 @@ class SignupForm extends Model
                 }
             }
 
-            // 5. Criar Morada
+            // 6. Criar Morada
             $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
             $morada->rua = $this->rua;
@@ -193,7 +201,7 @@ class SignupForm extends Model
                 return null;
             }
 
-            // 6. Enviar email de verificação
+            // 7. Enviar email de verificação
             return $user && $this->sendEmail($user) ? $user : $user;
 
         } catch (\Exception $e) {

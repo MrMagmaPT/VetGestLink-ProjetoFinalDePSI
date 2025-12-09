@@ -24,7 +24,7 @@ $this->registerCssFile('@web/static/css/view.css');
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Animais', ['index']) ?></li>
                     <li class="breadcrumb-item active"><?= Html::encode($model->nome) ?></li>
                 </ol>
@@ -262,18 +262,18 @@ $this->registerCssFile('@web/static/css/view.css');
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
+                                ['class' => 'btn btn-primary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
                                 [
-                                    'class' => 'btn btn-danger btn-lg',
+                                    'class' => 'btn btn-danger btn-md',
                                     'data' => [
                                         'confirm' => 'Tem a certeza que deseja eliminar este animal?',
                                         'method' => 'post',
@@ -295,8 +295,6 @@ $this->registerCssFile('@web/static/css/view.css');
                     <div class="card-body">
                         <div class="alert alert-info mb-0">
                             <small>
-                                <i class="fas fa-hashtag"></i>
-                                <strong>ID:</strong> <?= $model->id ?><br>
                                 <i class="fas fa-calendar-plus"></i>
                                 <strong>Registado:</strong> <?= $model->dtanascimento ? 'desde ' . Yii::$app->formatter->asDate($model->dtanascimento, 'php:Y') : '-' ?>
                             </small>

@@ -22,10 +22,14 @@ $form = ActiveForm::begin([
 <div class="userprofile-form">
     <div class="row mb-3">
         <div class="col-auto">
-            <?= Html::img($avatarUrl, ['id' => 'avatar-preview', 'style' => 'width:80px;height:80px;object-fit:cover;border-radius:50%;border:1px solid #ddd;']) ?>
+            <?= Html::img($avatarUrl, ['id' => 'userprofile-image-preview', 'style' => 'width:80px;height:80px;object-fit:cover;border-radius:50%;border:1px solid #ddd;']) ?>
         </div>
         <div class="col">
-            <?= $form->field($model, 'imageFile')->fileInput(['accept' => 'image/png, image/jpeg'])->label('Fotografia de Perfil (opcional)') ?>
+            <?= $form->field($model, 'imageFile')->fileInput([
+                'accept' => 'image/png, image/jpeg',
+                'id' => 'userprofile-imagefile',
+                'data-image-preview' => 'userprofile-image-preview',
+            ])->label('Fotografia de Perfil (opcional)') ?>
             <div id="imageFile-client-error" class="text-danger small" style="display:none;margin-top:.25rem;"></div>
         </div>
     </div>
@@ -55,20 +59,10 @@ $form = ActiveForm::begin([
 
 <?php ActiveForm::end(); ?>
 
-<?php // script pequeno para preview da imagem (sem validação) ?>
-<?php $this->registerJs(<<<'JS'
-(function(){
-    var input = document.querySelector('#userprofile-imagefile');
-    var img = document.getElementById('avatar-preview');
-    if (!input || !img) return;
-    input.addEventListener('change', function(){
-        var f = this.files && this.files[0];
-        if (!f) return;
-        var r = new FileReader();
-        r.onload = function(e){ img.src = e.target.result; };
-        r.readAsDataURL(f);
-    });
-})();
-JS
+<?php
+$this->registerJsFile(
+    Yii::getAlias('@web/js/image-preview.js'),
+    ['depends' => [\yii\web\JqueryAsset::class]]
 );
 ?>
+

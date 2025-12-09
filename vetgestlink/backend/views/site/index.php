@@ -160,13 +160,14 @@ $this->registerCssFile('@web/static/css/view.css');
                 echo TableWidget::widget([
                         'title' => 'Marcações',
                         'content' => $marcacoesPendentes,
-                        'columns' => ['data','estado','horainicio', 'horafim', 'tipo', 'animais_id', 'userprofiles_id'],
+                        'columns' => ['data','estado','horainicio', 'horafim', 'servicos_id', 'animais_id', 'userprofiles_id'],
                         'emptyMessage' => 'Nenhuma marcação pendente.',
                         'revaluedColumns' => [
                                 'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
-                                'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)'
+                                'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)',
+                                'servicos_id' => '\\backend\\models\\ServicoSearch::getServicoNameById(%%)',
                         ],
-                        'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
+                        'alternateNamingColumns' => ['horainicio' => 'Início', 'horafim' => 'Fim', 'servicos_id' => 'Serviço', 'animais_id' => 'Animal', 'userprofiles_id' => 'Cliente'],
                 ]); ?>
             </div>
         <?php endif; ?>
@@ -206,9 +207,6 @@ $this->registerCssFile('@web/static/css/view.css');
                 ]);
                 ?>
             </div>
-
-            
-
             <!-- Marcacões de Hoje -->
             <div class=".col-md-12">
                 <?php

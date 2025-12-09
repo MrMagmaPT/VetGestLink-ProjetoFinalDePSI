@@ -77,16 +77,22 @@ use yii\widgets\ActiveForm;
 
             <!-- Card Ações -->
             <div class="card shadow-sm hover-shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks text-secondary"></i>
+                        Ações
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Método' : 'Guardar Alterações'),
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times me-2"></i>Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>
@@ -98,10 +104,3 @@ use yii\widgets\ActiveForm;
 
     <?php ActiveForm::end(); ?>
 </div>
-
-<style>
-.hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    transition: box-shadow 0.3s ease;
-}
-</style>

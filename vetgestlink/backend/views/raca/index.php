@@ -8,6 +8,8 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use backend\widgets\BigCardWidget;
+use yii\widgets\Pjax;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\RacaSearch $searchModel */
@@ -17,24 +19,21 @@ $this->title = 'Gestão de Raças';
 $this->params['breadcrumbs'][] = 'Raças';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-dog text-primary"></i>
-                    Raças
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Raças</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Raças',
+    'icon' => 'fa-dog text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Raças',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
@@ -72,9 +71,14 @@ $this->params['breadcrumbs'][] = 'Raças';
                 </div>
             </div>
             <div class="card-body p-0">
+                <?php Pjax::begin(['id' => 'raca-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end} perfis</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
+                    //Mudar a mensagem quando não houver resultados
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
@@ -91,6 +95,7 @@ $this->params['breadcrumbs'][] = 'Raças';
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'headerOptions' => ['style' => 'width: 180px'],
                         ],
                         [
                             'attribute' => 'especies_id',
@@ -126,7 +131,7 @@ $this->params['breadcrumbs'][] = 'Raças';
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -172,6 +177,7 @@ $this->params['breadcrumbs'][] = 'Raças';
                         ],
                     ],
                 ]); ?>
+                <?php Pjax::end(); ?>
             </div>
         </div>
     </div>

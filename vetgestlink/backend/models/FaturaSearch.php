@@ -19,7 +19,7 @@ class FaturaSearch extends Fatura
         return [
             [['id', 'estado', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
             [['total'], 'number'],
-            [['data'], 'safe'],
+            [['created_at'], 'safe'],
         ];
     }
 
@@ -62,13 +62,27 @@ class FaturaSearch extends Fatura
         $query->andFilterWhere([
             'id' => $this->id,
             'total' => $this->total,
-            'data' => $this->data,
             'estado' => $this->estado,
             'metodospagamentos_id' => $this->metodospagamentos_id,
             'userprofiles_id' => $this->userprofiles_id,
             'eliminado' => $this->eliminado,
         ]);
 
+        $query->andFilterWhere(['like', 'created_at', $this->created_at]);
+
         return $dataProvider;
+    }
+    /**
+     * Retorna lista [id => texto] de faturas para Select2
+     */
+    public function getFaturasList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Fatura::find()->orderBy(['id' => SORT_DESC])->all(),
+            'id',
+            function($model) {
+                return 'Fatura #' . $model->id . ' - ' . number_format($model->total, 2, ',', '.') . '€';
+            }
+        );
     }
 }

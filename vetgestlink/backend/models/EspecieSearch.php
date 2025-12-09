@@ -67,4 +67,15 @@ class EspecieSearch extends Especie
 
         return $dataProvider;
     }
+
+        /**
+     * Retorna lista [id => nome] de espécies ativas para Select2
+     */
+    public static function getEspeciesList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Especie::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
+            'id', 'nome'
+        );
+    }
 }

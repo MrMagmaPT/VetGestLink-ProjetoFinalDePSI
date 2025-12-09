@@ -8,8 +8,17 @@ return [
         '@uploads' => dirname(dirname(__DIR__)) . '/frontend/web/uploads',
         // URL pública que aponta para a pasta acima. Ajuste conforme o seu setup.
         '@uploadsUrl' => '/uploads',
+        // Alias global para favicon (ajuste conforme o contexto)
+        '@faviconGlobal' => YII_ENV === 'frontend' ? '/vetgestlink/frontend/web/favicon.ico' : '/vetgestlink/backend/web/favicon.ico',
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'container' => [
+        'definitions' => [
+            'kartik\base\Config' => [
+                'bsVersion' => '5.x',
+            ],
+        ],
+    ],
     'components' => [
         'cache' => [
             'class' => \yii\caching\FileCache::class,

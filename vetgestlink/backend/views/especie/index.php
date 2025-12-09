@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\EspecieSearch $searchModel */
@@ -15,24 +16,21 @@ $this->title = 'Gestão de Espécies';
 $this->params['breadcrumbs'][] = 'Espécies';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-paw text-primary"></i>
-                    Espécies
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Espécies</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Espécies',
+    'icon' => 'fa-paw text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Espécies',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">
@@ -70,6 +68,7 @@ $this->params['breadcrumbs'][] = 'Espécies';
                 </div>
             </div>
             <div class="card-body p-0">
+                <?php \yii\widgets\Pjax::begin(['id' => 'especie-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
@@ -81,6 +80,7 @@ $this->params['breadcrumbs'][] = 'Espécies';
                         ],
                         [
                             'attribute' => 'nome',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'format' => 'raw',
                             'value' => function($model) {
                                 return Html::a(
@@ -92,6 +92,7 @@ $this->params['breadcrumbs'][] = 'Espécies';
                         ],
                         [
                             'attribute' => 'eliminado',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -104,13 +105,12 @@ $this->params['breadcrumbs'][] = 'Espécies';
                                 0 => 'Ativa',
                                 1 => 'Eliminada',
                             ],
-                            'headerOptions' => ['style' => 'width: 120px'],
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -156,6 +156,7 @@ $this->params['breadcrumbs'][] = 'Espécies';
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

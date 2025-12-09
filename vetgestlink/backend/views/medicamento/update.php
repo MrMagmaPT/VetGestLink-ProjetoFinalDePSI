@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Medicamento $model */
@@ -11,26 +12,29 @@ $this->params['breadcrumbs'][] = ['label' => $model->nome, 'url' => ['view', 'id
 $this->params['breadcrumbs'][] = 'Editar';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-edit text-primary"></i>
-                    <?= Html::encode($this->title) ?>
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item"><?= Html::a('Medicamentos', ['index']) ?></li>
-                    <li class="breadcrumb-item"><?= Html::a($model->nome, ['view', 'id' => $model->id]) ?></li>
-                    <li class="breadcrumb-item active">Editar</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Editar Medicamento: ' . $model->nome,
+    'icon' => 'fa-edit text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Medicamentos',
+            'url' => ['index'],
+        ],
+        [
+            'label' => $model->nome,
+            'url' => ['view', 'id' => $model->id],
+        ],
+        [
+            'label' => 'Editar',
+        ],
+    ],
+]);
+?>
 
 <div class="content">
     <div class="container-fluid">

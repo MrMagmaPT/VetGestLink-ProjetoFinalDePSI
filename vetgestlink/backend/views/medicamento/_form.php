@@ -4,10 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use common\models\Categoria;
+use backend\models\MedicamentoSearch;
 
 /** @var yii\web\View $this */
 /** @var common\models\Medicamento $model */
+/** @var backend\models\MedicamentoSearch $searchModel */
 /** @var yii\widgets\ActiveForm $form */
+
 ?>
 
 <div class="medicamentos-form">
@@ -65,13 +68,20 @@ use common\models\Categoria;
                             ])->label('<i class="fas fa-boxes me-2"></i> Quantidade em Stock') ?>
                         </div>
                         <div class="col-md-4">
-                            <?= $form->field($model, 'categorias_id')->dropDownList(
-                                ArrayHelper::map(Categoria::find()->where(['eliminado' => 0])->all(), 'id', 'nome'),
-                                [
-                                    'prompt' => 'Selecione uma categoria',
-                                    'class' => 'form-control'
-                                ]
-                            )->label('<i class="fas fa-folder me-2"></i> Categoria') ?>
+                            <?= $form->field($model, 'categorias_id')->widget(kartik\select2\Select2::class, [
+                                'data' => $searchModel->getCategoriasAtivasList(),
+                                'options' => [
+                                    'placeholder' => 'Selecione uma categoria',
+                                    'allowClear' => true,
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma categoria encontrada"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ])->label('<i class="fas fa-folder me-2"></i> Categoria') ?>
                         </div>
                     </div>
                 </div>
@@ -101,16 +111,22 @@ use common\models\Categoria;
 
             <!-- Card Ações -->
             <div class="card shadow-sm hover-shadow">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tasks text-secondary"></i>
+                            Ações
+                        </h5>
+                    </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Medicamento' : 'Guardar Alterações'),
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times me-2"></i>Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>
@@ -122,10 +138,3 @@ use common\models\Categoria;
 
     <?php ActiveForm::end(); ?>
 </div>
-
-<style>
-.hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    transition: box-shadow 0.3s ease;
-}
-</style>

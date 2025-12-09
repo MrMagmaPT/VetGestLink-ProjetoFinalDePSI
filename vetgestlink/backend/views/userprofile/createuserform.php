@@ -6,45 +6,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use backend\widgets\FlashMessages;
 
-$this->title = 'Registar Utilizador';
-$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+
 ?>
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-user-plus text-primary"></i>
-                    Registar Utilizador
-                </h1>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="content">
     <div class="container-fluid">
-        <?php foreach (Yii::$app->session->getAllFlashes() as $type => $messages): ?>
-            <?php
-            $alertType = ($type === 'error') ? 'danger' : $type;
-            $messages = (array) $messages;
-            ?>
-            <div class="alert alert-<?= $alertType ?> alert-dismissible fade show" role="alert">
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                <?php if (count($messages) > 1): ?>
-                    <ul class="mb-0">
-                        <?php foreach ($messages as $message): ?>
-                            <li><?= Html::encode($message) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <?= Html::encode($messages[0]) ?>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
+        <!-- Feedback Messages -->
+        <?= FlashMessages::widget() ?>  
+
 
         <?php $form = ActiveForm::begin([
                 'id' => 'form-signup',
@@ -55,6 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
                 ],
         ]); ?>
+
+        <!-- Display form errors summary -->
+        <?php if ($model->hasErrors()): ?>
+            <div class="alert alert-danger">
+                <strong>Por favor, corrija os seguintes erros:</strong>
+                <?= \yii\helpers\Html::errorSummary($model, ['header' => '', 'class' => 'mb-0']) ?>
+            </div>
+        <?php endif; ?>
 
         <div class="row">
             <!-- Coluna Esquerda -->
@@ -110,7 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-md-4">
                                 <?= $form->field($model, 'dtanascimento')->input('date', [
                                     'class' => 'form-control',
-                                    'max' => date('Y-m-d')
                                 ]) ?>
                             </div>
                             <div class="col-md-4">
@@ -146,7 +124,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= $form->field($model, 'imageFile')->fileInput([
                                 'class' => 'form-control',
                                 'accept' => 'image/png, image/jpeg, image/jpg'
-                            ])->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: PNG, JPG, JPEG (opcional)</small>') ?>
+                            ])->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: PNG, JPG, JPEG (opcional)</small>')
+                            ?>
                         </div>
                     </div>
                 </div>

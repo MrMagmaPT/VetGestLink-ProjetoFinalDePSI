@@ -6,6 +6,9 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use kartik\select2\Select2;
+use yii\web\JsExpression;
+use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var backend\models\MarcacaoSearch $searchModel */
@@ -21,26 +24,21 @@ $this->title = 'Gestão de Marcações';
 // Breadcrumbs(Substituído pelo header personalizado)
 $this->params['breadcrumbs'][] = 'Marcações';
 ?>
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-calendar-alt text-primary"></i>
-                    Marcações
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Marcações</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
-
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Marcações',
+    'icon' => 'fa-calendar-check text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Marcações',
+        ],
+    ],
+]);
+?>
 <div class="content">
     <div class="container-fluid">
         <!-- Card de Estatísticas -->
@@ -94,44 +92,48 @@ $this->params['breadcrumbs'][] = 'Marcações';
                 </div>
             </div>
             <div class="card-body p-0">
+                <?php \yii\widgets\Pjax::begin(['id' => 'marcacao-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 50px'],
+                            'headerOptions' => ['style' => 'width: 180px'],
                         ],
                         [
                             'attribute' => 'data',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Data',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<strong>' . Yii::$app->formatter->asDate($model->data, 'php:d/m/Y') . '</strong>';
                             },
-                            'headerOptions' => ['style' => 'width: 120px'],
                         ],
                         [
                             'attribute' => 'horainicio',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Hora Início',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horainicio));
                             },
-                            'headerOptions' => ['style' => 'width: 110px'],
                         ],
                         [
                             'attribute' => 'horafim',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Hora Fim',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horafim));
                             },
-                            'headerOptions' => ['style' => 'width: 110px'],
                         ],
                         [
                             'attribute' => 'animais_id',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Animal',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -144,9 +146,28 @@ $this->params['breadcrumbs'][] = 'Marcações';
                                 }
                                 return '-';
                             },
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'animais_id',
+                                'data' => \yii\helpers\ArrayHelper::map(\common\models\Animal::find()->orderBy('nome')->asArray()->all(), 'id', 'nome'),
+                                'options' => [
+                                    'placeholder' => 'Animal...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'minimumResultsForSearch' => 0,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhum animal encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'attribute' => 'userprofiles_id',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Veterinário',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -159,9 +180,28 @@ $this->params['breadcrumbs'][] = 'Marcações';
                                 }
                                 return '-';
                             },
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'userprofiles_id',
+                                'data' => \yii\helpers\ArrayHelper::map(\common\models\Userprofile::find()->orderBy('nomecompleto')->asArray()->all(), 'id', 'nomecompleto'),
+                                'options' => [
+                                    'placeholder' => 'Veterinário...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'minimumResultsForSearch' => 0,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhum veterinário encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'attribute' => 'estado',
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -172,18 +212,34 @@ $this->params['breadcrumbs'][] = 'Marcações';
                                 ];
                                 return $badges[$model->estado] ?? $model->estado;
                             },
-                            'filter' => [
-                                Marcacao::ESTADO_PENDENTE => 'Pendente',
-                                Marcacao::ESTADO_REALIZADA => 'Realizada',
-                                Marcacao::ESTADO_CANCELADA => 'Cancelada',
-                            ],
-                            'headerOptions' => ['style' => 'width: 130px'],
+                            'filter' => Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'estado',
+                                'data' => [
+                                    Marcacao::ESTADO_PENDENTE => 'Pendente',
+                                    Marcacao::ESTADO_REALIZADA => 'Realizada',
+                                    Marcacao::ESTADO_CANCELADA => 'Cancelada',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'minimumResultsForSearch' => 0,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -229,6 +285,7 @@ $this->params['breadcrumbs'][] = 'Marcações';
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

@@ -5,6 +5,8 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\web\UploadedFile;
+use common\validators\NifValidator;
+use common\validators\BirthValidator;
 
 /**
  * This is the model class for table "userprofiles".
@@ -47,7 +49,13 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return [
             [['eliminado'], 'default', 'value' => 0],
-            [['nomecompleto', 'nif', 'telemovel', 'dtanascimento', 'user_id'], 'required'],
+            ['nomecompleto', 'required', 'message' => 'O nome completo é obrigatório.'],
+            ['nif', 'required', 'message' => 'O NIF é obrigatório.'],
+            ['nif', NifValidator::class],
+            ['telemovel', 'required', 'message' => 'O telemóvel é obrigatório.'],
+            ['dtanascimento', 'required', 'message' => 'A data de nascimento é obrigatória.'],
+            ['dtanascimento', BirthValidator::class],
+            ['user_id', 'required', 'message' => 'Dados do Userprofile estão inválidos, corrija para criar o User.'],
             [['dtanascimento'], 'safe'],
             [['user_id', 'eliminado'], 'integer'],
             [['nomecompleto'], 'string', 'max' => 45],
@@ -81,6 +89,7 @@ class Userprofile extends \yii\db\ActiveRecord
      * Gets query for [[Animais]].
      *
      * @return \yii\db\ActiveQuery
+     */
     public function getAnimais()
     {
     return $this->hasMany(Animal::class, ['userprofiles_id' => 'id']);

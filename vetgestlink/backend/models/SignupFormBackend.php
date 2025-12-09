@@ -33,26 +33,33 @@ class SignupFormBackend extends Model
     {
         return [
             ['username', 'trim'],
-            ['username', 'required'],
+            ['username', 'required', 'message' => 'O nome de utilizador é obrigatório.'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este nome de utilizador já existe.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
-            ['email', 'required'],
+            ['email', 'required', 'message' => 'O email é obrigatório.'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este email já está registado.'],
 
-            ['password', 'required'],
+            ['password', 'required', 'message' => 'A palavra-passe é obrigatória.'],
             ['password', 'string', 'min' => 6],
 
-            [['nomecompleto', 'dtanascimento', 'nif', 'telemovel'], 'required'],
+            ['nomecompleto', 'required', 'message' => 'O nome completo é obrigatório.'],
+            ['dtanascimento', 'required', 'message' => 'A data de nascimento é obrigatória.'],
+            ['nif', 'required', 'message' => 'O NIF é obrigatório.'],
+            ['telemovel', 'required', 'message' => 'O telemóvel é obrigatório.'],
             ['nomecompleto', 'string', 'max' => 45],
             ['dtanascimento', 'date', 'format' => 'php:Y-m-d'],
             ['nif', 'string', 'length' => 9],
             ['telemovel', 'string', 'length' => 9],
 
-            [['rua', 'nporta', 'cdpostal', 'localidade', 'cidade'], 'required'],
+            ['rua', 'required', 'message' => 'A rua é obrigatória.'],
+            ['nporta', 'required', 'message' => 'O número da porta é obrigatório.'],
+            ['cdpostal', 'required', 'message' => 'O código postal é obrigatório.'],
+            ['localidade', 'required', 'message' => 'A localidade é obrigatória.'],
+            ['cidade', 'required', 'message' => 'A cidade é obrigatória.'],
 
             // MUDANÇA: Ajustar max para 45 caracteres (conforme tabela)
             [['rua', 'localidade', 'cidade'], 'string', 'max' => 45],
@@ -65,7 +72,6 @@ class SignupFormBackend extends Model
             ['role', 'string'],
         ];
     }
-
 
     public function attributeLabels()
     {
@@ -97,7 +103,21 @@ class SignupFormBackend extends Model
         }
 
         try {
-            // 1. Criar User
+            // 1. Valida Userprofile antes de criar User
+            $userprofile = new Userprofile();
+            $userprofile->nomecompleto = $this->nomecompleto;
+            $userprofile->dtanascimento = $this->dtanascimento;
+            $userprofile->nif = $this->nif;
+            $userprofile->telemovel = $this->telemovel;
+            $userprofile->eliminado = 0;
+
+            if (!$userprofile->validate()) {
+                Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
+                $this->addErrors($userprofile->getErrors());
+                return null;
+            }
+
+            // 2. Criar User
             $user = new User();
             $user->username = $this->username;
             $user->email = $this->email;
@@ -115,7 +135,7 @@ class SignupFormBackend extends Model
 
             Yii::info("User ID {$user->id} criado");
 
-            // 2. Atribuir role selecionada ou cliente por defeito
+            // 3. Atribuir role selecionada ou cliente por defeito
             $auth = Yii::$app->authManager;
             $roleName = $this->role ?: 'cliente'; // Se não foi definida, usa 'cliente'
             $roleObj = $auth->getRole($roleName);
@@ -125,28 +145,22 @@ class SignupFormBackend extends Model
             } else {
                 Yii::warning("Role '{$roleName}' não encontrada no sistema RBAC");
             }
-            // 3. Criar Userprofile
-            $userprofile = new Userprofile();
-            $userprofile->user_id = $user->id;
-            $userprofile->nomecompleto = $this->nomecompleto;
-            $userprofile->dtanascimento = $this->dtanascimento;
-            $userprofile->nif = $this->nif;
-            $userprofile->telemovel = $this->telemovel;
-            $userprofile->eliminado = 0;
 
+            // 4. Salvar Userprofile já validado
+            $userprofile->user_id = $user->id;
             if (!$userprofile->save()) {
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
                 throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
             }
 
-            // 3.1 Upload de imagem de perfil (se fornecida)
+            // 5. Upload de imagem de perfil (se fornecida)
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
                 $userprofile->uploadImage();
                 Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
             }
 
-            // 4. Criar Morada
+            // 6. Criar Morada
             $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
             $morada->rua = $this->rua;

@@ -128,8 +128,10 @@ class MedicamentoController extends Controller
             $model->loadDefaultValues();
         }
 
+        $searchModel = new MedicamentoSearch();
         return $this->render('create', [
             'model' => $model,
+            'searchModel' => $searchModel,
         ]);
     }
 

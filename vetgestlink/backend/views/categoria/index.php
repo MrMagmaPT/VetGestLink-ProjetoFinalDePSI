@@ -6,6 +6,9 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\BigCardWidget;
+use backend\widgets\SmallCardWidget;
+use backend\widgets\PageHeaderWidget;
+
 
 /** @var yii\web\View $this */
 /** @var backend\models\CategoriaSearch $searchModel */
@@ -18,30 +21,27 @@ $this->title = 'Gestão de Categorias';
 $this->params['breadcrumbs'][] = 'Categorias';
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-folder text-primary"></i>
-                    Categorias de Medicamentos
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item active">Categorias</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<?php
+echo PageHeaderWidget::widget([
+    'title' => 'Gestão de Categorias',
+    'icon' => 'fa-folder text-primary',
+    'breadcrumbs' => [
+        [
+            'label' => '<i class="fas fa-home"></i> Dashboard',
+            'url' => ['/site/index'],
+        ],
+        [
+            'label' => 'Categorias',
+        ],
+    ],
+]); 
+?>
 
 <div class="content">
     <div class="container-fluid">
         <!-- Card de Estatísticas -->
         <div class="row mb-4">
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-folder',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Categorias',
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = 'Categorias';
                 'url' => '/categoria/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-pills',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Total de Medicamentos',
@@ -80,19 +80,56 @@ $this->params['breadcrumbs'][] = 'Categorias';
                         ['class' => 'btn btn-success']
                     ) ?>
                 </div>
+                <div class="row mb-3 mt-3">
+                    <div class="col-md-6">
+                        <!-- Barra de pesquisa com Select2 -->
+                        <?= kartik\select2\Select2::widget([
+                            'name' => 'search_categoria',
+                            'data' => $searchModel->getCategoriasList(),
+                            'value' => $searchModel->id,
+                            'options' => [
+                                'placeholder' => 'Pesquisar categoria...',
+                                'id' => 'categoria-search',
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true,
+                                'language' => [
+                                    'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma categoria encontrada"; }'),
+                                ],
+                                'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                                'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                            ],
+                            'bsVersion' => '5.x',
+                            'pluginEvents' => [
+                                'select2:select' => 'function(e) { 
+                                    var id = e.params.data.id;
+                                    window.location.href = "' . Url::to(['index']) . '?CategoriaSearch[id]=" + id;
+                                }',
+                                'select2:clear' => 'function(e) {
+                                    window.location.href = "' . Url::to(['index']) . '";
+                                }',
+                            ],
+                        ]); ?>
+                    </div>
+                </div>
             </div>
             <div class="card-body p-0">
+                <?php \yii\widgets\Pjax::begin(['id' => 'categoria-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 50px'],
+                            'headerOptions' => ['style' => 'width: 50px '],
                         ],
                         [
                             'attribute' => 'nome',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
                             'label' => 'Nome da Categoria',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -102,9 +139,12 @@ $this->params['breadcrumbs'][] = 'Categorias';
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false,
                         ],
                         [
                             'attribute' => 'medicamentos_count',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Medicamentos',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -114,12 +154,12 @@ $this->params['breadcrumbs'][] = 'Categorias';
                                 }
                                 return '<span class="text-muted">0</span>';
                             },
-                            'headerOptions' => ['style' => 'width: 150px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'enableSorting' => false,
                         ],
                         [
                             'attribute' => 'eliminado',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -128,17 +168,31 @@ $this->params['breadcrumbs'][] = 'Categorias';
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativo',
-                                1 => 'Eliminado',
-                            ],
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                                'filter' => kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'eliminado',
+                                'data' => [
+                                    0 => 'Ativo',
+                                    1 => 'Eliminado',
+                                ],
+                                'options' => [
+                                    'placeholder' => 'Estado...',
+                                    'allowClear' => true,
+                                    'style' => 'width: 120px;',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,
-                            'header' => 'Ações',
-                            'template' => '{view} {update} {delete}',
+                            'header' => '<i class="fas fa-cog"></i> Ações',
+                            'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
                             'buttons' => [
                                 'view' => function ($url, $model) {
                                     return Html::a(
@@ -184,6 +238,7 @@ $this->params['breadcrumbs'][] = 'Categorias';
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

@@ -67,4 +67,15 @@ class CategoriaSearch extends Categoria
 
         return $dataProvider;
     }
+
+    /**
+     * Retorna lista [id => nome] de categorias ativas para Select2
+     */
+    public function getCategoriasList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
+            'id', 'nome'
+        );
+    }
 }

@@ -24,7 +24,7 @@ $this->registerCssFile('@web/static/css/view.css');
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
+                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Dashboard', ['/site/index']) ?></li>
                     <li class="breadcrumb-item"><?= Html::a('Métodos de Pagamento', ['index']) ?></li>
                     <li class="breadcrumb-item active"><?= Html::encode($model->nome) ?></li>
                 </ol>
@@ -53,13 +53,14 @@ $this->registerCssFile('@web/static/css/view.css');
                 'url' => '#',
             ]) ?>
             
-            <?= SmallCardWidget::widget([
+            <!-- Não é necessário mostrar o ID do método de pagamento em um card separado -->
+            <!-- <?= SmallCardWidget::widget([
                 'icon' => 'fa-hashtag',
                 'iconColorClass' => 'icon-purple',
                 'text' => 'ID do Método',
                 'value' => $model->id,
                 'url' => '#',
-            ]) ?>
+            ]) ?> -->
         </div>
 
         <div class="row">
@@ -82,14 +83,15 @@ $this->registerCssFile('@web/static/css/view.css');
                                 <strong><?= Html::encode($model->nome) ?></strong>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <!-- Onde Mostrava o ID do método de pagamento -->
+                        <!-- <div class="row mb-3">
                             <div class="col-md-3 fw-bold text-muted">
                                 <i class="fas fa-hashtag"></i> ID:
                             </div>
                             <div class="col-md-9">
                                 <?= Html::encode($model->id) ?>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row mb-3">
                             <div class="col-md-3 fw-bold text-muted">
                                 <i class="fas fa-toggle-on"></i> Estado de Vigor:
@@ -121,18 +123,18 @@ $this->registerCssFile('@web/static/css/view.css');
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
+                                ['class' => 'btn btn-primary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
                                 [
-                                    'class' => 'btn btn-danger btn-lg',
+                                    'class' => 'btn btn-danger btn-md',
                                     'data' => [
                                         'confirm' => 'Tem a certeza que deseja eliminar este método de pagamento?',
                                         'method' => 'post',

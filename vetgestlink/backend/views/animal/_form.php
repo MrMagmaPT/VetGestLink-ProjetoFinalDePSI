@@ -6,6 +6,7 @@ use common\models\Especie;
 use common\models\Userprofile;
 use common\models\Raca;
 use yii\helpers\ArrayHelper;
+use kartik\select2\Select2
 
 /** @var yii\web\View $this */
 /** @var common\models\Animal $model */
@@ -77,35 +78,32 @@ use yii\helpers\ArrayHelper;
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <?= $form->field($model, 'especies_id')->dropDownList(
-                                ArrayHelper::map(
-                                    Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                                    'id',
-                                    'nome'
-                                ),
-                                ['prompt' => 'Selecione uma espécie', 'class' => 'form-control']
-                            )->label('Espécie') ?>
+                            <?= $form->field($model, 'especies_id')->widget(Select2::classname(), [
+                                'data' => \backend\models\EspecieSearch::getEspeciesList(),
+                                'options' => ['placeholder' => 'Selecione uma espécie...'],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ])->label('Espécie') ?>
                         </div>
                         <div class="col-md-6">
-                            <?= $form->field($model, 'racas_id')->dropDownList(
-                                ArrayHelper::map(
-                                    Raca::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                                    'id',
-                                    'nome'
-                                ),
-                                ['prompt' => 'Selecione uma raça', 'class' => 'form-control']
-                            )->label('Raça') ?>
+                            <?= $form->field($model, 'racas_id')->widget(Select2::classname(), [
+                                'data' => \backend\models\RacaSearch::getRacasList(),
+                                'options' => ['placeholder' => 'Selecione uma raça...'],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ],
+                            ])->label('Raça') ?>
                         </div>
                     </div>
 
-                    <?= $form->field($model, 'userprofiles_id')->dropDownList(
-                        ArrayHelper::map(
-                            Userprofile::find()->where(['eliminado' => 0])->orderBy(['nomecompleto' => SORT_ASC])->all(),
-                            'id',
-                            'nomecompleto'
-                        ),
-                        ['prompt' => 'Selecione o dono', 'class' => 'form-control']
-                    )->label('Dono') ?>
+                    <?= $form->field($model, 'userprofiles_id')->widget(Select2::classname(), [
+                        'data' => \backend\models\UserprofileSearch::getActiveOwnersList(),
+                        'options' => ['placeholder' => 'Selecione o dono...'],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ])->label('Dono') ?>
                 </div>
             </div>
 
@@ -123,26 +121,18 @@ use yii\helpers\ArrayHelper;
                     </h5>
                 </div>
                 <div class="card-body text-center">
-                    <?php if ($model->getImageUrl()): ?>
-                        <div class="mb-3">
-                            <img src="<?= $model->getImageUrl() ?>" 
-                                 alt="Foto do animal" 
-                                 class="img-fluid rounded shadow-sm" 
-                                 style="max-height: 250px; object-fit: cover;" />
-                        </div>
-                        <p class="text-muted small mb-3">
-                            <i class="fas fa-info-circle"></i> Foto atual
-                        </p>
-                    <?php else: ?>
-                        <div class="mb-3">
-                            <i class="fas fa-image text-muted" style="font-size: 80px;"></i>
-                        </div>
-                        <p class="text-muted small mb-3">Sem fotografia</p>
-                    <?php endif; ?>
-
+                    <div class="mb-3">
+                        <img src="<?= $model->getImageUrl() ?>" 
+                             alt="Foto do animal" 
+                             id="animal-image-preview"
+                             class="img-fluid rounded shadow-sm" 
+                             style="max-height: 250px; object-fit: cover;<?= $model->getImageUrl() ? '' : 'display:none;' ?>" />
+                    </div>
                     <?= $form->field($model, 'imageFile')->fileInput([
                         'accept' => 'image/*',
-                        'class' => 'form-control'
+                        'class' => 'form-control',
+                        'id' => 'animal-imagefile',
+                        'data-image-preview' => 'animal-image-preview',
                     ])->label('Nova Fotografia')->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: JPG, PNG (opcional)</small>') ?>
                 </div>
             </div>
@@ -156,15 +146,15 @@ use yii\helpers\ArrayHelper;
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
+                    <div class="d-flex justify-content-center">
                         <?= Html::submitButton(
                             '<i class="fas fa-save"></i> Guardar',
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md me-3']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times"></i> Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>

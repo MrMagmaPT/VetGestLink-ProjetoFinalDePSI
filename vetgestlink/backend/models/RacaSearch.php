@@ -68,4 +68,15 @@ class RacaSearch extends Raca
 
         return $dataProvider;
     }
+
+    /**
+     * Retorna lista [id => nome] de raças ativas para Select2
+     */
+    public static function getRacasList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Raca::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
+            'id', 'nome'
+        );
+    }
 }
