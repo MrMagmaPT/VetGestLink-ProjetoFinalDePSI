@@ -108,6 +108,8 @@ class FaturaController extends Controller
     public function actionCreate()
     {
         $model = new Fatura();
+        $metodosPagamento = FaturaSearch::getMetodosPagamentoAtivos();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -119,6 +121,8 @@ class FaturaController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'metodosPagamento' => $metodosPagamento,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 
@@ -132,6 +136,8 @@ class FaturaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $metodosPagamento = FaturaSearch::getMetodosPagamentoAtivos();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -139,6 +145,8 @@ class FaturaController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'metodosPagamento' => $metodosPagamento,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 

@@ -3,7 +3,6 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\debug\components\search\matchers\GreaterThan;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -16,7 +15,6 @@ use common\models\Medicamento;
 use common\models\Categoria;
 use common\models\Raca;
 use common\models\Especie;
-use function PHPUnit\Framework\lessThan;
 
 class SiteController extends Controller
 {

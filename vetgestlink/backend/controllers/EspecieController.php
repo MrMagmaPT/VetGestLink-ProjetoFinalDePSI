@@ -72,10 +72,16 @@ class EspecieController extends Controller
     {
         $searchModel = new EspecieSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        
+        // Estatísticas
+        $totalCount = \common\models\Especie::find()->where(['eliminado' => 0])->count();
+        $deletedCount = \common\models\Especie::find()->where(['eliminado' => 1])->count();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'deletedCount' => $deletedCount,
         ]);
     }
 

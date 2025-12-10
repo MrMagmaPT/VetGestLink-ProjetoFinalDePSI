@@ -45,36 +45,36 @@ class BigCardWidget extends Widget
         return <<<HTML
             <style>
             .info-box-custom {
-                border-radius: 28px !important;
-                box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.08);
+                border-radius: 20px !important;
+                box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.06);
                 background: #f8fafc;
-                padding: 32px 24px 24px 24px;
+                padding: 20px 16px 16px 16px;
                 transition: box-shadow 0.2s, transform 0.2s;
             }
             .info-box-custom:hover {
-                box-shadow: 0 10px 40px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.14);
-                transform: translateY(-3px) scale(1.04);
+                box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 12px rgba(0,0,0,0.10);
+                transform: translateY(-2px) scale(1.02);
             }
             .info-box-icon.rounded {
-                border-radius: 18px !important;
-                font-size: 3rem;
-                width: 80px;
-                height: 80px;
+                border-radius: 14px !important;
+                font-size: 2.4rem;
+                width: 60px;
+                height: 60px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-right: 24px;
+                margin-right: 16px;
             }
             .info-box-content {
-                padding-left: 12px;
+                padding-left: 8px;
             }
             .info-box-text {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
                 font-weight: 600;
                 color: #343a40;
             }
             .info-box-number {
-                font-size: 2.4rem;
+                font-size: 1.9rem;
                 font-weight: 700;
                 color: #007bff;
             }

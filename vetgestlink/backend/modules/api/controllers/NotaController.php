@@ -26,13 +26,7 @@ class NotaController extends Controller
     {
         $behaviors = parent::behaviors();
 
-        // Autenticação via QueryParamAuth (access-token)
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
-
-        // CORS
+        // CORS - DEVE vir PRIMEIRO
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::class,
             'cors' => [
@@ -42,6 +36,12 @@ class NotaController extends Controller
                 'Access-Control-Allow-Credentials' => false,
                 'Access-Control-Max-Age' => 86400,
             ],
+        ];
+
+        // Autenticação via QueryParamAuth (access-token)
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
         ];
 
         // JSON response
@@ -68,15 +68,15 @@ class NotaController extends Controller
     }
 
     /**
-     * GET /nota
+     * GET /nota/all
      * Lista todas as notas dos animais do cliente
      */
-    public function actionIndex()
+    public function actionAll()
     {
         $userProfileId = $this->getUserProfileId();
 
         $notas = Nota::find()
-            ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
+            ->where(['userprofiles_id' => $userProfileId])
             ->with(['animais', 'userprofiles'])
             ->orderBy(['created_at' => SORT_DESC])
             ->all();
@@ -98,9 +98,37 @@ class NotaController extends Controller
         return $result;
     }
 
+    /**
+     * GET /nota/view/{id}
+     * Detalhes de uma nota específica
+     */
+    public function actionView($id)
+    {
+        $userProfileId = $this->getUserProfileId();
+
+        $nota = Nota::find()
+            ->where(['id' => $id, 'userprofiles_id' => $userProfileId])
+            ->with(['animais', 'userprofiles'])
+            ->one();
+
+        if (!$nota) {
+            throw new NotFoundHttpException('Nota não encontrada');
+        }
+
+        return [
+            'id' => $nota->id,
+            'nota' => $nota->nota,
+            'animais_id' => $nota->animais_id,
+            'animal_nome' => $nota->animais ? $nota->animais->nome : null,
+            'userprofiles_id' => $nota->userprofiles_id,
+            'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : null,
+            'created_at' => $nota->created_at,
+            'updated_at' => $nota->updated_at,
+        ];
+    }
 
     /**
-     * POST /nota
+     * POST /nota/create
      * Criar nova nota
      */
     public function actionCreate()
@@ -116,7 +144,7 @@ class NotaController extends Controller
         }
 
         // Verificar se o animal pertence ao usuário
-        $animal = Animal::findOne(['id' => $animaisId, 'userprofiles_id' => $userProfileId, 'eliminado' => 0]);
+        $animal = Animal::findOne(['id' => $animaisId, 'userprofiles_id' => $userProfileId]);
         if (!$animal) {
             throw new NotFoundHttpException('Animal não encontrado');
         }
@@ -144,14 +172,14 @@ class NotaController extends Controller
     }
 
     /**
-     * PUT /nota/{id}
+     * PUT /nota/update/{id}
      * Atualizar uma nota existente
      */
     public function actionUpdate($id)
     {
         $userProfileId = $this->getUserProfileId();
 
-        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId, 'eliminado' => 0]);
+        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
         if (!$nota) {
             throw new NotFoundHttpException('Nota não encontrada');
         }
@@ -183,21 +211,20 @@ class NotaController extends Controller
     }
 
     /**
-     * DELETE /nota/{id}
+     * DELETE /nota/delete/{id}
      * Deletar uma nota (soft delete)
      */
     public function actionDelete($id)
     {
         $userProfileId = $this->getUserProfileId();
 
-        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId, 'eliminado' => 0]);
+        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
         if (!$nota) {
             throw new NotFoundHttpException('Nota não encontrada');
         }
 
-        // Soft delete
-        $nota->eliminado = 1;
-        if (!$nota->save()) {
+        // Delete real
+        if (!$nota->delete()) {
             throw new \yii\web\ServerErrorHttpException('Erro ao deletar nota');
         }
 

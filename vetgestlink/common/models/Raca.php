@@ -74,4 +74,18 @@ class Raca extends \yii\db\ActiveRecord
         return $this->hasOne(Especie::class, ['id' => 'especies_id']);
     }
 
+    /**
+     * Obter nome da espécie (propriedade virtual)
+     * @return string|null
+     */
+    public function getEspecieNome()
+    {
+        if ($this->isRelationPopulated('especies')) {
+            $especie = $this->especies;
+            return $especie ? $especie->nome : null;
+        }
+        $especie = $this->getEspecies()->one();
+        return $especie ? $especie->nome : null;
+    }
+
 }

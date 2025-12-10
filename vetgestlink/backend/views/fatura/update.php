@@ -5,6 +5,8 @@ use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $model */
+/** @var array $metodosPagamento */
+/** @var array $userprofilesList */
 
 echo PageHeaderWidget::widget([
     'title' => 'Editar Fatura #' . $model->id,
@@ -37,6 +39,8 @@ echo PageHeaderWidget::widget([
             <div class="card-body">
                 <?= $this->render('_form', [
                     'model' => $model,
+                    'metodosPagamento' => $metodosPagamento,
+                    'userprofilesList' => $userprofilesList,
                 ]) ?>
             </div>
         </div>

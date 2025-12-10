@@ -23,48 +23,71 @@ class AnimalSearch extends Animal
         ];
     }
 
-        /**
-         * Retorna lista de animais ativos para Select2
-         */
-        public static function getActiveAnimalsList()
-        {
-            return \yii\helpers\ArrayHelper::map(
-                Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                'id',
-                'nome'
-            );
-        }
+    /**
+     * Lista completa [id => nome] de animais
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Animal::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
 
-        /**
-         * Retorna lista de todos os animais para Select2
-         */
-        public static function getAnimaisList()
-        {
-            return \yii\helpers\ArrayHelper::map(
-                Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                'id',
-                'nome'
-            );
-        }
+    /**
+     * Lista apenas animais ativos [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
 
-        /**
-         * Retorna lista de donos ativos com animais para Select2
-         */
-        public static function getActiveOwnersList()
-        {
-            $owners = \common\models\Userprofile::find()
-                ->where(['eliminado' => 0])
-                ->andWhere(['in', 'id',
-                    (new \yii\db\Query())
-                        ->select('userprofiles_id')
-                        ->from('animais')
-                        ->where(['eliminado' => 0])
-                        ->groupBy('userprofiles_id')
-                ])
-                ->orderBy('nomecompleto')
-                ->all();
-            return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
-        }
+    /**
+     * Buscar nome do animal por ID
+     */
+    public static function getNameById($id)
+    {
+        $animal = Animal::findOne($id);
+        return $animal ? $animal->nome : null;
+    }
+
+    /**
+     * Lista de donos que possuem animais ativos [id => nomecompleto]
+     */
+    public static function getActiveOwnersList()
+    {
+        $owners = \common\models\Userprofile::find()
+            ->where(['eliminado' => 0])
+            ->andWhere(['in', 'id',
+                (new \yii\db\Query())
+                    ->select('userprofiles_id')
+                    ->from('animais')
+                    ->where(['eliminado' => 0])
+                    ->groupBy('userprofiles_id')
+            ])
+            ->orderBy('nomecompleto')
+            ->all();
+        return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
+     */
+    public static function getActiveAnimalsList()
+    {
+        return static::getActiveList();
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
+     */
+    public static function getAnimaisList()
+    {
+        return static::getActiveList();
+    }
     /**
      * {@inheritdoc}
      */
@@ -84,7 +107,8 @@ class AnimalSearch extends Animal
      */
     public function search($params, $formName = null)
     {
-        $query = Animal::find();
+        $query = Animal::find()
+            ->with(['especies', 'userprofiles', 'racas']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -118,13 +142,27 @@ class AnimalSearch extends Animal
         return $dataProvider;
     }
 
-    public static function getAnimalNameById($id)
+    /**
+     * Retorna objetos Animal (para casos que precisam do objeto completo)
+     */
+    public static function getActiveAnimalsObjects()
     {
-        $animal = Animal::findOne($id);
-        return $animal ? $animal->nome : null;
+        return Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all();
     }
 
-    public static  function getAnimaisListTEST() {
-        return Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all();
+    /**
+     * @deprecated Use getNameById() instead
+     */
+    public static function getAnimalNameById($id)
+    {
+        return static::getNameById($id);
+    }
+
+    /**
+     * @deprecated Use getActiveAnimalsObjects() instead
+     */
+    public static function getAnimaisListTEST()
+    {
+        return static::getActiveAnimalsObjects();
     }
 }

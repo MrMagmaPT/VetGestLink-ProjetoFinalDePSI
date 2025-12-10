@@ -15,6 +15,8 @@ use common\assets\CommonAsset;
 
 AppAsset::register($this);
 CommonAsset::register($this);
+
+$faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
 ?>
 
 <?php $this->beginPage() ?>
@@ -25,14 +27,9 @@ CommonAsset::register($this);
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!--Configurar favicon-->
-    <?php
-    // Usar favicon publicado pelo asset bundle
-    $commonAsset = common\assets\CommonAsset::register($this);
-    $faviconUrl = $commonAsset->baseUrl . '/favicon.ico';
-    ?>
+    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
+
     
     <title>
         <?= Html::encode($this->title) ?>

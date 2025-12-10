@@ -152,7 +152,6 @@ class UserprofileController extends Controller
                 }
             }
         }
-
         return $this->render('update', [
             'model' => $model,
             'moradas' => $moradas,
@@ -232,7 +231,6 @@ class UserprofileController extends Controller
                 return $this->redirect(['update', 'id' => $model->id]);
             }
         }
-
         return $this->redirect(['update', 'id' => $model->id]);
     }
 

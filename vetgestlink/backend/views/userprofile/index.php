@@ -226,8 +226,7 @@ echo PageHeaderWidget::widget([
                             'attribute' => 'morada_cidade',
                             'label' => 'Cidade',
                             'value' => function($model) {
-                                $morada = $model->getMoradas()->one();
-                                return $morada ? $morada->cidade : '-';
+                                return $model->moradaCidade ?: '-';
                             },
                             'filter' => kartik\select2\Select2::widget([
                                 'model' => $searchModel,

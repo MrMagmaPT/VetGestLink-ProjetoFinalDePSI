@@ -71,4 +71,28 @@ class Especie extends \yii\db\ActiveRecord
         return $this->hasMany(Raca::class, ['especies_id' => 'id']);
     }
 
+    /**
+     * Obter total de raças desta espécie (propriedade virtual)
+     * @return int
+     */
+    public function getTotalRacas()
+    {
+        if ($this->isRelationPopulated('racas')) {
+            return count($this->racas);
+        }
+        return $this->getRacas()->count();
+    }
+
+    /**
+     * Obter total de animais desta espécie (propriedade virtual)
+     * @return int
+     */
+    public function getTotalAnimais()
+    {
+        if ($this->isRelationPopulated('animais')) {
+            return count($this->animais);
+        }
+        return $this->getAnimais()->count();
+    }
+
 }

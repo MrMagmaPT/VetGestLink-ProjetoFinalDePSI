@@ -61,7 +61,8 @@ class UserprofileSearch extends Userprofile
     public function search($params, $formName = null)
     {
         $query = Userprofile::find()
-            ->joinWith(['moradas']); // Join com a tabela de moradas
+            ->joinWith(['moradas'])
+            ->with(['moradas']); // Eager loading para evitar queries N+1
 
         // add conditions that should always apply her
 

@@ -5,6 +5,9 @@ use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Animal $model */
+/** @var array $especiesList */
+/** @var array $racasList */
+/** @var array $userprofilesList */
 
 ?>
 <?php
@@ -35,6 +38,9 @@ echo PageHeaderWidget::widget([
             <div class="card-body">
                 <?= $this->render('_form', [
                     'model' => $model,
+                    'especiesList' => $especiesList,
+                    'racasList' => $racasList,
+                    'userprofilesList' => $userprofilesList,
                 ]) ?>
             </div>
         </div>

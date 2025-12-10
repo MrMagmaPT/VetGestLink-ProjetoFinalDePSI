@@ -3,12 +3,12 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use backend\models\AnimalSearch;
-use backend\models\UserprofileSearch;
 
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $animaisList */
+/** @var array $userprofilesList */
 ?>
 
 <div class="nota-form">
@@ -42,7 +42,7 @@ use backend\models\UserprofileSearch;
                     <div class="row">
                         <div class="col-md-6">
                             <?= $form->field($model, 'animais_id')->widget(Select2::class, [
-                                'data' => AnimalSearch::getAnimaisList(),
+                                'data' => $animaisList,
                                 'options' => [
                                     'placeholder' => 'Selecione um animal',
                                 ],
@@ -56,7 +56,7 @@ use backend\models\UserprofileSearch;
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'userprofiles_id')->widget(Select2::class, [
-                                'data' => UserprofileSearch::getActiveOwnersList(),
+                                'data' => $userprofilesList,
                                 'options' => [
                                     'placeholder' => 'Selecione o autor',
                                 ],

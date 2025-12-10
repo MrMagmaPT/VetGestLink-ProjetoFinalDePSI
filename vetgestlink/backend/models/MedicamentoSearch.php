@@ -42,7 +42,8 @@ class MedicamentoSearch extends Medicamento
      */
     public function search($params, $formName = null)
     {
-        $query = Medicamento::find();
+        $query = Medicamento::find()
+            ->with(['categorias']); // Eager loading para evitar queries N+1
 
         // add conditions that should always apply here
 

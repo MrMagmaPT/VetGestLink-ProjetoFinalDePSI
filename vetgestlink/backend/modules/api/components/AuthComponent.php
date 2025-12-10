@@ -59,7 +59,6 @@ class AuthComponent extends Component
     public function init()
     {
         parent::init();
-        // Configurações adicionais se necessário
     }
 
     /**
@@ -75,7 +74,7 @@ class AuthComponent extends Component
     {
         // Validar parâmetros
         if (empty($username) || empty($password)) {
-            throw new UnauthorizedHttpException('Username e password são obrigatórios');
+            throw new UnauthorizedHttpException('Credenciais inválidas');
         }
 
         // Buscar usuário
@@ -83,13 +82,13 @@ class AuthComponent extends Component
 
         // Validar existência e senha
         if (!$user || !$user->validatePassword($password)) {
-            Yii::error("Login failed - Invalid credentials for: {$username}", __METHOD__);
+            Yii::error("Login falhou - Credenciais inválidas para: {$username}", __METHOD__);
             throw new UnauthorizedHttpException('Credenciais inválidas');
         }
 
         // Verificar status do usuário
         if ($user->status != User::STATUS_ACTIVE) {
-            Yii::error("Login failed - Inactive account for: {$username}", __METHOD__);
+            Yii::error("Login falhou - Conta inativa para: {$username}", __METHOD__);
             throw new ForbiddenHttpException('Conta inativa');
         }
 
@@ -99,36 +98,28 @@ class AuthComponent extends Component
             if ($auth) {
                 // RBAC está configurado, verificar role
                 if (!$auth->checkAccess($user->id, $this->requiredRole)) {
-                    Yii::warning("Login attempt without required role '{$this->requiredRole}' for user: {$username}", __METHOD__);
+                    Yii::warning("Login sem a role '{$this->requiredRole}' para o usuário: {$username}", __METHOD__);
                     throw new ForbiddenHttpException(
                         'Acesso negado. Apenas clientes podem usar a aplicação mobile.'
                     );
                 }
             } else {
                 // RBAC não está configurado, apenas logar aviso
-                Yii::warning("RBAC not configured - skipping role check for user: {$username}", __METHOD__);
+                Yii::warning("RBAC não configurado - ignorando verificação de role para o usuário: {$username}", __METHOD__);
             }
         }
-
-        // Gerar/regenerar auth_key se necessário
-        if (empty($user->auth_key)) {
-            $user->generateAuthKey();
-            if (!$user->save(false)) {
-                Yii::error("Failed to generate auth_key for user: {$username}", __METHOD__);
-                throw new \Exception('Erro ao gerar token de autenticação');
-            }
-        }
-
+        
         // Buscar userprofile
         $userprofile = $user->userprofile;
 
+        // Validar existência do userprofile
         if (!$userprofile) {
-            Yii::error("Userprofile not found for user: {$username}", __METHOD__);
+            Yii::error("Perfil de usuário não encontrado para o usuário: {$username}", __METHOD__);
             throw new ForbiddenHttpException('Perfil de usuário não encontrado');
         }
 
         // Log de sucesso
-        Yii::info("Login successful for user: {$username} (ID: {$user->id})", __METHOD__);
+        Yii::info("Login bem-sucedido para o usuário: {$username} (ID: {$user->id})", __METHOD__);
 
         // Retornar dados do usuário
         return [
@@ -140,13 +131,6 @@ class AuthComponent extends Component
                 'username' => $user->username,
                 'email' => $user->email,
             ],
-            'userprofile' => [
-                'id' => $userprofile->id,
-                'nomecompleto' => $userprofile->nomecompleto,
-                'telemovel' => $userprofile->telemovel,
-                'nif' => $userprofile->nif,
-                'dtanascimento' => $userprofile->dtanascimento,
-            ]
         ];
     }
 
@@ -221,37 +205,81 @@ class AuthComponent extends Component
     /**
      * Inicia processo de recuperação de senha
      *
-     * @param string $username Nome de usuário
+     * @param string $email Email do usuário
      * @return array Resultado da operação
      */
-    public function requestPasswordReset($username)
+    public function requestPasswordReset($email)
     {
-        if (empty($username)) {
+        if (empty($email)) {
             return [
                 'success' => false,
-                'message' => 'Username é obrigatório'
+                'message' => 'Email é obrigatório'
             ];
         }
 
-        // Buscar usuário
-        $user = User::findByUsername($username);
-
-        if (!$user) {
-            // Por segurança, não revelar se o usuário existe
+        // Validar formato de email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return [
-                'success' => true,
-                'message' => 'Se o username existir, um email de recuperação será enviado'
+                'success' => false,
+                'message' => 'Email inválido'
             ];
         }
 
-        // TODO: Implementar geração de token de recuperação
-        // TODO: Implementar envio de email
+        // Buscar usuário ativo pelo email
+        $user = User::findOne([
+            'email' => $email,
+            'status' => User::STATUS_ACTIVE,
+        ]);
 
-        Yii::info("Password reset requested for: {$username}", __METHOD__);
+
+        //Verificar se user com esse email existe
+        if (!$user) {
+            Yii::warning("Password reset requested for non-existent email: {$email}", __METHOD__);
+            // Por segurança, não revelar que o email não existe
+            return [
+                'success' => false,
+                'message' => 'Este email não está registado no sistema.'
+            ];
+        }
+        
+        // Gerar token de recuperação
+        if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
+            $user->generatePasswordResetToken();
+            if (!$user->save(false)) {
+                Yii::error("Failed to save password reset token for: {$email}", __METHOD__);
+                return [
+                    'success' => false,
+                    'message' => 'Erro ao processar solicitação'
+                ];
+            }
+        }
+
+        // Enviar email
+        try {
+            $sent = Yii::$app
+                ->mailer
+                ->compose(
+                    ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
+                    ['user' => $user]
+                )
+                ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' - Recuperação de Senha'])
+                ->setTo($user->email)
+                ->setSubject('Recuperação de senha - ' . Yii::$app->name)
+                ->send();
+
+            if ($sent) {
+                Yii::info("Password reset email sent to: {$email}", __METHOD__);
+            } else {
+                Yii::warning("Failed to send password reset email to: {$email}", __METHOD__);
+            }
+        } catch (\Exception $e) {
+            Yii::error("Email sending error for {$email}: " . $e->getMessage(), __METHOD__);
+            // Não retornar erro ao usuário por segurança
+        }
 
         return [
             'success' => true,
-            'message' => 'Email de recuperação enviado com sucesso'
+            'message' => 'Verifique seu email para instruções de recuperação de senha.'
         ];
     }
 
@@ -280,21 +308,6 @@ class AuthComponent extends Component
             'nif' => $userprofile->nif,
             'tipo' => 'cliente'
         ];
-    }
-
-
-    /**
-     * Gera um novo token para um usuário
-     *
-     * @param User $user Modelo do usuário
-     * @return string Novo token gerado
-     */
-    public function generateNewToken($user)
-    {
-        $user->generateAuthKey();
-        $user->save(false);
-
-        return $user->auth_key;
     }
 }
 

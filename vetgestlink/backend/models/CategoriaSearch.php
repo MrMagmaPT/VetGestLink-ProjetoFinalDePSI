@@ -41,7 +41,8 @@ class CategoriaSearch extends Categoria
      */
     public function search($params, $formName = null)
     {
-        $query = Categoria::find();
+        $query = Categoria::find()
+            ->with(['medicamentos']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -69,13 +70,41 @@ class CategoriaSearch extends Categoria
     }
 
     /**
-     * Retorna lista [id => nome] de categorias ativas para Select2
+     * Lista completa [id => nome] de categorias
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Categoria::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Lista apenas categorias ativas [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Buscar nome da categoria por ID
+     */
+    public static function getNameById($id)
+    {
+        $categoria = Categoria::findOne($id);
+        return $categoria ? $categoria->nome : null;
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
      */
     public function getCategoriasList()
     {
-        return \yii\helpers\ArrayHelper::map(
-            \common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
-            'id', 'nome'
-        );
+        return static::getActiveList();
     }
 }

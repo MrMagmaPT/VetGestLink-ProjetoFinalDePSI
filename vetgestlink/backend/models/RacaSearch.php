@@ -41,7 +41,8 @@ class RacaSearch extends Raca
      */
     public function search($params, $formName = null)
     {
-        $query = Raca::find();
+        $query = Raca::find()
+            ->with(['especies']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -70,12 +71,51 @@ class RacaSearch extends Raca
     }
 
     /**
-     * Retorna lista [id => nome] de raças ativas para Select2
+     * Lista completa [id => nome] de raças
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Raca::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Lista apenas raças ativas [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Raca::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Buscar nome da raça por ID
+     */
+    public static function getNameById($id)
+    {
+        $raca = \common\models\Raca::findOne($id);
+        return $raca ? $raca->nome : null;
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
      */
     public static function getRacasList()
     {
+        return static::getActiveList();
+    }
+
+    /**
+     * Lista de espécies ativas [id => nome]
+     */
+    public static function getEspeciesAtivasList()
+    {
         return \yii\helpers\ArrayHelper::map(
-            \common\models\Raca::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
+            \common\models\Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
             'id', 'nome'
         );
     }

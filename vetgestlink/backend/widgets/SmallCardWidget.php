@@ -50,36 +50,36 @@ class SmallCardWidget extends Widget
         return <<<HTML
             <style>
             .info-box-custom {
-                border-radius: 28px !important;
-                box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.08);
+                border-radius: 20px !important;
+                box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.06);
                 background: #f8fafc;
-                padding: 24px 18px 18px 18px;
+                padding: 16px 12px 12px 12px;
                 transition: box-shadow 0.2s, transform 0.2s;
             }
             .info-box-custom:hover {
-                box-shadow: 0 10px 40px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.14);
-                transform: translateY(-3px) scale(1.04);
+                box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 12px rgba(0,0,0,0.10);
+                transform: translateY(-2px) scale(1.02);
             }
             .info-box-icon.rounded {
-                border-radius: 18px !important;
-                font-size: 2.6rem;
-                width: 64px;
-                height: 64px;
+                border-radius: 14px !important;
+                font-size: 2rem;
+                width: 50px;
+                height: 50px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-right: 18px;
+                margin-right: 12px;
             }
             .info-box-content {
-                padding-left: 8px;
+                padding-left: 6px;
             }
             .info-box-text {
-                font-size: 1.1rem;
+                font-size: 0.95rem;
                 font-weight: 600;
                 color: #343a40;
             }
             .info-box-number {
-                font-size: 2rem;
+                font-size: 1.6rem;
                 font-weight: 700;
                 color: #007bff;
             }

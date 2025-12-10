@@ -27,6 +27,7 @@ class HealthController extends Controller
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::class,
             'cors' => [
+                // Res
                 'Origin' => ['*'],
                 'Access-Control-Request-Method' => ['GET', 'OPTIONS'],
                 'Access-Control-Request-Headers' => ['*'],

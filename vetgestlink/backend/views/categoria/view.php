@@ -114,7 +114,7 @@ echo PageHeaderWidget::widget([
                         </div>
                         <div class="card-body">
                             <div class="list-group">
-                                <?php foreach ($model->getMedicamentos()->where(['eliminado' => 0])->limit(10)->all() as $medicamento): ?>
+                                <?php foreach ($medicamentosAtivos as $medicamento): ?>
                                     <?= Html::a(
                                         '<i class="fas fa-capsules text-primary"></i> ' . Html::encode($medicamento->nome) . 
                                         ' <span class="badge bg-secondary float-end">' . number_format($medicamento->preco, 2, ',', '.') . ' €</span>',

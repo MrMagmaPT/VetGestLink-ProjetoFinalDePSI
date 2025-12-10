@@ -42,7 +42,8 @@ class ServicoSearch extends Servico
      */
     public function search($params, $formName = null)
     {
-        $query = Servico::find();
+        $query = Servico::find()
+            ->with(['linhasfaturas']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -70,22 +71,50 @@ class ServicoSearch extends Servico
         return $dataProvider;
     }
 
-    public static function getServicoNameById($id)
+    /**
+     * Lista completa [id => nome] de serviços
+     */
+    public static function getList()
     {
-        $servico = Servico::findOne($id);
-        return $servico ? $servico->nome : 'Desconhecido';
+        return \yii\helpers\ArrayHelper::map(
+            Servico::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
     }
 
     /**
-     * Retorna lista de serviços para Select2 [id => nome]
+     * Lista apenas serviços ativos [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Servico::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Buscar nome do serviço por ID
+     */
+    public static function getNameById($id)
+    {
+        $servico = Servico::findOne($id);
+        return $servico ? $servico->nome : null;
+    }
+
+    /**
+     * @deprecated Use getNameById() instead
+     */
+    public static function getServicoNameById($id)
+    {
+        return static::getNameById($id);
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
      */
     public static function getServicosList()
     {
-        return Servico::find()
-            ->select(['nome'])
-            ->where(['eliminado' => 0])
-            ->orderBy(['nome' => SORT_ASC])
-            ->indexBy('nome')
-            ->column();
+        return static::getActiveList();
     }
 }

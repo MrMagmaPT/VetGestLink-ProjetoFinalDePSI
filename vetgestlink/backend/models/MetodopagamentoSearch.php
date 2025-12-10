@@ -75,17 +75,43 @@ class MetodopagamentoSearch extends Metodopagamento
         return $dataProvider;
     }
 
-        /**
-     * Retorna lista de métodos de pagamento para Select2 [nome => nome]
+    /**
+     * Lista completa [id => nome] de métodos de pagamento
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Metodopagamento::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Lista apenas métodos de pagamento ativos [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Metodopagamento::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Buscar nome do método de pagamento por ID
+     */
+    public static function getNameById($id)
+    {
+        $metodo = Metodopagamento::findOne($id);
+        return $metodo ? $metodo->nome : null;
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
      */
     public static function getMetodosList()
     {
-        return Metodopagamento::find()
-            ->select(['nome'])
-            ->where(['eliminado' => 0])
-            ->orderBy(['nome' => SORT_ASC])
-            ->indexBy('nome')
-            ->column();
+        return static::getActiveList();
     }
 }
 

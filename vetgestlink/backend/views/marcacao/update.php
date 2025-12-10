@@ -5,6 +5,9 @@ use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Marcacao $model */
+/** @var array $animaisList */
+/** @var array $veterinariosArray */
+/** @var array $medicamentos */
 
 $this->title = 'Atualizar Marcação: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Marcações', 'url' => ['index']];
@@ -36,6 +39,9 @@ echo PageHeaderWidget::widget([
     <div class="container-fluid">
         <?= $this->render('_form', [
             'model' => $model,
+            'animaisList' => $animaisList,
+            'veterinariosArray' => $veterinariosArray,
+            'medicamentos' => $medicamentos,
         ]) ?>
     </div>
 </div>

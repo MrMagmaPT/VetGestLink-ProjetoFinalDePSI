@@ -221,8 +221,7 @@ echo PageHeaderWidget::widget([
                             'attribute' => 'categorias_id',
                             'label' => 'Categoria',
                             'value' => function($model) {
-                                $categoria = $model->getCategorias()->one();
-                                return $categoria ? $categoria->nome : '-';
+                                return $model->categoriaNome ?: '-';
                             },
                             'filter' => false,
                         ],
