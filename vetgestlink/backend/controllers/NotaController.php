@@ -83,8 +83,14 @@ class NotaController extends Controller
             $model->loadDefaultValues();
         }
 
+        // Preparar listas para o formulário
+        $animaisList = \backend\models\AnimalSearch::getAnimaisList();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
+
         return $this->render('create', [
             'model' => $model,
+            'animaisList' => $animaisList,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 
@@ -103,8 +109,14 @@ class NotaController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        // Preparar listas para o formulário
+        $animaisList = \backend\models\AnimalSearch::getAnimaisList();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
+
         return $this->render('update', [
             'model' => $model,
+            'animaisList' => $animaisList,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 

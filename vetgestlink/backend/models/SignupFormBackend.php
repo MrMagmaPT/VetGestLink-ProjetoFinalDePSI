@@ -103,21 +103,7 @@ class SignupFormBackend extends Model
         }
 
         try {
-            // 1. Valida Userprofile antes de criar User
-            $userprofile = new Userprofile();
-            $userprofile->nomecompleto = $this->nomecompleto;
-            $userprofile->dtanascimento = $this->dtanascimento;
-            $userprofile->nif = $this->nif;
-            $userprofile->telemovel = $this->telemovel;
-            $userprofile->eliminado = 0;
-
-            if (!$userprofile->validate()) {
-                Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                $this->addErrors($userprofile->getErrors());
-                return null;
-            }
-
-            // 2. Criar User
+            // 1. Criar User primeiro
             $user = new User();
             $user->username = $this->username;
             $user->email = $this->email;
@@ -130,12 +116,13 @@ class SignupFormBackend extends Model
 
             if (!$user->save()) {
                 Yii::error("Erro User: " . json_encode($user->errors));
-                throw new \Exception('Erro ao criar User: ' . json_encode($user->errors));
+                $this->addErrors($user->getErrors());
+                return null;
             }
 
             Yii::info("User ID {$user->id} criado");
 
-            // 3. Atribuir role selecionada ou cliente por defeito
+            // 2. Atribuir role selecionada ou cliente por defeito
             $auth = Yii::$app->authManager;
             $roleName = $this->role ?: 'cliente'; // Se não foi definida, usa 'cliente'
             $roleObj = $auth->getRole($roleName);
@@ -146,21 +133,33 @@ class SignupFormBackend extends Model
                 Yii::warning("Role '{$roleName}' não encontrada no sistema RBAC");
             }
 
-            // 4. Salvar Userprofile já validado
+            // 3. Criar e salvar Userprofile (agora com user_id válido)
+            $userprofile = new Userprofile();
             $userprofile->user_id = $user->id;
+            $userprofile->nomecompleto = $this->nomecompleto;
+            $userprofile->dtanascimento = $this->dtanascimento;
+            $userprofile->nif = $this->nif;
+            $userprofile->telemovel = $this->telemovel;
+            $userprofile->eliminado = 0;
+
             if (!$userprofile->save()) {
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                throw new \Exception('Erro ao criar Userprofile: ' . json_encode($userprofile->errors));
+                // Se falhar, apagar o User criado
+                $user->delete();
+                $this->addErrors($userprofile->getErrors());
+                return null;
             }
 
-            // 5. Upload de imagem de perfil (se fornecida)
+            Yii::info("Userprofile ID {$userprofile->id} criado");
+
+            // 4. Upload de imagem de perfil (se fornecida)
             if ($this->imageFile) {
                 $userprofile->imageFile = $this->imageFile;
                 $userprofile->uploadImage();
                 Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
             }
 
-            // 6. Criar Morada
+            // 5. Criar Morada
             $morada = new Morada();
             $morada->userprofiles_id = $userprofile->id;
             $morada->rua = $this->rua;
@@ -173,10 +172,17 @@ class SignupFormBackend extends Model
             $morada->principal = $this->principal ? 1 : 0;
             $morada->eliminado = 0;
 
-            if (!$morada->save()) {
-                Yii::error("Erro Morada: " . json_encode($morada->errors));
-                throw new \Exception('Erro ao criar Morada: ' . json_encode($morada->errors));
+            // Verificar se a morada é válida
+            if (!$morada->validate()) {
+                Yii::error("Validação Morada falhou: " . json_encode($morada->errors));
+                // Se falhar, apagar Userprofile e User criados
+                $userprofile->delete();
+                $user->delete();
+                $this->addErrors($morada->getErrors());
+                return null;
             }
+
+            Yii::info("Morada ID {$morada->id} criada para Userprofile ID {$userprofile->id}");
 
             return $user;
 

@@ -51,10 +51,18 @@ class ServicoController extends Controller
     {
         $searchModel = new ServicoSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        
+        // Estatísticas
+        $totalCount = \common\models\Servico::find()->where(['eliminado' => 0])->count();
+        $deletedCount = \common\models\Servico::find()->where(['eliminado' => 1])->count();
+        $avgValue = \common\models\Servico::find()->where(['eliminado' => 0])->average('valor');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalCount' => $totalCount,
+            'deletedCount' => $deletedCount,
+            'avgValue' => $avgValue,
         ]);
     }
 

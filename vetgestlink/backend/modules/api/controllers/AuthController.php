@@ -124,5 +124,103 @@ class AuthController extends Controller
             ];
         }
     }
+
+    /**
+     * Logout de cliente
+     *
+     * POST /api/auth/logout
+     * Aceita token via: Header Authorization, body ou query params
+     *
+     * @return array
+     */
+    public function actionLogout()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $token = $this->extractToken();
+
+        if (!$token) {
+            Yii::$app->response->statusCode = 400;
+            return ['success' => false, 'message' => 'Token não fornecido'];
+        }
+
+        return $this->module->auth->logout($token);
+    }
+
+    /**
+     * Extrai token do header, body ou query params
+     */
+    private function extractToken()
+    {
+        // Header Authorization: Bearer <token> que é o auth_key
+        $authHeader = Yii::$app->request->headers->get('Authorization');
+
+        //Verificar se o header está no formato Bearer e extrair o token
+        if ($authHeader && preg_match('/^Bearer\s+(.*?)$/i', $authHeader, $matches)) {
+            return $matches[1];
+        }
+
+        // Para Query params
+        $data = Yii::$app->request->post();
+        return $data['token'] ?? Yii::$app->request->getQueryParam('access-token');
+    }
+
+    /**
+     * Obter informações do usuário autenticado
+     *
+     * GET /api/auth/profile
+     * Header: Authorization: Bearer <token>
+     *
+     * @return array
+     */
+    public function actionProfile()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $token = $this->extractToken();
+
+        if (!$token) {
+            Yii::$app->response->statusCode = 401;
+            return ['success' => false, 'message' => 'Token não fornecido'];
+        }
+
+        $userInfo = $this->module->auth->getUserInfo($token);
+
+        // Se token inválido
+        if (!$userInfo) {
+            Yii::$app->response->statusCode = 401;
+            return ['success' => false, 'message' => 'Token inválido ou expirado'];
+        }
+
+        return ['success' => true, 'user' => $userInfo];
+    }
+
+    /**
+     * Solicitar recuperação de senha
+     *
+     * POST /api/auth/forgot
+     * Body: {"email": "maria@example.com"}
+     *
+     * @return array
+     */
+    public function actionForgot()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $data = Yii::$app->request->post();
+        $email = $data['email'] ?? null;
+
+        if (!$email) {
+            Yii::$app->response->statusCode = 400;
+            return [
+                'success' => false,
+                'message' => 'Email é obrigatório'
+            ];
+        }
+
+        $result = $this->module->auth->requestPasswordReset($email);
+        return $result;
+    }
 }
+
 

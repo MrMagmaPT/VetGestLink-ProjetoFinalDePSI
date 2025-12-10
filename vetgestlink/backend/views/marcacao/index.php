@@ -149,7 +149,7 @@ echo PageHeaderWidget::widget([
                             'filter' => Select2::widget([
                                 'model' => $searchModel,
                                 'attribute' => 'animais_id',
-                                'data' => \yii\helpers\ArrayHelper::map(\common\models\Animal::find()->orderBy('nome')->asArray()->all(), 'id', 'nome'),
+                                'data' => $animaisList,
                                 'options' => [
                                     'placeholder' => 'Animal...',
                                     'allowClear' => true,
@@ -183,7 +183,7 @@ echo PageHeaderWidget::widget([
                             'filter' => Select2::widget([
                                 'model' => $searchModel,
                                 'attribute' => 'userprofiles_id',
-                                'data' => \yii\helpers\ArrayHelper::map(\common\models\Userprofile::find()->orderBy('nomecompleto')->asArray()->all(), 'id', 'nomecompleto'),
+                                'data' => $userprofilesList,
                                 'options' => [
                                     'placeholder' => 'Veterinário...',
                                     'allowClear' => true,

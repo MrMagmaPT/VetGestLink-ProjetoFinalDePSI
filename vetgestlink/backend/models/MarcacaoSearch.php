@@ -43,7 +43,8 @@ class MarcacaoSearch extends Marcacao
      */
     public function search($params, $formName = null)
     {
-        $query = Marcacao::find();
+        $query = Marcacao::find()
+            ->with(['animais', 'userprofiles']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -78,5 +79,57 @@ class MarcacaoSearch extends Marcacao
         return $dataProvider;
     }
 
+    /**
+     * Lista completa [id => descrição] de marcações
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Marcacao::find()->orderBy(['data' => SORT_DESC])->all(),
+            'id',
+            function($model) {
+                return 'Marcação #' . $model->id . ' - ' . $model->data;
+            }
+        );
+    }
+
+    /**
+     * Lista apenas marcações ativas [id => descrição]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Marcacao::find()
+                ->where(['eliminado' => 0])
+                ->orderBy(['data' => SORT_DESC])
+                ->all(),
+            'id',
+            function($model) {
+                return 'Marcação #' . $model->id . ' - ' . $model->data;
+            }
+        );
+    }
+
+    /**
+     * Lista [id => nome] de animais para filtros
+     */
+    public static function getAnimaisList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Animal::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Lista [id => nomecompleto] de userprofiles para filtros
+     */
+    public static function getUserprofilesList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Userprofile::find()->orderBy('nomecompleto')->all(),
+            'id', 'nomecompleto'
+        );
+    }
 
 }

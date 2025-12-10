@@ -60,8 +60,6 @@ class CategoriaController extends Controller
             ]
         );
     }
-
-
     /**
      * Lists all Categoria models.
      *
@@ -96,8 +94,22 @@ class CategoriaController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        
+        // Buscar medicamentos ativos desta categoria (eager loading)
+        $medicamentosAtivos = \common\models\Medicamento::find()
+            ->where(['categorias_id' => $id, 'eliminado' => 0])
+            ->limit(10)
+            ->all();
+        
+        $medicamentosCount = \common\models\Medicamento::find()
+            ->where(['categorias_id' => $id, 'eliminado' => 0])
+            ->count();
+        
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'medicamentosAtivos' => $medicamentosAtivos,
+            'medicamentosCount' => $medicamentosCount,
         ]);
     }
 

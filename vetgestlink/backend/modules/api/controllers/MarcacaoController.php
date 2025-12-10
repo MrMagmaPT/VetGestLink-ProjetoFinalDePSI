@@ -24,13 +24,7 @@ class MarcacaoController extends Controller
     {
         $behaviors = parent::behaviors();
 
-        // Autenticação via QueryParamAuth (access-token)
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
-
-        // CORS
+        // CORS - DEVE vir PRIMEIRO
         $behaviors['corsFilter'] = [
             'class' => \yii\filters\Cors::class,
             'cors' => [
@@ -40,6 +34,13 @@ class MarcacaoController extends Controller
                 'Access-Control-Allow-Credentials' => false,
                 'Access-Control-Max-Age' => 86400,
             ],
+        ];
+
+        // Autenticação via QueryParamAuth (access-token ou auth_key)
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::class,
+            'tokenParam' => 'access-token',
+            'optional' => ['options'],
         ];
 
         // JSON response
@@ -66,10 +67,10 @@ class MarcacaoController extends Controller
     }
 
     /**
-     * GET /marcacao
+     * GET /marcacao/all
      * Lista marcações do cliente com filtros opcionais
      */
-    public function actionIndex()
+    public function actionAll()
     {
         $userProfileId = $this->getUserProfileId();
 
@@ -101,7 +102,6 @@ class MarcacaoController extends Controller
         $search = Yii::$app->request->get('search');
         if ($search) {
             $query->andWhere(['or',
-                ['like', 'tipo', $search],
                 ['like', 'diagnostico', $search],
             ]);
         }
@@ -115,15 +115,12 @@ class MarcacaoController extends Controller
                 'data' => $marcacao->data,
                 'horainicio' => $marcacao->horainicio,
                 'horafim' => $marcacao->horafim,
-                'tipo' => $marcacao->tipo,
                 'estado' => $marcacao->estado,
                 'duracao_minutos' => $this->calcularDuracao($marcacao->horainicio, $marcacao->horafim),
                 'diagnostico' => $marcacao->diagnostico,
-                'preco' => (float)$marcacao->preco,
-                'animais_id' => $marcacao->animais_id,
+                'servico_nome' => $marcacao->servicos ? $marcacao->servicos->nome : null,
                 'animal_nome' => $marcacao->animais ? $marcacao->animais->nome : null,
                 'animal_especie' => $marcacao->animais && $marcacao->animais->especies ? $marcacao->animais->especies->nome : null,
-                'userprofiles_id' => $marcacao->userprofiles_id,
                 'created_at' => $marcacao->created_at,
                 'updated_at' => $marcacao->updated_at,
             ];
@@ -133,9 +130,9 @@ class MarcacaoController extends Controller
     }
 
     /**
-     * GET /marcacao/{id}
+     * GET /marcacao/view/{id}
      * Detalhes de uma marcação específica
-     */
+     */ 
     public function actionView($id)
     {
         $userProfileId = $this->getUserProfileId();
@@ -161,11 +158,11 @@ class MarcacaoController extends Controller
             'data' => $marcacao->data,
             'horainicio' => $marcacao->horainicio,
             'horafim' => $marcacao->horafim,
-            'tipo' => $marcacao->tipo,
             'estado' => $marcacao->estado,
             'duracao_minutos' => $this->calcularDuracao($marcacao->horainicio, $marcacao->horafim),
             'diagnostico' => $marcacao->diagnostico,
-            'preco' => (float)$marcacao->preco,
+            'servicos_id' => $marcacao->servicos_id,
+            'servico_nome' => $marcacao->servicos ? $marcacao->servicos->nome : null,
             'animais_id' => $marcacao->animais_id,
             'userprofiles_id' => $marcacao->userprofiles_id,
             'created_at' => $marcacao->created_at,

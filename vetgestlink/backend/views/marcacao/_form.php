@@ -5,14 +5,13 @@ use yii\widgets\ActiveForm;
 use common\models\Animal;
 use common\models\Userprofile;
 use yii\helpers\ArrayHelper;
-use backend\models\UserprofileSearch;
-use backend\models\AnimalSearch;
-use backend\models\MedicamentoSearch;
-
 
 /** @var yii\web\View $this */
 /** @var common\models\Marcacao $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $animaisList */
+/** @var array $veterinariosArray */
+/** @var array $medicamentos */
 ?>
 
 <div class="marcacoes-form">
@@ -59,7 +58,7 @@ use backend\models\MedicamentoSearch;
                     <div class="row">
                         <div class="col-md-6">
                             <?= $form->field($model, 'animais_id')->dropDownList(
-                                ArrayHelper::map(AnimalSearch::getAnimaisListTEST(), 'id', 'nome'),
+                                $animaisList,
                                 [
                                     'prompt' => 'Selecione um animal',
                                     'class' => 'form-control',
@@ -69,7 +68,7 @@ use backend\models\MedicamentoSearch;
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'userprofiles_id')->dropDownList(
-                                ArrayHelper::map(UserprofileSearch::getUserListByType('veterinario', 0), 'id', 'nomecompleto'),
+                                $veterinariosArray,
                                 [
                                     'prompt' => 'Selecione um veterinário',
                                     'class' => 'form-control',
@@ -109,7 +108,7 @@ use backend\models\MedicamentoSearch;
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach (MedicamentoSearch::getMedicamentoList() as $medicamento): ?>
+                            <?php foreach ($medicamentos as $medicamento): ?>
                                 <tr>
                                     <td>
                                         <strong><?= Html::encode($medicamento->nome) ?></strong>

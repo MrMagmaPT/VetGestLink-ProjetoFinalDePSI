@@ -71,10 +71,18 @@ class RacaController extends Controller
     {
         $searchModel = new RacaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
+        $especiesAtivas = RacaSearch::getEspeciesAtivasList();
+        
+        // Estatísticas
+        $totalCount = \common\models\Raca::find()->where(['eliminado' => 0])->count();
+        $deletedCount = \common\models\Raca::find()->where(['eliminado' => 1])->count();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'especiesAtivas' => $especiesAtivas,
+            'totalCount' => $totalCount,
+            'deletedCount' => $deletedCount,
         ]);
     }
 
@@ -99,6 +107,7 @@ class RacaController extends Controller
     public function actionCreate()
     {
         $model = new Raca();
+        $especiesAtivas = RacaSearch::getEspeciesAtivasList();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -110,6 +119,7 @@ class RacaController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'especiesAtivas' => $especiesAtivas,
         ]);
     }
 
@@ -123,6 +133,7 @@ class RacaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $especiesAtivas = RacaSearch::getEspeciesAtivasList();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -130,6 +141,7 @@ class RacaController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'especiesAtivas' => $especiesAtivas,
         ]);
     }
 

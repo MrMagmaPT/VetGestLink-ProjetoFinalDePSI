@@ -43,14 +43,14 @@ echo PageHeaderWidget::widget([
                 'icon' => 'fa-dog',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Raças',
-                'value' => Raca::find()->where(['eliminado' => 0])->count(),
+                'value' => $totalCount,
                 'url' => '/raca/index',
             ]) ?>
             <?= BigCardWidget::widget([
                 'icon' => 'fa-dog',
                 'iconColorClass' => 'icon-gray',
                 'text' => 'Eliminadas',
-                'value' => Raca::find()->where(['eliminado' => 1])->count(),
+                'value' => $deletedCount,
                 'url' => '/raca/index',
             ]) ?>
         </div>
@@ -108,7 +108,7 @@ echo PageHeaderWidget::widget([
                                     ['class' => 'text-decoration-none']
                                 ) : '-';
                             },
-                            'filter' => ArrayHelper::map(Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(), 'id', 'nome'),
+                            'filter' => $especiesAtivas,
                             'headerOptions' => ['style' => 'width: 180px'],
                         ],
                         [

@@ -82,4 +82,36 @@ class Medicamento extends \yii\db\ActiveRecord
         return $this->hasMany(Linhafatura::class, ['medicamentos_id' => 'id']);
     }
 
+    /**
+     * Obter nome da categoria (propriedade virtual)
+     * @return string|null
+     */
+    public function getCategoriaNome()
+    {
+        // Se categorias já foi carregado (eager loading), usa o cache
+        if ($this->isRelationPopulated('categorias')) {
+            $categoria = $this->categorias;
+            return $categoria ? $categoria->nome : null;
+        }
+        
+        // Se não foi carregado, faz query única
+        $categoria = $this->getCategorias()->one();
+        return $categoria ? $categoria->nome : null;
+    }
+
+    /**
+     * Obter objeto Categoria (propriedade virtual)
+     * @return Categoria|null
+     */
+    public function getCategoria()
+    {
+        // Se categorias já foi carregado (eager loading), usa o cache
+        if ($this->isRelationPopulated('categorias')) {
+            return $this->categorias;
+        }
+        
+        // Se não foi carregado, faz query única
+        return $this->getCategorias()->one();
+    }
+
 }

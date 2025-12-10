@@ -5,6 +5,8 @@ use backend\widgets\PageHeaderWidget;
 
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
+/** @var array $animaisList */
+/** @var array $userprofilesList */
 
 $this->title = 'Atualizar Nota: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Notas', 'url' => ['index']];
@@ -36,6 +38,8 @@ echo PageHeaderWidget::widget([
     <div class="container-fluid">
         <?= $this->render('_form', [
             'model' => $model,
+            'animaisList' => $animaisList,
+            'userprofilesList' => $userprofilesList,
         ]) ?>
     </div>
 </div>

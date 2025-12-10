@@ -2,15 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\models\Especie;
-use common\models\Userprofile;
-use common\models\Raca;
-use yii\helpers\ArrayHelper;
 use kartik\select2\Select2
 
 /** @var yii\web\View $this */
 /** @var common\models\Animal $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $especiesList */
+/** @var array $racasList */
+/** @var array $userprofilesList */
 ?>
 
 <div class="animal-form">
@@ -79,7 +78,7 @@ use kartik\select2\Select2
                     <div class="row">
                         <div class="col-md-6">
                             <?= $form->field($model, 'especies_id')->widget(Select2::classname(), [
-                                'data' => \backend\models\EspecieSearch::getEspeciesList(),
+                                'data' => $especiesList,
                                 'options' => ['placeholder' => 'Selecione uma espécie...'],
                                 'pluginOptions' => [
                                     'allowClear' => true
@@ -88,7 +87,7 @@ use kartik\select2\Select2
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'racas_id')->widget(Select2::classname(), [
-                                'data' => \backend\models\RacaSearch::getRacasList(),
+                                'data' => $racasList,
                                 'options' => ['placeholder' => 'Selecione uma raça...'],
                                 'pluginOptions' => [
                                     'allowClear' => true
@@ -98,7 +97,7 @@ use kartik\select2\Select2
                     </div>
 
                     <?= $form->field($model, 'userprofiles_id')->widget(Select2::classname(), [
-                        'data' => \backend\models\UserprofileSearch::getActiveOwnersList(),
+                        'data' => $userprofilesList,
                         'options' => ['placeholder' => 'Selecione o dono...'],
                         'pluginOptions' => [
                             'allowClear' => true

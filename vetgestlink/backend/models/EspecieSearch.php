@@ -41,7 +41,8 @@ class EspecieSearch extends Especie
      */
     public function search($params, $formName = null)
     {
-        $query = Especie::find();
+        $query = Especie::find()
+            ->with(['racas']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -68,14 +69,42 @@ class EspecieSearch extends Especie
         return $dataProvider;
     }
 
-        /**
-     * Retorna lista [id => nome] de espécies ativas para Select2
+    /**
+     * Lista completa [id => nome] de espécies
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Especie::find()->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Lista apenas espécies ativas [id => nome]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
+        );
+    }
+
+    /**
+     * Buscar nome da espécie por ID
+     */
+    public static function getNameById($id)
+    {
+        $especie = Especie::findOne($id);
+        return $especie ? $especie->nome : null;
+    }
+
+    /**
+     * @deprecated Use getActiveList() instead
      */
     public static function getEspeciesList()
     {
-        return \yii\helpers\ArrayHelper::map(
-            \common\models\Especie::find()->where(['eliminado' => 0])->orderBy('nome')->asArray()->all(),
-            'id', 'nome'
-        );
+        return static::getActiveList();
     }
 }

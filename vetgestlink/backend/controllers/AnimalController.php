@@ -79,6 +79,9 @@ class AnimalController extends Controller
         $machoCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'M'])->count();
         $femeaCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'F'])->count();
         $microchipCount = Animal::find()->where(['eliminado' => 0, 'microship' => 1])->count();
+        
+        // Listas para filtros
+        $especiesList = \backend\models\EspecieSearch::getActiveList();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -87,6 +90,7 @@ class AnimalController extends Controller
             'machoCount' => $machoCount,
             'femeaCount' => $femeaCount,
             'microchipCount' => $microchipCount,
+            'especiesList' => $especiesList,
         ]);
     }
 
@@ -124,8 +128,16 @@ class AnimalController extends Controller
             $model->loadDefaultValues();
         }
 
+        // Preparar listas para o formulário
+        $especiesList = \backend\models\EspecieSearch::getEspeciesList();
+        $racasList = \backend\models\RacaSearch::getRacasList();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
+
         return $this->render('create', [
             'model' => $model,
+            'especiesList' => $especiesList,
+            'racasList' => $racasList,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 
@@ -149,8 +161,16 @@ class AnimalController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        // Preparar listas para o formulário
+        $especiesList = \backend\models\EspecieSearch::getEspeciesList();
+        $racasList = \backend\models\RacaSearch::getRacasList();
+        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
+
         return $this->render('update', [
             'model' => $model,
+            'especiesList' => $especiesList,
+            'racasList' => $racasList,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 

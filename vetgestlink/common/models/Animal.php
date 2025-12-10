@@ -231,20 +231,13 @@ class Animal extends \yii\db\ActiveRecord
 
         return $uploader->getUrl($this->foto);
     }
-
     /**
-     * Calcular idade do animal em anos
-     * @return int
+     * Verifica se o animal tem imagem
+     * @return bool
      */
-    public function getIdade()
+    public function hasImage()
     {
-        if (empty($this->dtanascimento)) {
-            return 0;
-        }
-        $dataNascimento = new \DateTime($this->dtanascimento);
-        $hoje = new \DateTime();
-        $idade = $hoje->diff($dataNascimento);
-        return $idade->y; // retorna anos
+        return !empty($this->foto);
     }
 
     /**
@@ -265,11 +258,59 @@ class Animal extends \yii\db\ActiveRecord
     }
 
     /**
-     * Verifica se o animal tem imagem
-     * @return bool
+     * Calcular idade do animal em anos
+     * @return int
      */
-    public function hasImage()
+    public function getIdade()
     {
-        return !empty($this->foto);
+        if (empty($this->dtanascimento)) {
+            return 0;
+        }
+        $dataNascimento = new \DateTime($this->dtanascimento);
+        $hoje = new \DateTime();
+        $idade = $hoje->diff($dataNascimento);
+        return $idade->y; // retorna anos
+    }
+    
+    /**
+     * Obter nome da espécie (propriedade virtual)
+     * @return string|null
+     */
+    public function getEspecieNome()
+    {
+        if ($this->isRelationPopulated('especies')) {
+            $especie = $this->especies;
+            return $especie ? $especie->nome : null;
+        }
+        $especie = $this->getEspecies()->one();
+        return $especie ? $especie->nome : null;
+    }
+
+    /**
+     * Obter nome da raça (propriedade virtual)
+     * @return string|null
+     */
+    public function getRacaNome()
+    {
+        if ($this->isRelationPopulated('racas')) {
+            $raca = $this->racas;
+            return $raca ? $raca->nome : null;
+        }
+        $raca = $this->getRacas()->one();
+        return $raca ? $raca->nome : null;
+    }
+
+    /**
+     * Obter nome completo do dono (propriedade virtual)
+     * @return string|null
+     */
+    public function getDonoNome()
+    {
+        if ($this->isRelationPopulated('userprofiles')) {
+            $dono = $this->userprofiles;
+            return $dono ? $dono->nomecompleto : null;
+        }
+        $dono = $this->getUserprofiles()->one();
+        return $dono ? $dono->nomecompleto : null;
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
 use common\models\Animal;
-use common\models\Userprofile;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\widgets\BigCardWidget;
 use backend\widgets\SmallCardWidget;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
@@ -190,10 +188,10 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return $model->especies->nome ?? '-';
                             },
-                                'filter' => kartik\select2\Select2::widget([
+                                'filter' => Select2::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'especies_id',
-                                    'data' => ($especiesList = \common\models\Especie::find()->select(['nome', 'id'])->where(['eliminado' => 0])->indexBy('id')->column()),
+                                    'data' => $especiesList,
                                     'options' => [
                                         'placeholder' => 'Espécie...',
                                         'allowClear' => true,
@@ -216,7 +214,7 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return $model->userprofiles->nomecompleto ?? '-';
                             },
-                                'filter' => kartik\select2\Select2::widget([
+                                'filter' => Select2::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'userprofiles_id',
                                     'data' => \backend\models\AnimalSearch::getActiveOwnersList(),

@@ -3,11 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\Controller;
-use yii\web\Response;
 use yii\web\NotFoundHttpException;
-use yii\web\UnauthorizedHttpException;
-use yii\filters\auth\QueryParamAuth;
 use common\models\Animal;
 use common\models\Nota;
 
@@ -16,61 +12,14 @@ use common\models\Nota;
  *
  * Endpoints para gerenciar animais do cliente autenticado.
  */
-class AnimalController extends Controller
+class AnimalController extends ApiController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-
-        // Autenticação via QueryParamAuth (access-token)
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
-
-        // CORS
-        $behaviors['corsFilter'] = [
-            'class' => \yii\filters\Cors::class,
-            'cors' => [
-                'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-                'Access-Control-Request-Headers' => ['*'],
-                'Access-Control-Allow-Credentials' => false,
-                'Access-Control-Max-Age' => 86400,
-            ],
-        ];
-
-        // JSON response
-        $behaviors['contentNegotiator'] = [
-            'class' => \yii\filters\ContentNegotiator::class,
-            'formats' => [
-                'application/json' => Response::FORMAT_JSON,
-            ],
-        ];
-
-        return $behaviors;
-    }
 
     /**
-     * Obter ID do userprofile do usuário autenticado
-     */
-    protected function getUserProfileId()
-    {
-        $user = Yii::$app->user->identity;
-        if (!$user || !$user->userprofile) {
-            throw new UnauthorizedHttpException('Usuário não autenticado ou sem perfil');
-        }
-        return $user->userprofile->id;
-    }
-
-    /**
-     * GET /animal
+     * GET /animal/all
      * Lista todos os animais do cliente autenticado
      */
-    public function actionIndex()
+    public function actionAll()
     {
         $userProfileId = $this->getUserProfileId();
 
@@ -87,6 +36,14 @@ class AnimalController extends Controller
                 $idade = $hoje->diff($nascimento)->y;
             }
 
+            // Obter URL da foto com tratamento de erro
+            $fotoUrl = null;
+            try {
+                $fotoUrl = $animal->getImageUrl();
+            } catch (\Exception $e) {
+                $fotoUrl = null;
+            }
+
             $result[] = [
                 'id' => $animal->id,
                 'nome' => $animal->nome,
@@ -99,7 +56,7 @@ class AnimalController extends Controller
                 'sexo' => $animal->sexo,
                 'datanascimento' => $animal->dtanascimento,
                 'microchip' => $animal->microship,
-                'foto_url' => $animal->getImageAbsoluteUrl(),
+                'foto_url' => $fotoUrl,
                 'userprofiles_id' => $animal->userprofiles_id,
                 'ativo' => $animal->eliminado == 0,
             ];
@@ -109,7 +66,7 @@ class AnimalController extends Controller
     }
 
     /**
-     * GET /animal/{id}
+     * GET /animal/view/{id}
      * Detalhes de um animal específico
      */
     public function actionView($id)
@@ -134,15 +91,21 @@ class AnimalController extends Controller
         // Buscar notas do animal
         $notas = [];
         foreach ($animal->notas as $nota) {
-            if ($nota->eliminado == 0) {
-                $notas[] = [
-                    'id' => $nota->id,
-                    'texto' => $nota->nota,
-                    'created_at' => $nota->created_at,
-                    'updated_at' => $nota->updated_at,
-                    'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : 'N/A',
-                ];
-            }
+            $notas[] = [
+                'id' => $nota->id,
+                'texto' => $nota->nota,
+                'created_at' => $nota->created_at,
+                'updated_at' => $nota->updated_at,
+                'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : 'N/A',
+            ];
+        }
+
+        // Obter URL da foto com tratamento de erro
+        $fotoUrl = null;
+        try {
+            $fotoUrl = $animal->getImageUrl();
+        } catch (\Exception $e) {
+            $fotoUrl = null;
         }
 
         return [
@@ -157,7 +120,7 @@ class AnimalController extends Controller
             'sexo' => $animal->sexo,
             'datanascimento' => $animal->dtanascimento,
             'microchip' => $animal->microship,
-            'foto_url' => $animal->getImageAbsoluteUrl(),
+            'foto_url' => $fotoUrl,
             'notas' => $notas,
             'ativo' => $animal->eliminado == 0,
             'dono' => [
@@ -169,10 +132,10 @@ class AnimalController extends Controller
     }
 
     /**
-     * GET /animal/{id}/notas
+     * GET /animal/{id}/notes
      * Lista notas de um animal específico
      */
-    public function actionNotas($id)
+    public function actionNotes($id)
     {
         $userProfileId = $this->getUserProfileId();
 
@@ -183,7 +146,7 @@ class AnimalController extends Controller
         }
 
         $notas = Nota::find()
-            ->where(['animais_id' => $id, 'eliminado' => 0])
+            ->where(['animais_id' => $id])
             ->orderBy(['created_at' => SORT_DESC])
             ->all();
 

@@ -42,21 +42,21 @@ echo PageHeaderWidget::widget([
                 'icon' => 'fa-concierge-bell',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Serviços',
-                'value' => Servico::find()->where(['eliminado' => 0])->count(),
+                'value' => $totalCount,
                 'url' => '/servico/index',
             ]) ?>
             <?= SmallCardWidget::widget([
                 'icon' => 'fa-concierge-bell',
                 'iconColorClass' => 'icon-gray',
                 'text' => 'Eliminados',
-                'value' => Servico::find()->where(['eliminado' => 1])->count(),
+                'value' => $deletedCount,
                 'url' => '/servico/index',
             ]) ?>
             <?= BigCardWidget::widget([
                 'icon' => 'fa-euro-sign',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Valor Médio',
-                'value' => number_format(Servico::find()->where(['eliminado' => 0])->average('valor'), 2) . '€',
+                'value' => number_format($avgValue, 2) . '€',
                 'url' => '/servico/index',
             ]) ?>
 

@@ -42,7 +42,8 @@ class FaturaSearch extends Fatura
      */
     public function search($params, $formName = null)
     {
-        $query = Fatura::find();
+        $query = Fatura::find()
+            ->with(['userprofiles', 'metodospagamentos', 'linhasfaturas']); // Eager loading
 
         // add conditions that should always apply here
 
@@ -73,9 +74,9 @@ class FaturaSearch extends Fatura
         return $dataProvider;
     }
     /**
-     * Retorna lista [id => texto] de faturas para Select2
+     * Lista completa [id => descrição] de faturas
      */
-    public function getFaturasList()
+    public static function getList()
     {
         return \yii\helpers\ArrayHelper::map(
             \common\models\Fatura::find()->orderBy(['id' => SORT_DESC])->all(),
@@ -83,6 +84,42 @@ class FaturaSearch extends Fatura
             function($model) {
                 return 'Fatura #' . $model->id . ' - ' . number_format($model->total, 2, ',', '.') . '€';
             }
+        );
+    }
+
+    /**
+     * Lista apenas faturas ativas [id => descrição]
+     */
+    public static function getActiveList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Fatura::find()
+                ->where(['eliminado' => 0])
+                ->orderBy(['id' => SORT_DESC])
+                ->all(),
+            'id',
+            function($model) {
+                return 'Fatura #' . $model->id . ' - ' . number_format($model->total, 2, ',', '.') . '€';
+            }
+        );
+    }
+
+    /**
+     * @deprecated Use getList() instead
+     */
+    public function getFaturasList()
+    {
+        return static::getList();
+    }
+
+    /**
+     * Lista de métodos de pagamento ativos [id => nome]
+     */
+    public static function getMetodosPagamentoAtivos()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Metodopagamento::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            'id', 'nome'
         );
     }
 }

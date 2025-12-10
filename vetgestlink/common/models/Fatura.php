@@ -148,4 +148,44 @@ class Fatura extends \yii\db\ActiveRecord
 
         return true;
     }
+
+    /**
+     * Obter nome do método de pagamento (propriedade virtual)
+     * @return string|null
+     */
+    public function getMetodoPagamentoNome()
+    {
+        if ($this->isRelationPopulated('metodospagamentos')) {
+            $metodo = $this->metodospagamentos;
+            return $metodo ? $metodo->nome : null;
+        }
+        $metodo = $this->getMetodospagamentos()->one();
+        return $metodo ? $metodo->nome : null;
+    }
+
+    /**
+     * Obter nome completo do cliente (propriedade virtual)
+     * @return string|null
+     */
+    public function getClienteNome()
+    {
+        if ($this->isRelationPopulated('userprofiles')) {
+            $cliente = $this->userprofiles;
+            return $cliente ? $cliente->nomecompleto : null;
+        }
+        $cliente = $this->getUserprofiles()->one();
+        return $cliente ? $cliente->nomecompleto : null;
+    }
+
+    /**
+     * Obter total de linhas da fatura (propriedade virtual)
+     * @return int
+     */
+    public function getTotalLinhas()
+    {
+        if ($this->isRelationPopulated('linhasfaturas')) {
+            return count($this->linhasfaturas);
+        }
+        return $this->getLinhasfaturas()->count();
+    }
 }

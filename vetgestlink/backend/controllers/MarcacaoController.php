@@ -78,6 +78,10 @@ class MarcacaoController extends Controller
         $pendenteCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])->count();
         $realizadaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_REALIZADA, 'eliminado' => 0])->count();
         $canceladaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_CANCELADA, 'eliminado' => 0])->count();
+        
+        // Listas para filtros
+        $animaisList = MarcacaoSearch::getAnimaisList();
+        $userprofilesList = MarcacaoSearch::getUserprofilesList();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -86,6 +90,8 @@ class MarcacaoController extends Controller
             'pendenteCount' => $pendenteCount,
             'realizadaCount' => $realizadaCount,
             'canceladaCount' => $canceladaCount,
+            'animaisList' => $animaisList,
+            'userprofilesList' => $userprofilesList,
         ]);
     }
 
@@ -110,6 +116,12 @@ class MarcacaoController extends Controller
     public function actionCreate()
     {
         $model = new Marcacao();
+        
+        // Listas para dropdowns
+        $animaisList = \backend\models\AnimalSearch::getActiveList();
+        $veterinariosList = \backend\models\UserprofileSearch::getUserListByType('veterinario', 0);
+        $veterinariosArray = \yii\helpers\ArrayHelper::map($veterinariosList, 'id', 'nomecompleto');
+        $medicamentos = \backend\models\MedicamentoSearch::getMedicamentoList();
 
         if ($this->request->isPost) {
             //dd($this->request->post());
@@ -125,6 +137,9 @@ class MarcacaoController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'animaisList' => $animaisList,
+            'veterinariosArray' => $veterinariosArray,
+            'medicamentos' => $medicamentos,
         ]);
     }
 
@@ -139,11 +154,13 @@ class MarcacaoController extends Controller
     {
         $model = $this->findModel($id);
 
+        // Listas para dropdowns
+        $animaisList = \backend\models\AnimalSearch::getActiveList();
+        $veterinariosList = \backend\models\UserprofileSearch::getUserListByType('veterinario', 0);
+        $veterinariosArray = \yii\helpers\ArrayHelper::map($veterinariosList, 'id', 'nomecompleto');
+        
         // Buscar medicamentos disponíveis
-        $medicamentos = \backend\models\MedicamentoSearch::find()
-            ->where(['eliminado' => 0])
-            ->orderBy('nome')
-            ->all();
+        $medicamentos = \backend\models\MedicamentoSearch::getMedicamentoList();
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             if ($model->save()) {
@@ -163,6 +180,8 @@ class MarcacaoController extends Controller
         return $this->render('update', [
             'model' => $model,
             'medicamentos' => $medicamentos,
+            'animaisList' => $animaisList,
+            'veterinariosArray' => $veterinariosArray,
         ]);
     }
 

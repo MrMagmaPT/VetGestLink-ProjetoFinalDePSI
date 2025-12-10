@@ -8,6 +8,8 @@ use yii\helpers\ArrayHelper;
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $metodosPagamento */
+/** @var array $userprofilesList */
 ?>
 
 <div class="faturas-form">
@@ -56,11 +58,7 @@ use yii\helpers\ArrayHelper;
                         </div>
                         <div class="col-md-6">
                             <?= $form->field($model, 'metodospagamentos_id')->widget(Select2::classname(), [
-                                'data' => ArrayHelper::map(
-                                    \common\models\Metodopagamento::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                                    'id',
-                                    'nome'
-                                ),
+                                'data' => $metodosPagamento,
                                 'options' => ['placeholder' => 'Selecione o método de pagamento...'],
                                 'pluginOptions' => [
                                     'allowClear' => true
@@ -70,7 +68,7 @@ use yii\helpers\ArrayHelper;
                     </div>
 
                     <?= $form->field($model, 'userprofiles_id')->widget(Select2::classname(), [
-                        'data' => \backend\models\UserprofileSearch::getActiveOwnersList(),
+                        'data' => $userprofilesList,
                         'options' => ['placeholder' => 'Selecione o cliente...'],
                         'pluginOptions' => [
                             'allowClear' => true

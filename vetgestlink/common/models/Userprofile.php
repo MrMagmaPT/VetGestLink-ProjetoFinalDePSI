@@ -241,4 +241,21 @@ class Userprofile extends \yii\db\ActiveRecord
     {
         return $this->user ? $this->user->updated_at : null;
     }
+
+    /**
+     * Obter cidade da primeira morada (propriedade virtual)
+     * @return string|null
+     */
+    public function getMoradaCidade()
+    {
+        // Se moradas já foi carregado (eager loading), usa o cache
+        if ($this->isRelationPopulated('moradas')) {
+            $moradas = $this->moradas;
+            return !empty($moradas) ? $moradas[0]->cidade : null;
+        }
+        
+        // Se não foi carregado, faz query única
+        $morada = $this->getMoradas()->one();
+        return $morada ? $morada->cidade : null;
+    }
 }

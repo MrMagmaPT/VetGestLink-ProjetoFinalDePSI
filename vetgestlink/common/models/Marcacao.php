@@ -207,4 +207,46 @@ class Marcacao extends \yii\db\ActiveRecord
         $this->estado = self::ESTADO_REALIZADA;
     }
 
+    /**
+     * Obter nome do animal (propriedade virtual)
+     * @return string|null
+     */
+    public function getAnimalNome()
+    {
+        if ($this->isRelationPopulated('animais')) {
+            $animal = $this->animais;
+            return $animal ? $animal->nome : null;
+        }
+        $animal = $this->getAnimais()->one();
+        return $animal ? $animal->nome : null;
+    }
+
+    /**
+     * Obter nome completo do veterinário (propriedade virtual)
+     * @return string|null
+     */
+    public function getVeterinarioNome()
+    {
+        if ($this->isRelationPopulated('userprofiles')) {
+            $vet = $this->userprofiles;
+            return $vet ? $vet->nomecompleto : null;
+        }
+        $vet = $this->getUserprofiles()->one();
+        return $vet ? $vet->nomecompleto : null;
+    }
+
+    /**
+     * Obter nome do serviço (propriedade virtual)
+     * @return string|null
+     */
+    public function getServicoNome()
+    {
+        if ($this->isRelationPopulated('servicos')) {
+            $servico = $this->servicos;
+            return $servico ? $servico->nome : null;
+        }
+        $servico = $this->getServicos()->one();
+        return $servico ? $servico->nome : null;
+    }
+
 }

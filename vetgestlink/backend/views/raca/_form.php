@@ -28,11 +28,7 @@ use common\models\Especie;
                     ]) ?>
 
                     <?= $form->field($model, 'especies_id')->dropDownList(
-                        ArrayHelper::map(
-                            Especie::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
-                            'id',
-                            'nome'
-                        ),
+                        $especiesAtivas,
                         ['prompt' => 'Selecione uma espécie', 'class' => 'form-control']
                     )->label('Espécie') ?>
 

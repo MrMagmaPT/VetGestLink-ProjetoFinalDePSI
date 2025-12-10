@@ -75,5 +75,27 @@ class NotaSearch extends Nota
 
         return $dataProvider;
     }
-}
 
+    /**
+     * Lista completa [id => nota] de notas
+     */
+    public static function getList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Nota::find()->orderBy(['created_at' => SORT_DESC])->all(),
+            'id',
+            function($model) {
+                return substr($model->nota, 0, 50) . '...';
+            }
+        );
+    }
+
+    /**
+     * Buscar nota por ID
+     */
+    public static function getNoteById($id)
+    {
+        $nota = Nota::findOne($id);
+        return $nota ? $nota->nota : null;
+    }
+}

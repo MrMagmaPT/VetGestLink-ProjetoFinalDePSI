@@ -93,7 +93,7 @@ $this->registerCssFile('@web/static/css/view.css');
                             </div>
                             <div class="col-md-8">
                                 <?php 
-                                $categoria = $model->getCategorias()->one();
+                                $categoria = $model->categoria;
                                 if ($categoria) {
                                     echo Html::a(
                                         '<span class="badge bg-info">' . Html::encode($categoria->nome) . '</span>',

@@ -3,12 +3,8 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\Controller;
-use yii\web\Response;
 use yii\web\NotFoundHttpException;
-use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
-use yii\filters\auth\QueryParamAuth;
 use common\models\Fatura;
 use common\models\Linhafatura;
 use common\models\Metodopagamento;
@@ -18,61 +14,14 @@ use common\models\Metodopagamento;
  *
  * Endpoints para gerenciar faturas do cliente autenticado.
  */
-class FaturaController extends Controller
+class FaturaController extends ApiController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-
-        // Autenticação via QueryParamAuth (access-token)
-        $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-        ];
-
-        // CORS
-        $behaviors['corsFilter'] = [
-            'class' => \yii\filters\Cors::class,
-            'cors' => [
-                'Origin' => ['*'],
-                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-                'Access-Control-Request-Headers' => ['*'],
-                'Access-Control-Allow-Credentials' => false,
-                'Access-Control-Max-Age' => 86400,
-            ],
-        ];
-
-        // JSON response
-        $behaviors['contentNegotiator'] = [
-            'class' => \yii\filters\ContentNegotiator::class,
-            'formats' => [
-                'application/json' => Response::FORMAT_JSON,
-            ],
-        ];
-
-        return $behaviors;
-    }
 
     /**
-     * Obter ID do userprofile do usuário autenticado
-     */
-    protected function getUserProfileId()
-    {
-        $user = Yii::$app->user->identity;
-        if (!$user || !$user->userprofile) {
-            throw new UnauthorizedHttpException('Usuário não autenticado ou sem perfil');
-        }
-        return $user->userprofile->id;
-    }
-
-    /**
-     * GET /fatura
+     * GET /fatura/all
      * Lista faturas do cliente com filtros opcionais
      */
-    public function actionIndex()
+    public function actionAll()
     {
         $userProfileId = $this->getUserProfileId();
 
@@ -111,7 +60,7 @@ class FaturaController extends Controller
     }
 
     /**
-     * GET /fatura/{id}
+     * GET /fatura/view/{id}
      * Detalhes de uma fatura específica
      */
     public function actionView($id)
@@ -120,7 +69,7 @@ class FaturaController extends Controller
 
         $fatura = Fatura::find()
             ->where(['id' => $id, 'userprofiles_id' => $userProfileId, 'eliminado' => 0])
-            ->with(['linhasfaturas', 'metodospagamentos', 'userprofiles'])
+            ->with(['linhasfaturas.medicamentos', 'linhasfaturas.marcacoes', 'metodospagamentos', 'userprofiles'])
             ->one();
 
         if (!$fatura) {
@@ -130,12 +79,32 @@ class FaturaController extends Controller
         $linhas = [];
         foreach ($fatura->linhasfaturas as $linha) {
             if ($linha->eliminado == 0) {
+                // Determinar descrição baseado no tipo de item
+                $descricao = '';
+                $tipo = '';
+                $precoUnitario = 0;
+                
+                if ($linha->medicamentos_id && $linha->medicamentos) {
+                    $descricao = $linha->medicamentos->nome;
+                    $tipo = 'medicamento';
+                    $precoUnitario = (float)$linha->medicamentos->preco;
+                } elseif ($linha->marcacoes_id && $linha->marcacoes) {
+                    $descricao = $linha->marcacoes->servicos ? $linha->marcacoes->servicos->nome : 'Serviço';
+                    $tipo = 'servico';
+                    $precoUnitario = $linha->marcacoes->servicos ? (float)$linha->marcacoes->servicos->preco : 0;
+                } else {
+                    $descricao = 'Item';
+                    $tipo = 'outro';
+                    $precoUnitario = (float)$linha->total / (int)$linha->quantidade;
+                }
+                
                 $linhas[] = [
                     'id' => $linha->id,
-                    'descricao' => $linha->descricao,
+                    'descricao' => $descricao,
+                    'tipo' => $tipo,
                     'quantidade' => (int)$linha->quantidade,
-                    'preco' => (float)$linha->preco,
-                    'subtotal' => (float)($linha->quantidade * $linha->preco),
+                    'preco_unitario' => $precoUnitario,
+                    'total' => (float)$linha->total,
                 ];
             }
         }
@@ -159,10 +128,10 @@ class FaturaController extends Controller
 
 
     /**
-     * GET /fatura/metodos-pagamento
+     * GET /fatura/paymentmethods
      * Lista métodos de pagamento disponíveis
      */
-    public function actionMetodosPagamento()
+    public function actionPaymentmethods()
     {
         $metodos = Metodopagamento::find()
             ->where(['vigor' => 1, 'eliminado' => 0])
@@ -178,6 +147,66 @@ class FaturaController extends Controller
         }
 
         return $result;
+    }
+
+    /**
+     * PUT /fatura/pay/{id}
+     * Pagar uma fatura (alterar estado para pago)
+     * 
+     * Body: {
+     *   "metodospagamentos_id": 1
+     * }
+     */
+    public function actionPay($id)
+    {
+        $userProfileId = $this->getUserProfileId();
+
+        $fatura = Fatura::find()
+            ->where(['id' => $id, 'userprofiles_id' => $userProfileId, 'eliminado' => 0])
+            ->one();
+
+        if (!$fatura) {
+            throw new NotFoundHttpException('Fatura não encontrada');
+        }
+
+        // Verificar se a fatura já está paga
+        if ($fatura->estado == 1) {
+            throw new BadRequestHttpException('Esta fatura já está paga');
+        }
+
+        $body = Yii::$app->request->getBodyParams();
+        
+        // Validar método de pagamento (opcional, mas recomendado)
+        if (isset($body['metodospagamentos_id'])) {
+            $metodoPagamento = Metodopagamento::find()
+                ->where(['id' => $body['metodospagamentos_id'], 'vigor' => 1, 'eliminado' => 0])
+                ->one();
+
+            if (!$metodoPagamento) {
+                throw new BadRequestHttpException('Método de pagamento inválido');
+            }
+
+            $fatura->metodospagamentos_id = $body['metodospagamentos_id'];
+        }
+
+        // Alterar estado para pago (1)
+        $fatura->estado = 1;
+
+        if (!$fatura->save()) {
+            throw new BadRequestHttpException('Erro ao atualizar fatura: ' . json_encode($fatura->errors));
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Fatura paga com sucesso',
+            'fatura' => [
+                'id' => $fatura->id,
+                'total' => (float)$fatura->total,
+                'estado' => $fatura->estado,
+                'metodospagamentos_id' => $fatura->metodospagamentos_id,
+                'created_at' => $fatura->created_at,
+            ],
+        ];
     }
 }
 

@@ -40,14 +40,14 @@ echo PageHeaderWidget::widget([
                 'icon' => 'fa-paw',
                 'iconColorClass' => 'icon-blue',
                 'text' => 'Total de Espécies',
-                'value' => Especie::find()->where(['eliminado' => 0])->count(),
+                'value' => $totalCount,
                 'url' => '/especie/index',
             ]) ?>
             <?= BigCardWidget::widget([
                 'icon' => 'fa-paw',
                 'iconColorClass' => 'icon-red',
                 'text' => 'Eliminadas',
-                'value' => Especie::find()->where(['eliminado' => 1])->count(),
+                'value' => $deletedCount,
                 'url' => '/especie/index',
             ]) ?>
         </div>
