@@ -21,5 +21,11 @@ class ModuleAPI extends \yii\base\Module
 
         // Deixar stateless (sem sessão)
         \Yii::$app->user->enableSession = false;
+
+        // Configurar errorHandler para retornar JSON
+        \Yii::$app->errorHandler->errorAction = null;
+        
+        // Forçar response format JSON para erros
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 }
