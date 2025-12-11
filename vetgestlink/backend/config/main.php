@@ -33,7 +33,7 @@ return [
         // imageUploader is registered globally in common/config/main.php - no need to redefine here
         'request' => [
             'csrfParam' => '_csrf-backend',
-            //jsonParser
+            //jsonParser() para requisições com Content-Type: application/json
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
@@ -64,41 +64,80 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // ========== AUTENTICAÇÃO (Públicas - AuthController) ==========
-                'POST api/auth/login' => 'api/auth/login',
-                'POST api/auth/logout' => 'api/auth/logout',
-                'GET api/auth/profile' => 'api/auth/profile',
-                'POST api/auth/forgot' => 'api/auth/forgot',
-
-                // ========== PERFIL (Protegidas - ProfileController) ==========
-                'GET api/profile' => 'api/profile/index',
-                'PUT api/profile/update' => 'api/profile/update',
-                'PUT api/profile/password' => 'api/profile/password',
-
-                // ========== ANIMAIS (Protegidas - AnimalController) ==========
-                'GET api/animal/all' => 'api/animal/all',
-                'GET api/animal/view/<id:\d+>' => 'api/animal/view',
-                'GET api/animal/<id:\d+>/notes' => 'api/animal/notes',
-
-                // ========== MARCAÇÕES (Protegidas - MarcacaoController) ==========
-                'GET api/marcacao/all' => 'api/marcacao/all',
-                'GET api/marcacao/view/<id:\d+>' => 'api/marcacao/view',
-
-                // ========== FATURAS (Protegidas - FaturaController) ==========
-                'GET api/fatura/all' => 'api/fatura/all',
-                'GET api/fatura/view/<id:\d+>' => 'api/fatura/view',
-                'GET api/fatura/paymentmethods' => 'api/fatura/paymentmethods',
-                'PUT api/fatura/pay/<id:\d+>' => 'api/fatura/pay',
-
-                // ========== NOTAS (Protegidas - NotaController) ==========
-                'GET api/nota/all' => 'api/nota/all',
-                'GET api/nota/view/<id:\d+>' => 'api/nota/view',
-                'POST api/nota/create' => 'api/nota/create',
-                'PUT api/nota/update/<id:\d+>' => 'api/nota/update',
-                'DELETE api/nota/delete/<id:\d+>' => 'api/nota/delete',
-
-                // ========== HEALTH CHECK (Pública - HealthController) ==========
-                'GET api/health' => 'api/health/index',
+                // ========== AUTH CONTROLLER (Público) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/auth',
+                    'extraPatterns' => [
+                        'POST login' => 'login',
+                        'POST logout' => 'logout',
+                        'POST forgot' => 'forgot',
+                    ],
+                ],
+                // ========== PROFILE CONTROLLER (Protegido) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/profile',
+                    'extraPatterns' => [
+                        'GET ' => 'index',
+                        'PUT update' => 'update',
+                        'PUT password' => 'password',
+                    ],
+                ],
+                // ========== ANIMAL CONTROLLER (Protegido) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/animal',
+                    'extraPatterns' => [
+                        'GET all' => 'all',
+                        'GET view/{id}' => 'view',
+                        'GET {id}/notes' => 'notes',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
+                // ========== MARCACAO CONTROLLER (Protegido) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/marcacao',
+                    'extraPatterns' => [
+                        'GET all' => 'all',
+                        'GET view/{id}' => 'view',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
+                // ========== FATURA CONTROLLER (Protegido) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/fatura',
+                    'extraPatterns' => [
+                        'GET all' => 'all',
+                        'GET view/{id}' => 'view',
+                        'GET paymentmethods' => 'paymentmethods',
+                        'PUT pay/{id}' => 'pay',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
+                // ========== NOTA CONTROLLER (Protegido - CRUD Completo) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/nota',
+                    'extraPatterns' => [
+                        'GET all' => 'all',
+                        'GET view/{id}' => 'view',
+                        'POST create' => 'create',
+                        'PUT update/{id}' => 'update',
+                        'DELETE delete/{id}' => 'delete',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
             ],
         ],
     ],

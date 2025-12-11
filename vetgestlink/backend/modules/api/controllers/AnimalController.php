@@ -3,17 +3,70 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
+use yii\rest\ActiveController;
+use yii\filters\Cors;
+use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
+use yii\filters\auth\QueryParamAuth;
 use common\models\Animal;
 use common\models\Nota;
 
 /**
  * Controller de Animais
- *
- * Endpoints para gerenciar animais do cliente autenticado.
+ * Endpoints para gerenciar animais do cliente autenticado
  */
-class AnimalController extends ApiController
+class AnimalController extends ActiveController
 {
+    public $modelClass = 'common\models\Animal';
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        // CORS
+        $behaviors['corsFilter'] = [
+            'class' => Cors::class,
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => true,
+                'Access-Control-Max-Age' => 86400,
+            ],
+        ];
+        
+        // Autenticação customizada
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::className(),
+        ];
+
+        // JSON response
+        $behaviors['contentNegotiator'] = [
+            'class' => \yii\filters\ContentNegotiator::class,
+            'formats' => [
+                'application/json' => Response::FORMAT_JSON,
+            ],
+        ];
+
+        return $behaviors;
+    }
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index'], $actions['view'], $actions['create'], $actions['update'], $actions['delete']);
+        return $actions;
+    }
+
+    protected function getUserProfileId()
+    {
+        $user = Yii::$app->user->identity;
+        if (!$user || !$user->userprofile) {
+            throw new UnauthorizedHttpException('Usuário sem perfil associado');
+        }
+        return $user->userprofile->id;
+    }
 
     /**
      * GET /animal/all

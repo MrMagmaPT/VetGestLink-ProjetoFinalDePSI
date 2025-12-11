@@ -9,7 +9,6 @@ use yii\helpers\ArrayHelper;
         <div class="d-flex justify-content-between align-items-center">
             <strong>Morada <?= $i === 0 ? 'Principal' : ($i + 1) ?></strong>
             <?= Html::hiddenInput("Morada[{$i}][id]", ArrayHelper::getValue($morada, 'id', '')) ?>
-            <?= Html::hiddenInput("Morada[{$i}][eliminado]", ArrayHelper::getValue($morada, 'eliminado', 0)) ?>
 
             <div>
                 <?php $mid = ArrayHelper::getValue($morada, 'id', null); ?>
