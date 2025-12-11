@@ -42,8 +42,7 @@ class ServicoSearch extends Servico
      */
     public function search($params, $formName = null)
     {
-        $query = Servico::find()
-            ->with(['linhasfaturas']); // Eager loading
+        $query = Servico::find();
 
         // add conditions that should always apply here
 
