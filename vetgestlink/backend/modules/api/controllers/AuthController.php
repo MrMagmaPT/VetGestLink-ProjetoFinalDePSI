@@ -260,28 +260,6 @@ class AuthController extends ActiveController
     }
 
     /**
-     * Logout de cliente
-     *
-     * POST /api/auth/logout
-     * Aceita token via: Header Authorization, body ou query params
-     *
-     * @return array
-     */
-    public function actionLogout()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $token = $this->extractToken();
-
-        if (!$token) {
-            Yii::$app->response->statusCode = 400;
-            return ['success' => false, 'message' => 'Token não fornecido'];
-        }
-
-        return $this->module->auth->logout($token);
-    }
-
-    /**
      * Extrai token do header, body ou query params
      */
     private function extractToken()
@@ -326,34 +304,10 @@ class AuthController extends ActiveController
             return ['success' => false, 'message' => 'Token inválido ou expirado'];
         }
 
-        return ['success' => true, 'user' => $userInfo];
-    }
-
-    /**
-     * Solicitar recuperação de senha
-     *
-     * POST /api/auth/forgot
-     * Body: {"email": "maria@example.com"}
-     *
-     * @return array
-     */
-    public function actionForgot()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $data = Yii::$app->request->post();
-        $email = $data['email'] ?? null;
-
-        if (!$email) {
-            Yii::$app->response->statusCode = 400;
-            return [
-                'success' => false,
-                'message' => 'Email é obrigatório'
+        return [
+            'success' => true,
+             'user' => $userInfo
             ];
-        }
-
-        $result = $this->module->auth->requestPasswordReset($email);
-        return $result;
     }
 }
 
