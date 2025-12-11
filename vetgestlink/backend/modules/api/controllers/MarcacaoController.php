@@ -3,11 +3,11 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
-use yii\filters\auth\QueryParamAuth;
 use common\models\Marcacao;
 
 /**
@@ -36,11 +36,9 @@ class MarcacaoController extends Controller
             ],
         ];
 
-        // Autenticação via QueryParamAuth (access-token ou auth_key)
+        // Autenticação customizada
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
-            'optional' => ['options'],
+            'class' => QueryParamAuth::className(),
         ];
 
         // JSON response

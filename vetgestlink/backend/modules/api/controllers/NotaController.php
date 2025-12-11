@@ -3,12 +3,12 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\Controller;
+use yii\filters\auth\QueryParamAuth;
+use yii\rest\ActiveController;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
-use yii\filters\auth\QueryParamAuth;
 use common\models\Nota;
 use common\models\Animal;
 
@@ -17,8 +17,10 @@ use common\models\Animal;
  *
  * Endpoints para gerenciar notas dos animais do cliente autenticado.
  */
-class NotaController extends Controller
+class NotaController extends ActiveController
 {
+    public $modelClass = 'common\models\Nota';
+
     /**
      * @inheritdoc
      */
@@ -38,10 +40,9 @@ class NotaController extends Controller
             ],
         ];
 
-        // Autenticação via QueryParamAuth (access-token)
+        // Autenticação customizada
         $behaviors['authenticator'] = [
-            'class' => QueryParamAuth::class,
-            'tokenParam' => 'access-token',
+            'class' => QueryParamAuth::className(),
         ];
 
         // JSON response

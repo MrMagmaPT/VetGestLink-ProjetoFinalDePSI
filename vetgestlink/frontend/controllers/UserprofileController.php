@@ -62,30 +62,14 @@ class UserprofileController extends Controller
             throw new NotFoundHttpException('Utilizador não encontrado.');
         }
 
-        // Obter perfil e moradas (somente as não eliminadas)
+        // Obter perfil e moradas
         $profile = $user->userprofile;
         if ($profile === null) {
             $profile = new Userprofile();
             $profile->user_id = $user->id;
             $moradas = [];
         } else {
-            $moradas = $profile->getMoradas()->where(['eliminado' => 0])->all();
-            // Fallback legacy caso não existam moradas (mantido por compatibilidade)
-            if (empty($moradas)) {
-                if (isset($profile->enderecos) && is_array($profile->enderecos) && count($profile->enderecos)) {
-                    foreach ($profile->enderecos as $e) {
-                        if (isset($e->eliminado) && $e->eliminado == 0) {
-                            $moradas[] = $e;
-                        }
-                    }
-                } elseif (isset($profile->address) && is_array($profile->address) && count($profile->address)) {
-                    foreach ($profile->address as $e) {
-                        if (isset($e->eliminado) && $e->eliminado == 0) {
-                            $moradas[] = $e;
-                        }
-                    }
-                }
-            }
+            $moradas = $profile->getMoradas()->all();
         }
 
         return $this->render('view', [
@@ -103,7 +87,7 @@ class UserprofileController extends Controller
     {
         $user = Yii::$app->user->identity;
         $model = $user->userprofile;
-        $moradas = $model ? $model->getMoradas()->where(['eliminado' => 0])->all() : [];
+        $moradas = $model ? $model->getMoradas()->all() : [];
 
         // Normalizar pedido POST para o caso do botão "Remover" sem JavaScript
         $this->normalizeNoJsRemove();
@@ -231,7 +215,6 @@ class UserprofileController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $model->userprofiles_id = $profile->id;
-            $model->eliminado = 0;
             if ($model->isNewRecord && !isset($model->principal)) {
                 $model->principal = 0;
             }
@@ -247,7 +230,7 @@ class UserprofileController extends Controller
     }
 
     /**
-     * Marcar uma morada como eliminada (eliminado = 0 -> 1).
+     * Remover uma morada permanentemente.
      * Suporta requisições PJAX/AJAX (retorna partial) e fallback redirect.
      */
     public function actionRemoveMorada($id)
@@ -272,11 +255,10 @@ class UserprofileController extends Controller
             return $this->redirect(['update']);
         }
 
-        $morada->eliminado = 1;
-        $morada->save(false);
+        $morada->delete();
 
-        // Lista atualizada de moradas ativas
-        $moradas = $profile->getMoradas()->where(['eliminado' => 0])->all();
+        // Lista atualizada de moradas
+        $moradas = $profile->getMoradas()->all();
         if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
             return $this->renderAjax('_moradas_list', ['moradas' => $moradas]);
         }
@@ -316,7 +298,8 @@ class UserprofileController extends Controller
             if (!isset($post['Morada'])) {
                 $post['Morada'] = [];
             }
-            $post['Morada'][$removeIndex]['eliminado'] = 1;
+            // Marcar para remoção física
+            unset($post['Morada'][$removeIndex]);
             if (method_exists(Yii::$app->request, 'setBodyParams')) {
                 Yii::$app->request->setBodyParams($post);
             } else {
@@ -407,12 +390,6 @@ class UserprofileController extends Controller
             if (!empty($data['id'])) {
                 $m = Morada::findOne($data['id']);
                 if ($m && $m->userprofiles_id == $model->id) {
-                    if (!empty($data['eliminado'])) {
-                        $m->eliminado = 1;
-                        $m->save(false);
-                        continue;
-                    }
-
                     // Atribuir apenas campos permitidos
                     $m->rua = $data['rua'] ?? $m->rua;
                     $m->nporta = $data['nporta'] ?? $m->nporta;
@@ -422,16 +399,11 @@ class UserprofileController extends Controller
                     $m->cxpostal = $data['cxpostal'] ?? $m->cxpostal;
                     $m->localidade = $data['localidade'] ?? $m->localidade;
                     $m->principal = isset($data['principal']) ? (int)$data['principal'] : ($m->principal ?? 0);
-                    $m->eliminado = 0;
                     $m->save(false);
                     $postedIds[] = $m->id;
                 }
             } else {
                 // Nova morada
-                if (!empty($data['eliminado'])) {
-                    continue;
-                }
-
                 $m = new Morada();
                 $m->rua = $data['rua'] ?? null;
                 $m->nporta = $data['nporta'] ?? null;
@@ -442,7 +414,6 @@ class UserprofileController extends Controller
                 $m->localidade = $data['localidade'] ?? null;
                 $m->principal = isset($data['principal']) ? (int)$data['principal'] : 0;
                 $m->userprofiles_id = $model->id;
-                $m->eliminado = 0;
                 $m->save(false);
                 $postedIds[] = $m->id;
             }
