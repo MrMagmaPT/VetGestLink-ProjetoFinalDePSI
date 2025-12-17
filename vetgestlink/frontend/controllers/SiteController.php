@@ -64,10 +64,6 @@ class SiteController extends Controller
             'error' => [
                 'class' => \yii\web\ErrorAction::class,
             ],
-            'captcha' => [
-                'class' => \yii\captcha\CaptchaAction::class,
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
-            ],
         ];
     }
 
@@ -78,8 +74,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        //obter todos os serviços ordenados por nome
         $servicos = \common\models\Servico::find()
-            ->where(['eliminado' => 0])
             ->orderBy(['nome' => SORT_ASC])
             ->all();
 
@@ -128,16 +124,21 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+
     public function actionContact()
     {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Obrigado por nos contactar. Entraremos em contacto assim que podermos.');
-            } else {
-                Yii::$app->session->setFlash('danger', 'Ocorreu um erro ao enviar sua mensagem.');
+            try {
+                if ($model->sendEmail(Yii::$app->params['vetGestLinkEmail'])) {
+                    Yii::$app->session->setFlash('success', '<i class="fas fa-check-circle me-2"></i><strong>Mensagem enviada com sucesso!</strong> Obrigado por entrar em contato. Responderemos em breve.');
+                } else {
+                    Yii::$app->session->setFlash('danger', '<i class="fas fa-exclamation-circle me-2"></i>Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+                }
+            } catch (\Exception $e) {
+                Yii::$app->session->setFlash('danger', '<i class="fas fa-exclamation-triangle me-2"></i>Erro ao enviar email: ' . $e->getMessage());
+                Yii::error('Erro no envio de email de contato: ' . $e->getMessage(), 'contact');
             }
-
             return $this->refresh();
         }
 
@@ -168,8 +169,11 @@ class SiteController extends Controller
             if ($model->signup()) {
                 Yii::$app->session->setFlash('success', 'Obrigado por se registar. Por favor verifique o seu email.');
                 return $this->goHome();
-            }else
-                Yii::$app->session->setFlash('danger', 'Ocurreu um erro ao criar a sua conta.');
+            }else{
+                $errorSummary = implode('<br>', array_map(function($errors) {
+            return implode('<br>', $errors);}, $model->getErrors()));
+            Yii::$app->session->setFlash('danger', 'Ocorreu um erro ao criar a sua conta.<br>' . $errorSummary);
+            }
         }
 
         return $this->render('signup', [

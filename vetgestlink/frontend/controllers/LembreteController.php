@@ -2,18 +2,16 @@
 
 namespace frontend\controllers;
 
-use common\models\Animal;
-use common\models\Nota;
-use Yii;
+use common\models\Lembrete;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * NotaController implements the CRUD actions for Nota model.
+ * LembreteController implements the CRUD actions for Lembrete model.
  */
-class NotaController extends Controller
+class LembreteController extends Controller
 {
     /**
      * @inheritDoc
@@ -42,41 +40,60 @@ class NotaController extends Controller
         );
     }
 
-
     /**
-     * Displays a single Nota model.
-     * @param int $id ID
+     * Lists all Lembrete models.
+     *
      * @return string
-     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionIndex($animal_id)
+    public function actionIndex()
     {
-        $model = $this->findModel($animal_id);
-
-        $animal = Animal::findOne($animal_id);
-        $allnotas = $animal->notas;
+        $dataProvider = new ActiveDataProvider([
+            'query' => Lembrete::find(),
+            /*
+            'pagination' => [
+                'pageSize' => 50
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ],
+            */
+        ]);
 
         return $this->render('index', [
-            'model' => $model,
-            'allnotas' => $allnotas,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Creates a new Nota model.
+     * Displays a single Lembrete model.
+     * @param int $id ID
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new Lembrete model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($animal_id)
+    public function actionCreate()
     {
-        $model = new Nota();
-        $model->animais_id = $animal_id;
-        $model->userprofiles_id = Yii::$app->user->identity->userprofile->id;
-        $model->created_at = date('Y-m-d H:i:s');
+        $model = new Lembrete();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
-            return $this->redirect(['animal/index', 'id' => $animal_id]);
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
         }
 
         return $this->render('create', [
@@ -85,7 +102,7 @@ class NotaController extends Controller
     }
 
     /**
-     * Updates an existing Nota model.
+     * Updates an existing Lembrete model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -95,13 +112,8 @@ class NotaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-                Yii::$app->session->setFlash('success', 'Nota atualizada com sucesso.');
-                return $this->redirect(['nota/index', 'animal_id' => $model->animais_id]);
-            } else {
-                Yii::$app->session->setFlash('danger', 'Erro ao atualizar a nota. Verifique os campos.');
-            }
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -109,9 +121,8 @@ class NotaController extends Controller
         ]);
     }
 
-
     /**
-     * Deletes an existing Nota model.
+     * Deletes an existing Lembrete model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -119,23 +130,21 @@ class NotaController extends Controller
      */
     public function actionDelete($id)
     {
-        $model = $this->findModel($id);
-        Yii::$app->session->setFlash('success', 'Nota eliminada com sucesso.');
         $this->findModel($id)->delete();
 
-        return $this->redirect(['nota/index','animal_id' => $model->animais_id]);
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Nota model based on its primary key value.
+     * Finds the Lembrete model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Nota the loaded model
+     * @return Lembrete the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Nota::findOne(['id' => $id])) !== null) {
+        if (($model = Lembrete::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

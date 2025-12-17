@@ -32,31 +32,31 @@ class SignupForm extends Model
     {
         return [
             ['username', 'trim'],
-            ['username', 'required'],
+            ['username', 'required', 'message' => 'O campo Nome de Utilizador é obrigatório.'],
             ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este nome de utilizador já existe.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
-            ['email', 'required'],
+            ['email', 'required', 'message' => 'O campo Email é obrigatório.'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este email já está registado.'],
 
-            ['password', 'required'],
+            ['password', 'required', 'message' => 'O campo Palavra-passe é obrigatório.'],
             ['password', 'string', 'min' => 6],
 
-            ['nomecompleto', 'required'],
-            ['dtanascimento', 'required'],
-            ['nif', 'required'],
+            ['nomecompleto', 'required', 'message' => 'O campo Nome Completo é obrigatório.'],
+            ['dtanascimento', 'required', 'message' => 'O campo Data de Nascimento é obrigatório.'],
+            ['nif', 'required', 'message' => 'O campo NIF é obrigatório.'],
             ['nif', 'string', 'length' => 9],
-            ['telemovel', 'required'],
+            ['telemovel', 'required', 'message' => 'O campo Telemóvel é obrigatório.'],
             ['telemovel', 'string', 'length' => 9],
 
-            ['rua', 'required'],
-            ['nporta', 'required'],
-            ['cdpostal', 'required'],
-            ['localidade', 'required'],
-            ['cidade', 'required'],
+            ['rua', 'required', 'message' => 'O campo Rua é obrigatório.'],
+            ['nporta', 'required', 'message' => 'O campo Número da Porta é obrigatório.'],
+            ['cdpostal', 'required', 'message' => 'O campo Código Postal é obrigatório.'],
+            ['localidade', 'required', 'message' => 'O campo Localidade é obrigatório.'],
+            ['cidade', 'required', 'message' => 'O campo Cidade é obrigatório.'],
             [['andar', 'cxpostal'], 'safe'],
             ['principal', 'boolean'],
             ['imageFile', 'file', 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024 * 2], // 2MB
@@ -103,34 +103,36 @@ class SignupForm extends Model
         $uploadedFileName = null;
 
         try {
-            // 1. Valida Userprofile antes de criar User
-            $userprofile = new Userprofile();
-            $userprofile->nomecompleto = $this->nomecompleto;
-            $userprofile->dtanascimento = $this->dtanascimento;
-            $userprofile->nif = $this->nif;
-            $userprofile->telemovel = $this->telemovel;
-            $userprofile->eliminado = 0;
-
-            if (!$userprofile->validate()) {
-                Yii::$app->session->setFlash('danger', 'Existem erros no perfil do utilizador. Corrija os campos destacados.');
-                $this->addErrors($userprofile->getErrors());
-                return null;
-            }
-
-            // 2. Criar User
+            // 1. Criar User primeiro
             $user = new User();
             $user->username = $this->username;
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
-            $user->generateEmailVerificationToken();
-            //$user->status = User::STATUS_INACTIVE;
+            //Usuarios Criados no frontend ficam Inativos até verificação por email
+            $user->status = User::STATUS_INACTIVE;
             $user->created_at = time();
             $user->updated_at = time();
 
             if (!$user->save()) {
-                Yii::$app->session->setFlash('danger', 'Erro ao criar utilizador.');
                 Yii::error("Erro User: " . json_encode($user->errors));
+                $this->addErrors($user->getErrors());
+                return null;
+            }
+
+            // 2. Criar e salvar Userprofile (agora com user_id válido)
+            $userprofile = new Userprofile();
+            $userprofile->user_id = $user->id;
+            $userprofile->nomecompleto = $this->nomecompleto;
+            $userprofile->dtanascimento = $this->dtanascimento;
+            $userprofile->nif = $this->nif;
+            $userprofile->telemovel = $this->telemovel;
+
+            if (!$userprofile->save()) {
+                Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
+                // Se falhar, apagar o User criado
+                $user->delete();
+                $this->addErrors($userprofile->getErrors());
                 return null;
             }
 
@@ -186,7 +188,6 @@ class SignupForm extends Model
             $morada->localidade = $this->localidade;
             $morada->cidade = $this->cidade;
             $morada->principal = $this->principal ? 1 : 0;
-            $morada->eliminado = 0;
 
             if (!$morada->save()) {
                 Yii::$app->session->setFlash('danger', 'Erro ao guardar a morada.');

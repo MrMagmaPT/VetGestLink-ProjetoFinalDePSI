@@ -16,16 +16,14 @@ $this->params['breadcrumbs'][] = 'Atualizar';
         <div class="col-lg-7">
 
             <div class="card shadow border-0 rounded-4">
-                <div class="card-header text-center text-white py-4 rounded-top" style="background: linear-gradient(90deg, rgb(76, 184, 138) 0%, rgb(148, 226, 182) 100%);">
-                    <h4 class="mb-0 fw-bold"><?= Html::encode($this->title) ?></h4>
-                </div>
 
-                <div class="card-body p-4">
-                    <?= $this->render('_form', [
-                        'model' => $model,
-                        'moradas' => $moradas,
-                    ]) ?>
-                </div>
+
+                
+            <?= $this->render('_form', [
+                'model' => $model,
+                'moradas' => $moradas,
+            ]) ?>
+                
 
             </div>
         </div>

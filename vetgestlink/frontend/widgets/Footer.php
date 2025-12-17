@@ -20,7 +20,7 @@ class Footer extends Widget
             $this->companyLinks = [
                 ['label' => 'Início', 'url' => ['site/index']],
                 ['label' => 'Sobre Nós', 'url' => ['site/about']],
-                ['label' => 'Serviços', 'url' => ['site/services']],
+                ['label' => 'Serviços', 'url' => ['site/index']],
                 ['label' => 'Casos de Sucesso', 'url' => ['#']],
                 ['label' => 'Contactos', 'url' => ['site/contact']],
             ];
@@ -39,7 +39,7 @@ class Footer extends Widget
         if (empty($this->contactInfo)) {
             $this->contactInfo = [
                 ['label' => '+351 234 567 890', 'url' => 'tel:+351234567890'],
-                ['label' => 'contacto@vetgestlink.com', 'url' => 'mailto:contacto@vetgestlink.com'],
+                ['label' => 'vetgestlink@gmail.com', 'url' => 'mailto:vetgestlink@gmail.com'],
                 ['label' => 'Leiria, Portugal', 'url' => '#'],
             ];
         }

@@ -25,7 +25,11 @@ class ServicesCardWidget extends Widget
     /**
      * @var array Cores para alternar nos cards (hex)
      */
-    public $colors = ['#4CB88A', '#94E2B6', '#6FD4A8'];
+    public $colors = [
+        '#4CB88A',// Verde padrão
+        '#94E2B6',// Verde claro
+        '#6FD4A8'// Verde médio
+    ];
 
     /**
      * @var array Ícones Font Awesome para alternar (sem 'fas')

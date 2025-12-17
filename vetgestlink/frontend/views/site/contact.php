@@ -6,53 +6,88 @@ use yii\captcha\Captcha;
 
 $this->title = 'Contato';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
+<div class="contact-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="contact-card">
+                    <div class="contact-header text-center">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h1 class="contact-title"><?= Html::encode($this->title) ?></h1>
+                        <p class="contact-subtitle">
+                            Tem dúvidas ou sugestões? Estamos aqui para ajudar!<br>
+                            Preencha o formulário abaixo e entraremos em contato em breve.
+                        </p>
+                    </div>
 
-<div class="site-contact mt-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <h1 class="mb-4 text-center"><?= Html::encode($this->title) ?></h1>
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'contact-form',
+                        'fieldConfig' => [
+                            'template' => '<div class="form-group">{label}{input}{error}</div>',
+                        ]
+                    ]); ?>
 
-            <p class="text-center text-muted mb-4">
-                Tem dúvidas ou sugestões? Preencha o formulário abaixo e entraremos em contato!
-            </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <?= $form->field($model, 'name')
+                                    ->textInput([
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Digite seu nome completo'
+                                    ])
+                                    ->label('<span class="form-label">Nome</span>') ?>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <?= $form->field($model, 'email')
+                                    ->textInput([
+                                        'class' => 'form-control',
+                                        'placeholder' => 'seu@email.com'
+                                    ])
+                                    ->label('<span class="form-label">E-mail</span>') ?>
+                            </div>
+                        </div>
+                    </div>
 
-            <?php if (Yii::$app->session->hasFlash('contactFormSubmitted')): ?>
-                <div class="alert alert-success">
-                    Obrigado por entrar em contato. Responderemos em breve.
+                    <div class="input-icon">
+                        <i class="fas fa-tag"></i>
+                        <?= $form->field($model, 'subject')
+                            ->textInput([
+                                'class' => 'form-control',
+                                'placeholder' => 'Qual o assunto da sua mensagem?'
+                            ])
+                            ->label('<span class="form-label">Assunto</span>') ?>
+                    </div>
+
+                    <div class="input-icon">
+                        <i class="fas fa-comment-alt" style="top: 25px;"></i>
+                        <?= $form->field($model, 'body')
+                            ->textarea([
+                                'class' => 'form-control',
+                                'placeholder' => 'Escreva sua mensagem aqui...',
+                                'rows' => 6
+                            ])
+                            ->label('<span class="form-label">Mensagem</span>') ?>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <?= Html::submitButton(
+                            '<i class="fas fa-paper-plane me-2"></i>Enviar Mensagem',
+                            ['class' => 'btn btn-submit']
+                        ) ?>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
                 </div>
-            <?php endif; ?>
-
-            <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
-
-            <div class="mb-3">
-                <?= $form->field($model, 'name')->textInput(['class' => 'form-control', 'placeholder' => 'Seu nome'])->label(false) ?>
             </div>
-
-            <div class="mb-3">
-                <?= $form->field($model, 'email')->textInput(['class' => 'form-control', 'placeholder' => 'Seu e-mail'])->label(false) ?>
-            </div>
-
-            <div class="mb-3">
-                <?= $form->field($model, 'subject')->textInput(['class' => 'form-control', 'placeholder' => 'Assunto'])->label(false) ?>
-            </div>
-
-            <div class="mb-3">
-                <?= $form->field($model, 'body')->textarea(['class' => 'form-control', 'placeholder' => 'Mensagem', 'rows' => 5])->label(false) ?>
-            </div>
-
-            <div class="mb-3">
-                <?= $form->field($model, 'verifyCode')->widget(Captcha::class, config: [
-                        'template' => '<div class="row"><div class="col-lg-4">{image}</div><div class="col-lg-8">{input}</div></div>',
-                        'options' => ['class' => 'form-control', 'placeholder' => 'Código de verificação'],
-                ])->label(false) ?>
-            </div>
-
-            <div class="d-grid">
-                <?= Html::submitButton('Enviar', ['class' => 'btn btn-dark rounded-pill']) ?>
-            </div>
-
-            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>

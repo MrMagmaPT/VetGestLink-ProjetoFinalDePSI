@@ -68,6 +68,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/auth',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'POST login' => 'login',
                         'POST logout' => 'logout',
@@ -78,6 +79,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/profile',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET ' => 'index',
                         'PUT update' => 'update',
@@ -88,6 +90,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/animal',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
@@ -101,6 +104,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/marcacao',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
@@ -113,6 +117,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/fatura',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
@@ -127,6 +132,7 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/nota',
+                    'pluralize' => false,
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',

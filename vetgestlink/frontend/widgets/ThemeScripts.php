@@ -11,12 +11,12 @@ class ThemeScripts extends Widget
     public $useDefaultScripts = true;
 
     private $defaultJsFiles = [
-        'vendor/modernizr-3.5.0.min.js', 'vendor/jquery-3.6.0.min.js', // jQuery primeiro
+        'vendor/modernizr-3.5.0.min.js',
         'popper.min.js',
         'bootstrap.min.js',
         'jquery.slicknav.min.js',
         'owl.carousel.min.js',
-        'slick.min.js', // Slick DEVE vir antes do main.js
+        'slick.min.js',
         'wow.min.js',
         'animated.headline.js',
         'jquery.magnific-popup.js',
@@ -28,7 +28,7 @@ class ThemeScripts extends Widget
         'mail-script.js',
         'jquery.ajaxchimp.min.js',
         'plugins.js',
-        'main.js', // main.js DEVE vir depois de slick.min.js
+        'main.js',
     ];
 
     public function run()

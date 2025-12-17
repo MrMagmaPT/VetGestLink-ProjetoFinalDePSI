@@ -29,6 +29,7 @@ class Lembrete extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
+     * //Coloca data e hora atual nos campos created_at e updated_at automaticamente
      */
     public function behaviors()
     {

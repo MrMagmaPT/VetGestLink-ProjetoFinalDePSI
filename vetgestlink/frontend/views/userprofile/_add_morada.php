@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container py-4">
     <div class="col-md-6 mx-auto">
         <div class="card p-3">
-            <?php $action = isset($model->id) ? ['userprofile/add-morada', 'id' => $model->id] : ['userprofile/add-morada']; ?>
+            <?php $action = $model->isNewRecord ? ['morada/create'] : ['morada/update', 'id' => $model->id]; ?>
             <?php $form = ActiveForm::begin(['action' => $action]); ?>
 
             <h5 class="mb-3"><?= $model->id ? 'Editar Morada' : 'Adicionar Morada' ?></h5>
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="d-flex justify-content-end gap-2">
                 <?= Html::a('Cancelar', ['userprofile/update'], ['class' => 'btn btn-outline-secondary']) ?>
-                <?= Html::submitButton('Adicionar', ['class' => 'btn btn-success']) ?>
+                <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
             </div>
 
             <?php ActiveForm::end(); ?>

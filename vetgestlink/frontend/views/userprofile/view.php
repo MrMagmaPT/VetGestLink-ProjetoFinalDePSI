@@ -4,6 +4,7 @@
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 
+
 /** @var yii\web\View $this */
 /** @var common\models\Userprofile $model */
 /** @var common\models\User|null $user */
@@ -148,15 +149,6 @@ $imgAttr = [
             <!-- footer -->
             <div class="card-footer bg-white border-0 d-flex justify-content-end">
                 <?= $editId ? Html::a('Editar Perfil', ['userprofile/update', 'id' => $editId], ['class' => 'btn btn-dark rounded-pill me-2']) : '' ?>
-                <?php if (!empty($model->foto)): ?>
-                    <?= Html::a('Remover Foto', ['userprofile/remove-photo'], [
-                        'class' => 'btn btn-outline-danger rounded-pill',
-                        'data' => [
-                            'method' => 'post',
-                            'confirm' => 'Tem a certeza que pretende remover a sua foto de perfil?'
-                        ]
-                    ]) ?>
-                <?php endif; ?>
             </div>
         </div>
     </div>

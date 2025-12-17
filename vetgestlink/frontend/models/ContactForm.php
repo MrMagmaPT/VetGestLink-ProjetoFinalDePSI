@@ -24,11 +24,13 @@ class ContactForm extends Model
     {
         return [
             // name, email, subject and body are required
-            [['name', 'email', 'subject', 'body'], 'required'],
+            [['name', 'email', 'subject', 'body'], 'required', 'message' => '{attribute} é obrigatório.'],
             // email has to be a valid email address
-            ['email', 'email'],
-            // verifyCode needs to be entered correctly
-            ['verifyCode', 'captcha'],
+            ['email', 'email', 'message' => 'Por favor, insira um endereço de email válido.'],
+            // string length validation
+            ['name', 'string', 'min' => 2, 'max' => 100, 'tooShort' => 'O nome deve ter pelo menos 2 caracteres.', 'tooLong' => 'O nome não pode ter mais de 100 caracteres.'],
+            ['subject', 'string', 'min' => 5, 'max' => 200, 'tooShort' => 'O assunto deve ter pelo menos 5 caracteres.', 'tooLong' => 'O assunto não pode ter mais de 200 caracteres.'],
+            ['body', 'string', 'min' => 10, 'max' => 5000, 'tooShort' => 'A mensagem deve ter pelo menos 10 caracteres.', 'tooLong' => 'A mensagem não pode ter mais de 5000 caracteres.'],
         ];
     }
 
@@ -38,7 +40,10 @@ class ContactForm extends Model
     public function attributeLabels()
     {
         return [
-            'verifyCode' => 'Verification Code',
+            'name' => 'Nome',
+            'email' => 'E-mail',
+            'subject' => 'Assunto',
+            'body' => 'Mensagem',
         ];
     }
 

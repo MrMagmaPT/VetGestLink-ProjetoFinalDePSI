@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="site-login d-flex justify-content-center align-items-center" style="min-height: 75vh;">
         <div class="row w-100" style="max-width: 900px;">
 
-            <!-- LEFT: LOGIN CARD -->
+            <!-- LOGIN  -->
             <div class="col-lg-6 mb-4 d-flex">
                 <div class="card shadow-lg border-0 rounded-4 flex-fill">
                     <div class="card-body p-4 d-flex flex-column justify-content-center">
@@ -25,16 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
                         <?= $form->field($model, 'username')
-                            ->textInput(['autofocus' => true, 'placeholder' => 'Enter your username'])
+                            ->textInput(['autofocus' => true, 'placeholder' => 'Inserir nome de utilizador'])
                             ->label(false) ?>
 
                         <?= $form->field($model, 'password')
-                            ->passwordInput(['placeholder' => 'Enter your password'])
+                            ->passwordInput(['placeholder' => 'Inserir palavra-passe'])
                             ->label(false) ?>
+
                         <div class="d-flex justify-content-between mb-3">
-                            <?= $form->field($model, 'rememberMe')->checkbox()->label('Remember me') ?>
+                            <?= $form->field($model, 'rememberMe')->checkbox()->label('Lembrar-me') ?>
                             <small>
-                                <?= Html::a('Forgot Password?', ['site/request-password-reset'], ['class' => 'text-primary']) ?>
+                                <?= Html::a('Esqueceu a palavra-passe?', ['site/request-password-reset'], ['class' => 'text-primary']) ?>
                             </small>
                         </div>
 
@@ -50,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
 
-            <!-- RIGHT: SIGNUP CARD -->
+            <!-- SIGNUP CARD -->
             <div class="col-lg-6 mb-4 d-flex">
                 <div class="card shadow-lg border-0 rounded-4 flex-fill">
                     <div class="card-body p-4 d-flex flex-column justify-content-center text-center">
@@ -58,10 +59,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         <p class="text-muted mb-4">
                             Crie uma conta para gerir os seus animas e reservar consultas.
                         </p>
+                        <!-- icone -->
+                        <i class="fas fa-user-plus fa-3x mb-4" style="color: #4CB88A;"></i>
 
                         <div class="d-grid mb-3 mt-auto">
                             <?= Html::a(
-                                'Create Account',
+                                'Registar Conta',
                                 ['site/signup'],
                                 ['class' => 'btn btn btn-lg rounded-pill px-4']
                             ) ?>

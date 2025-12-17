@@ -9,7 +9,6 @@ use frontend\widgets\ThemeAssets;
 use frontend\widgets\ThemeScripts;
 use frontend\widgets\Navbar;
 use frontend\widgets\Footer;
-use frontend\widgets\ScrollToTop;
 //Registar assets comuns(fav)
 use common\assets\CommonAsset;
 
@@ -29,14 +28,12 @@ $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<?= $faviconUrl ?>">
-
-    
     <title>
         <?= Html::encode($this->title) ?>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
-    <!-- Template CSS -->
+    <!-- CSS e o Temaplate -->
     <?php ThemeAssets::widget(); ?>
 
     <?php $this->head() ?>
@@ -49,18 +46,14 @@ $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
 
 <!-- Main content -->
 <main role="main" class="flex-shrink-0 mt-5 pt-5">
-    <?php foreach (Yii::$app->session->getAllFlashes() as $type => $message): ?>
-        <div class="alert alert-<?= $type ?> alert-dismissible fade show mt-2" role="alert">
-            <?= $message ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <?php endforeach; ?>
+    <?= Alert::widget() ?>
 
     <?= $content ?>
 </main>
 
 <?= Footer::widget() ?>
 
+<!-- Registar JS files -->
 <?php ThemeScripts::widget(); ?>
 
 <?php $this->endBody() ?>

@@ -246,7 +246,7 @@ class RbacController extends Controller
         $updateAddress = $auth->createPermission('updateAddress');
         $updateAddress->description = 'Atualizar moradas';
         $auth->add($updateAddress);
-
+ 
         // DELETE - Eliminar moradas (RECECIONISTA e CLIENTE)
         $deleteAddress = $auth->createPermission('deleteAddress');
         $deleteAddress->description = 'Eliminar moradas';
@@ -299,12 +299,59 @@ class RbacController extends Controller
         $auth->add($deleteInvoice);
 
         //----------------------------------------------------------------
-        //PERMISSÕES ESPECÍFICAS DO CLIENTE:
+        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(NOTAS DO ANIMAL)
 
-        //Editar notas do dono do animal (Cliente)
-        $editOwnerNotes = $auth->createPermission('editOwnerNotes');
-        $editOwnerNotes->description = 'Editar notas dono do seu animal';
-        $auth->add($editOwnerNotes);
+        //CREATE - Criar notas animal (CLIENTE)
+        $createOwnerNotes = $auth->createPermission('createOwnerNotes');
+        $createOwnerNotes->description = 'Criar notas dono do seu animal';  
+        $auth->add($createOwnerNotes);
+
+        //READ - Visualizar notas animal (CLIENTE)
+        $viewOwnerNotes = $auth->createPermission('viewOwnerNotes');
+        $viewOwnerNotes->description = 'Visualizar notas dono do seu animal';
+        $auth->add($viewOwnerNotes);
+
+        //UPDATE - Editar notas animal (CLIENTE)
+        $updateOwnerNotes = $auth->createPermission('updateOwnerNotes');
+        $updateOwnerNotes->description = 'Atualizar notas dono do seu animal';
+        $auth->add($updateOwnerNotes);
+
+        //DELETE - Eliminar notas animal (CLIENTE)
+        $deleteOwnerNotes = $auth->createPermission('deleteOwnerNotes');
+        $deleteOwnerNotes->description = 'Eliminar notas dono do seu animal';
+        $auth->add($deleteOwnerNotes);
+
+        //========================================================================
+        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(LEMBRETES)
+
+        //CREATE - Criar lembretes (CLIENTE)
+        $createReminders = $auth->createPermission('createReminders');
+        $createReminders->description = 'Criar lembretes';
+        $auth->add($createReminders);
+
+        //READ - Visualizar lembretes (CLIENTE)
+        $viewReminders = $auth->createPermission('viewReminders'); 
+        $viewReminders->description = 'Visualizar lembretes';
+        $auth->add($viewReminders);
+
+        //UPDATE - Editar lembretes (CLIENTE)
+        $updateReminders = $auth->createPermission('updateReminders');
+        $updateReminders->description = 'Atualizar lembretes';
+        $auth->add($updateReminders);
+
+        //DELETE - Eliminar lembretes (CLIENTE)
+        $deleteReminders = $auth->createPermission('deleteReminders');  
+        $deleteReminders->description = 'Eliminar lembretes';
+        $auth->add($deleteReminders);
+
+        //========================================================================
+        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(MORADAS)
+
+        // DELETE - Eliminar morada moradas secudarias (CLIENTE)
+        $deleteSecondaryAddress = $auth->createPermission('deleteSecondaryAddress');
+        $deleteSecondaryAddress->description = 'Eliminar moradas';
+        $auth->add($deleteSecondaryAddress);
+
 
         //----------------------------------------------------------------
         //GERIR IMAGENS (VETERINÁRIO, RECECIONISTA, CLIENTE)
@@ -433,25 +480,51 @@ class RbacController extends Controller
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
 
+        //VER Animais
         $auth->addChild($cliente, $viewAnimals);
+        //ATUALIZAR a sua informação
         $auth->addChild($cliente, $updateClient);
+        //VER suas consultas
         $auth->addChild($cliente, $viewConsultations);
+        //VER suas faturas
         $auth->addChild($cliente, $viewInvoices);
 
+        //CRUD Moradas e delete permanente do das moradas secundárias
         $auth->addChild($cliente, $createAddress);
         $auth->addChild($cliente, $viewAddresses);
         $auth->addChild($cliente, $updateAddress);
-        $auth->addChild($cliente, $deleteAddress);
+        $auth->addChild($cliente, $deleteSecondaryAddress);
 
-        $auth->addChild($cliente, $editOwnerNotes);
+        //CRUD Notas do animal
+        $auth->addChild($cliente, $createOwnerNotes);
+        $auth->addChild($cliente, $viewOwnerNotes);
+        $auth->addChild($cliente, $updateOwnerNotes);
+        $auth->addChild($cliente, $deleteOwnerNotes);
 
+        //CRUD Lembretes
+        $auth->addChild($cliente, $createReminders);
+        $auth->addChild($cliente, $viewReminders);
+        $auth->addChild($cliente, $updateReminders);    
+        $auth->addChild($cliente, $deleteReminders);
+
+    
         $auth->addChild($cliente, $viewImages);
 
         //===============================================
 
-
-
         //Mensagem pra dar feedback que rodou o script
-        echo "✅ RBAC inicializado com sucesso ✅\n";
+        echo "✅ RBAC inicializado com sucesso. Permissões: {$this->countPermissions()} | Roles: {$this->countRoles()} ✅\n";
+    }
+
+    function countPermissions()
+    {
+        $auth = Yii::$app->authManager;
+        return count($auth->getPermissions());
+    }
+
+    function countRoles()
+    {
+        $auth = Yii::$app->authManager;
+        return count($auth->getRoles());
     }
 }

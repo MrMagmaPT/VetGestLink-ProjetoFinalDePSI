@@ -6,6 +6,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use frontend\widgets\ImageUploadWidget;
 
 $this->title = 'Registar';
 $this->params['breadcrumbs'][] = $this->title;
@@ -13,8 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="site-signup">
     <div class="panel panel-primary" style="max-width: 900px; margin: 30px auto;">
-        <div class="panel-heading text-center" style="padding: 20px;">
-            <h1 class="panel-title" style="font-size: 28px; font-weight: bold;"><?= Html::encode($this->title) ?></h1>
+        <div class="panel-heading text-center">
+            <h1 class="panel-title"> <?= Html::encode($this->title) ?></h1>
             <p style="margin: 10px 0 0 0; font-size: 16px;">Preencha os campos abaixo para criar a sua conta</p>
         </div>
 
@@ -30,15 +31,31 @@ $this->params['breadcrumbs'][] = $this->title;
                     'fieldConfig' => [
                             'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
                     ],
-            ]); 
-            //DEBUG LOG
-            Yii::error('Entrou no signup', 'signup');
-            ?>
+            ]); ?>
+
+            <!-- Foto de Perfil -->
+            <div class="panel panel-info" style="margin-bottom: 25px;">
+                <div class="panel-heading text-center">
+                    <h3 class="panel-title"><i class="fa fa-camera text-success"></i> Foto de Perfil</h3>
+                </div>
+                <div class="panel-body">
+                    <?= ImageUploadWidget::widget([
+                        'model' => $model,
+                        'attribute' => 'imageFile',
+                        'form' => $form,
+                        'previewId' => 'image-preview-signup',
+                        'defaultImage' => Yii::getAlias('@web') . '/uploads/users/default.jpg',
+                        'imageSize' => 150,
+                        'borderColor' => '#28a745',
+                        'helpText' => 'Clique na imagem para adicionar sua foto',
+                    ]) ?>
+                </div>
+            </div>
 
             <!-- Dados de Acesso -->
             <div class="panel panel-info" style="margin-bottom: 25px;">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="glyphicon glyphicon-lock"></i> Dados de Acesso</h3>
+                    <h3 class="panel-title"><i class="fa fa-lock text-success"></i> Dados de Acesso</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -68,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <!-- Informações Pessoais -->
             <div class="panel panel-info" style="margin-bottom: 25px;">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="glyphicon glyphicon-user"></i> Informações Pessoais</h3>
+                    <h3 class="panel-title"><i class="fa fa-user text-success"></i> Informações Pessoais</h3>
                 </div>
                 <div class="panel-body">
                     <?= $form->field($model, 'nomecompleto')->textInput([
@@ -98,20 +115,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]) ?>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <?= $form->field($model, 'imageFile')->fileInput([
-                            'class' => 'form-control',
-                            'accept' => 'image/png, image/jpeg, image/jpg'
-                        ])->hint('Formatos aceites: PNG, JPG, JPEG (opcional)') ?>
-                    </div>
                 </div>
             </div>
 
             <!-- Morada -->
             <div class="panel panel-info" style="margin-bottom: 25px;">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="glyphicon glyphicon-map-marker"></i> Morada</h3>
+                    <h3 class="panel-title"><i class="fa fa-map-marker text-success"></i> Morada</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -187,7 +197,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn btn-lg rounded-pill px-4']) ?>
                 </p>
 
-                //DEBUG LOG
+                //DEBUG LOG(REMOVER DEPOIS)
                 <?php if (YII_DEBUG): ?>
                     <button type="button" onclick="autoFill()">Auto Fill</button>
 

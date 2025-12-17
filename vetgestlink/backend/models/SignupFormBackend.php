@@ -140,7 +140,6 @@ class SignupFormBackend extends Model
             $userprofile->dtanascimento = $this->dtanascimento;
             $userprofile->nif = $this->nif;
             $userprofile->telemovel = $this->telemovel;
-            $userprofile->eliminado = 0;
 
             if (!$userprofile->save()) {
                 Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
@@ -170,7 +169,6 @@ class SignupFormBackend extends Model
             $morada->localidade = $this->localidade;
             $morada->cidade = $this->cidade;
             $morada->principal = $this->principal ? 1 : 0;
-            $morada->eliminado = 0;
 
             // Verificar se a morada é válida
             if (!$morada->validate()) {

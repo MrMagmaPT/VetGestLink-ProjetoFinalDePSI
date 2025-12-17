@@ -258,57 +258,6 @@ class AuthController extends ActiveController
             'message' => 'Verifique seu email para instruções de recuperação de senha.'
         ];
     }
-
-    /**
-     * Extrai token do header, body ou query params
-     */
-    private function extractToken()
-    {
-        // Header Authorization: Bearer <token> que é o auth_key
-        $authHeader = Yii::$app->request->headers->get('Authorization');
-
-        //Verificar se o header está no formato Bearer e extrair o token
-        if ($authHeader && preg_match('/^Bearer\s+(.*?)$/i', $authHeader, $matches)) {
-            return $matches[1];
-        }
-
-        // Para Query params
-        $data = Yii::$app->request->post();
-        return $data['token'] ?? Yii::$app->request->getQueryParam('access-token');
-    }
-
-    /**
-     * Obter informações do usuário autenticado
-     *
-     * GET /api/auth/profile
-     * Header: Authorization: Bearer <token>
-     *
-     * @return array
-     */
-    public function actionProfile()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        $token = $this->extractToken();
-
-        if (!$token) {
-            Yii::$app->response->statusCode = 401;
-            return ['success' => false, 'message' => 'Token não fornecido'];
-        }
-
-        $userInfo = $this->module->auth->getUserInfo($token);
-
-        // Se token inválido
-        if (!$userInfo) {
-            Yii::$app->response->statusCode = 401;
-            return ['success' => false, 'message' => 'Token inválido ou expirado'];
-        }
-
-        return [
-            'success' => true,
-             'user' => $userInfo
-            ];
-    }
 }
 
 

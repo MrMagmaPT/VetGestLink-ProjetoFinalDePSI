@@ -27,14 +27,15 @@ class Navbar extends Widget
         $profileId = $user->userprofiles->id ?? null;
         $items = [
             ['label' => 'Sobre', 'url' => ['site/about']],
-            ['label' => 'Contact', 'url' => ['site/contact']],
+            ['label' => 'Contatos', 'url' => ['site/contact']],
         ];
 
         if (!Yii::$app->user->isGuest) {
             $items = array_merge($items, [
-                ['label' => 'Pagamentos & Fatura', 'url' => ['fatura/index']],
-                ['label' => 'Animal', 'url' => ['animal/index']],
+                ['label' => 'Faturas', 'url' => ['fatura/index']],
+                ['label' => 'Animais', 'url' => ['animal/index']],
                 ['label' => 'Marcações', 'url' => ['marcacao/index']],
+                ['label' => 'Lembretes', 'url' => ['lembrete/index']],
                 ['label' => 'Perfil - ' . $user->username, 'url' => ['userprofile/view', 'id' => $profileId]],
             ]);
         }

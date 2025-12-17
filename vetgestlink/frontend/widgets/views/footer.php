@@ -18,8 +18,7 @@ $contactInfo = $contactInfo ?? [
 ?>
 
 <footer>
-    <!-- Footer Start-->
-    <div class="footer-area footer-padding">
+    <div class="footer-area" style="padding: 30px 0;">
         <div class="container">
             <div class="row d-flex justify-content-between">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
@@ -71,5 +70,4 @@ $contactInfo = $contactInfo ?? [
             </div>
         </div>
     </div>
-    <!-- Footer End-->
 </footer>
