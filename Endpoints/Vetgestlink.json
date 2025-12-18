@@ -1,0 +1,1344 @@
+{
+  "name": "Vetgestlink",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "API Health Check",
+      "filename": "API Health Check.bru",
+      "seq": 7,
+      "settings": {
+        "encodeUrl": true,
+        "timeout": 0
+      },
+      "tags": [],
+      "examples": [],
+      "request": {
+        "url": "http://localhost/vetgestlink/backend/web/api/health",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "folder",
+      "name": "Animais",
+      "filename": "Animais",
+      "seq": 3,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Animais",
+          "seq": 3
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "All Animais",
+          "filename": "All Animais.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://172.22.21.220/backend/web/api/animal/all?access-token=ak_cliente_000000000000000000000",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "ak_cliente_000000000000000000000",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Detail Animais",
+          "filename": "Detail Animais.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/animal/view/2?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "View Notas de um Animal",
+          "filename": "View Notas de um Animal.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/animal/2/notas?access-token=ak_cliente_000000000000000000000",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "ak_cliente_000000000000000000000",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Profile",
+      "filename": "Profile",
+      "seq": 8,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Profile",
+          "seq": 8
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Update Profile",
+          "filename": "Update Profile.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/profile/update?access-token=-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n    \"nomecompleto\": \"Carlos Mendes\",\n    \"email\": \"carlos.mendes@email.com\",\n    \"telemovel\": \"912 345 678\",\n    \"morada\": {\n      \"rua\": \"Rua das Acácias\",\n      \"nporta\": \"45\",\n      \"cdpostal\": \"1000-100\",\n      \"localidade\": \"Lisboa\"\n    }\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "View Perfil",
+          "filename": "View Perfil.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/profile?access-token=ucFYkY_dMGlqRXpR3HqEOkx2hoqYXccx",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "ucFYkY_dMGlqRXpR3HqEOkx2hoqYXccx",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "folder",
+          "name": "Mudar Senha",
+          "filename": "Mudar Senha",
+          "seq": 1,
+          "examples": [],
+          "root": {
+            "request": {
+              "auth": {
+                "mode": "inherit"
+              }
+            },
+            "meta": {
+              "name": "Mudar Senha",
+              "seq": 1
+            }
+          },
+          "items": [
+            {
+              "type": "http",
+              "name": "Mudar Senha",
+              "filename": "Mudar Senha.bru",
+              "seq": 1,
+              "settings": {
+                "encodeUrl": true,
+                "timeout": 0
+              },
+              "tags": [],
+              "examples": [],
+              "request": {
+                "url": "http://localhost/vetgestlink/backend/web/api/profile/password?access-token=-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+                "method": "PUT",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "access-token",
+                    "value": "-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"current_password\": \"ClientPass123!\",\n  \"new_password\": \"ClientPass123!\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": [],
+                  "file": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "docs": "",
+                "auth": {
+                  "mode": "inherit"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Autenticação",
+      "filename": "Autenticação",
+      "seq": 2,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Autenticação",
+          "seq": 2
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Login User",
+          "filename": "Login User.bru",
+          "seq": 1,
+          "settings": {},
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/auth/login",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"username\":\"admin\",\n  \"password\":\"AdminPass123!\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "This request retrieves a list of users from the JSONPlaceholder API.",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Logout User",
+          "filename": "Logout User.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/auth/logout?access-token=nlugOeEc151W-crlzhzFcsK5zbl9xq0j",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "nlugOeEc151W-crlzhzFcsK5zbl9xq0j",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Recuperação de senha",
+          "filename": "Recuperação de senha.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/auth/forgot",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"email\":\"wilca22mpos2003@gmail.com\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Marcacoes",
+      "filename": "Marcacoes",
+      "seq": 5,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Marcacoes",
+          "seq": 5
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "All Marcacoes (Filtro Animal ID)",
+          "filename": "All Marcacoes (Filtro Animal ID).bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/marcacao/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N&animal_id=1",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "animal_id",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "All Marcacoes (Filtro Status)",
+          "filename": "All Marcacoes (Filtro Status).bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/marcacao/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N&status=realizada",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "status",
+                "value": "realizada",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "All Marcacoes(Sem Filtros)",
+          "filename": "All Marcacoes(Sem Filtros).bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/marcacao/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Detail Marcacao",
+          "filename": "Detail Marcacao.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/marcacao/view/1?access-token=-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "-Lqt03pmPQLr4UmxU8zM6QxIo0D0B5FU",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Faturas",
+      "filename": "Faturas",
+      "seq": 4,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Faturas",
+          "seq": 4
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "All Faturas (Filtro Ano)",
+          "filename": "All Faturas (Filtro Ano).bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/fatura/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N&ano=2025",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "ano",
+                "value": "2025",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "All Faturas (Filtro estado)",
+          "filename": "All Faturas (Filtro estado).bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/fatura/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N&estado=1",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              },
+              {
+                "name": "estado",
+                "value": "1",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "All Faturas",
+          "filename": "All Faturas.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/fatura/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Detail Faturas",
+          "filename": "Detail Faturas.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/fatura/view/1?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "folder",
+          "name": "MetodoPagamentos",
+          "filename": "MetodoPagamentos",
+          "seq": 5,
+          "examples": [],
+          "root": {
+            "request": {
+              "auth": {
+                "mode": "inherit"
+              }
+            },
+            "meta": {
+              "name": "MetodoPagamentos",
+              "seq": 5
+            }
+          },
+          "items": [
+            {
+              "type": "http",
+              "name": "All MetodosPagamentos",
+              "filename": "All MetodosPagamentos.bru",
+              "seq": 1,
+              "settings": {
+                "encodeUrl": true,
+                "timeout": 0
+              },
+              "tags": [],
+              "examples": [],
+              "request": {
+                "url": "http://localhost/vetgestlink/backend/web/api/fatura/paymentmethods?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "access-token",
+                    "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": [],
+                  "file": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "docs": "",
+                "auth": {
+                  "mode": "inherit"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Notas",
+      "filename": "Notas",
+      "seq": 6,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Notas",
+          "seq": 6
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "All Notas",
+          "filename": "All Notas.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/nota/all?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Create Nota",
+          "filename": "Create Nota.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/nota/create?access-token=ak_cliente_000000000000000000000",
+            "method": "POST",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "ak_cliente_000000000000000000000",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"animais_id\": 2,\n  \"nota\": \"Texto da nota aqui\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Delete Nota",
+          "filename": "Delete Nota.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/nota/delete/8?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Detail Nota",
+          "filename": "Detail Nota.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/nota/view/1?access-token=GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "GjT4mz0FZTlcrqOrEkRBsGfvgGHhsV_N",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Update Nota",
+          "filename": "Update Nota.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/nota/update/1?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"nota\": \"Texto atualizado da nota\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "Lembretes",
+      "filename": "Lembretes",
+      "seq": 8,
+      "examples": [],
+      "root": {
+        "request": {
+          "auth": {
+            "mode": "inherit"
+          }
+        },
+        "meta": {
+          "name": "Lembretes",
+          "seq": 8
+        }
+      },
+      "items": [
+        {
+          "type": "http",
+          "name": "Create Lembrete",
+          "filename": "Create Lembrete.bru",
+          "seq": 1,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/create?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "POST",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"descricao\":\"lol\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Detail Lembrete",
+          "filename": "Detail Lembrete.bru",
+          "seq": 2,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/view/1?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Update Lembrete",
+          "filename": "Update Lembrete.bru",
+          "seq": 3,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/update/2?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "PUT",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"descricao\":\"lol\"\n}",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Delete lembrete",
+          "filename": "Delete lembrete.bru",
+          "seq": 4,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/delete/1?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "DELETE",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "All Lembretes",
+          "filename": "All Lembretes.bru",
+          "seq": 5,
+          "settings": {
+            "encodeUrl": true,
+            "timeout": 0
+          },
+          "tags": [],
+          "examples": [],
+          "request": {
+            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/all?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "method": "GET",
+            "headers": [],
+            "params": [
+              {
+                "name": "access-token",
+                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": [],
+              "file": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "docs": "",
+            "auth": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "environments": [],
+  "root": {
+    "request": {
+      "auth": {
+        "mode": "none"
+      }
+    }
+  },
+  "brunoConfig": {
+    "version": "1",
+    "name": "Vetgestlink",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.008136749267578125,
+    "filesCount": 33
+  }
+}
