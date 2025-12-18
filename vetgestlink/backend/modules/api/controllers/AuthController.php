@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\ActiveController;
+use yii\rest\Controller;
 use yii\web\Response;
 use yii\web\UnauthorizedHttpException;
 use yii\web\ForbiddenHttpException;
@@ -15,7 +15,7 @@ use common\models\User;
  * Endpoints públicos para login, logout e recuperação de senha.
  * Este controller NÃO requer autenticação (exceto logout).
  */
-class AuthController extends ActiveController
+class AuthController extends Controller
 {
     public $modelClass = 'common\models\User';
 
@@ -50,19 +50,6 @@ class AuthController extends ActiveController
         ];
 
         return $behaviors;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        $actions = parent::actions();
-        
-        // Desabilitar actions padrão do ActiveController
-        unset($actions['index'], $actions['view'], $actions['create'], $actions['update'], $actions['delete']);
-        
-        return $actions;
     }
 
     /**

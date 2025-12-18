@@ -155,7 +155,7 @@ class UserprofileSearch extends Userprofile
      */
     public function getCidadeList()
     {
-        return \common\models\Morada::find()->select(['cidade', 'cidade'])->where(['eliminado' => 0])->distinct()->indexBy('cidade')->column();
+        return \common\models\Morada::find()->select(['cidade', 'cidade'])->distinct()->indexBy('cidade')->column();
     }
 
     /**

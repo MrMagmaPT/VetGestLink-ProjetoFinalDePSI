@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * MarcacaoController implements the CRUD actions for Marcacao model.
@@ -122,6 +123,7 @@ class MarcacaoController extends Controller
         $veterinariosList = \backend\models\UserprofileSearch::getUserListByType('veterinario', 0);
         $veterinariosArray = \yii\helpers\ArrayHelper::map($veterinariosList, 'id', 'nomecompleto');
         $medicamentos = \backend\models\MedicamentoSearch::getMedicamentoList();
+        $servicosList = \backend\models\ServicoSearch::getActiveList();
 
         if ($this->request->isPost) {
             //dd($this->request->post());
@@ -129,17 +131,20 @@ class MarcacaoController extends Controller
                 $model->estado = Marcacao::ESTADO_PENDENTE;
                 if($model->save()) {
                     return $this->redirect(['view', 'id' => $model->id]);
+                }else{
+                    Yii::error($model->errors, 'marcacao');
                 }
             }
         } else {
             $model->loadDefaultValues();
         }
-
+        
         return $this->render('create', [
             'model' => $model,
             'animaisList' => $animaisList,
             'veterinariosArray' => $veterinariosArray,
             'medicamentos' => $medicamentos,
+            'servicosList' => $servicosList,
         ]);
     }
 

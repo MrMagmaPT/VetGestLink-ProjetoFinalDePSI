@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
+
 /**
  * This is the model class for table "marcacao".
  *
@@ -29,7 +30,6 @@ use yii\db\Expression;
  */
 class Marcacao extends \yii\db\ActiveRecord
 {
-
     /**
      * ENUM field values
      */
@@ -268,6 +268,7 @@ class Marcacao extends \yii\db\ActiveRecord
         $myObj->diagnostico = $this->diagnostico;
         $myObj->created_at = $this->created_at;
         $myObj->updated_at = $this->updated_at;
+        
         $myJSON = json_encode($myObj);
         if ($insert) {
             $this->FazPublishNoMosquitto("INSERT", $myJSON);
@@ -293,11 +294,7 @@ class Marcacao extends \yii\db\ActiveRecord
         $username = ""; // defina se necessário
         $password = ""; // defina se necessário
         $client_id = "phpMQTT-publisher"; // deve ser único
-        if (!class_exists('app\\mosquitto\\phpMQTT')) {
-            // Opcional: lançar exceção ou logar erro se a classe não existir
-            return;
-        }
-        $mqtt = new \app\mosquitto\phpMQTT($server, $port, $client_id);
+        $mqtt = new \Bluerhinos\phpmqtt($server, $port, $client_id);
         if ($mqtt->connect(true, NULL, $username, $password)) {
             $mqtt->publish($canal, $msg, 0);
             $mqtt->close();

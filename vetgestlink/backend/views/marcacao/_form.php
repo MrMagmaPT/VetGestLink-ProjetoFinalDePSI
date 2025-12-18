@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 /** @var array $animaisList */
 /** @var array $veterinariosArray */
 /** @var array $medicamentos */
+/** @var array $servicosList */
 ?>
 
 <div class="marcacoes-form">
@@ -56,7 +57,7 @@ use yii\helpers\ArrayHelper;
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <?= $form->field($model, 'animais_id')->dropDownList(
                                 $animaisList,
                                 [
@@ -66,7 +67,7 @@ use yii\helpers\ArrayHelper;
                                 ]
                             )->label('<i class="fas fa-paw me-2"></i> Animal') ?>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <?= $form->field($model, 'userprofiles_id')->dropDownList(
                                 $veterinariosArray,
                                 [
@@ -75,6 +76,16 @@ use yii\helpers\ArrayHelper;
                                     'required' => true
                                 ]
                             )->label('<i class="fas fa-user-md me-2"></i> Veterinário') ?>
+                        </div>
+                        <div class="col-md-4">
+                            <?= $form->field($model, 'servicos_id')->dropDownList(
+                                $servicosList,
+                                [
+                                    'prompt' => 'Selecione um serviço',
+                                    'class' => 'form-control',
+                                    'required' => true
+                                ]
+                            )->label('<i class="fas fa-briefcase-medical me-2"></i> Serviço') ?>
                         </div>
                     </div>
 
@@ -148,6 +159,7 @@ use yii\helpers\ArrayHelper;
                     <?= $form->field($model, 'estado')->dropDownList([
                         'cancelada' => 'Cancelada',
                         'realizada' => 'Realizada',
+                        'pendente' => 'Pendente',
                     ], [
                         'prompt' => 'Selecione o estado',
                         'class' => 'form-control',
