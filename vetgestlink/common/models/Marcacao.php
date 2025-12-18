@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-
+use Bluerhinos\phpMQTT;
 
 /**
  * This is the model class for table "marcacao".
@@ -294,7 +294,7 @@ class Marcacao extends \yii\db\ActiveRecord
         $username = ""; // defina se necessário
         $password = ""; // defina se necessário
         $client_id = "phpMQTT-publisher"; // deve ser único
-        $mqtt = new \Bluerhinos\phpmqtt($server, $port, $client_id);
+        $mqtt = new phpmqtt($server, $port, $client_id);
         if ($mqtt->connect(true, NULL, $username, $password)) {
             $mqtt->publish($canal, $msg, 0);
             $mqtt->close();
