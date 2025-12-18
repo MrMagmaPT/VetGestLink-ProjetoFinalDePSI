@@ -163,6 +163,7 @@ class MarcacaoController extends Controller
         $animaisList = \backend\models\AnimalSearch::getActiveList();
         $veterinariosList = \backend\models\UserprofileSearch::getUserListByType('veterinario', 0);
         $veterinariosArray = \yii\helpers\ArrayHelper::map($veterinariosList, 'id', 'nomecompleto');
+        $servicosList = \backend\models\ServicoSearch::getActiveList();
         
         // Buscar medicamentos disponíveis
         $medicamentos = \backend\models\MedicamentoSearch::getMedicamentoList();
@@ -187,6 +188,7 @@ class MarcacaoController extends Controller
             'medicamentos' => $medicamentos,
             'animaisList' => $animaisList,
             'veterinariosArray' => $veterinariosArray,
+            'servicosList' => $servicosList,
         ]);
     }
 

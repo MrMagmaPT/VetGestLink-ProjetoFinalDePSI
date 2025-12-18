@@ -42,6 +42,7 @@ echo PageHeaderWidget::widget([
             'animaisList' => $animaisList,
             'veterinariosArray' => $veterinariosArray,
             'medicamentos' => $medicamentos,
+            'servicosList' => $servicosList,
         ]) ?>
     </div>
 </div>
