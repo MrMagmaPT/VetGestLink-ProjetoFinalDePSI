@@ -54,7 +54,7 @@ class FaturaController extends ActiveController
         return $behaviors;
     }
 
-    //Desabilitar ações padrão
+    //Tira as ações padrões do ActiveController (index, view, create, update, delete)
     public function actions()
     {
         $actions = parent::actions();
@@ -77,6 +77,12 @@ class FaturaController extends ActiveController
      */
     public function actionAll()
     {
+        $permission = Yii::$app->user->can('viewInvoices');
+
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver faturas.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         $query = Fatura::find()
@@ -119,6 +125,12 @@ class FaturaController extends ActiveController
      */
     public function actionView($id)
     {
+        $permission = Yii::$app->user->can('viewInvoices');
+
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver faturas.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         $fatura = Fatura::find()
@@ -187,6 +199,12 @@ class FaturaController extends ActiveController
      */
     public function actionPaymentmethods()
     {
+        $permission = Yii::$app->user->can('viewInvoices');
+
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver métodos de pagamento.');
+        }
+
         $metodos = Metodopagamento::find()
             ->where(['vigor' => 1, 'eliminado' => 0])
             ->all();
@@ -213,6 +231,11 @@ class FaturaController extends ActiveController
      */
     public function actionPay($id)
     {
+
+        $permission = Yii::$app->user->can('payInvoices');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para pagar faturas.');
+        }
         $userProfileId = $this->getUserProfileId();
 
         $fatura = Fatura::find()

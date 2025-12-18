@@ -38,7 +38,7 @@ class RbacController extends Controller
         $auth->add($deleteUser);
 
         //----------------------------------------------------------------
-        //GERIR METODOS DE PAGAMENTO (ADMIN)
+        //GERIR METODOS DE PAGAMENTO (ADMIN)(Cliente)
 
         // CREATE - Criar métodos de pagamento (ADMIN)
         $createPaymentMethod = $auth->createPermission('createPaymentMethod');
@@ -60,6 +60,11 @@ class RbacController extends Controller
         $deletePaymentMethod->description = 'Eliminar métodos de pagamento';
         $auth->add($deletePaymentMethod);
 
+
+        //PAGAR FATURAS (CLIENTE)
+        $payInvoices = $auth->createPermission('payInvoices');
+        $payInvoices->description = 'Pagar faturas';
+        $auth->add($payInvoices);
         //----------------------------------------------------------------
         //GERIR CATEGORIAS DE MEDICAMENTOS (ADMIN)
 
@@ -302,24 +307,24 @@ class RbacController extends Controller
         //PERMISSÕES ESPECÍFICAS DO CLIENTE:(NOTAS DO ANIMAL)
 
         //CREATE - Criar notas animal (CLIENTE)
-        $createOwnerNotes = $auth->createPermission('createOwnerNotes');
-        $createOwnerNotes->description = 'Criar notas dono do seu animal';  
-        $auth->add($createOwnerNotes);
+        $createNotes = $auth->createPermission('createNotes');
+        $createNotes->description = 'Criar notas dono do seu animal';  
+        $auth->add($createNotes);
 
         //READ - Visualizar notas animal (CLIENTE)
-        $viewOwnerNotes = $auth->createPermission('viewOwnerNotes');
-        $viewOwnerNotes->description = 'Visualizar notas dono do seu animal';
-        $auth->add($viewOwnerNotes);
+        $viewNotes = $auth->createPermission('viewNotes');
+        $viewNotes->description = 'Visualizar notas dono do seu animal';
+        $auth->add($viewNotes);
 
         //UPDATE - Editar notas animal (CLIENTE)
-        $updateOwnerNotes = $auth->createPermission('updateOwnerNotes');
-        $updateOwnerNotes->description = 'Atualizar notas dono do seu animal';
-        $auth->add($updateOwnerNotes);
+        $updateNotes = $auth->createPermission('updateNotes');
+        $updateNotes->description = 'Atualizar notas dono do seu animal';
+        $auth->add($updateNotes);
 
         //DELETE - Eliminar notas animal (CLIENTE)
-        $deleteOwnerNotes = $auth->createPermission('deleteOwnerNotes');
-        $deleteOwnerNotes->description = 'Eliminar notas dono do seu animal';
-        $auth->add($deleteOwnerNotes);
+        $deleteNotes = $auth->createPermission('deleteNotes');
+        $deleteNotes->description = 'Eliminar notas dono do seu animal';
+        $auth->add($deleteNotes);
 
         //========================================================================
         //PERMISSÕES ESPECÍFICAS DO CLIENTE:(LEMBRETES)
@@ -488,6 +493,8 @@ class RbacController extends Controller
         $auth->addChild($cliente, $viewConsultations);
         //VER suas faturas
         $auth->addChild($cliente, $viewInvoices);
+        //PAGAR suas faturas
+        $auth->addChild($cliente, $payInvoices);
 
         //CRUD Moradas e delete permanente do das moradas secundárias
         $auth->addChild($cliente, $createAddress);
@@ -496,10 +503,10 @@ class RbacController extends Controller
         $auth->addChild($cliente, $deleteSecondaryAddress);
 
         //CRUD Notas do animal
-        $auth->addChild($cliente, $createOwnerNotes);
-        $auth->addChild($cliente, $viewOwnerNotes);
-        $auth->addChild($cliente, $updateOwnerNotes);
-        $auth->addChild($cliente, $deleteOwnerNotes);
+        $auth->addChild($cliente, $createNotes);
+        $auth->addChild($cliente, $viewNotes);
+        $auth->addChild($cliente, $updateNotes);
+        $auth->addChild($cliente, $deleteNotes);
 
         //CRUD Lembretes
         $auth->addChild($cliente, $createReminders);
@@ -507,8 +514,8 @@ class RbacController extends Controller
         $auth->addChild($cliente, $updateReminders);    
         $auth->addChild($cliente, $deleteReminders);
 
-    
-        $auth->addChild($cliente, $viewImages);
+        //ver clientes (próprioPerfil)
+        $auth->addChild($cliente, $viewClients);
 
         //===============================================
 

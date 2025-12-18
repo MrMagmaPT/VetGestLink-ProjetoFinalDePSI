@@ -70,6 +70,13 @@ class MarcacaoController extends Controller
      */
     public function actionAll()
     {
+        $permission = Yii::$app->user->can('viewConsultations');
+        // Verifica permissão   
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
+        }
+
+
         $userProfileId = $this->getUserProfileId();
 
         $query = Marcacao::find()
@@ -133,6 +140,12 @@ class MarcacaoController extends Controller
      */ 
     public function actionView($id)
     {
+        $permission = Yii::$app->user->can('viewConsultations');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
+        }
+        
         $userProfileId = $this->getUserProfileId();
 
         $marcacao = Marcacao::find()

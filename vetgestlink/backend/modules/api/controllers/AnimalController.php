@@ -52,6 +52,7 @@ class AnimalController extends ActiveController
         return $behaviors;
     }
 
+    //Tira as ações padrões do ActiveController (index, view, create, update, delete)
     public function actions()
     {
         $actions = parent::actions();
@@ -74,6 +75,13 @@ class AnimalController extends ActiveController
      */
     public function actionAll()
     {
+        $permission = Yii::$app->user->can('viewAnimals');
+
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         $animais = Animal::find()
@@ -124,6 +132,13 @@ class AnimalController extends ActiveController
      */
     public function actionView($id)
     {
+        $permission = Yii::$app->user->can('viewAnimals');
+
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+        
         $userProfileId = $this->getUserProfileId();
 
         $animal = Animal::find()
@@ -185,11 +200,18 @@ class AnimalController extends ActiveController
     }
 
     /**
-     * GET /animal/{id}/notes
+     * GET /animal/notas/{id}
      * Lista notas de um animal específico
      */
-    public function actionNotes($id)
+    public function actionNotas($id)
     {
+        $permission = Yii::$app->user->can('viewAnimals');
+        
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         // Verificar se o animal pertence ao usuário

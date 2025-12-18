@@ -249,4 +249,60 @@ class Marcacao extends \yii\db\ActiveRecord
         return $servico ? $servico->nome : null;
     }
 
+
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        // Obter dados relevantes da marcação
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->data = $this->data;
+        $myObj->horainicio = $this->horainicio;
+        $myObj->horafim = $this->horafim;
+        $myObj->estado = $this->estado;
+        $myObj->servicos_id = $this->servicos_id;
+        $myObj->animais_id = $this->animais_id;
+        $myObj->userprofiles_id = $this->userprofiles_id;
+        $myObj->diagnostico = $this->diagnostico;
+        $myObj->created_at = $this->created_at;
+        $myObj->updated_at = $this->updated_at;
+        $myJSON = json_encode($myObj);
+        if ($insert) {
+            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+        } else {
+            $this->FazPublishNoMosquitto("UPDATE", $myJSON);
+        }
+    }
+
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myJSON = json_encode($myObj);
+        $this->FazPublishNoMosquitto("DELETE", $myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $username = ""; // defina se necessário
+        $password = ""; // defina se necessário
+        $client_id = "phpMQTT-publisher"; // deve ser único
+        if (!class_exists('app\\mosquitto\\phpMQTT')) {
+            // Opcional: lançar exceção ou logar erro se a classe não existir
+            return;
+        }
+        $mqtt = new \app\mosquitto\phpMQTT($server, $port, $client_id);
+        if ($mqtt->connect(true, NULL, $username, $password)) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        } else {
+            file_put_contents("debug.output", "Time out!");
+        }
+    }
 }

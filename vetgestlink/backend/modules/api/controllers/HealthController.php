@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\Controller;
+use yii\rest\ActiveController;
 use yii\web\Response;
 
 /**
@@ -11,7 +11,7 @@ use yii\web\Response;
  *
  * Endpoint público para verificar status do servidor.
  */
-class HealthController extends Controller
+class HealthController extends ActiveController
 {
     /**
      * @inheritdoc
@@ -47,12 +47,21 @@ class HealthController extends Controller
         return $behaviors;
     }
 
+    //Tira as ações padrões do ActiveController (index, view, create, update, delete)
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index'], $actions['view'], $actions['create'], $actions['update'], $actions['delete']);
+        return $actions;
+    }
+    
     /**
      * GET /health
      * Verifica status do servidor
      */
     public function actionIndex()
     {
+
         return [
             'status' => 'ok',
             'message' => 'Servidor funcionando corretamente',

@@ -73,6 +73,14 @@ class AuthController extends ActiveController
      */
     public function actionLogin()
     {
+        $permission = Yii::$app->authManager->getRole('cliente');
+
+        // Verificar se o usuário tem a role de cliente
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Somente clientes podem fazer login.');
+        }
+
+        // Obter dados do POST
         $data = Yii::$app->request->post();
 
         // Validar parâmetros
@@ -144,6 +152,14 @@ class AuthController extends ActiveController
      */
     public function actionLogout()
     {
+
+        $permission = Yii::$app->authManager->getRole('cliente');
+
+        // Verificar se o usuário tem a role de cliente
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Somente clientes podem fazer logout.');
+        }
+
         // Buscar token do query param ou header
         $token = Yii::$app->request->get('access-token');
         
@@ -192,6 +208,13 @@ class AuthController extends ActiveController
      */
     public function actionForgot()
     {
+        $permission = Yii::$app->authManager->getRole('cliente');
+
+        // Verificar se o usuário tem a role de cliente
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Somente clientes podem solicitar recuperação de senha.');
+        }
+
         // Obter dados do POST
         $data = Yii::$app->request->post();
 

@@ -53,6 +53,7 @@ class ProfileController extends ActiveController
         return $behaviors;
     }
 
+    //Tira as ações padrões do ActiveController (index, view, create, update, delete)
     public function actions()
     {
         $actions = parent::actions();
@@ -75,6 +76,12 @@ class ProfileController extends ActiveController
      */
     public function actionIndex()
     {
+        $permission = Yii::$app->user->can('viewClients');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver o perfil.');
+        }
+
         $user = $this->getAuthenticatedUser();
         $userprofile = $user->userprofile;
 
@@ -110,6 +117,12 @@ class ProfileController extends ActiveController
      */
     public function actionUpdate()
     {
+        $permission = Yii::$app->user->can('updateClient');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para atualizar o perfil.');
+        }
+        
         $user = $this->getAuthenticatedUser();
         $userprofile = $user->userprofile;
 
@@ -222,6 +235,12 @@ class ProfileController extends ActiveController
      */
     public function actionMorada()
     {
+        $permission = Yii::$app->user->can('updateClient');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para atualizar o perfil.');
+        }
+
         $user = $this->getAuthenticatedUser();
         $userprofile = $user->userprofile;
 
@@ -270,6 +289,12 @@ class ProfileController extends ActiveController
      */
     public function actionPassword()
     {
+        $permission = Yii::$app->user->can('updateClient');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para alterar a senha.');
+        }
+
         $user = $this->getAuthenticatedUser();
 
         $data = Yii::$app->request->post();

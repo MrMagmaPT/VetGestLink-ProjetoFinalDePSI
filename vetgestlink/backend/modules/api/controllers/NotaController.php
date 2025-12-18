@@ -56,6 +56,15 @@ class NotaController extends ActiveController
         return $behaviors;
     }
 
+
+    //Tira as ações padrões do ActiveController (index, view, create, update, delete)
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['index'], $actions['view'], $actions['create'], $actions['update'], $actions['delete']);
+        return $actions;
+    }
+    
     /**
      * Obter ID do userprofile do usuário autenticado
      */
@@ -74,6 +83,12 @@ class NotaController extends ActiveController
      */
     public function actionAll()
     {
+        $permission = Yii::$app->user->can('viewNotes');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver notas.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         $notas = Nota::find()
@@ -105,6 +120,12 @@ class NotaController extends ActiveController
      */
     public function actionView($id)
     {
+        $permission = Yii::$app->user->can('viewNotes');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver notas.');
+        }
+
         $userProfileId = $this->getUserProfileId();
 
         $nota = Nota::find()
@@ -134,6 +155,10 @@ class NotaController extends ActiveController
      */
     public function actionCreate()
     {
+        $permission = Yii::$app->user->can('createNotes');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para criar notas.');
+        }
         $userProfileId = $this->getUserProfileId();
         $data = Yii::$app->request->post();
 
@@ -178,6 +203,14 @@ class NotaController extends ActiveController
      */
     public function actionUpdate($id)
     {
+
+        $permission = Yii::$app->user->can('updateNotes');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para atualizar notas.');
+        }
+
+
         $userProfileId = $this->getUserProfileId();
 
         $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
@@ -213,10 +246,18 @@ class NotaController extends ActiveController
 
     /**
      * DELETE /nota/delete/{id}
-     * Deletar uma nota (soft delete)
+     * Deletar uma nota existente
      */
     public function actionDelete($id)
     {
+
+        $permission = Yii::$app->user->can('deleteNotes');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para deletar notas.');
+        }
+
+
         $userProfileId = $this->getUserProfileId();
 
         $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);

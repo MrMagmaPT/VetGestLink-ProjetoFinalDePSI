@@ -94,7 +94,7 @@ return [
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
-                        'GET {id}/notes' => 'notes',
+                        'GET {id}/notas' => 'notas',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
@@ -132,6 +132,22 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/nota',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET all' => 'all',
+                        'GET view/{id}' => 'view',
+                        'POST create' => 'create',
+                        'PUT update/{id}' => 'update',
+                        'DELETE delete/{id}' => 'delete',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\d+>',
+                    ],
+                ],
+                // ========== LEMBRETE CONTROLLER (Protegido - CRUD Completo) ==========
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/lembrete',
                     'pluralize' => false,
                     'extraPatterns' => [
                         'GET all' => 'all',
