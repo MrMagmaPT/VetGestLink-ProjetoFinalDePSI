@@ -4,6 +4,9 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var common\models\Morada $model */
+/** @var int $profileId */
+
+
 $this->title = 'Adicionar Morada';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,7 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="d-flex justify-content-end gap-2">
                 <?= Html::a('Cancelar', ['userprofile/update'], ['class' => 'btn btn-outline-secondary']) ?>
-                <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
+                <?= Html::submitButton(
+                    '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Morada' : 'Guardar Alterações'),
+                    ['class' => 'btn btn-success btn-md']
+                ) ?>
             </div>
 
             <?php ActiveForm::end(); ?>

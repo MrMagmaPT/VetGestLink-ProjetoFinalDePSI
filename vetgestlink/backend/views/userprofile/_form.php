@@ -151,14 +151,14 @@ use yii\widgets\ActiveForm;
                 </div>
                 <div class="card-body text-center">
                     <?php \yii\widgets\Pjax::begin(['id' => 'userprofile-image-pjax', 'enablePushState' => false]); ?>
-                    <div class="mb-3">
-                        <?php if ($model->getImageUrl()): ?>
-                            <img id="userprofile-image-preview" src="<?= $model->getImageUrl() ?>" alt="<?= $model->nomecompleto ?>" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px;" />
-                        <?php else: ?>
-                            <img id="userprofile-image-preview" src="" alt="Preview" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px; display: none;" />
-                            <i class="fas fa-user-circle text-muted" style="font-size: 120px;"></i>
-                        <?php endif; ?>
-                    </div>
+                        <div class="mb-3 d-flex flex-column justify-content-center align-items-center" style="min-height: 180px;">
+                            <?php if ($model->getImageUrl()): ?>
+                                <img id="userprofile-image-preview" src="<?= $model->getImageUrl() ?>" alt="<?= $model->nomecompleto ?>" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px;" />
+                            <?php else: ?>
+                                <img id="userprofile-image-preview" src="" alt="Preview" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 300px; display: none;" />
+                                <i class="fas fa-user-circle text-muted" style="font-size: 120px;"></i>
+                            <?php endif; ?>
+                        </div>
                     <p class="text-muted small">
                         <i class="fas fa-info-circle"></i>
                         Carregue uma nova imagem para substituir

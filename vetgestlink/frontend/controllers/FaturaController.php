@@ -1,11 +1,10 @@
 <?php
-
 namespace frontend\controllers;
 
-use common\models\Metodopagamento;
-use common\models\Fatura;
 use Yii;
-use yii\data\ActiveDataProvider;
+use common\models\Fatura;
+use backend\models\FaturaSearch;
+use backend\models\MetodopagamentoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,6 +28,25 @@ class FaturaController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+                'access' => [
+                    'class' => \yii\filters\AccessControl::class,
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                        [
+                            'actions' => ['index','view'],
+                            'allow' => true,
+                            'roles' => ['viewInvoices'],
+                        ],
+                        [
+                            'actions' => ['pagar'],
+                            'allow' => true,
+                            'roles' => ['payInvoices'],
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -40,60 +58,69 @@ class FaturaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Fatura::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
-
+        // Obtém o ID do usuário logado 
+        $userId = Yii::$app->user->identity->id ?? null;
+    
+        // Usar o SearchModel do backend para obter faturas do usuário
+        $faturasUsuario = FaturaSearch::getByUserId($userId);
+        
+        // Renderizar a view com o dataProvider
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'faturasUsuario' => $faturasUsuario,
         ]);
     }
 
     /**
-     * Displays a single Fatura model.
-     * @param int $id ID
+     * Mostra detalhes de uma fatura específica.
+     * @param mixed $id
+     * @throws Yii\web\NotFoundHttpException
      * @return string
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        // Buscar o modelo da fatura
+        $model = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Fatura model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = new Fatura();
-
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
             'model' => $model,
         ]);
     }
 
+    /**
+     * Pagar uma fatura.
+     * @param int $id ID
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionPagar($id)
+    {
+        // Encontrar o modelo da fatura com base no ID
+        $model = $this->findModel($id);
+
+        // Usar o SearchModel do backend para métodos de pagamento ativos
+        $searchModel = new MetodopagamentoSearch();
+
+        // Obter a lista de métodos de pagamento ativos
+        $metodosAtivos = $searchModel->getActiveList();
+
+        // Processar o pagamento
+        if ($model->load(Yii::$app->request->post())) {
+            // Marca como pago
+            $model->estado = 1; 
+            //e False para pular validação, ajustar conforme necessário
+            if ($model->save(false)) {
+                Yii::$app->session->setFlash('success', 'Pagamento realizado com sucesso!');
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Erro ao salvar o pagamento.');
+            }
+        }
+
+        return $this->render('pagar', [
+            'model' => $model,
+            'metodos' => $metodosAtivos, 
+        ]);
+    }
 
     /**
      * Finds the Fatura model based on its primary key value.
@@ -110,46 +137,5 @@ class FaturaController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    public function actionPagar($id)
-    {
-        $model = $this->findModel($id);
-
-        // filtra apenas em metodos em vigor
-        $metodos = \common\models\Metodopagamento::find()->where(['vigor' => 1])->all();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
-            return $this->redirect(['sucesso', 'id' => $model->id]);
-        }
-
-        return $this->render('_pagar', [
-            'model' => $model,
-            'metodos' => $metodos,
-        ]);
-    }
-
-
-    public function actionSucesso($id)
-    {
-        $modelo = Fatura::findOne($id);
-        if (!$modelo) {
-            Yii::$app->session->setFlash('error', 'Fatura não encontrada.');
-            return $this->redirect(['index']);
-        }
-
-        // Muda para pago
-        $modelo->estado = 1;
-        if ($modelo->save(false)) {
-            Yii::$app->session->setFlash('success', 'Pagamento realizado com sucesso!');
-        } else {
-            Yii::$app->session->setFlash('error', 'Ocorreu um erro ao finalizar o pagamento.');
-        }
-
-        return $this->render('view', [
-            'model' => $modelo,
-        ]);
-    }
-
-
 
 }

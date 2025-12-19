@@ -9,7 +9,6 @@ class Navbar extends Widget
 {
     public $logoPath = null; // use @logo alias by default
     public $menuItems = [];
-    public $logoUrl = null; // computed in run
 
     public function init()
     {
@@ -22,21 +21,24 @@ class Navbar extends Widget
 
     private function getDefaultMenuItems()
     {
+        $userId = Yii::$app->user->identity->id ?? null;
+        // Get username safely
+        $userName = Yii::$app->user->identity->username ?? null;
 
-        $user = Yii::$app->user->identity;
-        $profileId = $user->userprofiles->id ?? null;
+        // Define default menu items
         $items = [
             ['label' => 'Sobre', 'url' => ['site/about']],
             ['label' => 'Contatos', 'url' => ['site/contact']],
         ];
 
-        if (!Yii::$app->user->isGuest) {
+        // Add user-specific items if logged in
+        if (!Yii::$app->user->isGuest ) {
             $items = array_merge($items, [
-                ['label' => 'Faturas', 'url' => ['fatura/index']],
-                ['label' => 'Animais', 'url' => ['animal/index']],
-                ['label' => 'Marcações', 'url' => ['marcacao/index']],
-                ['label' => 'Lembretes', 'url' => ['lembrete/index']],
-                ['label' => 'Perfil - ' . $user->username, 'url' => ['userprofile/view', 'id' => $profileId]],
+                ['label' => 'Faturas', 'url' => ['fatura/index' , 'userId' ]],
+                ['label' => 'Animais', 'url' => ['animal/index' , 'userId' ]],
+                ['label' => 'Marcações', 'url' => ['marcacao/index', 'userId' ]],
+                ['label' => 'Lembretes', 'url' => ['lembrete/index', 'userId' ]],
+                ['label' => 'Perfil - ' . $userName, 'url' => ['userprofile/view', 'id' => $userId]],
             ]);
         }
 
@@ -45,19 +47,12 @@ class Navbar extends Widget
 
     public function run()
     {
-        $logoUrl = $this->getLogoUrl();
+        $logoUrl = Yii::getAlias('@web') . '/static/img/logo/logo.png';
         return $this->render('navbar', [
             'logoUrl' => $logoUrl,
             'menuItems' => $this->menuItems,
         ]);
     }
 
-    protected function getLogoUrl()
-    {
-        $logoPath = $this->logoPath ?? '/static/img/logo/logo.png';
-        $path = Yii::getAlias('@webroot') . $logoPath;
-        $version = (is_file($path) ? filemtime($path) : time());
-        return Yii::getAlias('@web') . $logoPath . '?v=' . $version;
-    }
 }
 

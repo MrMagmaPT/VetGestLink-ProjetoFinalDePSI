@@ -60,9 +60,10 @@ class PaymentMethodWidget extends Widget
     public function run()
     {
         return $this->form->field($this->model, $this->attribute)->radioList(
-            \yii\helpers\ArrayHelper::map($this->metodos, 'id', 'nome'),
+            $this->metodos, // já está no formato [id => nome]
             [
                 'item' => function ($index, $label, $name, $checked, $value) {
+                    // $label é o nome, $value é o id
                     $icon = $this->icons[$label] ?? $this->defaultIcon;
                     
                     return '

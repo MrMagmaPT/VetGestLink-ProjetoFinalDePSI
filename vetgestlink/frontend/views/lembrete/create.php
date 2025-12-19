@@ -3,18 +3,15 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Lembrete $model */
+/** @var common\models\Lembrete $lembrete */
 
 $this->title = 'Create Lembrete';
 $this->params['breadcrumbs'][] = ['label' => 'Lembretes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lembrete-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
+<div class="container py-3">
 
     <?= $this->render('_form', [
-        'model' => $model,
+        'lembrete' => $lembrete,
     ]) ?>
-
 </div>

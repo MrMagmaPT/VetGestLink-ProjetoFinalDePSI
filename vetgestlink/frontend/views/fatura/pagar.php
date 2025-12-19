@@ -5,17 +5,17 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $model */
 
-$this->title = 'Update Fatura: ' . $model->id;
+$this->title = 'Pagar Fatura: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Fatura', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Pagar';
 ?>
 <div class="faturas-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_pagar', [
         'model' => $model,
+        'metodos' => $metodos,
     ]) ?>
 
 </div>

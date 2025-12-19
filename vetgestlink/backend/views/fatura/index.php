@@ -126,7 +126,7 @@ echo PageHeaderWidget::widget([
                                 ? kartik\select2\Select2::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'id',
-                                    'data' => $searchModel->getFaturasList(),
+                                    'data' => $searchModel->getList(),
                                     'options' => [
                                         'placeholder' => 'Fatura...',
                                         'allowClear' => true,

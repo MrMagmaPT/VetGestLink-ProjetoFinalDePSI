@@ -12,10 +12,9 @@ class RbacController extends Controller
         $auth = Yii::$app->authManager;
         $auth->removeAll();
 
-        //========================================================================
         //Permissões:
-
-        //GERIR UTILIZADORES (ADMIN)
+        //========================================================================
+        //GERIR UTILIZADORES (ADMIN)(Rececionista)
 
         // CREATE - Criar utilizadores (ADMIN)
         $createUser = $auth->createPermission('createUser');
@@ -37,8 +36,9 @@ class RbacController extends Controller
         $deleteUser->description = 'Eliminar utilizadores';
         $auth->add($deleteUser);
 
-        //----------------------------------------------------------------
-        //GERIR METODOS DE PAGAMENTO (ADMIN)(Cliente)
+        //-----------------------------------------------------------------------//
+        //          GERIR METODOS DE PAGAMENTO (ADMIN)(Cliente)                 //
+        //--------------------------------------------------------------------//
 
         // CREATE - Criar métodos de pagamento (ADMIN)
         $createPaymentMethod = $auth->createPermission('createPaymentMethod');
@@ -59,14 +59,9 @@ class RbacController extends Controller
         $deletePaymentMethod = $auth->createPermission('deletePaymentMethod');
         $deletePaymentMethod->description = 'Eliminar métodos de pagamento';
         $auth->add($deletePaymentMethod);
-
-
-        //PAGAR FATURAS (CLIENTE)
-        $payInvoices = $auth->createPermission('payInvoices');
-        $payInvoices->description = 'Pagar faturas';
-        $auth->add($payInvoices);
-        //----------------------------------------------------------------
-        //GERIR CATEGORIAS DE MEDICAMENTOS (ADMIN)
+        //------------------------------------------------------------------//
+        //                  GERIR CATEGORIAS DE MEDICAMENTOS (ADMIN)       //
+        //----------------------------------------------------------------//
 
         // CREATE - Criar categoria de medicamento (ADMIN)
         $createMedicationCategory = $auth->createPermission('createMedicationCategory');
@@ -88,8 +83,9 @@ class RbacController extends Controller
         $deleteMedicationCategory->description = 'Eliminar categoria de medicamento';
         $auth->add($deleteMedicationCategory);
 
-        //----------------------------------------------------------------
-        //GERIR MEDICAMENTOS (ADMIN)
+        //-------------------------------------------------------------------//
+        //                      GERIR MEDICAMENTOS (ADMIN)                  //
+        //-----------------------------------------------------------------//
 
         // CREATE - Criar medicamento (ADMIN)
         $createMedication = $auth->createPermission('createMedication');
@@ -110,42 +106,44 @@ class RbacController extends Controller
         $deleteMedication = $auth->createPermission('deleteMedication');
         $deleteMedication->description = 'Eliminar medicamento';
         $auth->add($deleteMedication);
+        //------------------------------------------------------------------//
+        //                      GERIR SERVICOS (ADMIN)                     //
+        //----------------------------------------------------------------//  
 
-        //----------------------------------------------------------------
-        //GERIR CONSULTAS (VETERINÁRIO)
+        // CREATE - Criar serviço (ADMIN)
+        $createService = $auth->createPermission('createService');
+        $createService->description = 'Criar serviço';
+        $auth->add($createService);
 
-        // CREATE - Criar consultas (VETERINÁRIO)
-        $createConsultation = $auth->createPermission('createConsultation');
-        $createConsultation->description = 'Criar consultas';
-        $auth->add($createConsultation);
+        // READ - Visualizar serviço (ADMIN)
+        $viewServices = $auth->createPermission('viewServices');
+        $viewServices->description = 'Visualizar serviço';
+        $auth->add($viewServices);
 
-        // READ - Visualizar consultas (VETERINÁRIO)
-        $viewConsultations = $auth->createPermission('viewConsultations');
-        $viewConsultations->description = 'Visualizar consultas';
-        $auth->add($viewConsultations);
+        // UPDATE - Atualizar serviço (ADMIN)
+        $updateService = $auth->createPermission('updateService');
+        $updateService->description = 'Atualizar serviço';
+        $auth->add($updateService);
 
-        // UPDATE - Atualizar consultas (VETERINÁRIO)
-        $updateConsultation = $auth->createPermission('updateConsultation');
-        $updateConsultation->description = 'Atualizar consultas';
-        $auth->add($updateConsultation);
+        // DELETE - Eliminar serviço (ADMIN)
+        $deleteService = $auth->createPermission('deleteService');
+        $deleteService->description = 'Eliminar serviço';
+        $auth->add($deleteService);
 
-        // DELETE - Eliminar consultas (VETERINÁRIO)
-        $deleteConsultation = $auth->createPermission('deleteConsultation');
-        $deleteConsultation->description = 'Eliminar consultas';
-        $auth->add($deleteConsultation);
-
-        //----------------------------------------------------------------
-        //ATRIBUIR MEDICAÇÃO (VETERINÁRIO)
+        //------------------------------------------------------------------//
+        //             ATRIBUIR MEDICAÇÃO (VETERINÁRIO)                     //    
+        //------------------------------------------------------------------//
 
         // CREATE - Atribuir medicação a consultas (VETERINÁRIO)
         $assignMedication = $auth->createPermission('assignMedication');
         $assignMedication->description = 'Atribuir medicação a consultas';
         $auth->add($assignMedication);
 
-        //----------------------------------------------------------------
-        //GERIR ANIMAIS (VETERINÁRIO)
+        //------------------------------------------------------------------//
+        //             GERIR ANIMAIS (VETERINÁRIO)(Rececionsita)           //
+        //----------------------------------------------------------------//
 
-        // CREATE - Criar animal (VETERINÁRIO)
+        // CREATE - Criar animal (VETERINÁRIO)(Rececionsita)
         $createAnimal = $auth->createPermission('createAnimal');
         $createAnimal->description = 'Criar animal';
         $auth->add($createAnimal);
@@ -165,8 +163,9 @@ class RbacController extends Controller
         $deleteAnimal->description = 'Eliminar animal';
         $auth->add($deleteAnimal);
 
-        //----------------------------------------------------------------
-        //GERIR RAÇAS DE ANIMAIS (VETERINÁRIO)
+        //-------------------------------------------------------------------//
+        //              GERIR RAÇAS DE ANIMAIS (VETERINÁRIO)                //
+        //-----------------------------------------------------------------//
 
         // CREATE - Criar raças de animal (VETERINÁRIO)
         $createBreed = $auth->createPermission('createBreed');
@@ -188,8 +187,9 @@ class RbacController extends Controller
         $deleteBreed->description = 'Eliminar raças de animal';
         $auth->add($deleteBreed);
 
-        //----------------------------------------------------------------
-        //GERIR ESPÉCIES DE ANIMAIS (VETERINÁRIO)
+        //----------------------------------------------------------------------//
+        //              GERIR ESPÉCIES DE ANIMAIS (VETERINÁRIO)                //
+        //--------------------------------------------------------------------//
 
         // CREATE - Criar espécies de animal (VETERINÁRIO)
         $createSpecies = $auth->createPermission('createSpecies');
@@ -211,9 +211,9 @@ class RbacController extends Controller
         $deleteSpecies->description = 'Eliminar espécies de animal';
         $auth->add($deleteSpecies);
 
-        //----------------------------------------------------------------
-        //GERIR MARCAÇÕES (RECECIONISTA)
-
+        //-------------------------------------------------------------------//
+        //              GERIR MARCAÇÕES (RECECIONISTA)                      //
+        //-----------------------------------------------------------------//
         // CREATE - Criar marcações (RECECIONISTA)
         $createAppointment = $auth->createPermission('createAppointment');
         $createAppointment->description = 'Criar marcações';
@@ -234,8 +234,9 @@ class RbacController extends Controller
         $deleteAppointment->description = 'Eliminar marcações';
         $auth->add($deleteAppointment);
 
-        //----------------------------------------------------------------
-        //GERIR MORADAS (RECECIONISTA E CLIENTE)
+        //--------------------------------------------------------------------//
+        //                 GERIR MORADAS (RECECIONISTA E CLIENTE)            //
+        //-------------------------------------------------------------------// 
 
         // CREATE - Criar moradas (RECECIONISTA e CLIENTE)
         $createAddress = $auth->createPermission('createAddress');
@@ -257,8 +258,9 @@ class RbacController extends Controller
         $deleteAddress->description = 'Eliminar moradas';
         $auth->add($deleteAddress);
 
-        //----------------------------------------------------------------
-        //GERIR CLIENTES (RECECIONISTA)
+        //-------------------------------------------------------------------//
+        //                 GERIR CLIENTES (RECECIONISTA)                    //
+        //-----------------------------------------------------------------//
 
         // CREATE - Criar clientes (RECECIONISTA)
         $createClient = $auth->createPermission('createClient');
@@ -280,8 +282,9 @@ class RbacController extends Controller
         $deleteClient->description = 'Eliminar clientes';
         $auth->add($deleteClient);
 
-        //----------------------------------------------------------------
-        //GERIR FATURAS (RECECIONISTA)
+        //--------------------------------------------------------------------//
+        //                     GERIR FATURAS (RECECIONISTA)                   //
+        //--------------------------------------------------------------------//
 
         // CREATE - Criar fatura (RECECIONISTA)
         $createInvoice = $auth->createPermission('createInvoice');
@@ -303,8 +306,9 @@ class RbacController extends Controller
         $deleteInvoice->description = 'Eliminar fatura';
         $auth->add($deleteInvoice);
 
-        //----------------------------------------------------------------
-        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(NOTAS DO ANIMAL)
+        //=========================================================================//
+        //          PERMISSÕES ESPECÍFICAS DO CLIENTE:(NOTAS DO ANIMAL)           //
+        //=======================================================================//
 
         //CREATE - Criar notas animal (CLIENTE)
         $createNotes = $auth->createPermission('createNotes');
@@ -326,8 +330,9 @@ class RbacController extends Controller
         $deleteNotes->description = 'Eliminar notas dono do seu animal';
         $auth->add($deleteNotes);
 
-        //========================================================================
-        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(LEMBRETES)
+        //===========================================================================//
+        //              PERMISSÕES ESPECÍFICAS DO CLIENTE:(LEMBRETES)               //
+        //========================================================================//
 
         //CREATE - Criar lembretes (CLIENTE)
         $createReminders = $auth->createPermission('createReminders');
@@ -349,166 +354,183 @@ class RbacController extends Controller
         $deleteReminders->description = 'Eliminar lembretes';
         $auth->add($deleteReminders);
 
-        //========================================================================
-        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(MORADAS)
+        //=========================================================================//
+        //                   PERMISSÕES ESPECÍFICAS DO CLIENTE:(MORADAS)          //
+        //========================================================================//
+
 
         // DELETE - Eliminar morada moradas secudarias (CLIENTE)
         $deleteSecondaryAddress = $auth->createPermission('deleteSecondaryAddress');
         $deleteSecondaryAddress->description = 'Eliminar moradas';
         $auth->add($deleteSecondaryAddress);
 
+        //=========================================================================
+        //PERMISSÕES ESPECÍFICAS DO CLIENTE:(PAGAR FATURAS)
 
-        //----------------------------------------------------------------
-        //GERIR IMAGENS (VETERINÁRIO, RECECIONISTA, CLIENTE)
-
-        // READ - Visualizar imagens (Todos os utilizadores autenticados)
-        $viewImages = $auth->createPermission('viewImages');
-        $viewImages->description = 'Visualizar imagens de animal e utilizadores';
-        $auth->add($viewImages);
-
-        // UPDATE - Atualizar imagens de animal (VETERINÁRIO)
-        $updateAnimalImage = $auth->createPermission('updateAnimalImage');
-        $updateAnimalImage->description = 'Atualizar imagens de animal';
-        $auth->add($updateAnimalImage);
-
-        // UPDATE - Atualizar imagens de utilizadores (ADMIN, Próprio utilizador)
-        $updateUserImage = $auth->createPermission('updateUserImage');
-        $updateUserImage->description = 'Atualizar imagens de utilizadores';
-        $auth->add($updateUserImage);
-
-        //========================================================================
-        //PERMISSOES BACKEND (ADMIN, VETERINARIO, RECECIONISTA):
+        //PAGAR FATURAS (CLIENTE)
+        $payInvoices = $auth->createPermission('payInvoices');
+        $payInvoices->description = 'Pagar faturas';
+        $auth->add($payInvoices);
+        //=========================================================================//
+        //              PERMISSOES BACKEND (ADMIN, VETERINARIO, RECECIONISTA):    //
+        //========================================================================//
 
         $backendAccess = $auth->createPermission('backendAccess');
         $backendAccess->description = 'Acesso ao backend';
         $auth->add($backendAccess);
 
-        //========================================================================
-        //========================================================================
-        //Roles:
+        //========================================================================//
+        //========================================================================//
+        //                              ROLES:                                    //
+        //========================================================================//
+        //========================================================================//
 
-        //administrador
+        //========================================================================
+        //ADMINISTRADOR
         $admin = $auth->createRole('admin');
         $auth->add($admin);
 
+        //CRUD Utilizadores
         $auth->addChild($admin, $createUser);
         $auth->addChild($admin, $viewUsers);
         $auth->addChild($admin, $updateUser);
-
         $auth->addChild($admin, $deleteUser);
 
+        //CRUD Métodos de Pagamento
         $auth->addChild($admin, $createPaymentMethod);
         $auth->addChild($admin, $viewPaymentMethods);
         $auth->addChild($admin, $updatePaymentMethod);
         $auth->addChild($admin, $deletePaymentMethod);
 
+        //CRUD Categorias de Medicamentos
         $auth->addChild($admin, $createMedicationCategory);
         $auth->addChild($admin, $viewMedicationCategories);
         $auth->addChild($admin, $updateMedicationCategory);
         $auth->addChild($admin, $deleteMedicationCategory);
 
+        //CRUD Medicamentos
         $auth->addChild($admin, $createMedication);
         $auth->addChild($admin, $viewMedications);
         $auth->addChild($admin, $updateMedication);
         $auth->addChild($admin, $deleteMedication);
 
-        $auth->addChild($admin, $viewImages);
-        $auth->addChild($admin, $updateAnimalImage);
-        $auth->addChild($admin, $updateUserImage);
+        //CRUD Serviços
+        $auth->addChild($admin, $createService);
+        $auth->addChild($admin, $viewServices);
+        $auth->addChild($admin, $updateService);
+        $auth->addChild($admin, $deleteService);
 
+        //PERMISSÃO BACKEND
         $auth->addChild($admin, $backendAccess);
-
-        //===============================================
-        //veterinario
+        //========================================================================
+        //VETERINÁRIO
         $veterinario = $auth->createRole('veterinario');
         $auth->add($veterinario);
+
+        //VER MEDICAMENTOS
         $auth->addChild($veterinario, $viewMedications);
-        $auth->addChild($veterinario, $createAnimal);
 
-        $auth->addChild($veterinario, $createConsultation);
-        $auth->addChild($veterinario, $viewConsultations);
-        $auth->addChild($veterinario, $updateConsultation);
-        $auth->addChild($veterinario, $deleteConsultation);
-
+        //ATRIBUIR MEDICAÇÃO NA MARCAÇÃO
         $auth->addChild($veterinario, $assignMedication);
+
+
+        //CRUD Animais(COMPLETO)(SOFT DELETE)
+        $auth->addChild($veterinario, $createAnimal);
         $auth->addChild($veterinario, $viewAnimals);
         $auth->addChild($veterinario, $updateAnimal);
         $auth->addChild($veterinario, $deleteAnimal);
 
+        //CRUD Consultas(COMPLETO)(SOFT DELETE)
+        $auth->addChild($veterinario, $createAppointment);
+        $auth->addChild($veterinario, $viewAppointments);
+        $auth->addChild($veterinario, $updateAppointment);
+        $auth->addChild($veterinario, $deleteAppointment);
+
+        //CRUD Raças de animais(COMPLETO)(SOFT DELETE)
         $auth->addChild($veterinario, $createBreed);
         $auth->addChild($veterinario, $viewBreeds);
         $auth->addChild($veterinario, $updateBreed);
         $auth->addChild($veterinario, $deleteBreed);
 
+        //CRUD Espécies de animais(COMPLETO)(SOFT DELETE)
         $auth->addChild($veterinario, $createSpecies);
         $auth->addChild($veterinario, $viewSpecies);
         $auth->addChild($veterinario, $updateSpecies);
         $auth->addChild($veterinario, $deleteSpecies);
 
-        $auth->addChild($veterinario, $viewImages);
-        $auth->addChild($veterinario, $updateAnimalImage);
-
+        //PERMISSÃO BACKEND
         $auth->addChild($veterinario, $backendAccess);
-        //===============================================
-        //rececionista
+        //========================================================================
+        //RECECIONISTA
         $rececionista = $auth->createRole('rececionista');
         $auth->add($rececionista);
 
-        $auth->addChild($rececionista, $viewConsultations);
-
+        //CRUD Marcações(COMPLETO)(SOFT DELETE)
         $auth->addChild($rececionista, $createAppointment);
         $auth->addChild($rececionista, $viewAppointments);
         $auth->addChild($rececionista, $updateAppointment);
         $auth->addChild($rececionista, $deleteAppointment);
 
+        //CRUD Moradas(COMPLETO)(HARD DELETE)
         $auth->addChild($rececionista, $createAddress);
         $auth->addChild($rececionista, $viewAddresses);
         $auth->addChild($rececionista, $updateAddress);
         $auth->addChild($rececionista, $deleteAddress);
 
+        //CRUD Clientes(COMPLETO)(SOFT DELETE)
+        $auth->addChild($rececionista, $createClient);
+        $auth->addChild($rececionista, $updateClient);
         $auth->addChild($rececionista, $viewClients);
         $auth->addChild($rececionista, $deleteClient);
 
+        //CRUD Faturas(COMPLETO)(SOFT DELETE)
         $auth->addChild($rececionista, $createInvoice);
         $auth->addChild($rececionista, $viewInvoices);
         $auth->addChild($rececionista, $updateInvoice);
         $auth->addChild($rececionista, $deleteInvoice);
 
+        //CRIAR ANIMAIS E VER ANIMAIS
+        $auth->addChild($rececionista, $createAnimal);
+        $auth->addChild($rececionista, $viewAnimals);
+
+        //VISUALIZAR OS MÉTODOS DE PAGAMENTO
         $auth->addChild($rececionista, $viewPaymentMethods);
 
-        $auth->addChild($rececionista, $viewImages);
-
+        //PERMISSÃO BACKEND
         $auth->addChild($rececionista, $backendAccess);
-
-        //===============================================
-        //cliente (Dono do animal)
+        //========================================================================
+        //CLIENTE (Dono do animal)
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
 
-        //VER Animais
+        //VER Animais✳️-front 
         $auth->addChild($cliente, $viewAnimals);
-        //ATUALIZAR a sua informação
+
+        //UPDATE da suas informação
         $auth->addChild($cliente, $updateClient);
-        //VER suas consultas
-        $auth->addChild($cliente, $viewConsultations);
+
+        //VER suas marcações
+        $auth->addChild($cliente, $viewAppointments);
+
         //VER suas faturas
         $auth->addChild($cliente, $viewInvoices);
+
         //PAGAR suas faturas
         $auth->addChild($cliente, $payInvoices);
 
-        //CRUD Moradas e delete permanente do das moradas secundárias
+        //CRUD Moradas e delete permanente do das moradas secundárias✳️-front
         $auth->addChild($cliente, $createAddress);
         $auth->addChild($cliente, $viewAddresses);
         $auth->addChild($cliente, $updateAddress);
         $auth->addChild($cliente, $deleteSecondaryAddress);
 
-        //CRUD Notas do animal
+        //CRUD Notas do animal(COMPLETO)(HARD DELETE)
         $auth->addChild($cliente, $createNotes);
         $auth->addChild($cliente, $viewNotes);
         $auth->addChild($cliente, $updateNotes);
         $auth->addChild($cliente, $deleteNotes);
 
-        //CRUD Lembretes
+        //CRUD Lembretes(COMPLETO)(SOFT DELETE)✳️-front 
         $auth->addChild($cliente, $createReminders);
         $auth->addChild($cliente, $viewReminders);
         $auth->addChild($cliente, $updateReminders);    
@@ -516,11 +538,9 @@ class RbacController extends Controller
 
         //ver clientes (próprioPerfil)
         $auth->addChild($cliente, $viewClients);
-
-        //===============================================
-
+        //========================================================================
         //Mensagem pra dar feedback que rodou o script
-        echo "✅ RBAC inicializado com sucesso. Permissões: {$this->countPermissions()} | Roles: {$this->countRoles()} ✅\n";
+        echo "RBAC inicializado com sucesso. Total de permissões: {$this->countPermissions()} | Total de roles: {$this->countRoles()}\n";
     }
 
     function countPermissions()

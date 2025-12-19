@@ -10,12 +10,11 @@ use frontend\widgets\ImageUploadWidget;
 /** @var common\models\Userprofile $model */
 /** @var array $moradas */
 
-$moradas = $moradas ?? ($model->moradas ?? []);
-$user = Yii::$app->user->identity;
+// ID do utilizador
+$userId = $model->id;
 
 // URL da imagem (o método getImageUrl do modelo trata do default)
 $avatarUrl = $model->getImageUrl();
-
 ?>
         <div class="card shadow-sm">
             <?php $form = ActiveForm::begin([
@@ -92,9 +91,6 @@ $avatarUrl = $model->getImageUrl();
                         </div>
                     </div>
                 </div>
-
-               
-
                 <!-- Moradas -->
                 <div class="mb-4">
                     <div class="text-success fw-semibold mb-3">Moradas</div>
@@ -104,7 +100,7 @@ $avatarUrl = $model->getImageUrl();
                     <?php Pjax::end(); ?>
 
                     <div class="mt-3">
-                        <?= Html::a('<i class="fa-solid fa-plus"></i> Adicionar Morada', ['morada/create'], [
+                        <?= Html::a('<i class="fa-solid fa-plus"></i> Adicionar Morada', ['morada/create', 'userId' => $userId], [
                             'class' => 'btn btn-outline-success btn-sm rounded-pill'
                         ]) ?>
                     </div>
@@ -113,12 +109,12 @@ $avatarUrl = $model->getImageUrl();
                 <div>
                     <div class="text-success fw-semibold mb-2">Outros</div>
                     <div class="small text-muted">Data de criação</div>
-                    <div class="fw-medium"><?= Html::encode(Yii::$app->formatter->asDate($model->created_at ?? $user->created_at ?? null, 'long')) ?></div>
+                    <div class="fw-medium">
+                        <?= Html::encode($model->getCreatedAt('Y-m-d')) ?>
+                    </div>
                 </div>
             </div>
-            
-
-            
+            <!-- footer -->
             <div class="card-footer bg-white border-0 d-flex justify-content-end gap-2">
                 <?= Html::a('Cancelar', ['/userprofile/view'], ['class' => 'btn btn-outline-secondary rounded-pill']) ?>
                 <?= Html::submitButton('Salvar Alterações', ['class' => 'btn btn-success rounded-pill']) ?>

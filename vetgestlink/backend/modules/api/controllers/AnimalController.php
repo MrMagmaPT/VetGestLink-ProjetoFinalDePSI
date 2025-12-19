@@ -119,6 +119,8 @@ class AnimalController extends ActiveController
                 'microchip' => $animal->microship,
                 'foto_url' => $fotoUrl,
                 'userprofiles_id' => $animal->userprofiles_id,
+                'created_at' => $animal->created_at,
+                'updated_at' => $animal->updated_at,
                 'ativo' => $animal->eliminado == 0,
             ];
         }
@@ -190,6 +192,8 @@ class AnimalController extends ActiveController
             'microchip' => $animal->microship,
             'foto_url' => $fotoUrl,
             'notas' => $notas,
+            'created_at' => $animal->created_at,
+            'updated_at' => $animal->updated_at,
             'ativo' => $animal->eliminado == 0,
             'dono' => [
                 'id' => $animal->userprofiles->id,

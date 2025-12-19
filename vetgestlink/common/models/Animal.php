@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\web\UploadedFile;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "animais".
@@ -19,6 +20,8 @@ use yii\web\UploadedFile;
  * @property int|null $racas_id
  * @property int $eliminado
  * @property string|null $foto
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property Especie $especies
  * @property Marcacao[] $marcacoes
@@ -42,6 +45,21 @@ class Animal extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => \yii\behaviors\TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public static function tableName()
     {
         return 'animais';
@@ -56,7 +74,7 @@ class Animal extends \yii\db\ActiveRecord
             [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
             [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
-            [['dtanascimento'], 'safe'],
+            [['dtanascimento', 'created_at', 'updated_at'], 'safe'],
             [['peso'], 'number'],
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
             [['sexo'], 'string'],
@@ -87,6 +105,8 @@ class Animal extends \yii\db\ActiveRecord
             'eliminado' => 'Eliminado',
             'imageFile' => 'Imagem',
             'foto' => 'Foto',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
         ];
     }
 

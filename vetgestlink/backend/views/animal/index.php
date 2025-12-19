@@ -6,7 +6,6 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\SmallCardWidget;
-use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use backend\widgets\PageHeaderWidget;
 
@@ -20,9 +19,7 @@ use backend\widgets\PageHeaderWidget;
 
 $this->title = 'Gestão de Animais';
 $this->params['breadcrumbs'][] = 'Animais';
-?>
 
-<?php
 echo PageHeaderWidget::widget([
     'title' => 'Gestão de Animais',
     'icon' => 'fa-dog text-primary',
@@ -37,7 +34,6 @@ echo PageHeaderWidget::widget([
     ],
 ]);
 ?>
-
 <div class="content">
     <div class="container-fluid">
         <!-- Cards de Estatísticas -->
@@ -90,7 +86,6 @@ echo PageHeaderWidget::widget([
                     ) ?>
                 </div>
             </div>
-            <div class="card-body">
             <div class="card-body p-0">
                 <?php \yii\widgets\Pjax::begin(['id' => 'animal-grid']); ?>
                 <?= GridView::widget([
@@ -205,7 +200,7 @@ echo PageHeaderWidget::widget([
                                     ],
                                     'bsVersion' => '5.x',
                                 ]),
-                            ],
+                        ],
                         [
                             'attribute' => 'userprofiles_id',
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -217,7 +212,7 @@ echo PageHeaderWidget::widget([
                                 'filter' => Select2::widget([
                                     'model' => $searchModel,
                                     'attribute' => 'userprofiles_id',
-                                    'data' => \backend\models\AnimalSearch::getActiveOwnersList(),
+                                    'data' => \backend\models\UserprofileSearch::getUserListByType('cliente', true),
                                     'options' => [
                                         'placeholder' => 'Dono...',
                                         'allowClear' => true,
@@ -231,7 +226,23 @@ echo PageHeaderWidget::widget([
                                     ],
                                     'bsVersion' => '5.x',
                                 ]),
-                            ],
+                        ],
+                        [
+                            'attribute' => 'created_at',
+                            'label' => 'Registado',
+                            'format' => ['date', 'php:d/m/Y'],
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => false,
+                        ],
+                        [
+                            'attribute' => 'updated_at',
+                            'label' => 'Atualizado',
+                            'format' => ['date', 'php:d/m/Y'],
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'filter' => false,
+                        ],
                         [
                             'attribute' => 'eliminado',
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -294,7 +305,8 @@ echo PageHeaderWidget::widget([
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                     ],
-                ]); ?>
+                ]);
+                ?>
                 <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>

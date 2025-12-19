@@ -80,4 +80,6 @@ class Lembrete extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Userprofile::class, ['id' => 'userprofiles_id']);
     }
+
+    
 }

@@ -1,18 +1,13 @@
 <?php
 
-use common\models\Fatura;
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var common\models\Fatura[] $faturasUsuario */
 
 $this->title = 'Minhas Faturas';
 $this->params['breadcrumbs'][] = $this->title;
-
-$faturas = $dataProvider->getModels();
 ?>
-
 <div class="faturas-index">
     <div class="container py-4">
 
@@ -23,14 +18,14 @@ $faturas = $dataProvider->getModels();
             </h1>
         </div>
 
-        <?php if (empty($faturas)): ?>
+        <?php if (empty($faturasUsuario)): ?>
             <div class="alert alert-info text-center">
                 <i class="fas fa-info-circle"></i>
                 Nenhuma fatura encontrada.
             </div>
         <?php else: ?>
             <div class="row g-4">
-                <?php foreach ($faturas as $fatura): ?>
+                <?php foreach ($faturasUsuario as $fatura): ?>
                     <?php
                     $isPaid = (bool)$fatura->estado;
                     $estadoText = $isPaid ? 'Pago' : 'Pendente';

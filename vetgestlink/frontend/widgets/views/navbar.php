@@ -2,9 +2,11 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-?>
-<?php $logoUrl = $logoUrl ?? Yii::getAlias('@web') . '/static/img/logo/logo.png'; ?>
+/** @var $this \yii\web\View */
+/** @var $logoUrl string */
+/** @var $menuItems array */
 
+?>
 <header>
     <div class="header-area header-transparent">
         <div class="main-header header-sticky">

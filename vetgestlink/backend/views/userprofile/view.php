@@ -145,6 +145,20 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                                         <?= Html::encode($morada->localidade) ?>
                                     </div>
                                 </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-3 fw-bold text-muted">
+                                        <i class="fas fa-clock"></i> Registado:
+                                    </div>
+                                    <div class="col-md-3">
+                                        <?= $morada->created_at ? Yii::$app->formatter->asDatetime($morada->created_at, 'php:d/m/Y H:i') : '-' ?>
+                                    </div>
+                                    <div class="col-md-3 fw-bold text-muted">
+                                        <i class="fas fa-sync"></i> Atualizado:
+                                    </div>
+                                    <div class="col-md-3">
+                                        <?= $morada->updated_at ? Yii::$app->formatter->asDatetime($morada->updated_at, 'php:d/m/Y H:i') : '-' ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>

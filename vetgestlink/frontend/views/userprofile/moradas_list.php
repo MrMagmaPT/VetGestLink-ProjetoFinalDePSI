@@ -4,24 +4,26 @@ use yii\helpers\ArrayHelper;
 use frontend\widgets\Alert;
 
 /** @var array $moradas */
+
+$moradaId = $morada->id ?? null;
 ?>
 <?php if (empty($moradas)): ?>
     <p class="text-muted">Nenhuma morada cadastrada.</p>
 <?php else: ?>
     <?= Alert::widget() ?>
     <?php foreach ($moradas as $i => $morada): ?>
+        <?php $moradaId = $morada->id ?? null; ?>
         <div class="morada-item mb-3 border-bottom pb-3">
             <div class="d-flex justify-content-between align-items-center">
                 <strong>Morada <?= $i === 0 ? 'Principal' : ($i + 1) ?></strong>
 
                 <div>
-                    <?php $mid = ArrayHelper::getValue($morada, 'id', null); ?>
-                    <?php if ($mid): ?>
-                        <?= Html::a('Editar', ['morada/update', 'id' => $mid], ['class' => 'btn btn-sm btn-outline-primary me-2']) ?>
+                    <?php if ($moradaId): ?>
+                        <?= Html::a('Editar', ['morada/update', 'id' => $moradaId], ['class' => 'btn btn-sm btn-outline-primary me-2']) ?>
                     <?php endif; ?>
 
-                    <?php if ($mid && $i !== 0): // só permitir remover moradas secundárias que tenham id ?>
-                        <?= Html::a('Remover', ['morada/delete', 'id' => $mid], [
+                    <?php if ($moradaId && $i !== 0): // só permitir remover moradas secundárias que tenham id ?>
+                        <?= Html::a('Remover', ['morada/delete', 'id' => $moradaId], [
                             'class' => 'btn btn-sm btn-danger',
                             'data' => [ 'method' => 'post', 'pjax' => 1 ],
                         ]) ?>
@@ -29,6 +31,7 @@ use frontend\widgets\Alert;
                 </div>
             </div>
 
+            <!-- Detalhes da morada -->
             <div class="row g-2 mt-2">
                 <div class="col-md-6">
                     <strong>Rua:</strong> <?= Html::encode($morada->rua ?? '') ?>

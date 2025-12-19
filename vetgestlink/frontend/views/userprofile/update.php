@@ -14,17 +14,11 @@ $this->params['breadcrumbs'][] = 'Atualizar';
 <div class="userprofile-update container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-7">
-
             <div class="card shadow border-0 rounded-4">
-
-
-                
-            <?= $this->render('_form', [
-                'model' => $model,
-                'moradas' => $moradas,
-            ]) ?>
-                
-
+                <?= $this->render('_form', [
+                    'model' => $model,
+                    'moradas' => $moradas,
+                ]) ?>
             </div>
         </div>
     </div>

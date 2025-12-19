@@ -4,12 +4,12 @@ namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Morada;
+use common\models\Lembrete;
 
 /**
- * MoradaSearch represents the model behind the search form of `common\models\Morada`.
+ * LembreteSearch represents the model behind the search form of `common\models\Lembrete`.
  */
-class MoradaSearch extends Morada
+class LembreteSearch extends Lembrete
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class MoradaSearch extends Morada
     public function rules()
     {
         return [
-            [['id', 'principal', 'userprofiles_id', 'eliminado'], 'integer'],
-            [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'userprofiles_id'], 'integer'],
+            [['descricao', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,18 +41,12 @@ class MoradaSearch extends Morada
      */
     public function search($params, $formName = null)
     {
-        $query = Morada::find()->with(['userprofiles']);
+        $query = Lembrete::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => [
-                'defaultOrder' => [
-                    'principal' => SORT_DESC,
-                    'cidade' => SORT_ASC,
-                ]
-            ],
         ]);
 
         $this->load($params, $formName);
@@ -66,22 +60,27 @@ class MoradaSearch extends Morada
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'principal' => $this->principal,
-            'userprofiles_id' => $this->userprofiles_id,
-            'eliminado' => $this->eliminado,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'userprofiles_id' => $this->userprofiles_id,
         ]);
 
-        $query->andFilterWhere(['like', 'rua', $this->rua])
-            ->andFilterWhere(['like', 'nporta', $this->nporta])
-            ->andFilterWhere(['like', 'andar', $this->andar])
-            ->andFilterWhere(['like', 'cdpostal', $this->cdpostal])
-            ->andFilterWhere(['like', 'cidade', $this->cidade])
-            ->andFilterWhere(['like', 'cxpostal', $this->cxpostal])
-            ->andFilterWhere(['like', 'localidade', $this->localidade]);
+        $query->andFilterWhere(['like', 'descricao', $this->descricao]);
 
         return $dataProvider;
     }
-}
 
+
+    /**
+     * Retorna todos os lembretes de um usuário, ordenados por data de criação desc.
+     * @param int $userId
+     * @return Lembrete[]
+     */
+    public static function getByUserId($userId)
+    {
+        return Lembrete::find()
+            ->where(['userprofiles_id' => $userId])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
+    }
+}

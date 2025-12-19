@@ -2,11 +2,13 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\models\Morada;
+use backend\models\MoradaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\Morada;
+
 
 /**
  * Controller responsável pela gestão de moradas do perfil do utilizador.
@@ -28,6 +30,11 @@ class MoradaController extends Controller
                             'allow' => true,
                             'roles' => ['@'],
                         ],
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['createAddresses', 'updateAddresses', 'deleteAddresses'],
+                        ],
                     ],
                 ],
                 'verbs' => [
@@ -37,7 +44,7 @@ class MoradaController extends Controller
                     ],
                 ],
             ]
-        );
+        );  
     }
 
     /**
@@ -45,23 +52,30 @@ class MoradaController extends Controller
      */
     public function actionCreate()
     {
+        // Obtém o perfil do usuário logado
         $user = Yii::$app->user->identity;
-        $profile = $user->userprofile;
 
-        if (!$profile || empty($profile->id)) {
-            Yii::$app->session->setFlash('warning', 'Por favor, salve o perfil antes de adicionar moradas.');
+        // Verifica se o perfil existe
+        $profile = $user->userprofile ?? null;
+        if (!$profile) {
+            Yii::$app->session->setFlash('error', 'Perfil não encontrado.');
             return $this->redirect(['/userprofile/update']);
         }
 
+        // Cria uma nova instância de Morada
         $model = new Morada();
+        // Define o ID do perfil do usuário na morada
         $model->userprofiles_id = $profile->id;
+        // Define como morada secundária por padrão
         $model->principal = 0;
 
+        // Processa o formulário de criação
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Morada adicionada com sucesso.');
             return $this->redirect(['/userprofile/update']);
         }
 
+        // Renderiza o formulário de criação
         return $this->render('/userprofile/_add_morada', ['model' => $model, 'profileId' => $profile->id]);
     }
 
@@ -70,26 +84,31 @@ class MoradaController extends Controller
      */
     public function actionUpdate($id)
     {
+        // Obtém o perfil do usuário logado
         $user = Yii::$app->user->identity;
-        $profile = $user->userprofile;
 
+        // Verifica se o perfil existe
+        $profile = $user->userprofile;
         if (!$profile) {
             Yii::$app->session->setFlash('error', 'Perfil não encontrado.');
             return $this->redirect(['/userprofile/update']);
         }
 
-        $model = Morada::findOne($id);
-        if (!$model || $model->userprofiles_id != $profile->id) {
-            Yii::$app->session->setFlash('error', 'Morada não encontrada ou sem permissão.');
+        // Encontra a morada a ser atualizada
+        $moradaAtualizada = $this->findModel($id);
+        if ($moradaAtualizada->userprofiles_id != $profile->id) {
+            Yii::$app->session->setFlash('error', 'Morada não encontrada.');
             return $this->redirect(['/userprofile/update']);
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        // Processa o formulário de atualização
+        if ($moradaAtualizada->load(Yii::$app->request->post()) && $moradaAtualizada->save()) {
             Yii::$app->session->setFlash('success', 'Morada atualizada com sucesso.');
             return $this->redirect(['/userprofile/update']);
         }
 
-        return $this->render('/userprofile/_add_morada', ['model' => $model, 'profileId' => $profile->id]);
+        // Renderiza o formulário de atualização
+        return $this->render('/userprofile/_add_morada', ['model' => $moradaAtualizada, 'profileId' => $profile->id]);
     }
 
 
@@ -110,8 +129,9 @@ class MoradaController extends Controller
             return $this->redirect(['/userprofile/update']);
         }
 
-        $morada = Morada::findOne($id);
-        if (!$morada || $morada->userprofiles_id != $profile->id) {
+
+        $morada = $this->findModel($id);
+        if ($morada->userprofiles_id != $profile->id) {
             if (Yii::$app->request->isPjax || Yii::$app->request->isAjax) {
                 return $this->asJson(['error' => 'Morada não encontrada ou sem permissão.']);
             }
@@ -133,4 +153,19 @@ class MoradaController extends Controller
         return $this->redirect(['/userprofile/update']);
     }
 
+    /**
+     * Finds the Morada model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id ID
+     * @return Morada the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Morada::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
 }

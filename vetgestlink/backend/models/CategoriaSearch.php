@@ -75,7 +75,7 @@ class CategoriaSearch extends Categoria
     public static function getList()
     {
         return \yii\helpers\ArrayHelper::map(
-            \common\models\Categoria::find()->orderBy('nome')->all(),
+            Categoria::find()->orderBy('nome')->all(),
             'id', 'nome'
         );
     }
@@ -86,7 +86,7 @@ class CategoriaSearch extends Categoria
     public static function getActiveList()
     {
         return \yii\helpers\ArrayHelper::map(
-            \common\models\Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
+            Categoria::find()->where(['eliminado' => 0])->orderBy('nome')->all(),
             'id', 'nome'
         );
     }

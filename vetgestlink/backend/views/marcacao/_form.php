@@ -189,12 +189,12 @@ use yii\helpers\ArrayHelper;
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Marcação' : 'Guardar Alterações'),
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times me-2"></i>Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>
@@ -210,9 +210,7 @@ use yii\helpers\ArrayHelper;
             ]
         );
         ?>
-
     </div>
-
     <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
 
     <?php ActiveForm::end(); ?>

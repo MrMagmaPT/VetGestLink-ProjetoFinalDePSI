@@ -10,6 +10,7 @@ $this->title = "Pagamento da Fatura #" . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Fatura #' . $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Pagamento';
+
 ?>
 
 <div class="fatura-pagar">

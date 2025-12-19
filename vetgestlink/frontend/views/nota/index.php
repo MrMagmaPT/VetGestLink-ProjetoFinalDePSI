@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Animal $model */
+/** @var common\models\Animal $animal */
 /** @var common\models\Nota[] $allnotas */
 
 $this->title = 'Notas';
@@ -13,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="d-flex justify-content-center align-items-center mb-4">
         <h1 class="fw-bold"><?= Html::encode($this->title) ?></h1>
     </div>
-
+    <div class="d-flex justify-content-center mt-3">
+        <?= Html::a('<i class="fa-solid fa-plus me-1 "></i> Nova Nota', ['/nota/create', 'animalId' => $animal->id], ['class' => 'btn btn-dark rounded-pill']) ?>
+    </div>
     <?php if (!empty($allnotas)) : ?>
         <div class="card mb-3 shadow-sm p-3">
             <ul class="list-group list-group-flush">
@@ -26,6 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                         <div class="btn-group btn-group-sm" role="group">
                             <?= Html::a('<i class="fa-solid fa-pen-to-square me-1"></i> Editar', ['/nota/update', 'id' => $nota->id], [
+                                'class' => 'btn btn-dark rounded-pill'
+                            ]) ?>
+                            <?= Html::a('<i class="fas fa-eye me-1"></i> Ver', ['/nota/view', 'id' => $nota->id], [
                                 'class' => 'btn btn-dark rounded-pill'
                             ]) ?>
                             <?= Html::a('<i class="fa-solid fa-trash me-1"></i> Apagar', ['/nota/delete', 'id' => $nota->id], [
@@ -43,10 +48,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php else: ?>
         <p class="text-muted text-center">Sem notas</p>
     <?php endif; ?>
-
-    <div class="d-flex justify-content-center mt-3">
-        <?= Html::a('<i class="fa-solid fa-plus me-1"></i> Nova Nota', ['/nota/create', 'animal_id' => $model->id], ['class' => 'btn btn-dark rounded-pill']) ?>
-    </div>
 </div>
 
 

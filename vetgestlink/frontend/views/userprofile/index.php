@@ -45,7 +45,7 @@ $user = $dataProvider->getModels();
                     </div>
                 </div>
                 <div class="card-footer text-end bg-light">
-                    <?= Html::a('Editar Perfil', ['profile/edit'], ['class' => 'site-btn']) ?>
+                    <?= Html::a('Editar Perfil', ['userprofile/update'], ['class' => 'site-btn']) ?>
                 </div>
             </div>
         </div>

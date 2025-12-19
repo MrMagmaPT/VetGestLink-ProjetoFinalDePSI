@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\widgets\FlashMessages;
+use common\widgets\ImageUpload;
 
 
 ?>
@@ -15,8 +16,6 @@ use backend\widgets\FlashMessages;
     <div class="container-fluid">
         <!-- Feedback Messages -->
         <?= FlashMessages::widget() ?>  
-
-
         <?php $form = ActiveForm::begin([
                 'id' => 'form-signup',
                 'options' => [
@@ -119,7 +118,6 @@ use backend\widgets\FlashMessages;
                                 ]
                             ) ?>
                         <?php endif; ?>
-
                         <div class="form-group">
                             <?= $form->field($model, 'imageFile')->fileInput([
                                 'class' => 'form-control',

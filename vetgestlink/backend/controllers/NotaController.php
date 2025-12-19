@@ -84,7 +84,7 @@ class NotaController extends Controller
         }
 
         // Preparar listas para o formulário
-        $animaisList = \backend\models\AnimalSearch::getAnimaisList();
+        $animaisList = \backend\models\AnimalSearch::getActiveList();
         $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         return $this->render('create', [
@@ -110,7 +110,7 @@ class NotaController extends Controller
         }
 
         // Preparar listas para o formulário
-        $animaisList = \backend\models\AnimalSearch::getAnimaisList();
+        $animaisList = \backend\models\AnimalSearch::getActiveList();
         $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         return $this->render('update', [

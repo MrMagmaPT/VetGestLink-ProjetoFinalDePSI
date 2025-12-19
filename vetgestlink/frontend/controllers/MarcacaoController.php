@@ -1,9 +1,9 @@
 <?php
-
 namespace frontend\controllers;
 
+use Yii;
 use common\models\Marcacao;
-use yii\data\ActiveDataProvider;
+use backend\models\MarcacaoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -34,7 +34,12 @@ class MarcacaoController extends Controller
                             'allow' => true,
                             'roles' => ['@'],
                         ],
-                    ],
+                        [
+                            'actions' => ['index','view'],
+                            'allow' => true,
+                            'roles' => ['viewAppointments'],
+                        ],
+                    ]
                 ],
             ]
         );
@@ -47,22 +52,15 @@ class MarcacaoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Marcacao::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        //Pegar o ID do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
 
+        // Usar o SearchModel do backend para obter marcações do usuário
+        $marcacoesUsuario = MarcacaoSearch::getByUserId($userId);
+
+        // Renderizar a view com as marcações do usuário
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'marcacoesUsuario' => $marcacoesUsuario,
         ]);
     }
 
@@ -74,8 +72,11 @@ class MarcacaoController extends Controller
      */
     public function actionView($id)
     {
+        // Encontrar o modelo Marcacao pelo ID
+        $marcacao = $this->findModel($id);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'marcacao' => $marcacao,
         ]);
     }
 

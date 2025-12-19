@@ -3,18 +3,11 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var common\models\Marcacao[] $marcacoesUsuario */
 
 $this->title = 'Minhas Marcações';
 $this->params['breadcrumbs'][] = $this->title;
-
-$this->registerCssFile('@web/static/css/marcacao.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-
-$marcacoes = $dataProvider->getModels();
-
-
 ?>
-
 <div class="marcacao-index">
     <div class="container py-4">
 
@@ -25,14 +18,14 @@ $marcacoes = $dataProvider->getModels();
             </h1>
         </div>
 
-        <?php if (empty($marcacoes)): ?>
+        <?php if (empty($marcacoesUsuario)): ?>
             <div class="alert alert-info text-center">
                 <i class="fas fa-info-circle"></i>
                 Nenhuma marcação encontrada.
             </div>
         <?php else: ?>
             <div class="row g-4">
-                <?php foreach ($marcacoes as $index => $marcacao): ?>
+                <?php foreach ($marcacoesUsuario as $index => $marcacao): ?>
                     <?php
                     // Determinar cor do badge baseado no estado
                     $estadoColors = [
@@ -111,7 +104,12 @@ $marcacoes = $dataProvider->getModels();
                             </div>
 
                             <div class="card-footer bg-light border-top">
-                                <small class="text-muted">
+                                <div class="mt-auto d-flex justify-content-center gap-2">
+                                    <?= Html::a('Ver Detalhes', ['view', 'id' => $marcacao->id], [
+                                        'class' => 'btn btn-dark rounded-pill'
+                                    ]) ?>
+                                </div>
+                                <small class="text-muted d-block mt-2 text-center w-100">
                                     <i class="far fa-clock"></i>
                                     Criado em: <?= Yii::$app->formatter->asDatetime($marcacao->created_at, 'php:d/m/Y H:i') ?>
                                 </small>

@@ -5,7 +5,7 @@ namespace common\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use Bluerhinos\phpMQTT;
+
 
 /**
  * This is the model class for table "marcacao".
@@ -241,17 +241,23 @@ class Marcacao extends \yii\db\ActiveRecord
      */
     public function getServicoNome()
     {
+        // Verificar se a relação já foi carregada
         if ($this->isRelationPopulated('servicos')) {
+            //Buscar via relação
             $servico = $this->servicos;
+            
+            // Retornar nome ou null
             return $servico ? $servico->nome : null;
         }
+        // Buscar via relação
         $servico = $this->getServicos()->one();
+
+        // Retornar nome ou null
         return $servico ? $servico->nome : null;
     }
 
 
-
-
+    // Publicar alterações no MQTT após salvar ou deletar
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
@@ -277,7 +283,6 @@ class Marcacao extends \yii\db\ActiveRecord
         }
     }
 
-
     public function afterDelete()
     {
         parent::afterDelete();
@@ -294,7 +299,7 @@ class Marcacao extends \yii\db\ActiveRecord
         $username = ""; // defina se necessário
         $password = ""; // defina se necessário
         $client_id = "phpMQTT-publisher"; // deve ser único
-        $mqtt = new phpmqtt($server, $port, $client_id);
+        $mqtt = new \Bluerhinos\phpmqtt($server, $port, $client_id);
         if ($mqtt->connect(true, NULL, $username, $password)) {
             $mqtt->publish($canal, $msg, 0);
             $mqtt->close();

@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "moradas".
@@ -17,13 +18,14 @@ use Yii;
  * @property string $localidade
  * @property int $principal
  * @property int $userprofiles_id
+ * @property string $created_at
+ * @property string $updated_at
+
  *
  * @property Userprofile $userprofile
  */
 class Morada extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -35,6 +37,20 @@ class Morada extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => \yii\behaviors\TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -42,6 +58,7 @@ class Morada extends \yii\db\ActiveRecord
             [['rua', 'nporta', 'cdpostal', 'cidade', 'localidade', 'principal', 'userprofiles_id'], 'required'],
             [['principal', 'userprofiles_id'], 'integer'],
             [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade'], 'string', 'max' => 45],
+            [['created_at', 'updated_at'], 'safe'],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
     }
@@ -62,6 +79,8 @@ class Morada extends \yii\db\ActiveRecord
             'localidade' => 'Localidade',
             'principal' => 'Principal',
             'userprofiles_id' => 'Userprofile ID',
+            'created_at' => 'Criado em',
+            'updated_at' => 'Atualizado em',
         ];
     }
 

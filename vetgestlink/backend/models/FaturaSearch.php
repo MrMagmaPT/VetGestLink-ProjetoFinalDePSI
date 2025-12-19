@@ -122,4 +122,19 @@ class FaturaSearch extends Fatura
             'id', 'nome'
         );
     }
+
+
+
+    /**
+     * Retorna todos os lembretes de um usuário, ordenados por data de criação desc.
+     * @param int $userId
+     * @return Fatura[]
+     */
+    public static function getByUserId($userId)
+    {
+        return Fatura::find()
+            ->where(['userprofiles_id' => $userId])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
+    }
 }

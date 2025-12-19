@@ -1,11 +1,9 @@
 <?php
-
 namespace frontend\controllers;
 
 use common\models\Animal;
 use common\models\Nota;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -42,22 +40,32 @@ class NotaController extends Controller
         );
     }
 
-
     /**
-     * Displays a single Nota model.
-     * @param int $id ID
+     * Lists all Nota models for a specific Animal.
+     * @param int $animal_id Animal ID
      * @return string
-     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionIndex($animal_id)
+    public function actionIndex()
     {
-        $model = $this->findModel($animal_id);
+        // Pegar o ID do animal a partir dos parâmetros da requisição
+        $animalId = Yii::$app->request->get('animalId');
 
-        $animal = Animal::findOne($animal_id);
+        //Encontrar o animal
+        $animal = Animal::findOne($animalId);
+        
+        // Verificar se o animal existe
+        if (!$animal) {
+            Yii::$app->session->setFlash('danger', 'Animal não encontrado.');
+            return $this->render('/animal/index', [
+                'error' => 'Animal não encontrado.'
+            ]);
+        }
+
+        // Pegar todas as notas associadas ao animal
         $allnotas = $animal->notas;
 
         return $this->render('index', [
-            'model' => $model,
+            'animal' => $animal,
             'allnotas' => $allnotas,
         ]);
     }
@@ -67,20 +75,32 @@ class NotaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($animal_id)
+    public function actionCreate($animalId)
     {
         $model = new Nota();
-        $model->animais_id = $animal_id;
+        $model->animais_id = $animalId;
         $model->userprofiles_id = Yii::$app->user->identity->userprofile->id;
-        $model->created_at = date('Y-m-d H:i:s');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', 'Nota criada com sucesso.');
-            return $this->redirect(['animal/index', 'id' => $animal_id]);
+            return $this->redirect(['nota/view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
+        ]);
+    }
+
+    /**
+     * Displays a single Nota model.
+     * @param int $id ID
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
         ]);
     }
 

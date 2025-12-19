@@ -225,65 +225,17 @@ $this->beginPage();
                                     'url' => ['/animal/index'],
                                     'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
-                            <?= MenuGroup::widget([
-                                    'icon' => 'far fa-file-lines',
-                                    'text' => 'Consultas',
-                                    'subs' => [
-                                            [
-                                                'type' => '1',
-                                                'icon' => 'fas fa-file-lines',
-                                                'text' => 'Consultas Terminadas',
-                                                'subs' => [
-                                                        [
-                                                            'type' => '2',
-                                                            'icon' => 'fas fa-file-lines',
-                                                            'text' => 'Com fatura',
-                                                            'url' => ['/marcacao/index'],
-                                                            'active' => Yii::$app->controller->id === 'marcacao',
-                                                        ],
-                                                        [
-                                                            'type' => '2',
-                                                            'icon' => 'fas fa-file-lines',
-                                                            'text' => 'Sem Fatura',
-                                                            'url' => ['/marcacao/index'],
-                                                            'active' => Yii::$app->controller->id === 'marcacao',
-                                                        ],
-                                                ],
-                                            ],
-                                            [
-                                                'type' => '2',
-                                                'icon' => 'fas fa-file-lines',
-                                                'text' => 'Consultas Canceladas',
-                                                'url' => ['/marcacao/index'],
-                                                'active' => Yii::$app->controller->id === 'marcacao',
-                                            ],
-                                    ],
-                            ]) ?>
                             <?= MenuItem::widget([
                                     'icon' => 'far fa-calendar',
-                                    'text' => 'Agendamentos',
+                                    'text' => 'Marcacoes',
                                     'url' => ['/marcacao/index'],
                                     'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
-                            <?= MenuGroup::widget([
-                                    'text' => 'Faturas',
+                            <?= MenuItem::widget([
                                     'icon' => 'nav-icon fas fa-layer-group',
-                                    'subs' => [
-                                            [
-                                                'type' =>  '2',
-                                                'icon' => 'fas fa-clock',
-                                                'text' => 'Por Pagar',
-                                                'url' => ['/fatura/index'],
-                                                'active' => Yii::$app->controller->id === 'fatura',
-                                            ],
-                                            [
-                                                'type' =>  '2',
-                                                'icon' => 'fas fa-circle-check',
-                                                'text' => 'Pagas',
-                                                'url' => ['/fatura/index'],
-                                                'active' => Yii::$app->controller->id === 'fatura',
-                                            ],
-                                    ],
+                                    'text' => 'Faturas',
+                                    'url' => ['/fatura/index'],
+                                    'active' => Yii::$app->controller->id === 'fatura' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
                         <?php endif; ?>
                     </ul>

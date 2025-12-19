@@ -1,11 +1,9 @@
 <?php
-
 namespace frontend\controllers;
 
-use common\models\Animal;
-use common\models\Nota;
 use Yii;
-use yii\data\ActiveDataProvider;
+use common\models\Animal;
+use backend\models\AnimalSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -30,6 +28,11 @@ class AnimalController extends Controller
                             'allow' => true,
                             'roles' => ['@'],
                         ],
+                        [
+                            'actions' => ['index','view'],
+                            'allow' => true,
+                            'roles' => ['viewAnimals'],
+                        ],
                     ],
                 ],
                 'verbs' => [
@@ -49,22 +52,15 @@ class AnimalController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Animal::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        // Obtém o ID do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
 
+        // Buscar animais do usuário através do AnimalSearch do backend
+        $animaisUsuario = AnimalSearch::getByUserId($userId);
+
+        // Renderizar a view
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'animaisUsuario' => $animaisUsuario,
         ]);
     }
 
@@ -76,14 +72,15 @@ class AnimalController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
+        // Buscar o modelo do animal
+        $animal = $this->findModel($id);
 
         //notas já vem ordenado pelo mais recente
         //é só buscar o primeiro do array
-        $latestNota = !empty($model->notas) ? $model->notas[0] : null;
+        $latestNota = !empty($animal->notas) ? $animal->notas[0] : null;
 
         return $this->render('view', [
-            'model' => $model,
+            'animal' => $animal,
             'latestNota' => $latestNota,
         ]);
     }

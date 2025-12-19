@@ -5,21 +5,28 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 ?>
+<div class="nota-form d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="card shadow-sm w-100" style="max-width: 500px;">
+        <div class="card-header bg-white text-center">
+            <h5 class="mb-0">
+                <i class="fa-regular fa-sticky-note text-primary"></i>
+                <?= $model->isNewRecord ? 'Criar Nota' : 'Atualizar Nota' ?>
+            </h5>
+        </div>
+        <div class="card-body">
+            <?php $form = ActiveForm::begin(); ?>
 
-<div class="nota-update-form">
+            <?= $form->field($model, 'nota')->textarea([
+                'rows' => 5,
+                'placeholder' => 'Digite sua nota aqui...'
+            ])->label('Nota') ?>
 
-    <?php $form = ActiveForm::begin(); ?>
+            <div class="form-group mt-3 d-flex justify-content-between">
+                <?= Html::submitButton($model->isNewRecord ? 'Criar Nota' : 'Atualizar Nota', ['class' => 'btn btn-primary rounded-pill']) ?>
+                <?= Html::a('Cancelar', ['index', 'animalId' => $model->animais_id], ['class' => 'btn btn-secondary rounded-pill']) ?>
+            </div>
 
-    <?= $form->field($model, 'nota')->textarea([
-        'rows' => 5,
-        'placeholder' => 'Atualize a nota aqui...'
-    ]) ?>
-
-    <div class="form-group mt-3">
-        <?= Html::submitButton('Atualizar Nota', ['class' => 'btn btn-dark rounded-pill']) ?>
-        <?= Html::a('Cancelar', ['nota/index', 'animal_id' => $model->animais_id], ['class' => 'btn btn-dark rounded-pill']) ?>
+            <?php ActiveForm::end(); ?>
+        </div>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

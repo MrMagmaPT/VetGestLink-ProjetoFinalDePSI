@@ -132,4 +132,14 @@ class MarcacaoSearch extends Marcacao
         );
     }
 
+    /**
+     * Retorna todas as marcações de um usuário específico.
+     * @param int $userId
+     * @return Marcacao[]
+     */
+    public static function getByUserId($userId)
+    {
+        return Marcacao::find()->where(['userprofiles_id' => $userId])->all();
+    }
+
 }

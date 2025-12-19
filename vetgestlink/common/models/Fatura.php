@@ -22,7 +22,7 @@ use yii\db\Expression;
  * @property Metodopagamento $metodospagamentos
  * @property Userprofile $userprofile
  */
-class Fatura extends \yii\db\ActiveRecord
+class Fatura extends ActiveRecord
 {
     /**
      * {@inheritdoc}

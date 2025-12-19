@@ -1,14 +1,12 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
-
 use yii\helpers\Html;
+
+/** @var yii\web\View $this */
+/** @var common\models\Animal[] $animaisUsuario */
 
 $this->title = 'Meus Animais';
 $this->params['breadcrumbs'][] = $this->title;
-
-$animais = $dataProvider->getModels();
 ?>
 
 <div class="animal-index">
@@ -21,12 +19,12 @@ $animais = $dataProvider->getModels();
         </div>
 
     <div class="row g-4 justify-content-center">
-        <?php if (empty($animais)): ?>
+        <?php if (empty($animaisUsuario)): ?>
             <div class="col-12">
                 <p class="text-center text-muted fst-italic">Nenhum animal registado.</p>
             </div>
         <?php else: ?>
-            <?php foreach ($animais as $animal): ?>
+            <?php foreach ($animaisUsuario as $animal): ?>
                 <div class="col-md-4 col-lg-3">
                     <div class="card shadow-sm h-100 rounded-4">
 

@@ -10,7 +10,6 @@ $this->params['breadcrumbs'][] = 'Editar';
 ?>
 
 <div class="container py-3">
-    <h1 class="mb-4"><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
