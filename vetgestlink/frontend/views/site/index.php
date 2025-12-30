@@ -1,16 +1,18 @@
 <?php
 /** @var yii\web\View $this */
 /** @var common\models\Servico[] $servicos */
+use yii\helpers\Url;
 
-$this->title = 'VetGestLink - Gestão Moderna para Clínicas Veterinárias';
- $logoPath = '/static/img/logo/logo.png';
+$this->title = 'VetGestLink';
+
+$logoPath = '/static/img/logo/logo.png';
 $logoFile = Yii::getAlias('@webroot') . $logoPath;
 $logoVersion = is_file($logoFile) ? filemtime($logoFile) : time();
 $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
 ?>
 <main style="background: #fff;">
     <!-- Slider Moderno -->
-    <section class="slider-area" style="background: url('<?= Yii::getAlias('@web') ?>/static/img/gallery/section_bg02.png') center center/cover no-repeat;">
+    <section class="slider-area">
         <div class="slider-active dot-style">
             <!-- Slide 1 -->
             <div class="single-slider d-flex align-items-center slider-height text-white" style="background: linear-gradient(90deg, #4CB88A 0%, #94E2B6 100%); min-height: 400px;">
@@ -39,7 +41,7 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
                                 <span class="badge mb-2" style="background: #4CB88A; color: #fff;" data-animation="fadeInUp" data-delay=".3s">Tecnologia para veterinários</span>
                                 <h1 class="display-4 fw-bold mb-3" data-animation="fadeInUp" data-delay=".3s" style="color: #fff;">Atenda com segurança e <span style="color:#fff">praticidade</span></h1>
                                 <p class="lead mb-4" data-animation="fadeInUp" data-delay=".6s" style="color: #fff;">O sistema que liga profissionais, clínicas e clientes num só local.</p>
-                                <a href="#servicos" class="btn btn-lg shadow" style="background: #4CB88A; color: #fff; border: none;" data-animation="fadeInLeft" data-delay=".3s">Saiba Mais <i class="ti-arrow-right"></i></a>
+                                <a href="#servicos" class="btn btn-lg shadow" style="background: #94E2B6; color: #fff; border: none;" data-animation="fadeInLeft" data-delay=".3s">Saiba Mais <i class="ti-arrow-right"></i></a>
                             </div>
                         </div>
                         <div class="col-lg-5 d-none d-lg-block text-center">
@@ -52,11 +54,11 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
     </section>
 
     <!-- Serviços -->
-    <section id="servicos" class="py-5" style="background: #fff;">
+    <section class="py-5" style="background: #fff;">
         <div class="container">
             <div class="row mb-5">
                 <div class="col text-center">
-                    <span class="fw-bold" style="color: #4CB88A;">Os Nossos Serviços</span>
+                    <span class="fw-bold" id="servicos" style="color: #4CB88A;">Os Nossos Serviços</span>
                     <h2 class="fw-bold mb-3" style="color: #4CB88A;">O que oferecemos</h2>
                     <p class="text-muted">Conheça os serviços disponíveis na nossa clínica veterinária.</p>
                 </div>
@@ -85,7 +87,10 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
                     <span class="fw-bold" style="color: #4CB88A;">Sobre o VetGestLink</span>
                     <h2 class="fw-bold mb-3" style="color: #4CB88A;">Tecnologia e cuidado para clínicas veterinárias</h2>
                     <p class="text-muted mb-4">A nossa plataforma foi criada para simplificar processos, melhorar o atendimento e impulsionar o crescimento do seu negócio veterinário. Com uma interface intuitiva, recursos completos e apoio dedicado, tem mais tempo para se focar no que importa: cuidar dos animais.</p>
-                    <a href="#" class="btn btn-lg shadow" style="background: #4CB88A; color: #fff; border: none;">Saber Mais</a>
+                    <?= \yii\helpers\Html::a('Saber Mais', ['/site/information'], [
+                        'class' => 'btn btn-lg shadow',
+                        'style' => 'background: #94E2B6; color: #fff; border: none;'
+                    ]) ?>
                 </div>
             </div>
         </div>
@@ -100,6 +105,7 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
                     <h2 class="fw-bold mb-3" style="color: #4CB88A;">O que dizem os nossos clientes</h2>
                 </div>
             </div>
+            <!-- Slide 1 -->
             <div class="testimonial-active h1-testimonial-active dot-style d-flex flex-wrap justify-content-center gap-4">
                 <div class="single-testimonial text-center p-4 mb-4" style="border: 2px solid #94E2B6; border-radius: 1rem;">
                     <div class="testimonial-caption">
@@ -113,6 +119,7 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
                         </div>
                     </div>
                 </div>
+                <!-- Slide 2 -->
                 <div class="single-testimonial text-center p-4 mb-4" style="border: 2px solid #4CB88A; border-radius: 1rem;">
                     <div class="testimonial-caption">
                         <div class="testimonial-founder mb-3">
@@ -130,16 +137,25 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
     </section>
 
     <!-- Call to Action -->
-    <section class="py-5 text-center" style="background: url('<?= Yii::getAlias('@web') ?>/static/img/gallery/section_bg02.png') center center/cover no-repeat; position: relative; color: #fff;">
-        <div style="position: absolute; inset: 0; background: rgba(76,184,138,0.92); z-index: 1;"></div>
+    <section class="py-5 text-center" >
         <div class="container" style="position: relative; z-index: 2;">
-            <h2 class="fw-bold mb-3">Pronto para modernizar a sua clínica?</h2>
-            <p class="lead mb-4">Experimente o VetGestLink e veja como a tecnologia pode transformar o seu negócio veterinário.</p>
+            <h2 class="fw-bold mb-3">Pronto para sua primeira marcação ?</h2>
+            <p class="lead mb-4">Veja como marcar sua consulta conosco.</p>
             <?php
-            use yii\helpers\Url;
-            $ctaUrl = Yii::$app->user->isGuest ? Url::to(['/site/signup']) : Url::to(['/userprofile/view']);
+            if (Yii::$app->user->isGuest) {
+                $ctaUrl = Url::to(['/site/signup']);
+                $ctaLabel = 'Comece Agora';
+                $ctaStyle = 'background: #94E2B6; color: #222; border: none;';
+            } else {
+                $ctaUrl = Url::to(['/site/information']);
+                $ctaLabel = 'Informações de Marcação';
+                $ctaStyle = 'background: #94E2B6; color: #fff; border: none;';
+            }
             ?>
-            <a href="<?= $ctaUrl ?>" class="btn btn-lg shadow" style="background: #94E2B6; color: #222; border: none;">Comece Agora</a>
+            <?= \yii\helpers\Html::a($ctaLabel, $ctaUrl, [
+                'class' => 'btn btn-lg shadow',
+                'style' => $ctaStyle
+            ]) ?>
         </div>
     </section>
 </main>

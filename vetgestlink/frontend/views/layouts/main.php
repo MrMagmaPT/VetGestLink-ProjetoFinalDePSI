@@ -47,7 +47,6 @@ $faviconUrl = Yii::getAlias('@web') . '/favicon.ico';
 <!-- Main content -->
 <main role="main" class="flex-shrink-0 mt-5 pt-5">
     <?= Alert::widget() ?>
-
     <?= $content ?>
 </main>
 

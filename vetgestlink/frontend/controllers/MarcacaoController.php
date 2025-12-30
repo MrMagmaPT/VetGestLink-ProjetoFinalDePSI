@@ -58,9 +58,25 @@ class MarcacaoController extends Controller
         // Usar o SearchModel do backend para obter marcações do usuário
         $marcacoesUsuario = MarcacaoSearch::getByUserId($userId);
 
-        // Renderizar a view com as marcações do usuário
+        // Montar array de eventos para o calendário
+        $eventos = [];
+        foreach ($marcacoesUsuario as $marcacao) {
+            $horario = $marcacao->horainicio . ' - ' . $marcacao->horafim;
+            $animal = isset($marcacao->animais) ? $marcacao->animais->nome : 'Marcacao';
+            $eventos[] = [
+                'title' => $animal . ' (' . $marcacao->horainicio . ' - ' . $marcacao->horafim . ')',
+                'start' => $marcacao->data . 'T' . $marcacao->horainicio,
+                'end' => $marcacao->data . 'T' . $marcacao->horafim,
+                'color' => '#007bff',
+                'url' => \yii\helpers\Url::to(['marcacao/view', 'id' => $marcacao->id]),
+                'allDay' => false,
+            ];
+        }
+
+        // Renderizar a view com as marcações do usuário e eventos do calendário
         return $this->render('index', [
             'marcacoesUsuario' => $marcacoesUsuario,
+            'eventos' => $eventos,
         ]);
     }
 

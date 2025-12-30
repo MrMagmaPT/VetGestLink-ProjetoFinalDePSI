@@ -9,7 +9,7 @@ $this->title = 'Minhas Faturas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="faturas-index">
-    <div class="container py-4">
+    <div class="container py-4" style="min-height: 60vh;">
 
         <div class="text-center mb-4">
             <h1 class="mb-0">

@@ -3,8 +3,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use frontend\widgets\PaymentMethodWidget;
 
-/** @var $model common\models\Fatura */
-/** @var $metodos common\models\Metodopagamento[] */
+/** @var common\models\Fatura $model */
+/** @var common\models\Metodopagamento[] $metodos */
 
 $this->title = "Pagamento da Fatura #" . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];

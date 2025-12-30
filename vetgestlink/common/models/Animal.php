@@ -283,9 +283,11 @@ class Animal extends \yii\db\ActiveRecord
      */
     public function getIdade()
     {
+        // Verifica se a data de nascimento está definida
         if (empty($this->dtanascimento)) {
             return 0;
         }
+        
         $dataNascimento = new \DateTime($this->dtanascimento);
         $hoje = new \DateTime();
         $idade = $hoje->diff($dataNascimento);

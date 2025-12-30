@@ -20,7 +20,8 @@ class Footer extends Widget
             $this->companyLinks = [
                 ['label' => 'Início', 'url' => ['site/index']],
                 ['label' => 'Sobre Nós', 'url' => ['site/about']],
-                ['label' => 'Serviços', 'url' => ['site/index']],
+                // Link para a section de serviços na página inicial
+                ['label' => 'Serviços', 'url' => ['/site/index#servicos']],
                 ['label' => 'Casos de Sucesso', 'url' => ['#']],
                 ['label' => 'Contactos', 'url' => ['site/contact']],
             ];

@@ -115,7 +115,7 @@ class AnimalController extends Controller
     public function actionCreate()
     {
         $model = new Animal();
-
+        
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');

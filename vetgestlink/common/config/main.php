@@ -42,7 +42,7 @@ return [
                 'scheme' => 'smtp',
                 'host' => 'smtp.gmail.com',
                 'username' => 'vetgestlink@gmail.com',
-                'password' => 'apnfxbjfgwncazwd',
+                'password' => 'qqwectqwcjwzbirl',
                 'port' => 587,
                 'encryption' => 'tls',
             ],

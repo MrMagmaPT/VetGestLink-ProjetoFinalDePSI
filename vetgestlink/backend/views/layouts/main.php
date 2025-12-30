@@ -1,12 +1,12 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
-
 use backend\widgets\MenuItem;
 use backend\widgets\MenuGroup;
 use backend\controllers\SiteController;
 use common\assets\CommonAsset;
 use kartik\select2\Select2Asset;
+use common\components\fullcalendar\FullcalendarWidget;
 
 //Registar assets comuns()
 CommonAsset::register($this);
@@ -58,20 +58,21 @@ $this->beginPage();
             <ul class="navbar-nav ml-auto">
                 <!-- Logout -->
                 <li class="nav-item">
-                    <form action="<?= \yii\helpers\Url::to(['/site/logout']) ?>" method="post">
-                        <?= \yii\helpers\Html::submitButton(
+                    <form action="<?=Url::to(['/site/logout']) ?>" method="post">
+                        <?= Html::submitButton(
                             '<i class="fas fa-sign-out-alt"></i> Log Out',
                             [
                                 'class' => 'nav-link',
                                 'style' => 'background:none;border:none;padding:0;'
                         ]) ?>
-                        <?= \yii\helpers\Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
+                        <?= Html::hiddenInput(Yii::$app->request->csrfParam, Yii::$app->request->getCsrfToken()) ?>
                     </form>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
+
                 </li>
             </ul>
         </nav>
@@ -115,10 +116,11 @@ $this->beginPage();
                         <?php if (!Yii::$app->user->isGuest): ?>
                             <?php 
                                 $profileUrl = isset($userprofile) && $userprofile ? Url::to(['/userprofile/view', 'id' => $userprofile->id]) : '#';
+                                $user = Yii::$app->user->identity;
                             ?>
                             <div class="d-flex align-items-center">
                                 <a href="<?= $profileUrl ?>" class="d-block mr-2">
-                                    <?= Yii::$app->user->identity->username ?>
+                                    <?= isset($user->username) ? Html::encode($user->username) : '' ?>
                                 </a>
                             </div>
                         <?php else: ?>
@@ -253,8 +255,6 @@ $this->beginPage();
                 <b>Versão</b> 1.0.0
             </div>
         </footer>
-    </div>
-
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>

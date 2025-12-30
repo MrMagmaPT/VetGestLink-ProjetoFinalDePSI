@@ -1,7 +1,5 @@
 <?php
-
 namespace frontend\controllers;
-
 
 use Yii;
 use yii\base\InvalidArgumentException;
@@ -166,13 +164,15 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
-            if ($model->signup()) {
+            $signupResult = $model->signup();
+            if ($signupResult) {
                 Yii::$app->session->setFlash('success', 'Obrigado por se registar. Por favor verifique o seu email.');
                 return $this->goHome();
-            }else{
+            } else {
                 $errorSummary = implode('<br>', array_map(function($errors) {
-            return implode('<br>', $errors);}, $model->getErrors()));
-            Yii::$app->session->setFlash('danger', 'Ocorreu um erro ao criar a sua conta.<br>' . $errorSummary);
+                    return implode('<br>', $errors);
+                }, $model->getErrors()));
+                Yii::$app->session->setFlash('danger', 'Ocorreu um erro ao criar a sua conta.<br>' . $errorSummary);
             }
         }
 
@@ -272,5 +272,9 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+
+    public function actionInformation(){
+        return $this->render('information');
     }
 }

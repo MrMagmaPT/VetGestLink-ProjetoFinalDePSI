@@ -29,6 +29,7 @@ class Navbar extends Widget
         $items = [
             ['label' => 'Sobre', 'url' => ['site/about']],
             ['label' => 'Contatos', 'url' => ['site/contact']],
+            ['label' => 'Informações', 'url' => ['site/information']],
         ];
 
         // Add user-specific items if logged in
@@ -38,7 +39,7 @@ class Navbar extends Widget
                 ['label' => 'Animais', 'url' => ['animal/index' , 'userId' ]],
                 ['label' => 'Marcações', 'url' => ['marcacao/index', 'userId' ]],
                 ['label' => 'Lembretes', 'url' => ['lembrete/index', 'userId' ]],
-                ['label' => 'Perfil - ' . $userName, 'url' => ['userprofile/view', 'id' => $userId]],
+                ['label' => 'Perfil', 'url' => ['userprofile/view', 'id' => $userId]],
             ]);
         }
 

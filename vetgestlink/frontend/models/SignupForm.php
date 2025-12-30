@@ -203,7 +203,18 @@ class SignupForm extends Model
             }
 
             // 7. Enviar email de verificação
-            return $user && $this->sendEmail($user) ? $user : $user;
+            $emailEnviado = false;
+
+            // Enviar email de verificação
+            if ($user) {
+                $emailEnviado = $this->sendEmail($user);
+                if (!$emailEnviado) {
+                    Yii::error('Falha ao enviar e-mail de verificação para o utilizador: ' . $user->email);
+                } else {
+                    Yii::info('E-mail de verificação enviado para: ' . $user->email);
+                }
+            }
+            return $user;
 
         } catch (\Exception $e) {
             Yii::error($e->getMessage());
