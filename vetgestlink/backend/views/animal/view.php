@@ -222,7 +222,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                                     ]
                                                 ) ?>
 
-                                                <?php if (Yii::$app->user->can('updateSpecies')): ?>
+                                                <?php if (Yii::$app->user->can('updateSpecies') && $nota->userprofiles_id == yii::$app->user->id): ?>
                                                     <?= Html::a(
                                                         '<i class="fas fa-edit"></i>',
                                                         ['/nota/update', 'id' => $nota->id],
@@ -234,7 +234,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                                     ) ?>
                                                 <?php endif; ?>
 
-                                                <?php if (Yii::$app->user->can('updateSpecies')): ?>
+                                                <?php if (Yii::$app->user->can('updateSpecies') && $nota->userprofiles_id == yii::$app->user->id): ?>
                                                     <?= Html::a(
                                                         '<i class="fas fa-trash"></i>',
                                                         ['/nota/delete', 'id' => $nota->id, 'animal_id' => $model->id],
