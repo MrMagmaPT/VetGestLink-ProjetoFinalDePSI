@@ -118,16 +118,30 @@ class UserprofileController extends Controller
             $model = $this->findModel($id);
         }
 
+        // Guardar a role original do utilizador associado
+        $auth = Yii::$app->authManager;
+        $originalRoles = $auth->getRolesByUser($model->user_id);
+
         // Carrega as moradas associadas
         $moradas = $model->moradas ?: [];
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // Permitir atualizar a role apenas para admin
-                if (!Yii::$app->user->can('admin')) {
-                    // Se não for admin, restaura o valor original da role
-                    $model->role = $model->getOldAttribute('role');
+                // Processar a role APENAS se for admin
+                if (Yii::$app->user->can('admin')) {
+                    $newRole = $this->request->post('role');
+                    if ($newRole) {
+                        // Remove todas as roles atuais
+                        $auth->revokeAll($model->user_id);
+
+                        // Atribui a nova role
+                        $role = $auth->getRole($newRole);
+                        if ($role) {
+                            $auth->assign($role, $model->user_id);
+                        }
+                    }
                 }
+
                 // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());
 
@@ -140,7 +154,6 @@ class UserprofileController extends Controller
                 // Processa upload de imagem
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                 if ($model->imageFile && $model->imageFile->tempName && file_exists($model->imageFile->tempName)) {
-                    // uploadImage() já atualiza o atributo $model->foto internamente
                     $model->uploadImage();
                 }
 
@@ -162,6 +175,8 @@ class UserprofileController extends Controller
             'moradas' => $moradas,
         ]);
     }
+
+
 
     /**
      * Deletes an existing Userprofile model.

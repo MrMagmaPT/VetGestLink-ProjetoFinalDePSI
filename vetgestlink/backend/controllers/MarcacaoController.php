@@ -356,8 +356,12 @@ class MarcacaoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Soft delete: marcar como eliminado
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
+        Yii::$app->session->setFlash('success', 'Marcacao marcada como eliminada.');
         return $this->redirect(['index']);
     }
 

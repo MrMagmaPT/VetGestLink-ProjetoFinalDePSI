@@ -76,8 +76,8 @@ class FaturaController extends Controller
 
         // Contadores para cards
         $totalCount = Fatura::find()->count();
-        $paidCount = Fatura::find()->where(['estado' => 1])->count();
-        $pendingCount = Fatura::find()->where(['estado' => 0])->count();
+        $paidCount = Fatura::find()->where(['estado' => 1, 'eliminado' => 0])->count();
+        $pendingCount = Fatura::find()->where(['estado' => 0, 'eliminado' => 0])->count();
 
         // Listas para Select2
         $faturasList = FaturaSearch::getFaturasListForIndex();

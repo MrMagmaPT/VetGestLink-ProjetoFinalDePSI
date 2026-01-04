@@ -48,7 +48,7 @@ echo PageHeaderWidget::widget([
             ]) ?>
             <?= BigCardWidget::widget([
                 'icon' => 'fa-dog',
-                'iconColorClass' => 'icon-gray',
+                'iconColorClass' => 'icon-red',
                 'text' => 'Eliminadas',
                 'value' => $deletedCount,
                 'url' => '/raca/index',

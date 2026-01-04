@@ -231,6 +231,7 @@ echo PageHeaderWidget::widget([
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhuma marcação encontrada.</div>',
                     'summary' => ' <b>Mostrando {begin} - {end}</b>',
                     'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
@@ -247,10 +248,11 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<strong>' . Yii::$app->formatter->asDate($model->data, 'php:d/m/Y') . '</strong>';
                             },
-                            'filter' => Html::activeInput('date', $searchModel, 'data', [
-                                'class' => 'form-control form-control-sm',
-                                'style' => 'width: 150px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeInput('date', $searchModel, 'data', [
+//                                'class' => 'form-control form-control-sm',
+//                                'style' => 'width: 150px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'horainicio',
@@ -260,10 +262,11 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horainicio));
                             },
-                            'filter' => Html::activeInput('time', $searchModel, 'horainicio', [
-                                'class' => 'form-control form-control-sm',
-                                'style' => 'width: 120px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeInput('time', $searchModel, 'horainicio', [
+//                                'class' => 'form-control form-control-sm',
+//                                'style' => 'width: 120px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'horafim',
@@ -273,10 +276,11 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horafim));
                             },
-                            'filter' => Html::activeInput('time', $searchModel, 'horafim', [
-                                'class' => 'form-control form-control-sm',
-                                'style' => 'width: 120px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeInput('time', $searchModel, 'horafim', [
+//                                'class' => 'form-control form-control-sm',
+//                                'style' => 'width: 120px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'animais_id',
@@ -293,11 +297,12 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '-';
                             },
-                            'filter' => Html::activeTextInput($searchModel, 'animais_id', [
-                                'class' => 'form-control form-control-sm',
-                                'placeholder' => 'Animal...',
-                                'style' => 'width: 120px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeTextInput($searchModel, 'animais_id', [
+//                                'class' => 'form-control form-control-sm',
+//                                'placeholder' => 'Animal...',
+//                                'style' => 'width: 120px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'userprofiles_id',
@@ -314,11 +319,12 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '-';
                             },
-                            'filter' => Html::activeTextInput($searchModel, 'userprofiles_id', [
-                                'class' => 'form-control form-control-sm',
-                                'placeholder' => 'Veterinário...',
-                                'style' => 'width: 120px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeTextInput($searchModel, 'userprofiles_id', [
+//                                'class' => 'form-control form-control-sm',
+//                                'placeholder' => 'Veterinário...',
+//                                'style' => 'width: 120px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'estado',
@@ -333,13 +339,14 @@ echo PageHeaderWidget::widget([
                                 ];
                                 return $badges[$model->estado] ?? $model->estado;
                             },
-                            'filter' => Html::activeDropDownList($searchModel, 'estado',
-                                ['' => 'Todos...', 'pendente' => 'Pendente', 'realizada' => 'Realizada', 'cancelada' => 'Cancelada'],
-                                [
-                                    'class' => 'form-control form-control-sm',
-                                    'style' => 'width: 120px;'
-                                ]
-                            ),
+                            'filter' => false,
+//                            'filter' => Html::activeDropDownList($searchModel, 'estado',
+//                                ['' => 'Todos...', 'pendente' => 'Pendente', 'realizada' => 'Realizada', 'cancelada' => 'Cancelada'],
+//                                [
+//                                    'class' => 'form-control form-control-sm',
+//                                    'style' => 'width: 120px;'
+//                                ]
+//                            ),
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [

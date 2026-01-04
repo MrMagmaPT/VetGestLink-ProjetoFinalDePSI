@@ -226,22 +226,24 @@ echo PageHeaderWidget::widget([
                             'label' => 'Nº Fatura',
                             'headerOptions' => ['style' => 'width: 100px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
-                            'filter' => Html::activeTextInput($searchModel, 'id', [
-                                'class' => 'form-control form-control-sm',
-                                'placeholder' => 'Nº...',
-                                'style' => 'width: 100px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeTextInput($searchModel, 'id', [
+//                                'class' => 'form-control form-control-sm',
+//                                'placeholder' => 'Nº...',
+//                                'style' => 'width: 100px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'total',
                             'headerOptions' => ['style' => 'width: 120px; text-align: right'],
                             'contentOptions' => ['style' => 'text-align: right'],
                             'format' => ['decimal', 2],
-                            'filter' => Html::activeTextInput($searchModel, 'total', [
-                                'class' => 'form-control form-control-sm',
-                                'placeholder' => 'Total...',
-                                'style' => 'width: 120px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeTextInput($searchModel, 'total', [
+//                                'class' => 'form-control form-control-sm',
+//                                'placeholder' => 'Total...',
+//                                'style' => 'width: 120px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'created_at',
@@ -249,22 +251,24 @@ echo PageHeaderWidget::widget([
                             'headerOptions' => ['style' => 'width: 150px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                             'format' => ['datetime', 'php:d/m/Y H:i'],
-                            'filter' => Html::activeInput('date', $searchModel, 'created_at', [
-                                'class' => 'form-control form-control-sm',
-                                'style' => 'width: 150px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeInput('date', $searchModel, 'created_at', [
+//                                'class' => 'form-control form-control-sm',
+//                                'style' => 'width: 150px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'estado',
                             'headerOptions' => ['style' => 'width: 120px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
-                            'filter' => Html::activeDropDownList($searchModel, 'estado', 
-                                ['' => 'Todos...', 0 => 'Pendente', 1 => 'Paga'],
-                                [
-                                    'class' => 'form-control form-control-sm',
-                                    'style' => 'width: 120px;'
-                                ]
-                            ),
+                            'filter' => false,
+//                            'filter' => Html::activeDropDownList($searchModel, 'estado',
+//                                ['' => 'Todos...', 0 => 'Pendente', 1 => 'Paga'],
+//                                [
+//                                    'class' => 'form-control form-control-sm',
+//                                    'style' => 'width: 120px;'
+//                                ]
+//                            ),
                             'value' => function($model) {
                                 if ($model->estado == 1) {
                                     return '<span class="badge bg-success"><i class="fas fa-check"></i> Paga</span>';
@@ -282,25 +286,27 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return $model->metodospagamentos ? $model->metodospagamentos->nome : 'Não definido';
                             },
-                            'filter' => Html::activeTextInput($searchModel, 'metodospagamentos_id', [
-                                'class' => 'form-control form-control-sm',
-                                'placeholder' => 'Método...',
-                                'style' => 'width: 180px;'
-                            ]),
+                            'filter' => false,
+//                            'filter' => Html::activeTextInput($searchModel, 'metodospagamentos_id', [
+//                                'class' => 'form-control form-control-sm',
+//                                'placeholder' => 'Método...',
+//                                'style' => 'width: 180px;'
+//                            ]),
                         ],
                         [
                             'attribute' => 'eliminado',
                             'headerOptions' => ['style' => 'width: 120px; text-align: center'],
                             'contentOptions' => function($model) {
-                                return ['style' => 'text-align: center; ' . ($model->eliminado ? 'background-color: #fee; color: #666;' : '')];
+                                return ['style' => 'text-align: center; ' . ($model->eliminado ? 'color: #666;' : '')];
                             },
-                            'filter' => Html::activeDropDownList($searchModel, 'eliminado',
-                                ['' => 'Todos...', 0 => 'Ativa', 1 => 'Eliminada'],
-                                [
-                                    'class' => 'form-control form-control-sm',
-                                    'style' => 'width: 120px;'
-                                ]
-                            ),
+                            'filter' => false,
+//                            'filter' => Html::activeDropDownList($searchModel, 'eliminado',
+//                                ['' => 'Todos...', 0 => 'Ativa', 1 => 'Eliminada'],
+//                                [
+//                                    'class' => 'form-control form-control-sm',
+//                                    'style' => 'width: 120px;'
+//                                ]
+//                            ),
                             'value' => function($model) {
                                 if ($model->eliminado) {
                                     return '<span class="badge bg-danger"><i class="fas fa-trash"></i> Eliminada</span>';

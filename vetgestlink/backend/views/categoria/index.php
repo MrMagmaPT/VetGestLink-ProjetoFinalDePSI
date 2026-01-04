@@ -203,26 +203,27 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                                'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'eliminado',
-                                'data' => [
-                                    0 => 'Ativo',
-                                    1 => 'Eliminado',
-                                ],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                                'filter' => false,
+//                                'filter' => kartik\select2\Select2::widget([
+//                                'model' => $searchModel,
+//                                'attribute' => 'eliminado',
+//                                'data' => [
+//                                    0 => 'Ativo',
+//                                    1 => 'Eliminado',
+//                                ],
+//                                'options' => [
+//                                    'placeholder' => 'Estado...',
+//                                    'allowClear' => true,
+//                                    'style' => 'width: 120px;',
+//                                ],
+//                                'pluginOptions' => [
+//                                    'allowClear' => true,
+//                                    'language' => [
+//                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+//                                    ],
+//                                ],
+//                                'bsVersion' => '5.x',
+//                            ]),
                         ],
                         [
                             'class' => ActionColumn::class,

@@ -107,7 +107,6 @@ $this->registerCssFile('@web/static/css/view.css');
                                     ['text' => 'Adicionar Medicamento', 'icon' => 'fa-pills', 'url' => '/medicamento/create'],
                             ],
                     ]);
-                    //dd($alertasMedicamentosCriticoStock);
                     echo AlertContainerWidget::widget([
                             'text' => 'Alertas',
                             'options' => [
@@ -158,12 +157,12 @@ $this->registerCssFile('@web/static/css/view.css');
             <div class="row mt-4">
                 <?php
                 echo TableWidget::widget([
-                        'title' => 'Marcações',
+                        'title' => 'Marcações Pendentes',
                         'content' => $marcacoesPendentes,
                         'columns' => ['data','estado','horainicio', 'horafim', 'servicos_id', 'animais_id', 'userprofiles_id'],
                         'emptyMessage' => 'Nenhuma marcação pendente.',
                         'revaluedColumns' => [
-                                'animais_id' => '\\backend\\models\\AnimalSearch::getAnimalNameById(%%)',
+                                'animais_id' => '\\backend\\models\\AnimalSearch::getNameById(%%)',
                                 'userprofiles_id' => '\\backend\\models\\UserprofileSearch::getUserNameById(%%)',
                                 'servicos_id' => '\\backend\\models\\ServicoSearch::getServicoNameById(%%)',
                         ],

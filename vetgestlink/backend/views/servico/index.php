@@ -47,7 +47,7 @@ echo PageHeaderWidget::widget([
             ]) ?>
             <?= SmallCardWidget::widget([
                 'icon' => 'fa-concierge-bell',
-                'iconColorClass' => 'icon-gray',
+                'iconColorClass' => 'icon-red',
                 'text' => 'Eliminados',
                 'value' => $deletedCount,
                 'url' => '/servico/index',
