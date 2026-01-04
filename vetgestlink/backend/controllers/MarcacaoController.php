@@ -356,6 +356,7 @@ class MarcacaoController extends Controller
      */
     public function actionDelete($id)
     {
+
         // Soft delete: marcar como eliminado
         $model = $this->findModel($id);
         $model->eliminado = 1;

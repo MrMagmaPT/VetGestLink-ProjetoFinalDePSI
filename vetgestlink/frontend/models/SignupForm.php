@@ -109,6 +109,7 @@ class SignupForm extends Model
             $user->email = $this->email;
             $user->setPassword($this->password);
             $user->generateAuthKey();
+            $user->generateEmailVerificationToken();
             //Usuarios Criados no frontend ficam Inativos até verificação por email
             $user->status = User::STATUS_INACTIVE;
             $user->created_at = time();
