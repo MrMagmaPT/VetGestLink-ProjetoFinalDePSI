@@ -44,7 +44,6 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                             'model' => $model,
                             'options' => ['class' => 'table table-borderless mb-0'],
                             'attributes' => [
-                                'id',
                                 [
                                     'attribute' => 'nome',
                                     'value' => function ($model) {
@@ -78,7 +77,7 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                         <i class="fas fa-cogs"></i> Ações
                     </div>
                     <div class="card-body">
-                                                <div class="d-grid gap-2">
+                        <div class="d-grid gap-2">
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],

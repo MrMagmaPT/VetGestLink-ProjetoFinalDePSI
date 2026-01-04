@@ -209,7 +209,6 @@ $this->registerCssFile('@web/static/css/view.css');
             <!-- Marcacões de Hoje -->
             <div class=".col-md-12">
                 <?php
-                //dd($marcacoesHoje);
                 echo TableWidget::widget([
                         'title' => 'Marcações',
                         'content' => $marcacoesHoje,

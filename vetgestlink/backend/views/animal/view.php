@@ -186,30 +186,74 @@ $this->registerCssFile('@web/static/css/view.css');
                 <!-- Card Notas -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-sticky-note text-warning"></i>
-                            Notas
-                        </h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-sticky-note text-warning"></i>
+                                Notas
+                            </h5>
+                            <?php if (Yii::$app->user->can('updateSpecies')) { ?>
+                                    <?= Html::a(
+                                        '<i class="fas fa-plus"></i> Adicionar Nota',
+                                        ['/nota/create', 'animal_id' => $model->id, 'user_id' => Yii::$app->user->id],
+                                        ['class' => 'btn btn-success btn-sm']
+                                    ) ?>
+                            <?php } ?>
+                        </div>
                     </div>
                     <div class="card-body">
+
                         <?php if (!empty($model->notas)): ?>
                             <div class="list-group list-group-flush">
                                 <?php foreach ($model->notas as $nota): ?>
                                     <div class="list-group-item px-0">
                                         <div class="d-flex w-100 justify-content-between align-items-start mb-2">
                                             <h6 class="mb-1">
-                                                <i class="fas fa-note-sticky text-warning"></i>
-                                                Nota #<?= $nota->id ?>
+                                                <i class="fas fa-user text-gray"></i>
+                                                <?= ucfirst(Html::encode($nota->userprofiles->nomecompleto ?? 'N/A')) ?>
                                             </h6>
-                                            <small class="text-muted">
-                                                <i class="far fa-clock"></i>
-                                                <?= Yii::$app->formatter->asDatetime($nota->created_at) ?>
-                                            </small>
+                                            <div class="d-flex gap-1">
+                                                <?= Html::a(
+                                                    '<i class="fas fa-eye"></i>',
+                                                    ['/nota/view', 'id' => $nota->id],
+                                                    [
+                                                        'class' => 'btn btn-sm btn-info',
+                                                        'title' => 'Ver',
+                                                        'data-toggle' => 'tooltip',
+                                                    ]
+                                                ) ?>
+
+                                                <?php if (Yii::$app->user->can('updateSpecies')): ?>
+                                                    <?= Html::a(
+                                                        '<i class="fas fa-edit"></i>',
+                                                        ['/nota/update', 'id' => $nota->id],
+                                                        [
+                                                            'class' => 'btn btn-sm btn-primary',
+                                                            'title' => 'Editar',
+                                                            'data-toggle' => 'tooltip',
+                                                        ]
+                                                    ) ?>
+                                                <?php endif; ?>
+
+                                                <?php if (Yii::$app->user->can('updateSpecies')): ?>
+                                                    <?= Html::a(
+                                                        '<i class="fas fa-trash"></i>',
+                                                        ['/nota/delete', 'id' => $nota->id, 'animal_id' => $model->id],
+                                                        [
+                                                            'class' => 'btn btn-sm btn-danger',
+                                                            'title' => 'Eliminar',
+                                                            'data-toggle' => 'tooltip',
+                                                            'data-confirm' => 'Tem a certeza que deseja eliminar esta nota?',
+                                                            'data-method' => 'post',
+                                                        ]
+                                                    ) ?>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
-                                        <p class="mb-2"><?= Html::encode($nota->nota) ?></p>
+
+                                        <p class="mb-2 mt-2"><?= Html::encode($nota->nota) ?></p>
                                         <small class="text-muted">
-                                            <i class="fas fa-user"></i>
-                                            Por: <?= Html::encode($nota->userprofiles->nomecompleto ?? 'N/A') ?>
+                                            <i class="far fa-clock"></i>
+                                            <?= Yii::$app->formatter->asDatetime($nota->created_at) ?>
                                         </small>
                                     </div>
                                 <?php endforeach; ?>
@@ -260,26 +304,34 @@ $this->registerCssFile('@web/static/css/view.css');
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-md']
-                            ) ?>
-                            <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-md',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar este animal?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php
+                            if (Yii::$app->user->can('updateSpecies')) {
+                            ?>
+
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-md']
+                                ) ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar este animal?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php
+                            }
+                            ?>
+
                         </div>
                     </div>
                 </div>

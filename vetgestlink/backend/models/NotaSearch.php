@@ -18,7 +18,7 @@ class NotaSearch extends Nota
     {
         return [
             [['id', 'animais_id', 'userprofiles_id'], 'integer'],
-            [['nota', 'created_at', 'updated_at'], 'safe'],
+            [['nota', 'created_at'], 'safe'],
         ];
     }
 
@@ -70,8 +70,7 @@ class NotaSearch extends Nota
         ]);
 
         $query->andFilterWhere(['like', 'nota', $this->nota])
-            ->andFilterWhere(['>=', 'created_at', $this->created_at ? $this->created_at . ' 00:00:00' : null])
-            ->andFilterWhere(['<=', 'updated_at', $this->updated_at ? $this->updated_at . ' 23:59:59' : null]);
+            ->andFilterWhere(['>=', 'created_at', $this->created_at ? $this->created_at . ' 00:00:00' : null]);
 
         return $dataProvider;
     }

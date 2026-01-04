@@ -153,11 +153,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <i class="fas fa-list text-primary"></i>
                                 Linhas da Fatura
                             </h5>
-                            <?= Html::a(
+                            <?php
+                            if (!$model->estado == 1) {
+                            ?>
+                                Html::a(
                                 '<i class="fas fa-plus"></i> Adicionar Linha',
                                 ['/linhafatura/create', 'fatura_id' => $model->id],
                                 ['class' => 'btn btn-success btn-sm']
-                            ) ?>
+                                )
+                            <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <div class="card-body p-0">
