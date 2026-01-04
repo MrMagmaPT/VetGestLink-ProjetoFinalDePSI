@@ -430,9 +430,12 @@ class RbacController extends Controller
         //VER MEDICAMENTOS
         $auth->addChild($veterinario, $viewMedications);
 
+
+        //VER SERVIÇOS
+        $auth->addChild($veterinario, $viewServices);
+
         //ATRIBUIR MEDICAÇÃO NA MARCAÇÃO
         $auth->addChild($veterinario, $assignMedication);
-
 
         //CRUD Animais(COMPLETO)(SOFT DELETE)
         $auth->addChild($veterinario, $createAnimal);

@@ -86,27 +86,31 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
-                            ) ?>
+                            <?php if (Yii::$app->user->can('updateService')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-md']
+                                ) ?>
+                            <?php endif; ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todas',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-lg',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar esta raça?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php if (Yii::$app->user->can('deleteService')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar esta raça?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -57,7 +57,7 @@ echo PageHeaderWidget::widget([
                 'url' => '/medicamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-folder-minus',
                 'iconColorClass' => 'icon-yellow',
                 'text' => 'Categorias Eliminadas',
@@ -80,36 +80,71 @@ echo PageHeaderWidget::widget([
                         ['class' => 'btn btn-success']
                     ) ?>
                 </div>
-                <div class="row mb-3 mt-3">
-                    <div class="col-md-6">
-                        <!-- Barra de pesquisa com Select2 -->
-                        <?= kartik\select2\Select2::widget([
-                            'name' => 'search_categoria',
-                            'data' => $searchModel->getCategoriasList(),
-                            'value' => $searchModel->id,
-                            'options' => [
-                                'placeholder' => 'Pesquisar categoria...',
-                                'id' => 'categoria-search',
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                                'language' => [
-                                    'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma categoria encontrada"; }'),
+            </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-folder"></i>
+                            </span>
+                            <?= kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'id',
+                                'data' => $searchModel->getCategoriasList(),
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por categoria...',
                                 ],
-                                'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                                'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                            ],
-                            'bsVersion' => '5.x',
-                            'pluginEvents' => [
-                                'select2:select' => 'function(e) { 
-                                    var id = e.params.data.id;
-                                    window.location.href = "' . Url::to(['index']) . '?CategoriaSearch[id]=" + id;
-                                }',
-                                'select2:clear' => 'function(e) {
-                                    window.location.href = "' . Url::to(['index']) . '";
-                                }',
-                            ],
-                        ]); ?>
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma categoria encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var id = e.params.data.id;
+                                        $.pjax.reload({container: "#categoria-grid", url: "' . Url::to(['index']) . '?CategoriaSearch[id]=" + id});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#categoria-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todas',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Ativas',
+                                ['index', 'CategoriaSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Eliminadas',
+                                ['index', 'CategoriaSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
             </div>

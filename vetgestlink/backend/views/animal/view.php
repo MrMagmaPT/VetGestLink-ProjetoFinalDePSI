@@ -65,7 +65,7 @@ $this->registerCssFile('@web/static/css/view.css');
                 'icon' => 'fa-birthday-cake',
                 'iconColorClass' => 'icon-purple',
                 'text' => 'Idade',
-                'value' => $model->dtanascimento ? date_diff(date_create($model->dtanascimento), date_create('now'))->y . ' anos' : 'N/A',
+                'value' => $model->getIdadeExtenso(),
                 'url' => '#',
             ]) ?>
         </div>

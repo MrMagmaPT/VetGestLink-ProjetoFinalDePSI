@@ -32,7 +32,14 @@ use common\models\Especie;
                         ['prompt' => 'Selecione uma espécie', 'class' => 'form-control']
                     )->label('Espécie') ?>
 
-                    <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+                    <?php if ($model->isNewRecord): ?>
+                        <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+                    <?php else: ?>
+                        <?= $form->field($model, 'eliminado')->checkbox([
+                            'label' => 'Marcar como eliminado',
+                            'uncheck' => 0
+                        ]) ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

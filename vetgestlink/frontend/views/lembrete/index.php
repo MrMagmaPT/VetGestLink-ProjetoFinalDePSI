@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </h1>
         </div>
 
-        <p>
+        <p class="text-center mb-4">
             <?= Html::a('Criar Lembrete', ['create', 'id'], ['class' => 'btn btn-success']) ?>
         </p>
 

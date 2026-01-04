@@ -56,14 +56,6 @@ echo PageHeaderWidget::widget([
                 'url' => '#',
             ]) ?>
             
-            <!-- Mostrar o ID da Categoria se necessário -->
-            <!-- <?= SmallCardWidget::widget([
-                'icon' => 'fa-hashtag',
-                'iconColorClass' => 'icon-purple',
-                'text' => 'ID da Categoria',
-                'value' => $model->id,
-                'url' => '#',
-            ]) ?> -->
         </div>
 
         <div class="row">

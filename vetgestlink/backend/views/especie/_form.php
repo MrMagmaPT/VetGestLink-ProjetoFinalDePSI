@@ -18,12 +18,14 @@ use yii\widgets\ActiveForm;
                     <div class="col-md-8">
                         <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'class' => 'form-control']) ?>
                     </div>
-                    <div class="col-md-4">
-                        <?= $form->field($model, 'eliminado')->dropDownList([
-                            0 => 'Ativa',
-                            1 => 'Eliminada',
-                        ], ['class' => 'form-control']) ?>
-                    </div>
+                        <?php if ($model->isNewRecord): ?>
+                            <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
+                        <?php else: ?>
+                            <?= $form->field($model, 'eliminado')->checkbox([
+                                'label' => 'Marcar como eliminado',
+                                'uncheck' => 0
+                            ]) ?>
+                        <?php endif; ?>
                 </div>
 
                 <div class="form-group mt-3">

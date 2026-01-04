@@ -109,11 +109,5 @@ class ServicoSearch extends Servico
         return static::getNameById($id);
     }
 
-    /**
-     * @deprecated Use getActiveList() instead
-     */
-    public static function getServicosList()
-    {
-        return static::getActiveList();
-    }
+
 }

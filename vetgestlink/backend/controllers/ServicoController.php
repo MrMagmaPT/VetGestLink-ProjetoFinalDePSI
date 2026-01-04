@@ -27,7 +27,7 @@ class ServicoController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'roles' => ['admin'],
+                            'roles' => ['viewServices'],
                         ],
                     ],
                 ],
@@ -53,9 +53,9 @@ class ServicoController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         
         // Estatísticas
-        $totalCount = \common\models\Servico::find()->where(['eliminado' => 0])->count();
-        $deletedCount = \common\models\Servico::find()->where(['eliminado' => 1])->count();
-        $avgValue = \common\models\Servico::find()->where(['eliminado' => 0])->average('valor');
+        $totalCount = Servico::find()->where(['eliminado' => 0])->count();
+        $deletedCount = Servico::find()->where(['eliminado' => 1])->count();
+        $avgValue = Servico::find()->where(['eliminado' => 0])->average('valor');
 
         return $this->render('index', [
             'searchModel' => $searchModel,

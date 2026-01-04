@@ -52,11 +52,11 @@ echo PageHeaderWidget::widget([
                 'value' => $deletedCount,
                 'url' => '/servico/index',
             ]) ?>
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-euro-sign',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Valor Médio',
-                'value' => number_format($avgValue, 2) . '€',
+                'value' => $avgValue !== null ? number_format($avgValue, 2) . '€' : 'N/A',
                 'url' => '/servico/index',
             ]) ?>
 
@@ -70,47 +70,83 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Serviços
                     </h5>
-                    <?= Html::a(
-                        '<i class="fas fa-plus"></i> Novo Serviço',
-                        ['create'],
-                        ['class' => 'btn btn-success']
-                    ) ?>
+                    <?php if (Yii::$app->user->can('createService')): ?>
+                        <?= Html::a(
+                            '<i class="fas fa-plus"></i> Novo Serviço',
+                            ['create'],
+                            ['class' => 'btn btn-success']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
-                <div class="row mb-3 mt-3">
-                    <div class="col-md-6">
-                    <!-- Barra de pesquisa Select2 para Serviço -->
-                    <?= kartik\select2\Select2::widget([
-                        'name' => 'search_servico',
-                        'data' => $searchModel::getServicosList(),
-                        'value' => $searchModel->nome,
-                        'options' => [
-                            'placeholder' => 'Pesquisar serviço...',
-                            'id' => 'servico-search',
-                            'class' => 'form-control form-control-sm',
-                            'style' => 'max-width: 50px; font-size: 0.7rem; display: inline-block; padding: 1px 2px;',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'language' => [
-                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhum serviço encontrado"; }'),
-                            ],
-                            'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                            'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                        ],
-                        'bsVersion' => '5.x',
-                        'pluginEvents' => [
-                            'select2:select' => 'function(e) { 
-                                var nome = e.params.data.id;
-                                window.location.href = "' . Url::to(['index']) . '?ServicoSearch[nome]=" + encodeURIComponent(nome);
-                            }',
-                            'select2:clear' => 'function(e) {
-                                window.location.href = "' . Url::to(['index']) . '";
-                            }',
-                        ],
-                    ]); ?>
+            </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-concierge-bell"></i>
+                            </span>
+                            <?= kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nome',
+                                'data' => $searchModel::getActiveList(),
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por nome...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum serviço encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var nome = e.params.data.id;
+                                        $.pjax.reload({container: "#servico-grid", url: "' . Url::to(['index']) . '?ServicoSearch[nome]=" + encodeURIComponent(nome)});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#servico-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todos',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Ativos',
+                                ['index', 'ServicoSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Eliminados',
+                                ['index', 'ServicoSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
             </div>
+        
             <div class="card-body p-0">
                 <!-- Para não recarregar a página inteira ao filtrar/paginar -->
                 <?php Pjax::begin(['id' => 'servico-grid']); ?>
@@ -162,26 +198,27 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'eliminado',
-                                'data' => [
-                                    0 => 'Ativo',
-                                    1 => 'Eliminado',
-                                ],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter' => false,
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'eliminado',
+                            //     'data' => [
+                            //         0 => 'Ativo',
+                            //         1 => 'Eliminado',
+                            //     ],
+                            //     'options' => [
+                            //         'placeholder' => 'Estado...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'class' => ActionColumn::class,
@@ -200,6 +237,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('updateService')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-edit"></i>',
                                         $url,
@@ -211,6 +251,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('deleteService')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,

@@ -8,6 +8,7 @@ use backend\widgets\PageHeaderWidget;
 /** @var array $animaisList */
 /** @var array $veterinariosArray */
 /** @var array $medicamentos */
+/** @var array $medicamentosAtuaisMap */
 
 $this->title = 'Atualizar Marcação: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Marcações', 'url' => ['index']];
@@ -42,6 +43,7 @@ echo PageHeaderWidget::widget([
             'animaisList' => $animaisList,
             'veterinariosArray' => $veterinariosArray,
             'medicamentos' => $medicamentos,
+            'medicamentosAtuaisMap' => $medicamentosAtuaisMap ?? [],
             'servicosList' => $servicosList,
         ]) ?>
     </div>

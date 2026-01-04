@@ -30,6 +30,34 @@ use yii\widgets\ActiveForm;
                     </h5>
                 </div>
                 <div class="card-body">
+                    <?php
+                    $roles = Yii::$app->authManager->getRolesByUser($model->user_id);
+                    $roleName = $roles ? array_keys($roles)[0] : 'cliente';
+                    $allRoles = Yii::$app->authManager->getRoles();
+                    $roleItems = [];
+                    foreach ($allRoles as $key => $role) {
+                        $roleItems[$key] = ucfirst($role->name);
+                    }
+                    ?>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label"><i class="fas fa-user-shield"></i> Perfil de Acesso</label>
+                            <?php if (Yii::$app->user->can('admin')): ?>
+                                <?= Html::dropDownList(
+                                    'role',
+                                    Yii::$app->request->post('role', $roleName),
+                                    $roleItems,
+                                    [
+                                        'class' => 'form-control',
+                                        'prompt' => 'Selecione a Role',
+                                        'name' => 'role',
+                                    ]
+                                ) ?>
+                            <?php else: ?>
+                                <input type="text" class="form-control" value="<?= ucfirst($roleName) ?>" readonly />
+                            <?php endif; ?>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <?= $form->field($model, 'nomecompleto')->textInput([
@@ -172,45 +200,42 @@ use yii\widgets\ActiveForm;
                         <i class="fas fa-info-circle"></i>
                         Formatos: JPG, PNG, GIF (máx. 2MB)
                     </small>
+                            <?php if ($model->getImageUrl() && !$model->isDefaultImage()): ?>
+                            <?php \yii\widgets\Pjax::begin(['id' => 'remove-image-pjax', 'enablePushState' => false]); ?>
+                            <?= Html::a(
+                                '<i class="fas fa-trash"></i> Remover Imagem',
+                                ['remove-image', 'id' => $model->id],
+                                [
+                                    'class' => 'btn btn-danger btn-md',
+                                    'data-confirm' => 'Tem certeza que deseja remover a imagem de perfil?',
+                                    'data-method' => 'post',
+                                    'data-pjax' => 1,
+                                ]
+                            ) ?>
+                            <?php \yii\widgets\Pjax::end(); ?>
+                        <?php endif; ?>
                     <?php \yii\widgets\Pjax::end(); ?>
                 </div>
             </div>
-
             <!-- Card Ações -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-tasks text-secondary"></i>
+                        <i class="fas fa-cogs"></i>
                         Ações
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <div class="btn-group w-100" role="group">
-                            <?= Html::submitButton(
-                                '<i class="fas fa-save"></i> Guardar Alterações',
-                                ['class' => 'btn btn-primary btn-md me-2']
-                            ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-times"></i> Cancelar',
-                                ['view', 'id' => $model->id],
-                                ['class' => 'btn btn-secondary btn-md me-2']
-                            ) ?>
-                            <?php if ($model->getImageUrl()): ?>
-                                <?php \yii\widgets\Pjax::begin(['id' => 'remove-image-pjax', 'enablePushState' => false]); ?>
-                                <?= Html::a(
-                                    '<i class="fas fa-trash"></i> Remover Imagem',
-                                    ['remove-image', 'id' => $model->id],
-                                    [
-                                        'class' => 'btn btn-danger btn-md',
-                                        'data-confirm' => 'Tem certeza que deseja remover a imagem de perfil?',
-                                        'data-method' => 'post',
-                                        'data-pjax' => 1,
-                                    ]
-                                ) ?>
-                                <?php \yii\widgets\Pjax::end(); ?>
-                            <?php endif; ?>
-                        </div>
+                        <?= Html::submitButton(
+                            '<i class="fas fa-save"></i> Guardar Alterações',
+                            ['class' => 'btn btn-primary btn-md me-2']
+                        ) ?>
+                        <?= Html::a(
+                            '<i class="fas fa-times"></i> Cancelar',
+                            ['view', 'id' => $model->id],
+                            ['class' => 'btn btn-secondary btn-md me-2']
+                        ) ?>
                     </div>
                 </div>
             </div>

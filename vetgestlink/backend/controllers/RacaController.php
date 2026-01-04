@@ -146,7 +146,7 @@ class RacaController extends Controller
     }
 
     /**
-     * Deletes an existing Raca model.
+     * Soft deletes an existing Raca model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -154,7 +154,9 @@ class RacaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->eliminado = 1;
+        $model->save(false);
 
         return $this->redirect(['index']);
     }

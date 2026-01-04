@@ -98,9 +98,36 @@ class MedicamentoSearch extends Medicamento
 
 
     public static function getMedicamentoList() {
-        return Medicamento::find()
-            ->where(['eliminado' => 0])
-            ->orderBy('nome')
-            ->all();
+        return \yii\helpers\ArrayHelper::map(
+            Medicamento::find()
+                ->where(['eliminado' => 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            function($model) {
+                return $model->nome . ' - €' . number_format($model->preco, 2, ',', '.');
+            }
+        );
+    }
+
+    /**
+     * Retorna lista de medicamentos com stock disponível (quantidade > 0)
+     * Útil para formulários onde apenas medicamentos disponíveis devem aparecer
+     * 
+     * @return array
+     */
+    public static function getMedicamentosDisponiveisList()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Medicamento::find()
+                ->where(['eliminado' => 0])
+                ->andWhere(['>', 'quantidade', 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            function($model) {
+                return $model->nome . ' (Stock: ' . $model->quantidade . ') - €' . number_format($model->preco, 2, ',', '.');
+            }
+        );
     }
 }

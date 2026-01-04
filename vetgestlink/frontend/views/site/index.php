@@ -137,7 +137,7 @@ $logoUrl = Yii::getAlias('@web') . $logoPath . '?v=' . $logoVersion;
     </section>
 
     <!-- Call to Action -->
-    <section class="py-5 text-center" >
+    <section class="py-4 text-center">
         <div class="container" style="position: relative; z-index: 2;">
             <h2 class="fw-bold mb-3">Pronto para sua primeira marcação ?</h2>
             <p class="lead mb-4">Veja como marcar sua consulta conosco.</p>

@@ -142,4 +142,85 @@ class MarcacaoSearch extends Marcacao
         return Marcacao::find()->where(['userprofiles_id' => $userId])->all();
     }
 
+    /**
+     * Lista [id => descrição] de marcações que ainda não possuem linha de fatura
+     * @return array
+     */
+    public static function getMarcacoesSemFaturaList()
+    {
+        $marcacoes = Marcacao::find()
+            ->joinWith('servicos')
+            ->joinWith('animais')
+            ->where(['marcacoes.eliminado' => 0])
+            ->andWhere(['not in', 'marcacoes.id', 
+                \common\models\Linhafatura::find()->select('marcacoes_id')->where(['not', ['marcacoes_id' => null]])
+            ])
+            ->all();
+        
+        $list = [];
+        foreach ($marcacoes as $marcacao) {
+            $servico = $marcacao->servicos ? $marcacao->servicos->nome : 'Serviço';
+            $animal = $marcacao->animais ? ' - ' . $marcacao->animais->nome : '';
+            $data = $marcacao->data ? ' (' . \Yii::$app->formatter->asDate($marcacao->data, 'php:d/m/Y') . ')' : '';
+            $list[$marcacao->id] = $servico . $animal . $data;
+        }
+        
+        return $list;
+    }
+
+    /**
+     * Lista de datas de marcações para Select2 no index [data => data formatada]
+     */
+    public static function getDatasListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Marcacao::find()
+                ->select(['data'])
+                ->distinct()
+                ->where(['eliminado' => 0])
+                ->orderBy(['data' => SORT_DESC])
+                ->all(),
+            'data',
+            function($model) {
+                return \Yii::$app->formatter->asDate($model->data, 'php:d/m/Y');
+            }
+        );
+    }
+
+    /**
+     * Lista de animais para Select2 no index [id => nome]
+     */
+    public static function getAnimaisListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Animal::find()
+                ->select(['id', 'nome'])
+                ->where(['eliminado' => 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            'nome'
+        );
+    }
+
+    /**
+     * Lista de veterinários para Select2 no index [id => nomecompleto]
+     */
+    public static function getVeterinariosListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Userprofile::find()
+                ->joinWith(['user'])
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->where([
+                    'auth_assignment.item_name' => 'veterinario',
+                    'userprofiles.eliminado' => 0
+                ])
+                ->orderBy('nomecompleto')
+                ->all(),
+            'id',
+            'nomecompleto'
+        );
+    }
+
 }

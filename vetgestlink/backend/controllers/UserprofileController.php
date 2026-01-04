@@ -123,6 +123,11 @@ class UserprofileController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
+                // Permitir atualizar a role apenas para admin
+                if (!Yii::$app->user->can('admin')) {
+                    // Se não for admin, restaura o valor original da role
+                    $model->role = $model->getOldAttribute('role');
+                }
                 // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());
 
@@ -217,7 +222,7 @@ class UserprofileController extends Controller
             Model::loadMultiple($moradas, $this->request->post());
 
             $valid = $model->validate();
-            $valid = \yii\base\Model::validateMultiple($moradas) && $valid;
+            $valid = Model::validateMultiple($moradas) && $valid;
 
             if ($valid) {
                 $model->save(false);

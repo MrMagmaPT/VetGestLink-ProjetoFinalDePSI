@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 /** @var array $animaisList */
 /** @var array $veterinariosArray */
 /** @var array $medicamentos */
+/** @var array $medicamentosAtuaisMap */
 /** @var array $servicosList */
 ?>
 
@@ -102,7 +103,7 @@ use yii\helpers\ArrayHelper;
             </div>
 
             <!-- Card Medicamentos -->
-            <div class="card shadow-sm mb-4" id="card-medicamentos" style="display: none;">
+            <div class="card shadow-sm mb-4" id="card-medicamentos" style="<?= !$model->isNewRecord ? '' : 'display: none;' ?>">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
                         <i class="fas fa-pills text-success"></i>
@@ -110,6 +111,10 @@ use yii\helpers\ArrayHelper;
                     </h5>
                 </div>
                 <div class="card-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota:</strong> Os medicamentos só podem ser adicionados quando a marcação está no estado <strong>"realizada"</strong>.
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-sm table-hover">
                             <thead class="table-light">
@@ -119,23 +124,28 @@ use yii\helpers\ArrayHelper;
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($medicamentos as $medicamento): ?>
+                            <?php 
+                            $medicamentosAtuaisMap = $medicamentosAtuaisMap ?? [];
+                            foreach ($medicamentos as $medicamento): 
+                                $quantidadeAtual = isset($medicamentosAtuaisMap[$medicamento->id]) ? $medicamentosAtuaisMap[$medicamento->id]['quantidade'] : 0;
+                            ?>
                                 <tr>
                                     <td>
                                         <strong><?= Html::encode($medicamento->nome) ?></strong>
                                         <?php if ($medicamento->descricao): ?>
                                             <br><small class="text-muted"><?= Html::encode($medicamento->descricao) ?></small>
                                         <?php endif; ?>
-                                        <br><small class="text-muted">Stock disponível: <?= $medicamento->quantidade ?></small>
+                                        <br><small class="text-muted">Stock disponível: <?= $medicamento->quantidade + $quantidadeAtual ?></small>
                                     </td>
                                     <td>
                                         <input type="number"
-                                               class="form-control form-control-sm"
+                                               class="form-control form-control-sm medicamento-quantidade"
                                                name="medicamentos[<?= $medicamento->id ?>][quantidade]"
                                                min="0"
-                                               max="<?= $medicamento->quantidade ?>"
+                                               max="<?= $medicamento->quantidade + $quantidadeAtual ?>"
                                                placeholder="0"
-                                               value="0">
+                                               value="<?= $quantidadeAtual ?>"
+                                               data-medicamento-id="<?= $medicamento->id ?>">
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -156,16 +166,24 @@ use yii\helpers\ArrayHelper;
                     </h5>
                 </div>
                 <div class="card-body">
-                    <?= $form->field($model, 'estado')->dropDownList([
-                        'cancelada' => 'Cancelada',
-                        'realizada' => 'Realizada',
-                        'pendente' => 'Pendente',
-                    ], [
-                        'prompt' => 'Selecione o estado',
-                        'class' => 'form-control',
-                        'required' => true,
-                        'id' => 'estado-dropdown'
-                    ])->label('<i class="fas fa-check-circle me-2"></i> Estado') ?>
+                    <?php if ($model->isNewRecord): ?>
+                        <!-- Modo Criação - Estado sempre Pendente -->
+                        <?= $form->field($model, 'estado')->hiddenInput(['value' => 'pendente'])->label(false) ?>
+                        <div class="alert alert-warning text-center">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Estado: Pendente</strong>
+                        </div>
+                    <?php else: ?>
+                        <!-- Modo Edição - Permite alterar estado -->
+                        <?= $form->field($model, 'estado')->dropDownList(
+                            \common\models\Marcacao::optsEstado(),
+                            [
+                                'class' => 'form-control',
+                                'id' => 'marcacao-estado',
+                                'prompt' => 'Selecione o estado'
+                            ]
+                        )->label('<i class="fas fa-info-circle me-2"></i> Estado') ?>
+                    <?php endif; ?>
 
                     <div class="alert alert-info mt-3 small">
                         <i class="fas fa-info-circle me-2"></i>
@@ -200,16 +218,6 @@ use yii\helpers\ArrayHelper;
                 </div>
             </div>
         </div>
-
-        <?php
-        $this->registerJsFile(
-            '@web/js/marcacao.js',
-            [
-                'depends' => [\yii\web\JqueryAsset::class],
-                'position' => \yii\web\View::POS_END
-            ]
-        );
-        ?>
     </div>
     <?= $form->field($model, 'eliminado')->hiddenInput(['value' => 0])->label(false) ?>
 

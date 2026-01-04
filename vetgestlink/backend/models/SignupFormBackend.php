@@ -68,7 +68,7 @@ class SignupFormBackend extends Model
             ['principal', 'boolean'],
             ['principal', 'default', 'value' => 1],
 
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'wrongExtension' => 'Apenas ficheiros PNG, JPG ou JPEG são permitidos.'],
             ['role', 'string'],
         ];
     }

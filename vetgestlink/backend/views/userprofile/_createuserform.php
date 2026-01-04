@@ -6,53 +6,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-$this->title = 'Registar Utilizador';
-$this->params['breadcrumbs'][] = ['label' => 'Utilizadores', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+use backend\widgets\FlashMessages;
 ?>
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">
-                    <i class="fas fa-user-plus text-primary"></i>
-                    Registar Utilizador
-                </h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><?= Html::a('<i class="fas fa-home"></i> Home', ['/site/index']) ?></li>
-                    <li class="breadcrumb-item"><?= Html::a('Utilizadores', ['index']) ?></li>
-                    <li class="breadcrumb-item active">Registar</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="content">
     <div class="container-fluid">
-        <?php foreach (Yii::$app->session->getAllFlashes() as $type => $messages): ?>
-            <?php
-            $alertType = ($type === 'error') ? 'danger' : $type;
-            $messages = (array) $messages;
-            ?>
-            <div class="alert alert-<?= $alertType ?> alert-dismissible fade show" role="alert">
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                <?php if (count($messages) > 1): ?>
-                    <ul class="mb-0">
-                        <?php foreach ($messages as $message): ?>
-                            <li><?= Html::encode($message) ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: ?>
-                    <?= Html::encode($messages[0]) ?>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-
+        <!-- Feedback Messages -->
+        <?= FlashMessages::widget() ?>  
         <?php $form = ActiveForm::begin([
                 'id' => 'form-signup',
                 'options' => [
@@ -62,6 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
                 ],
         ]); ?>
+
+        <!-- Display form errors summary -->
+        <?php if ($model->hasErrors()): ?>
+            <div class="alert alert-danger">
+                <strong>Por favor, corrija os seguintes erros:</strong>
+                <?= Html::errorSummary($model, ['header' => '', 'class' => 'mb-0']) ?>
+            </div>
+        <?php endif; ?>
 
         <div class="row">
             <!-- Coluna Esquerda -->
@@ -117,7 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-md-4">
                                 <?= $form->field($model, 'dtanascimento')->input('date', [
                                     'class' => 'form-control',
-                                    'max' => date('Y-m-d')
                                 ]) ?>
                             </div>
                             <div class="col-md-4">
@@ -136,20 +103,26 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                         </div>
 
+                        <!-- Somente Admin pode definir a Role -->
                         <?php if (!Yii::$app->user->isGuest && Yii::$app->user->can('admin')): ?>
                             <?= $form->field($model, 'role')->dropDownList(
                                 array_map(function($role) {
                                     return ucfirst($role->name);
                                 }, Yii::$app->authManager->getRoles()),
-                                ['prompt' => 'Selecione a Role', 'class' => 'form-control']
+                                [
+                                    'prompt' => 'Selecione a Role', 
+                                    'class' => 'form-control',
+                                    'options' => ['cliente' => ['selected' => true]]
+                                ]
                             ) ?>
                         <?php endif; ?>
-
+                        
                         <div class="form-group">
                             <?= $form->field($model, 'imageFile')->fileInput([
                                 'class' => 'form-control',
                                 'accept' => 'image/png, image/jpeg, image/jpg'
-                            ])->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: PNG, JPG, JPEG (opcional)</small>') ?>
+                            ])->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: PNG, JPG, JPEG (opcional)</small>')
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -240,14 +213,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             <?= Html::submitButton(
                                 '<i class="fas fa-check"></i> Criar Utilizador',
                                 [
-                                    'class' => 'btn btn-success btn-lg',
+                                    'class' => 'btn btn-success btn-md',
                                     'name' => 'signup-button'
                                 ]
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-times"></i> Cancelar',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                         </div>
                     </div>
@@ -302,6 +275,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
 
+
+                    <!--Debug Script-->
                     <script>
                         function autoFill() {
                             document.getElementById('signupformbackend-username').value = 'user' + Math.floor(Math.random() * 10000);
@@ -309,7 +284,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             document.getElementById('signupformbackend-password').value = '123456';
                             document.getElementById('signupformbackend-nomecompleto').value = 'João Silva Santos';
                             document.getElementById('signupformbackend-dtanascimento').value = '1990-05-15';
-                            document.getElementById('signupformbackend-nif').value = '123456789';
+                            document.getElementById('signupformbackend-nif').value = '123456789' + Math.floor(Math.random() * 10000);
                             document.getElementById('signupformbackend-telemovel').value = '912345678';
                             document.getElementById('signupformbackend-rua').value = 'Rua das Flores';
                             document.getElementById('signupformbackend-nporta').value = '123';

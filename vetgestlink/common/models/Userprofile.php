@@ -29,10 +29,23 @@ use common\validators\BirthValidator;
  */
 class Userprofile extends \yii\db\ActiveRecord
 {
+
     /**
      * @var UploadedFile
      */
     public $imageFile;
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => 'updated_at',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -63,7 +76,7 @@ class Userprofile extends \yii\db\ActiveRecord
             [['nif'], 'unique'],
             [['foto'], 'string', 'max' => 255],
             // image upload: optional, only PNG/JPG/JPEG, max 2MB
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 2 * 1024 * 1024, 'tooBig' => 'O ficheiro é demasiado grande. Máx 2MB.', 'checkExtensionByMimeType' => false],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'wrongExtension' => 'Apenas ficheiros PNG, JPG ou JPEG são permitidos.', 'maxSize' => 2 * 1024 * 1024, 'tooBig' => 'O ficheiro é demasiado grande. Máx 2MB.', 'checkExtensionByMimeType' => false],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -196,6 +209,20 @@ class Userprofile extends \yii\db\ActiveRecord
         }
 
         return Yii::$app->imageUploader->getUrl($storedPath);
+    }
+
+    
+    /**
+     * Verifica se a imagem do perfil é a imagem padrão (default.jpg)
+     * @return bool
+     */
+    public function isDefaultImage()
+    {
+        if (empty($this->foto)) {
+            return true;
+        }
+        $foto = strtolower(trim($this->foto));
+        return $foto === 'default.jpg' || substr($foto, -11) === '/default.jpg';
     }
 
     /**

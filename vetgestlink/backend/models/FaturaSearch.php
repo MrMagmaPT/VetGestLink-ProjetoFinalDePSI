@@ -137,4 +137,48 @@ class FaturaSearch extends Fatura
             ->orderBy(['created_at' => SORT_DESC])
             ->all();
     }
+
+    /**
+     * Lista de números de faturas para Select2 no index [id => Nº]
+     */
+    public static function getFaturasListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Fatura::find()
+                ->select(['id'])
+                ->orderBy(['id' => SORT_DESC])
+                ->all(),
+            'id',
+            function($model) {
+                return '#' . $model->id;
+            }
+        );
+    }
+
+    /**
+     * Lista de métodos de pagamento para Select2 no index [id => nome]
+     */
+    public static function getMetodosPagamentoListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Metodopagamento::find()
+                ->select(['id', 'nome'])
+                ->where(['eliminado' => 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            'nome'
+        );
+    }
+
+    /**
+     * Lista de estados para Select2 no index
+     */
+    public static function getEstadosListForIndex()
+    {
+        return [
+            0 => 'Pendente',
+            1 => 'Paga'
+        ];
+    }
 }

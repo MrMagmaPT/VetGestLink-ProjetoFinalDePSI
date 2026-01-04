@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\PageHeaderWidget;
+use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var backend\models\FaturaSearch $searchModel */
@@ -66,38 +67,141 @@ echo PageHeaderWidget::widget([
                 </div>
             </div>
             <div class="card-body">
-                <!-- Barra de pesquisa com Select2 -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <?php if (method_exists($searchModel, 'getFaturasList')): ?>
-                        <?= kartik\select2\Select2::widget([
-                            'name' => 'search_fatura',
-                            'data' => $searchModel->getFaturasList(),
-                            'value' => $searchModel->id,
-                            'options' => [
-                                'placeholder' => 'Pesquisar fatura...',
-                                'id' => 'fatura-search',
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                                'language' => [
-                                    'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma fatura encontrada"; }'),
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-file-invoice"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'id',
+                                'data' => $faturasList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por nº...',
                                 ],
-                                'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                                'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                            ],
-                            'bsVersion' => '5.x',
-                            'pluginEvents' => [
-                                'select2:select' => 'function(e) { 
-                                    var id = e.params.data.id;
-                                    window.location.href = "' . Url::to(['index']) . '?FaturaSearch[id]=" + id;
-                                }',
-                                'select2:clear' => 'function(e) {
-                                    window.location.href = "' . Url::to(['index']) . '";
-                                }',
-                            ],
-                        ]); ?>
-                        <?php endif; ?>
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma fatura encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var faturaId = e.params.data.id;
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '?FaturaSearch[id]=" + faturaId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-info text-white" style="width: 45px;">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'metodospagamentos_id',
+                                'data' => $metodosPagamentoList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por método...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum método encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var metodoId = e.params.data.id;
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '?FaturaSearch[metodospagamentos_id]=" + metodoId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white" style="width: 45px;">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'estado',
+                                'data' => $estadosList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por estado...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var estado = e.params.data.id;
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '?FaturaSearch[estado]=" + estado});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#fatura-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todas',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Pagas',
+                                ['index', 'FaturaSearch[estado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-clock"></i> Pendentes',
+                                ['index', 'FaturaSearch[estado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-warning']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check-circle"></i> Ativas',
+                                ['index', 'FaturaSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-primary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-trash"></i> Eliminadas',
+                                ['index', 'FaturaSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,30 +226,22 @@ echo PageHeaderWidget::widget([
                             'label' => 'Nº Fatura',
                             'headerOptions' => ['style' => 'width: 100px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
-                            'filter' => isset($searchModel) && method_exists($searchModel, 'getFaturasList')
-                                ? kartik\select2\Select2::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'id',
-                                    'data' => $searchModel->getList(),
-                                    'options' => [
-                                        'placeholder' => 'Fatura...',
-                                        'allowClear' => true,
-                                        'style' => 'width: 120px;',
-                                    ],
-                                    'pluginOptions' => [
-                                        'allowClear' => true,
-                                        'language' => [
-                                            'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma fatura encontrada"; }'),
-                                        ],
-                                    ],
-                                    'bsVersion' => '5.x',
-                                ]) : null,
+                            'filter' => Html::activeTextInput($searchModel, 'id', [
+                                'class' => 'form-control form-control-sm',
+                                'placeholder' => 'Nº...',
+                                'style' => 'width: 100px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'total',
                             'headerOptions' => ['style' => 'width: 120px; text-align: right'],
                             'contentOptions' => ['style' => 'text-align: right'],
                             'format' => ['decimal', 2],
+                            'filter' => Html::activeTextInput($searchModel, 'total', [
+                                'class' => 'form-control form-control-sm',
+                                'placeholder' => 'Total...',
+                                'style' => 'width: 120px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'created_at',
@@ -153,28 +249,22 @@ echo PageHeaderWidget::widget([
                             'headerOptions' => ['style' => 'width: 150px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                             'format' => ['datetime', 'php:d/m/Y H:i'],
+                            'filter' => Html::activeInput('date', $searchModel, 'created_at', [
+                                'class' => 'form-control form-control-sm',
+                                'style' => 'width: 150px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'estado',
                             'headerOptions' => ['style' => 'width: 120px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'estado',
-                                'data' => [0 => 'Pendente', 1 => 'Paga'],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter' => Html::activeDropDownList($searchModel, 'estado', 
+                                ['' => 'Todos...', 0 => 'Pendente', 1 => 'Paga'],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'style' => 'width: 120px;'
+                                ]
+                            ),
                             'value' => function($model) {
                                 if ($model->estado == 1) {
                                     return '<span class="badge bg-success"><i class="fas fa-check"></i> Paga</span>';
@@ -190,8 +280,35 @@ echo PageHeaderWidget::widget([
                             'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Método de Pagamento',
                             'value' => function($model) {
-                                return $model->metodospagamentos ? $model->metodospagamentos->nome : '-';
+                                return $model->metodospagamentos ? $model->metodospagamentos->nome : 'Não definido';
                             },
+                            'filter' => Html::activeTextInput($searchModel, 'metodospagamentos_id', [
+                                'class' => 'form-control form-control-sm',
+                                'placeholder' => 'Método...',
+                                'style' => 'width: 180px;'
+                            ]),
+                        ],
+                        [
+                            'attribute' => 'eliminado',
+                            'headerOptions' => ['style' => 'width: 120px; text-align: center'],
+                            'contentOptions' => function($model) {
+                                return ['style' => 'text-align: center; ' . ($model->eliminado ? 'background-color: #fee; color: #666;' : '')];
+                            },
+                            'filter' => Html::activeDropDownList($searchModel, 'eliminado',
+                                ['' => 'Todos...', 0 => 'Ativa', 1 => 'Eliminada'],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'style' => 'width: 120px;'
+                                ]
+                            ),
+                            'value' => function($model) {
+                                if ($model->eliminado) {
+                                    return '<span class="badge bg-danger"><i class="fas fa-trash"></i> Eliminada</span>';
+                                } else {
+                                    return '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Ativa</span>';
+                                }
+                            },
+                            'format' => 'raw',
                         ],
                         [
                             'class' => ActionColumn::className(),

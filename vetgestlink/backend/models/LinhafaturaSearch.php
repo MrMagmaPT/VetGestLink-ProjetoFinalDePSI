@@ -17,7 +17,7 @@ class LinhafaturaSearch extends Linhafatura
     public function rules()
     {
         return [
-            [['id', 'quantidade', 'vendidoemconsulta', 'faturas_id', 'medicamentos_id', 'marcacoes_id', 'eliminado'], 'integer'],
+            [['id', 'quantidade', 'vendidoemconsulta', 'faturas_id', 'servicos_id', 'medicamentos_id', 'marcacoes_id', 'eliminado'], 'integer'],
             [['total'], 'number'],
         ];
     }
@@ -41,17 +41,12 @@ class LinhafaturaSearch extends Linhafatura
      */
     public function search($params, $formName = null)
     {
-        $query = Linhafatura::find()->with(['fatura', 'medicamentos', 'marcacao']);
+        $query = Linhafatura::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
         ]);
 
         $this->load($params, $formName);
@@ -69,6 +64,7 @@ class LinhafaturaSearch extends Linhafatura
             'quantidade' => $this->quantidade,
             'vendidoemconsulta' => $this->vendidoemconsulta,
             'faturas_id' => $this->faturas_id,
+            'servicos_id' => $this->servicos_id,
             'medicamentos_id' => $this->medicamentos_id,
             'marcacoes_id' => $this->marcacoes_id,
             'eliminado' => $this->eliminado,
@@ -77,4 +73,3 @@ class LinhafaturaSearch extends Linhafatura
         return $dataProvider;
     }
 }
-

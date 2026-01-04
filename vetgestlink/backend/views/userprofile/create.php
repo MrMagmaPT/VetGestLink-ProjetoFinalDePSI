@@ -33,7 +33,7 @@ echo PageHeaderWidget::widget([
 
 <div class="content">
     <div class="container-fluid">
-        <?= $this->render('createuserform', [
+        <?= $this->render('_createuserform', [
             'model' => $model,
         ]) ?>
     </div>

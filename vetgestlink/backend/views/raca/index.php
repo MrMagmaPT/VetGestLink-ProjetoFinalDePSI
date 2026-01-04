@@ -63,20 +63,90 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Raças
                     </h5>
-                    <?= Html::a(
-                        '<i class="fas fa-plus"></i> Nova Raça',
-                        ['create'],
-                        ['class' => 'btn btn-success']
-                    ) ?>
+                    <?php if (Yii::$app->user->can('createBreed')): ?>
+                        <?= Html::a(
+                            '<i class="fas fa-plus"></i> Nova Raça',
+                            ['create'],
+                            ['class' => 'btn btn-success']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
             </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-dog"></i>
+                            </span>
+                            <?= kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nome',
+                                'data' => $searchModel::getActiveList(),
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por nome...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma raça encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) {
+                                        var nome = e.params.data.id;
+                                        $.pjax.reload({container: "#raca-grid", url: "' . Url::to(['index']) . '?RacaSearch[nome]=" + encodeURIComponent(nome)});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#raca-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todas',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Ativas',
+                                ['index', 'RacaSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Eliminadas',
+                                ['index', 'RacaSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card-body p-0">
                 <?php Pjax::begin(['id' => 'raca-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
-                    'summary' => ' <b>Mostrando {begin} - {end} perfis</b>',
-                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n\n{pager}",
+                    'summary' => ' <b>Mostrando {begin} - {end} raças</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
                     //Mudar a mensagem quando não houver resultados
                     'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
@@ -95,6 +165,7 @@ echo PageHeaderWidget::widget([
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false,
                             'headerOptions' => ['style' => 'width: 180px'],
                         ],
                         [
@@ -108,7 +179,8 @@ echo PageHeaderWidget::widget([
                                     ['class' => 'text-decoration-none']
                                 ) : '-';
                             },
-                            'filter' => $especiesAtivas,
+                            'filter' => false,
+                            // 'filter' => $especiesAtivas,
                             'headerOptions' => ['style' => 'width: 180px'],
                         ],
                         [
@@ -121,10 +193,27 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativa</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativa',
-                                1 => 'Eliminada',
-                            ],
+                            'filter' => false,
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'eliminado',
+                            //     'data' => [
+                            //         0 => 'Ativa',
+                            //         1 => 'Eliminada',
+                            //     ],
+                            //     'options' => [
+                            //         'placeholder' => 'Estado...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                             'headerOptions' => ['style' => 'width: 120px'],
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
@@ -145,6 +234,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('updateBreed')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-edit"></i>',
                                         $url,
@@ -156,6 +248,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('deleteBreed')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,

@@ -28,7 +28,7 @@ class Navbar extends Widget
         // Define default menu items
         $items = [
             ['label' => 'Sobre', 'url' => ['site/about']],
-            ['label' => 'Contatos', 'url' => ['site/contact']],
+            ['label' => 'Contactos', 'url' => ['site/contact']],
             ['label' => 'Informações', 'url' => ['site/information']],
         ];
 

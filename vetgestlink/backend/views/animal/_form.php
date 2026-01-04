@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\select2\Select2
+use kartik\select2\Select2;
+use backend\widgets\FlashMessages;
 
 /** @var yii\web\View $this */
 /** @var common\models\Animal $model */
@@ -13,7 +14,16 @@ use kartik\select2\Select2
 ?>
 
 <div class="animal-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin([
+            'id' => 'form-signup',
+            'options' => [
+                'enctype' => 'multipart/form-data'
+            ],
+            // Erro em vermelho abaixo do campo
+            'fieldConfig' => [
+                'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
+            ],
+    ]); ?>
 
     <div class="row">
         <!-- Coluna Esquerda - Formulário -->
@@ -120,12 +130,11 @@ use kartik\select2\Select2
                     </h5>
                 </div>
                 <div class="card-body text-center">
-                    <div class="mb-3">
-                        <img src="<?= $model->getImageUrl() ?>" 
-                             alt="Foto do animal" 
-                             id="animal-image-preview"
-                             class="img-fluid rounded shadow-sm" 
-                             style="max-height: 250px; object-fit: cover;<?= $model->getImageUrl() ? '' : 'display:none;' ?>" />
+                    <div class="mb-3 d-flex flex-column justify-content-center align-items-center" style="min-height: 180px;">
+                        <img id="animal-image-preview" src="<?= $model->getImageUrl() ?>" alt="Foto do animal" class="img-thumbnail rounded" style="max-width: 100%; height: auto; max-height: 250px;<?= $model->getImageUrl() ? '' : 'display:none;' ?>" />
+                        <?php if (!$model->getImageUrl()): ?>
+                            <i class="fas fa-dog text-muted" style="font-size: 120px;"></i>
+                        <?php endif; ?>
                     </div>
                     <?= $form->field($model, 'imageFile')->fileInput([
                         'accept' => 'image/*',
@@ -133,22 +142,26 @@ use kartik\select2\Select2
                         'id' => 'animal-imagefile',
                         'data-image-preview' => 'animal-image-preview',
                     ])->label('Nova Fotografia')->hint('<small class="text-muted"><i class="fas fa-info-circle"></i> Formatos aceites: JPG, PNG (opcional)</small>') ?>
-                </div>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i>
+                        Formatos: JPG, PNG, GIF (máx. 2MB)
+                    </small>
+            </div>
             </div>
 
             <!-- Card Ações -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-tasks text-secondary"></i>
+                        <i class="fas fa-cogs text-secondary"></i>
                         Ações
                     </h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-center">
+                    <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save"></i> Guardar',
-                            ['class' => 'btn btn-success btn-md me-3']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times"></i> Cancelar',

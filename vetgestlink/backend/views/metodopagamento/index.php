@@ -48,7 +48,7 @@ echo PageHeaderWidget::widget([
                 'url' => '/metodopagamento/index',
             ]) ?>
             
-            <?= BigCardWidget::widget([
+            <?= SmallCardWidget::widget([
                 'icon' => 'fa-check-circle',
                 'iconColorClass' => 'icon-green',
                 'text' => 'Métodos Ativos',
@@ -79,48 +79,82 @@ echo PageHeaderWidget::widget([
                         ['class' => 'btn btn-success']
                     ) ?>
                 </div>
-                                <div class="row mb-3 mt-3">
-                    <div class="col-md-6">
-                    <!-- Barra de pesquisa Select2 para Método de Pagamento -->
-                    <?= kartik\select2\Select2::widget([
-                        'name' => 'search_metodopagamento',
-                        'data' => $searchModel::getMetodosList(),
-                        'value' => $searchModel->nome,
-                        'options' => [
-                            'placeholder' => 'Pesquisar método...',
-                            'id' => 'metodopagamento-search',
-                            'class' => 'form-control form-control-sm',
-                            'style' => 'max-width: 50px; font-size: 0.7rem; display: inline-block; padding: 1px 2px;',
-                        ],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                            'language' => [
-                                'noResults' => new \yii\web\JsExpression('function() { return "Nenhum método encontrado"; }'),
-                            ],
-                            'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                            'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                        ],
-                        'bsVersion' => '5.x',
-                        'pluginEvents' => [
-                            'select2:select' => 'function(e) { 
-                                var nome = e.params.data.id;
-                                window.location.href = "' . Url::to(['index']) . '?MetodopagamentoSearch[nome]=" + encodeURIComponent(nome);
-                            }',
-                            'select2:clear' => 'function(e) {
-                                window.location.href = "' . Url::to(['index']) . '";
-                            }',
-                        ],
-                    ]); ?>
+            </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <?= kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nome',
+                                'data' => $searchModel::getMetodosList(),
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por método...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum método encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var nome = e.params.data.id;
+                                        $.pjax.reload({container: "#metodopagamento-grid", url: "' . Url::to(['index']) . '?MetodopagamentoSearch[nome]=" + encodeURIComponent(nome)});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#metodopagamento-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todos',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Ativos',
+                                ['index', 'MetodopagamentoSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Eliminados',
+                                ['index', 'MetodopagamentoSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="card-body p-0">
+                <?php \yii\widgets\Pjax::begin(['id' => 'metodopagamento-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'summary' => ' <b>Mostrando {begin} - {end}</b>',
                     'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
-                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum Método de pagamento encontrado com esse nome.</div>',
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum Método de pagamento encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
@@ -164,26 +198,28 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-danger"><i class="fas fa-times"></i> Inativo</span>';
                             },
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'eliminado',
-                                'data' => [
-                                    0 => 'Ativo',
-                                    1 => 'Eliminado',
-                                ],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+
+                            'filter' => false,
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'eliminado',
+                            //     'data' => [
+                            //         0 => 'Ativo',
+                            //         1 => 'Eliminado',
+                            //     ],
+                            //     'options' => [
+                            //         'placeholder' => 'Estado...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'class' => ActionColumn::class,
@@ -234,6 +270,7 @@ echo PageHeaderWidget::widget([
                         ],
                     ],
                 ]); ?>
+                <?php \yii\widgets\Pjax::end(); ?>
             </div>
         </div>
     </div>

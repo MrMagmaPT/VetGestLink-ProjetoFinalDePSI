@@ -145,6 +145,38 @@ class Marcacao extends \yii\db\ActiveRecord
         return $this->hasOne(Servico::class, ['id' => 'servicos_id']);
     }
 
+        /**
+     * Gets query for medications used in this appointment (marcacao).
+     * Returns linhasfaturas that have both marcacoes_id and medicamentos_id,
+     * with vendidoemconsulta flag set to 1.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMedicamentosUtilizados()
+    {
+        return $this->hasMany(Medicamento::class, ['id' => 'medicamentos_id'])
+            ->viaTable('linhasfaturas', ['marcacoes_id' => 'id'], function($query) {
+                $query->andWhere(['vendidoemconsulta' => 1])
+                      ->andWhere(['eliminado' => 0])
+                      ->andWhere(['IS NOT', 'medicamentos_id', null]);
+            });
+    }
+
+    /**
+     * Gets the linhasfaturas records for medications used in this appointment.
+     * Useful to get quantity and total price information.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLinhasfaturasMedicamentos()
+    {
+        return $this->hasMany(Linhafatura::class, ['marcacoes_id' => 'id'])
+            ->andWhere(['vendidoemconsulta' => 1])
+            ->andWhere(['eliminado' => 0])
+            ->andWhere(['IS NOT', 'medicamentos_id', null])
+            ->with('medicamentos');
+    }
+
 
     /**
      * column estado ENUM value labels

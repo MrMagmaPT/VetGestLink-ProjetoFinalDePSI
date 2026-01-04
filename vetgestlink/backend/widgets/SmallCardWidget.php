@@ -23,23 +23,23 @@ class SmallCardWidget extends Widget
     // Rederiza o html do widget e merdas associadas :D
     public function run()
     {
-        // Mapa de cores para os ícones
+        // Mapa de cores para os cards (small-box)
         $colorMap = [
-            'icon-blue' => 'background: #007bff; color: white;',
-            'icon-yellow' => 'background: #ffc107; color: white;',
-            'icon-green' => 'background: #28a745; color: white;',
-            'icon-orange' => 'background: #ff9800; color: white;',
-            'icon-red' => 'background: #dc3545; color: white;',
-            'icon-purple' => 'background: #9333ea; color: white;',
-            'icon-gray' => 'background: #6c757d; color: white;',
-            'icon-primary' => 'background: #007bff; color: white;',
-            'icon-success' => 'background: #28a745; color: white;',
-            'icon-secondary' => 'background: #6c757d; color: white;',
-            'icon-pink' => 'background: #e91e63; color: white;',
+            'icon-blue' => 'bg-info',
+            'icon-yellow' => 'bg-warning',
+            'icon-green' => 'bg-success',
+            'icon-orange' => 'bg-warning',
+            'icon-red' => 'bg-danger',
+            'icon-purple' => 'bg-purple',
+            'icon-gray' => 'bg-secondary',
+            'icon-primary' => 'bg-primary',
+            'icon-success' => 'bg-success',
+            'icon-secondary' => 'bg-secondary',
+            'icon-pink' => 'bg-pink',
         ];
 
-        // Obter o estilo inline para o ícone
-        $iconStyle = $colorMap[$this->iconColorClass] ?? 'background: #6c757d; color: white;';
+        // Obter a classe de cor do card
+        $bgClass = $colorMap[$this->iconColorClass] ?? 'bg-info';
 
         //url convertido de incompleto (ex: /user/index) para
         // completo usando o yii para n ser nada hardcoded
@@ -48,51 +48,17 @@ class SmallCardWidget extends Widget
 
         //devolve o card com os elementos que acabamos de adicionar/modificar
         return <<<HTML
-            <style>
-            .info-box-custom {
-                border-radius: 20px !important;
-                box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.06);
-                background: #f8fafc;
-                padding: 16px 12px 12px 12px;
-                transition: box-shadow 0.2s, transform 0.2s;
-            }
-            .info-box-custom:hover {
-                box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 12px rgba(0,0,0,0.10);
-                transform: translateY(-2px) scale(1.02);
-            }
-            .info-box-icon.rounded {
-                border-radius: 14px !important;
-                font-size: 2rem;
-                width: 50px;
-                height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 12px;
-            }
-            .info-box-content {
-                padding-left: 6px;
-            }
-            .info-box-text {
-                font-size: 0.95rem;
-                font-weight: 600;
-                color: #343a40;
-            }
-            .info-box-number {
-                font-size: 1.6rem;
-                font-weight: 700;
-                color: #007bff;
-            }
-            </style>
-            <div class="col-lg-3 col-12" style="cursor:pointer;" onclick="window.location.href='{$encoded_url}';">
-                <div class="info-box info-box-custom shadow-sm">
-                    <span class="info-box-icon rounded" style="{$iconStyle}">
-                        <i class="fas {$this->icon}"></i>
-                    </span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">{$this->text}</span>
-                        <span class="info-box-number">{$this->value}</span>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box {$bgClass}">
+                    <div class="inner">
+                        <h3>{$this->value}</h3>
+                        <p>{$this->text}</p>
                     </div>
+                    <div class="icon">
+                        <i class="fas {$this->icon}"></i>
+                    </div>
+
                 </div>
             </div>
         HTML;

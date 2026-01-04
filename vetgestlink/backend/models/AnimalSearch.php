@@ -151,4 +151,59 @@ class AnimalSearch extends Animal
         return Animal::find()->where(['eliminado' => 0])->orderBy('nome')->all();
     }
 
+    /**
+     * Lista de animais para Select2 no index [id => nome]
+     */
+    public static function getAnimaisListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            Animal::find()
+                ->select(['id', 'nome'])
+                ->where(['eliminado' => 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            'nome'
+        );
+    }
+
+    /**
+     * Lista de espécies para Select2 no index [id => nome]
+     */
+    public static function getEspeciesListForIndex()
+    {
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Especie::find()
+                ->select(['id', 'nome'])
+                ->where(['eliminado' => 0])
+                ->orderBy('nome')
+                ->all(),
+            'id',
+            'nome'
+        );
+    }
+
+    /**
+     * Lista de donos (clientes) para Select2 no index [id => nomecompleto]
+     */
+    public static function getDonosListForIndex()
+    {
+        // Retorna apenas donos que possuem animais não eliminados
+        return \yii\helpers\ArrayHelper::map(
+            \common\models\Userprofile::find()
+                ->where(['userprofiles.eliminado' => 0])
+                ->andWhere(['in', 'userprofiles.id',
+                    (new \yii\db\Query())
+                        ->select('userprofiles_id')
+                        ->from('animais')
+                        ->where(['eliminado' => 0])
+                        ->groupBy('userprofiles_id')
+                ])
+                ->orderBy('nomecompleto')
+                ->all(),
+            'id',
+            'nomecompleto'
+        );
+    }
+
 }

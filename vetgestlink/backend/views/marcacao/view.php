@@ -84,14 +84,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-3 fw-bold text-muted">
-                                <i class="fas fa-hashtag"></i> ID:
-                            </div>
-                            <div class="col-md-9">
-                                <strong><?= Html::encode($model->id) ?></strong>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3 fw-bold text-muted">
                                 <i class="fas fa-calendar"></i> Data:
                             </div>
                             <div class="col-md-9">
@@ -173,6 +165,77 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
 
+                <!-- Card Medicamentos Utilizados -->
+                <?php if (!empty($medicamentosUtilizados)): ?>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-pills text-success"></i>
+                            Medicamentos Utilizados
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="fas fa-capsules"></i> Medicamento</th>
+                                        <th class="text-center"><i class="fas fa-hashtag"></i> Quantidade</th>
+                                        <th class="text-end"><i class="fas fa-euro-sign"></i> Preço Unit.</th>
+                                        <th class="text-end"><i class="fas fa-calculator"></i> Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $totalGeral = 0;
+                                    foreach ($medicamentosUtilizados as $linha): 
+                                        $medicamento = $linha->medicamentos;
+                                        if ($medicamento):
+                                            $totalLinha = $linha->total;
+                                            $totalGeral += $totalLinha;
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <?= Html::a(
+                                                Html::encode($medicamento->nome),
+                                                ['/medicamento/view', 'id' => $medicamento->id],
+                                                ['class' => 'text-decoration-none']
+                                            ) ?>
+                                            <?php if ($medicamento->descricao): ?>
+                                                <br><small class="text-muted"><?= Html::encode($medicamento->descricao) ?></small>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-info"><?= Html::encode($linha->quantidade) ?></span>
+                                        </td>
+                                        <td class="text-end">
+                                            <?= number_format($medicamento->preco, 2, ',', '.') ?> €
+                                        </td>
+                                        <td class="text-end fw-bold">
+                                            <?= number_format($totalLinha, 2, ',', '.') ?> €
+                                        </td>
+                                    </tr>
+                                    <?php 
+                                        endif;
+                                    endforeach; 
+                                    ?>
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td colspan="3" class="text-end fw-bold">
+                                            <i class="fas fa-calculator"></i> Total Medicamentos:
+                                        </td>
+                                        <td class="text-end fw-bold text-success">
+                                            <?= number_format($totalGeral, 2, ',', '.') ?> €
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <!-- Card Relações -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
@@ -227,6 +290,28 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['update', 'id' => $model->id],
                                 ['class' => 'btn btn-primary btn-md']
                             ) ?>
+                            
+                            <?php 
+                            // Verificar se a marcação está realizada e ainda não tem fatura
+                            $temFatura = \common\models\Linhafatura::find()
+                                ->where(['marcacoes_id' => $model->id])
+                                ->exists();
+                            
+                            if ($model->estado === \common\models\Marcacao::ESTADO_REALIZADA && !$temFatura): 
+                            ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-file-invoice-dollar"></i> Gerar Fatura',
+                                    ['gerar-fatura', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-success btn-md',
+                                        'data' => [
+                                            'confirm' => 'Deseja gerar uma fatura para esta marcação?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
+                            
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],

@@ -66,6 +66,12 @@ $this->title = 'Informações';
 						width="100%" height="350" style="border:0; border-radius: 0.5rem; box-shadow: 0 1px 6px rgba(0,0,0,0.08);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
 					</iframe>
 				</div>
+				<!-- Card de formas de contato -->
+				<div class="card-body text-center">
+					<h5 class="card-title mb-3">Formas de Contato</h5>
+					<p class="mb-1"><i class="fas fa-phone-alt me-2"></i>+351 234 567 890</p>
+					<p><i class="fas fa-envelope me-2"></i>vetgestlink@gmail.com</p>
+				</div>
 				<div class="alert alert-info text-center mt-4 mb-0" style="font-size: 1.1rem;">
 					<i class="fas fa-info-circle me-2"></i>
 					Estamos sempre disponíveis para esclarecer dúvidas e ajudar no que for necessário. Obrigado pela confiança!

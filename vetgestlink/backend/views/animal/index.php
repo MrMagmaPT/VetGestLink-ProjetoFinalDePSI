@@ -86,6 +86,151 @@ echo PageHeaderWidget::widget([
                     ) ?>
                 </div>
             </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-paw"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nome',
+                                'data' => $animaisList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar animal...',
+                                    'id' => 'animal-search',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum animal encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var animalId = e.params.data.id;
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '?AnimalSearch[id]=" + animalId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white" style="width: 45px;">
+                                <i class="fas fa-dog"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'especies_id',
+                                'data' => $especiesList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por espécie...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var especieId = e.params.data.id;
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '?AnimalSearch[especies_id]=" + especieId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-warning text-dark" style="width: 45px;">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'userprofiles_id',
+                                'data' => $donosList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por dono...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum dono encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var donoId = e.params.data.id;
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '?AnimalSearch[userprofiles_id]=" + donoId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#animal-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todos',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-mars"></i> Machos',
+                                ['index', 'AnimalSearch[sexo]' => 'M'],
+                                ['class' => 'btn btn-sm btn-outline-primary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-venus"></i> Fêmeas',
+                                ['index', 'AnimalSearch[sexo]' => 'F'],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-microchip"></i> Com Microchip',
+                                ['index', 'AnimalSearch[microship]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-microchip"></i> Sem Microchip',
+                                ['index', 'AnimalSearch[microship]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-warning']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check-circle"></i> Ativos',
+                                ['index', 'AnimalSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-info']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body p-0">
                 <?php \yii\widgets\Pjax::begin(['id' => 'animal-grid']); ?>
                 <?= GridView::widget([
@@ -129,6 +274,88 @@ echo PageHeaderWidget::widget([
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter'=> false
+                        ],
+                        [
+                            'attribute' => 'userprofiles_id',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'label' => 'Dono',
+                            'value' => function($model) {
+                                return $model->userprofiles->nomecompleto ?? '-';
+                            },
+                             'filter'=> false
+                            // 'filter' => Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'userprofiles_id',
+                            //     'data' => \backend\models\UserprofileSearch::getUserListByType('cliente', true),
+                            //     'options' => [
+                            //         'placeholder' => 'Dono...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum dono encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
+                        ],
+                        [
+                            'attribute' => 'especies_id',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'label' => 'Espécie',
+                            'value' => function($model) {
+                                return $model->especies->nome ?? '-';
+                            },
+                            'filter'=> false
+                            // 'filter' => Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'especies_id',
+                            //     'data' => $especiesList,
+                            //     'options' => [
+                            //         'placeholder' => 'Espécie...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
+                        ],
+                        [
+                            'attribute' => 'racas_id',
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'label' => 'Raça',
+                            'value' => function($model) {
+                                return $model->racas->nome ?? '-';
+                            },
+                            'filter'=> false
+                            // 'filter' => Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'racas_id',
+                            //     'data' => $racasList,
+                            //     'options' => [
+                            //         'placeholder' => 'Raça...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -136,6 +363,7 @@ echo PageHeaderWidget::widget([
                             'attribute' => 'dtanascimento',
                             'label' => 'Data Nasc.',
                             'format' => ['date', 'php:d/m/Y'],
+                            'filter'=> false
                         ],
                         [
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -145,6 +373,7 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return $model->peso ? number_format($model->peso, 2, ',', '.') . ' kg' : '-';
                             },
+                            'filter'=> false
                         ],
                         [
                             'attribute' => 'sexo',
@@ -159,7 +388,8 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '-';
                             },
-                                'filter' => ['M' => 'Macho', 'F' => 'Fêmea'],
+                            'filter'=> false
+                                
                         ],
                         [
                             'attribute' => 'microship',
@@ -173,59 +403,7 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-secondary"><i class="fas fa-times"></i> Não</span>';
                             },
-                                'filter' => [1 => 'Sim', 0 => 'Não'],
-                        ],
-                        [
-                            'attribute' => 'especies_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
-                            'label' => 'Espécie',
-                            'value' => function($model) {
-                                return $model->especies->nome ?? '-';
-                            },
-                                'filter' => Select2::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'especies_id',
-                                    'data' => $especiesList,
-                                    'options' => [
-                                        'placeholder' => 'Espécie...',
-                                        'allowClear' => true,
-                                        'style' => 'width: 120px;',
-                                    ],
-                                    'pluginOptions' => [
-                                        'allowClear' => true,
-                                        'language' => [
-                                            'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
-                                        ],
-                                    ],
-                                    'bsVersion' => '5.x',
-                                ]),
-                        ],
-                        [
-                            'attribute' => 'userprofiles_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
-                            'label' => 'Dono',
-                            'value' => function($model) {
-                                return $model->userprofiles->nomecompleto ?? '-';
-                            },
-                                'filter' => Select2::widget([
-                                    'model' => $searchModel,
-                                    'attribute' => 'userprofiles_id',
-                                    'data' => \backend\models\UserprofileSearch::getUserListByType('cliente', true),
-                                    'options' => [
-                                        'placeholder' => 'Dono...',
-                                        'allowClear' => true,
-                                        'style' => 'width: 120px;',
-                                    ],
-                                    'pluginOptions' => [
-                                        'allowClear' => true,
-                                        'language' => [
-                                            'noResults' => new \yii\web\JsExpression('function() { return "Nenhum dono encontrado"; }'),
-                                        ],
-                                    ],
-                                    'bsVersion' => '5.x',
-                                ]),
+                            'filter' => false,
                         ],
                         [
                             'attribute' => 'created_at',
@@ -255,7 +433,7 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                                'filter' => [0 => 'Ativo', 1 => 'Eliminado'],
+                            'filter' => false,
                         ],
                         [
                             'class' => ActionColumn::class,
@@ -273,29 +451,37 @@ echo PageHeaderWidget::widget([
                                         ]
                                     );
                                 },
+
+                                //Verifica se o user tem permissão para permitir editar
                                 'update' => function ($url, $model) {
-                                    return Html::a(
-                                        '<i class="fas fa-edit"></i>',
-                                        $url,
-                                        [
-                                            'class' => 'btn btn-sm btn-primary',
-                                            'title' => 'Editar',
-                                            'data-toggle' => 'tooltip',
-                                        ]
-                                    );
+                                     if (Yii::$app->user->can('updateAnimal')) {
+                                        return Html::a(
+                                            '<i class="fas fa-edit"></i>',
+                                            $url,
+                                            [
+                                                'class' => 'btn btn-sm btn-primary',
+                                                'title' => 'Editar',
+                                                'data-toggle' => 'tooltip',
+                                            ]
+                                        );
+                                    }  
                                 },
+
+                                
                                 'delete' => function ($url, $model) {
-                                    return Html::a(
-                                        '<i class="fas fa-trash"></i>',
-                                        $url,
-                                        [
-                                            'class' => 'btn btn-sm btn-danger',
-                                            'title' => 'Eliminar',
-                                            'data-toggle' => 'tooltip',
-                                            'data-confirm' => 'Tem a certeza que deseja eliminar este animal?',
-                                            'data-method' => 'post',
-                                        ]
-                                    );
+                                    if (Yii::$app->user->can('deleteAnimal')) {
+                                        return Html::a(
+                                            '<i class="fas fa-trash"></i>',
+                                            $url,
+                                            [
+                                                'class' => 'btn btn-sm btn-danger',
+                                                'title' => 'Eliminar',
+                                                'data-toggle' => 'tooltip',
+                                                'data-confirm' => 'Tem a certeza que deseja eliminar este animal?',
+                                                'data-method' => 'post',
+                                            ]
+                                        );
+                                    }
                                 },
                             ],
                             'urlCreator' => function ($action, Animal $model, $key, $index, $column) {

@@ -40,6 +40,7 @@ echo PageHeaderWidget::widget([
     <div class="container-fluid">
         <?= $this->render('_form', [
             'model' => $model,
+            'searchModel' => $searchModel,
         ]) ?>
     </div>
 </div>

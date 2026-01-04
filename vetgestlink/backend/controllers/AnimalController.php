@@ -5,6 +5,9 @@ namespace backend\controllers;
 use Yii;
 use common\models\Animal;
 use backend\models\AnimalSearch;
+use backend\models\EspecieSearch;
+use backend\models\RacaSearch;
+use backend\models\UserprofileSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,6 +74,8 @@ class AnimalController extends Controller
      */
     public function actionIndex()
     {
+
+
         $searchModel = new AnimalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -80,8 +85,10 @@ class AnimalController extends Controller
         $femeaCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'F'])->count();
         $microchipCount = Animal::find()->where(['eliminado' => 0, 'microship' => 1])->count();
         
-        // Listas para filtros
-        $especiesList = \backend\models\EspecieSearch::getActiveList();
+        // Listas para filtros Select2
+        $animaisList = AnimalSearch::getAnimaisListForIndex();
+        $especiesList = AnimalSearch::getEspeciesListForIndex();
+        $donosList = AnimalSearch::getDonosListForIndex();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -90,7 +97,9 @@ class AnimalController extends Controller
             'machoCount' => $machoCount,
             'femeaCount' => $femeaCount,
             'microchipCount' => $microchipCount,
+            'animaisList' => $animaisList,
             'especiesList' => $especiesList,
+            'donosList' => $donosList,
         ]);
     }
 
@@ -129,9 +138,9 @@ class AnimalController extends Controller
         }
 
         // Preparar listas para o formulário
-        $especiesList = \backend\models\EspecieSearch::getEspeciesList();
-        $racasList = \backend\models\RacaSearch::getRacasList();
-        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
+        $especiesList = EspecieSearch::getEspeciesList();
+        $racasList = RacaSearch::getRacasList();
+        $userprofilesList = UserprofileSearch::getActiveOwnersList();
 
         return $this->render('create', [
             'model' => $model,
@@ -205,5 +214,23 @@ class AnimalController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    private static function getusertype($userId) {
+        if (!$userId) {
+            return 0;
+        }
+        $roles = Yii::$app->authManager->getRolesByUser($userId);
+        if (isset($roles['admin'])) {
+            return 1;
+        }
+        if (isset($roles['veterinario'])) {
+            return 2;
+        }
+        if (isset($roles['rececionista'])) {
+            return 3;
+        }
+        return 0;
     }
 }

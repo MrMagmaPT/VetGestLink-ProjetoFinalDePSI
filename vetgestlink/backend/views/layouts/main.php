@@ -74,12 +74,18 @@ $this->beginPage();
                     </a>
 
                 </li>
+                <!-- Control Sidebar -->
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- Main Sidebar -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- VetGestLink Logo -->
-            <a href="<?= Url::home() ?>" class="brand-link">
+            <a href="<?= Url::home() ?>" class="brand-link" style="text-decoration: none;">
                 <img src="<?= $faviconUrl ?>" alt="Logo" class="brand-image">
                 <span class="brand-text text-success"><b>VetGestLink</b></span>
                 <!-- Botão de Logout compacto -->
@@ -119,7 +125,7 @@ $this->beginPage();
                                 $user = Yii::$app->user->identity;
                             ?>
                             <div class="d-flex align-items-center">
-                                <a href="<?= $profileUrl ?>" class="d-block mr-2">
+                                <a href="<?= $profileUrl ?>" class="d-block mr-2" style="text-decoration: none;">
                                     <?= isset($user->username) ? Html::encode($user->username) : '' ?>
                                 </a>
                             </div>
@@ -184,7 +190,7 @@ $this->beginPage();
                             ]) ?>
                             <?= MenuItem::widget([
                                     'icon' => 'far fa-file-lines',
-                                    'text' => 'Consulta',
+                                    'text' => 'Marcações',
                                     'url' => ['/marcacao/index'],
                                     'active' => Yii::$app->controller->id === 'marcacao' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
@@ -193,6 +199,12 @@ $this->beginPage();
                                     'text' => 'Medicamentos',
                                     'url' => ['/medicamento/index'],
                                     'active' => Yii::$app->controller->id === 'medicamento' && Yii::$app->controller->action->id === 'index',
+                            ]) ?>
+                            <?= MenuItem::widget([
+                                    'icon' => 'fa fa-concierge-bell',
+                                    'text' => 'Serviços',
+                                    'url' => ['/servico/index'],
+                                    'active' => Yii::$app->controller->id === 'servico' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
                             <?= MenuGroup::widget([
                                     'text' => 'Raças & Espécies',
@@ -220,6 +232,12 @@ $this->beginPage();
                                     'text' => 'Dashboard',
                                     'url' => ['/site/index'],
                                     'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                            ]) ?>
+                            <?= MenuItem::widget([
+                                    'icon' => 'fa fa-circle-user',
+                                    'text' => 'Gestao de Clientes',
+                                    'url' => ['/userprofile/index'],
+                                    'active' => Yii::$app->controller->id === 'userprofile' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
                             <?= MenuItem::widget([
                                     'icon' => 'fa fa-paw',
@@ -255,10 +273,26 @@ $this->beginPage();
                 <b>Versão</b> 1.0.0
             </div>
         </footer>
+        
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <!-- O conteúdo será gerado dinamicamente pelo control_sidebar.js -->
+        </aside>
+    </div>
+    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    
+    <?php
+    // Registrar o control_sidebar.js
+    $this->registerJsFile(
+        '@web/../vendor/hail812/yii2-adminlte3/src/web/js/control_sidebar.js',
+        ['depends' => [\yii\web\JqueryAsset::class]]
+    );
+    ?>
     <?php $this->endBody() ?>
     </body>
     </html>

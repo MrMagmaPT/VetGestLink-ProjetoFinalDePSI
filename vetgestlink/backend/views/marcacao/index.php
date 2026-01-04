@@ -91,6 +91,141 @@ echo PageHeaderWidget::widget([
                     ) ?>
                 </div>
             </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-calendar"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'data',
+                                'data' => $datasList ?? [],
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por data...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhuma data encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var data = e.params.data.id;
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '?MarcacaoSearch[data]=" + data});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-info text-white" style="width: 45px;">
+                                <i class="fas fa-paw"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'animais_id',
+                                'data' => $animaisList,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por animal...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhum animal encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var animalId = e.params.data.id;
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '?MarcacaoSearch[animais_id]=" + animalId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white" style="width: 45px;">
+                                <i class="fas fa-user-md"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'userprofiles_id',
+                                'data' => $userprofilesList,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por veterinário...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new JsExpression('function() { return "Nenhum veterinário encontrado"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var vetId = e.params.data.id;
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '?MarcacaoSearch[userprofiles_id]=" + vetId});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#marcacao-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todas',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-clock"></i> Pendentes',
+                                ['index', 'MarcacaoSearch[estado]' => 'pendente'],
+                                ['class' => 'btn btn-sm btn-outline-warning']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Realizadas',
+                                ['index', 'MarcacaoSearch[estado]' => 'realizada'],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Canceladas',
+                                ['index', 'MarcacaoSearch[estado]' => 'cancelada'],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
             <div class="card-body p-0">
                 <?php \yii\widgets\Pjax::begin(['id' => 'marcacao-grid']); ?>
                 <?= GridView::widget([
@@ -112,6 +247,10 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<strong>' . Yii::$app->formatter->asDate($model->data, 'php:d/m/Y') . '</strong>';
                             },
+                            'filter' => Html::activeInput('date', $searchModel, 'data', [
+                                'class' => 'form-control form-control-sm',
+                                'style' => 'width: 150px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'horainicio',
@@ -121,6 +260,10 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horainicio));
                             },
+                            'filter' => Html::activeInput('time', $searchModel, 'horainicio', [
+                                'class' => 'form-control form-control-sm',
+                                'style' => 'width: 120px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'horafim',
@@ -130,6 +273,10 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return '<i class="far fa-clock"></i> ' . date('H:i', strtotime($model->horafim));
                             },
+                            'filter' => Html::activeInput('time', $searchModel, 'horafim', [
+                                'class' => 'form-control form-control-sm',
+                                'style' => 'width: 120px;'
+                            ]),
                         ],
                         [
                             'attribute' => 'animais_id',
@@ -146,23 +293,10 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '-';
                             },
-                            'filter' => Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'animais_id',
-                                'data' => $animaisList,
-                                'options' => [
-                                    'placeholder' => 'Animal...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'minimumResultsForSearch' => 0,
-                                    'language' => [
-                                        'noResults' => new JsExpression('function() { return "Nenhum animal encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
+                            'filter' => Html::activeTextInput($searchModel, 'animais_id', [
+                                'class' => 'form-control form-control-sm',
+                                'placeholder' => 'Animal...',
+                                'style' => 'width: 120px;'
                             ]),
                         ],
                         [
@@ -180,23 +314,10 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '-';
                             },
-                            'filter' => Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'userprofiles_id',
-                                'data' => $userprofilesList,
-                                'options' => [
-                                    'placeholder' => 'Veterinário...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'minimumResultsForSearch' => 0,
-                                    'language' => [
-                                        'noResults' => new JsExpression('function() { return "Nenhum veterinário encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
+                            'filter' => Html::activeTextInput($searchModel, 'userprofiles_id', [
+                                'class' => 'form-control form-control-sm',
+                                'placeholder' => 'Veterinário...',
+                                'style' => 'width: 120px;'
                             ]),
                         ],
                         [
@@ -212,28 +333,13 @@ echo PageHeaderWidget::widget([
                                 ];
                                 return $badges[$model->estado] ?? $model->estado;
                             },
-                            'filter' => Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'estado',
-                                'data' => [
-                                    Marcacao::ESTADO_PENDENTE => 'Pendente',
-                                    Marcacao::ESTADO_REALIZADA => 'Realizada',
-                                    Marcacao::ESTADO_CANCELADA => 'Cancelada',
-                                ],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'minimumResultsForSearch' => 0,
-                                    'language' => [
-                                        'noResults' => new JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter' => Html::activeDropDownList($searchModel, 'estado',
+                                ['' => 'Todos...', 'pendente' => 'Pendente', 'realizada' => 'Realizada', 'cancelada' => 'Cancelada'],
+                                [
+                                    'class' => 'form-control form-control-sm',
+                                    'style' => 'width: 120px;'
+                                ]
+                            ),
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [

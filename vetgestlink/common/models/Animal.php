@@ -73,7 +73,13 @@ class Animal extends \yii\db\ActiveRecord
         return [
             [['racas_id'], 'default', 'value' => null],
             [['eliminado'], 'default', 'value' => 0],
-            [['nome', 'dtanascimento', 'peso', 'microship', 'sexo', 'especies_id', 'userprofiles_id'], 'required'],
+            ['nome', 'required', 'message' => 'O nome do animal é obrigatório.'],
+            ['dtanascimento', 'required', 'message' => 'A data de nascimento é obrigatória.'],
+            ['peso', 'required', 'message' => 'O peso é obrigatório.'],
+            ['microship', 'required', 'message' => 'O número do microchip é obrigatório.'],
+            ['sexo', 'required', 'message' => 'O sexo é obrigatório.'],
+            ['especies_id', 'required', 'message' => 'A espécie é obrigatória.'],
+            ['userprofiles_id', 'required', 'message' => 'O dono é obrigatório.'],
             [['dtanascimento', 'created_at', 'updated_at'], 'safe'],
             [['peso'], 'number'],
             [['microship', 'especies_id', 'userprofiles_id', 'racas_id', 'eliminado'], 'integer'],
@@ -292,6 +298,32 @@ class Animal extends \yii\db\ActiveRecord
         $hoje = new \DateTime();
         $idade = $hoje->diff($dataNascimento);
         return $idade->y; // retorna anos
+    }
+
+    /**
+     * Retorna a idade do animal em anos, meses e dias (ex: "2 anos, 3 meses, 5 dias")
+     * @return string
+     */
+    public function getIdadeExtenso()
+    {
+        if (!$this->dtanascimento) {
+            return 'N/A';
+        }
+        $diff = date_diff(date_create($this->dtanascimento), date_create('now'));
+        $anos = $diff->y;
+        $meses = $diff->m;
+        $dias = $diff->d;
+        $partes = [];
+        if ($anos > 0) {
+            $partes[] = $anos . ' ' . ($anos === 1 ? 'ano' : 'anos');
+        }
+        if ($meses > 0) {
+            $partes[] = $meses . ' ' . ($meses === 1 ? 'mês' : 'meses');
+        }
+        if ($dias > 0 || empty($partes)) {
+            $partes[] = $dias . ' ' . ($dias === 1 ? 'dia' : 'dias');
+        }
+        return implode(', ', $partes);
     }
     
     /**

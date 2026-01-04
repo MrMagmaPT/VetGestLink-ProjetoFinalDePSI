@@ -4,7 +4,7 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 use yii\captcha\Captcha;
 
-$this->title = 'Contato';
+$this->title = 'Contacto';
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>

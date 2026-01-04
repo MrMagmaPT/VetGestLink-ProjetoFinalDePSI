@@ -36,6 +36,7 @@ echo PageHeaderWidget::widget([
     <div class="container-fluid">
         <?= $this->render('_form', [
             'model' => $model,
+            'especiesAtivas' => $especiesAtivas,
         ]) ?>
     </div>
 </div>

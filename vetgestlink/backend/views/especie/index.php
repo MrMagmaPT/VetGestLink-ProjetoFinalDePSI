@@ -60,18 +60,92 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Espécies
                     </h5>
-                    <?= Html::a(
-                        '<i class="fas fa-plus"></i> Nova Espécie',
-                        ['create'],
-                        ['class' => 'btn btn-success']
-                    ) ?>
+                    <?php if (Yii::$app->user->can('createSpecies')): ?>
+                        <?= Html::a(
+                            '<i class="fas fa-plus"></i> Nova Espécie',
+                            ['create'],
+                            ['class' => 'btn btn-success']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
             </div>
+            <div class="card-body">
+                <!-- Barra de Pesquisa com Select2 -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-paw"></i>
+                            </span>
+                            <?= kartik\select2\Select2::widget([
+                                'model' => $searchModel,
+                                'attribute' => 'nome',
+                                'data' => $searchModel::getActiveList(),
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por nome...',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma espécie encontrada"; }'),
+                                    ],
+                                ],
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var nome = e.params.data.id;
+                                        $.pjax.reload({container: "#especie-grid", url: "' . Url::to(['index']) . '?EspecieSearch[nome]=" + encodeURIComponent(nome)});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#especie-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                                'bsVersion' => '5.x',
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todas',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-check"></i> Ativas',
+                                ['index', 'EspecieSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Eliminadas',
+                                ['index', 'EspecieSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card-body p-0">
                 <?php \yii\widgets\Pjax::begin(['id' => 'especie-grid']); ?>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
+                    'summary' => ' <b>Mostrando {begin} - {end} espécies</b>',
+                    'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
+                    //Mudar a mensagem quando não houver resultados
+                    'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
                     'columns' => [
                         [
@@ -89,6 +163,7 @@ echo PageHeaderWidget::widget([
                                     ['class' => 'text-decoration-none']
                                 );
                             },
+                            'filter' => false,
                         ],
                         [
                             'attribute' => 'eliminado',
@@ -101,10 +176,27 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativa</span>';
                             },
-                            'filter' => [
-                                0 => 'Ativa',
-                                1 => 'Eliminada',
-                            ],
+                            'filter' => false,
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'eliminado',
+                            //     'data' => [
+                            //         0 => 'Ativa',
+                            //         1 => 'Eliminada',
+                            //     ],
+                            //     'options' => [
+                            //         'placeholder' => 'Estado...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [
@@ -124,6 +216,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('updateSpecies')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-edit"></i>',
                                         $url,
@@ -135,6 +230,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('deleteSpecies')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,

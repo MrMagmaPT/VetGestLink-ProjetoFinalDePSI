@@ -92,36 +92,167 @@ echo PageHeaderWidget::widget([
             </div>
             <div class="card-body">
                 <!-- Barra de Pesquisa com Select2 -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <?= Select2::widget([
-                            'name' => 'search_userprofile',
-                            'data' => $searchModel->getNomecompletoList(), // [id => nomecompleto]
-                            'value' => $searchModel->id,
-                            'options' => [
-                                'placeholder' => 'Pesquisar perfil...',
-                                'id' => 'userprofile-search',
-                            ],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                                'language' => [
-                                    'noResults' => new \yii\web\JsExpression('function() { return "Nenhum perfil encontrado"; }'),
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white" style="width: 45px;">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'name' => 'search_userprofile',
+                                'data' => $searchModel->getNomecompletoList(),
+                                'value' => $searchModel->id,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar perfil...',
+                                    'id' => 'userprofile-search',
                                 ],
-                                'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                                'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
-                            ],
-                            'bsVersion' => '5.x',
-                            'pluginEvents' => [
-                                'select2:select' => 'function(e) { 
-                                    var id = e.params.data.id;
-                                    window.location.href = "' . Url::to(['index']) . '?UserprofileSearch[id]=" + id;
-                                }',
-                                //Redireciona para a página index sem filtros ao limpar a barra de pesquisa
-                                'select2:clear' => 'function(e) {
-                                    window.location.href = "' . Url::to(['index']) . '";
-                                }',
-                            ],
-                        ]); ?>
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum perfil encontrado"; }'),
+                                    ],
+                                    'templateResult' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                                    'templateSelection' => new \yii\web\JsExpression('function(data) { return data.text; }'),
+                                ],
+                                'bsVersion' => '5.x',
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var id = e.params.data.id;
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '?UserprofileSearch[id]=" + id});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-info text-white" style="width: 45px;">
+                                <i class="fas fa-id-card"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'name' => 'search_nif',
+                                'data' => $searchModel->getNifList(),
+                                'value' => $searchModel->nif,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por NIF...',
+                                    'id' => 'nif-search',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum NIF encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var nif = e.params.data.id;
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '?UserprofileSearch[nif]=" + nif});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white" style="width: 45px;">
+                                <i class="fas fa-phone"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'name' => 'search_telemovel',
+                                'data' => $searchModel->getTelemovelList(),
+                                'value' => $searchModel->telemovel,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por Telemóvel...',
+                                    'id' => 'telemovel-search',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum telemóvel encontrado"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var telemovel = e.params.data.id;
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '?UserprofileSearch[telemovel]=" + telemovel});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                            ]); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text bg-warning text-dark" style="width: 45px;">
+                                <i class="fas fa-city"></i>
+                            </span>
+                            <?= Select2::widget([
+                                'name' => 'search_cidade',
+                                'data' => $searchModel->getCidadeList(),
+                                'value' => $searchModel->morada_cidade,
+                                'options' => [
+                                    'placeholder' => 'Pesquisar por Cidade...',
+                                    'id' => 'cidade-search',
+                                ],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma cidade encontrada"; }'),
+                                    ],
+                                ],
+                                'bsVersion' => '5.x',
+                                'pluginEvents' => [
+                                    'select2:select' => 'function(e) { 
+                                        var cidade = e.params.data.id;
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '?UserprofileSearch[morada_cidade]=" + cidade});
+                                    }',
+                                    'select2:clear' => 'function(e) {
+                                        $.pjax.reload({container: "#userprofile-grid", url: "' . Url::to(['index']) . '"});
+                                    }',
+                                ],
+                            ]); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Barra de Filtros Rápidos -->
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <span class="text-muted fw-bold me-2">
+                                <i class="fas fa-filter"></i> Filtros Rápidos:
+                            </span>
+                            <?= Html::a(
+                                '<i class="fas fa-list"></i> Todos',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-secondary']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-user-check"></i> Ativos',
+                                ['index', 'UserprofileSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-user-times"></i> Eliminados',
+                                ['index', 'UserprofileSearch[eliminado]' => 1],
+                                ['class' => 'btn btn-sm btn-outline-danger']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times"></i> Limpar Filtros',
+                                ['index'],
+                                ['class' => 'btn btn-sm btn-outline-dark']
+                            ) ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,46 +310,48 @@ echo PageHeaderWidget::widget([
                             'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'nif',
                             'label' => 'NIF',
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'nif',
-                                'data' => $searchModel->getNifList(),
-                                'options' => [
-                                    'placeholder' => 'NIF...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum NIF encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter'=> false
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'nif',
+                            //     'data' => $searchModel->getNifList(),
+                            //     'options' => [
+                            //         'placeholder' => 'NIF...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum NIF encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'telemovel',
                             'label' => 'Telemóvel',
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'telemovel',
-                                'data' => $searchModel->getTelemovelList(),
-                                'options' => [
-                                    'placeholder' => 'Telemóvel...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum telemóvel encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter'=> false
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'telemovel',
+                            //     'data' => $searchModel->getTelemovelList(),
+                            //     'options' => [
+                            //         'placeholder' => 'Telemóvel...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum telemóvel encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -228,23 +361,24 @@ echo PageHeaderWidget::widget([
                             'value' => function($model) {
                                 return $model->moradaCidade ?: '-';
                             },
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'morada_cidade',
-                                'data' => $searchModel->getCidadeList(),
-                                'options' => [
-                                    'placeholder' => 'Cidade...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma cidade encontrada"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter'=> false
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'morada_cidade',
+                            //     'data' => $searchModel->getCidadeList(),
+                            //     'options' => [
+                            //         'placeholder' => 'Cidade...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhuma cidade encontrada"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'headerOptions' => ['style' => 'width: 180px; text-align: center'],
@@ -258,26 +392,27 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
                             },
-                            'filter' => kartik\select2\Select2::widget([
-                                'model' => $searchModel,
-                                'attribute' => 'eliminado',
-                                'data' => [
-                                    0 => 'Ativo',
-                                    1 => 'Eliminado',
-                                ],
-                                'options' => [
-                                    'placeholder' => 'Estado...',
-                                    'allowClear' => true,
-                                    'style' => 'width: 120px;',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                                    ],
-                                ],
-                                'bsVersion' => '5.x',
-                            ]),
+                            'filter'=> false
+                            // 'filter' => kartik\select2\Select2::widget([
+                            //     'model' => $searchModel,
+                            //     'attribute' => 'eliminado',
+                            //     'data' => [
+                            //         0 => 'Ativo',
+                            //         1 => 'Eliminado',
+                            //     ],
+                            //     'options' => [
+                            //         'placeholder' => 'Estado...',
+                            //         'allowClear' => true,
+                            //         'style' => 'width: 120px;',
+                            //     ],
+                            //     'pluginOptions' => [
+                            //         'allowClear' => true,
+                            //         'language' => [
+                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
+                            //         ],
+                            //     ],
+                            //     'bsVersion' => '5.x',
+                            // ]),
                         ],
                         [
                             'class' => ActionColumn::class,
