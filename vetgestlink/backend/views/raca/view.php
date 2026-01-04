@@ -58,13 +58,6 @@ $this->registerCssFile('@web/static/css/view.css');
                 'value' => $model->eliminado ? 'Eliminada' : 'Ativa',
                 'url' => '#',
             ]) ?>
-            <?= SmallCardWidget::widget([
-                'icon' => 'fa-hashtag',
-                'iconColorClass' => 'icon-gray',
-                'text' => 'ID',
-                'value' => $model->id,
-                'url' => '#',
-            ]) ?>
         </div>
 
         <div class="row">
@@ -108,14 +101,6 @@ $this->registerCssFile('@web/static/css/view.css');
                                 <?php else: ?>
                                     <span class="badge bg-success"><i class="fas fa-check"></i> Ativa</span>
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-3 fw-bold text-muted">
-                                <i class="fas fa-hashtag"></i> ID:
-                            </div>
-                            <div class="col-md-9">
-                                <?= $model->id ?>
                             </div>
                         </div>
                     </div>

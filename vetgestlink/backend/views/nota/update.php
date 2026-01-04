@@ -38,8 +38,6 @@ echo PageHeaderWidget::widget([
     <div class="container-fluid">
         <?= $this->render('_form', [
             'model' => $model,
-            'animaisList' => $animaisList,
-            'userprofilesList' => $userprofilesList,
         ]) ?>
     </div>
 </div>

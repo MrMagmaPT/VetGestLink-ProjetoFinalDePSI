@@ -7,8 +7,6 @@ use kartik\select2\Select2;
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 /** @var yii\widgets\ActiveForm $form */
-/** @var array $animaisList */
-/** @var array $userprofilesList */
 ?>
 
 <div class="nota-form">
@@ -41,32 +39,12 @@ use kartik\select2\Select2;
 
                     <div class="row">
                         <div class="col-md-6">
-                            <?= $form->field($model, 'animais_id')->widget(Select2::class, [
-                                'data' => $animaisList,
-                                'options' => [
-                                    'placeholder' => 'Selecione um animal',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum animal encontrado"; }'),
-                                    ],
-                                ],
-                            ])->label('<i class="fas fa-paw me-2"></i> Animal') ?>
+                            <?= $form->field($model, 'animais_id')->hiddenInput(['value' => $model->animais_id])->label(false) ?>
+
                         </div>
                         <div class="col-md-6">
-                            <?= $form->field($model, 'userprofiles_id')->widget(Select2::class, [
-                                'data' => $userprofilesList,
-                                'options' => [
-                                    'placeholder' => 'Selecione o autor',
-                                ],
-                                'pluginOptions' => [
-                                    'allowClear' => true,
-                                    'language' => [
-                                        'noResults' => new \yii\web\JsExpression('function() { return "Nenhum utilizador encontrado"; }'),
-                                    ],
-                                ],
-                            ])->label('<i class="fas fa-user-md me-2"></i> Autor') ?>
+                            <?= $form->field($model, 'userprofiles_id')->hiddenInput(['value' => $model->userprofiles_id])->label(false) ?>
+
                         </div>
                     </div>
                 </div>
@@ -89,10 +67,10 @@ use kartik\select2\Select2;
                         <strong>Sobre notas:</strong><br>
                         As notas permitem registar observações importantes sobre os animais.<br><br>
                         <strong>Dicas:</strong><br>
-                        • Use notas para comportamento<br>
-                        • Registre alergias conhecidas<br>
+                        • Use notas para detalhar comportamento<br>
+                        • Registe alergias conhecidas<br>
                         • Anote preferências alimentares<br>
-                        • Documente histórico médico
+                        • Documente histórico veterinario
                     </div>
                 </div>
             </div>

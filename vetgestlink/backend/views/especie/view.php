@@ -44,7 +44,6 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                             'model' => $model,
                             'options' => ['class' => 'table table-borderless mb-0'],
                             'attributes' => [
-                                'id',
                                 [
                                     'attribute' => 'nome',
                                     'value' => function ($model) {

@@ -69,28 +69,28 @@ class NotaController extends Controller
     /**
      * Creates a new Nota model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param int $animal_id Animal_ID
+     * @param int $user_id User_ID
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate(int $animal_id, int $user_id)
     {
-        $model = new Nota();
+        $nota = new Nota();
+
+        $nota->animais_id = $animal_id;
+        $nota->userprofiles_id = $user_id;
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($nota->load($this->request->post( )) && $nota->save()) {
+                return $this->redirect(['animal/view', 'id' => $animal_id]);
             }
         } else {
-            $model->loadDefaultValues();
+            $nota->loadDefaultValues();
         }
 
-        // Preparar listas para o formulário
-        $animaisList = \backend\models\AnimalSearch::getActiveList();
-        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         return $this->render('create', [
-            'model' => $model,
-            'animaisList' => $animaisList,
-            'userprofilesList' => $userprofilesList,
+            'model' => $nota,
         ]);
     }
 
@@ -106,17 +106,11 @@ class NotaController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $id]);
         }
-
-        // Preparar listas para o formulário
-        $animaisList = \backend\models\AnimalSearch::getActiveList();
-        $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 
         return $this->render('update', [
             'model' => $model,
-            'animaisList' => $animaisList,
-            'userprofilesList' => $userprofilesList,
         ]);
     }
 
@@ -124,14 +118,15 @@ class NotaController extends Controller
      * Deletes an existing Nota model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
+     * @param int $animal_id Animal_ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $animal_id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['animal/view', 'id' => $animal_id]);
     }
 
     /**
