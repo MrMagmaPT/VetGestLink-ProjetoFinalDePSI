@@ -259,27 +259,33 @@ $this->registerCssFile('@web/static/css/view.css');
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-md']
-                            ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-list"></i> Ver Todos',
-                                ['index'],
-                                ['class' => 'btn btn-secondary btn-md']
-                            ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-md',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar este animal?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php if (Yii::$app->user->can('viewAnimals')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-list"></i> Ver Todos',
+                                    ['index'],
+                                    ['class' => 'btn btn-secondary btn-md']
+                                ) ?>
+                            <?php endif; ?>
+                            <?php if (Yii::$app->user->can('updateAnimal')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-md']
+                                ) ?>
+                            <?php endif; ?>
+                            <?php if (Yii::$app->user->can('deleteAnimal')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar este animal?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

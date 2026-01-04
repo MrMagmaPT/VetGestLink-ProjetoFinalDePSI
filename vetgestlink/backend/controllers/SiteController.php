@@ -142,6 +142,25 @@ class SiteController extends Controller
             ->andWhere(['eliminado' => 0])
             ->sum('total') ?? 0;
 
+        // Dados para o gráfico de faturamento dos últimos 12 meses
+        $dadosFaturamento = [];
+        $labelsMeses = [];
+        
+        $anoAtual = date('Y');
+        $nomesMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        
+        for ($mes = 1; $mes <= 12; $mes++) {
+            // Buscar faturas usando YEAR() e MONTH() do MySQL
+            $totalMes = Fatura::find()
+                ->where(['YEAR(created_at)' => $anoAtual])
+                ->andWhere(['MONTH(created_at)' => $mes])
+                ->andWhere(['eliminado' => 0, 'estado' => 1]) // Apenas faturas pagas
+                ->sum('total') ?? 0;
+            
+            $dadosFaturamento[] = (float)$totalMes;
+            $labelsMeses[] = $nomesMeses[$mes - 1];
+        }
+
         return $this->render('index', [
             'usertype' => $userType,
             'totalClientes' => $totalClientes,
@@ -162,6 +181,8 @@ class SiteController extends Controller
             'faturasDoMes' => $faturasDoMes,
             'receitaMensal' => $receitaMensal,
             'totalmarcacoes' => $totalmarcacoes,
+            'dadosFaturamento' => $dadosFaturamento,
+            'labelsMeses' => $labelsMeses,
         ]);
     }
     private static function getusertype($userId) {

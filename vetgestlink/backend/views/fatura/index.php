@@ -221,18 +221,18 @@ echo PageHeaderWidget::widget([
                             'headerOptions' => ['style' => 'width: 80px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                         ],
-                        [
-                            'attribute' => 'id',
-                            'label' => 'Nº Fatura',
-                            'headerOptions' => ['style' => 'width: 100px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
-                            'filter' => false,
-//                            'filter' => Html::activeTextInput($searchModel, 'id', [
-//                                'class' => 'form-control form-control-sm',
-//                                'placeholder' => 'Nº...',
-//                                'style' => 'width: 100px;'
-//                            ]),
-                        ],
+//                         [
+//                             'attribute' => 'id',
+//                             'label' => 'Nº Fatura',
+//                             'headerOptions' => ['style' => 'width: 100px; text-align: center'],
+//                             'contentOptions' => ['style' => 'text-align: center'],
+//                             'filter' => false,
+// //                            'filter' => Html::activeTextInput($searchModel, 'id', [
+// //                                'class' => 'form-control form-control-sm',
+// //                                'placeholder' => 'Nº...',
+// //                                'style' => 'width: 100px;'
+// //                            ]),
+//                         ],
                         [
                             'attribute' => 'total',
                             'headerOptions' => ['style' => 'width: 120px; text-align: right'],
@@ -333,15 +333,19 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
-                                    return Html::a(
-                                        '<i class="fas fa-edit"></i>',
-                                        $url,
-                                        [
-                                            'class' => 'btn btn-sm btn-primary',
-                                            'title' => 'Editar',
-                                            'data-toggle' => 'tooltip',
-                                        ]
-                                    );
+                                    // Só mostrar botão de editar se a fatura estiver pendente
+                                    if ($model->estado == 0) {
+                                        return Html::a(
+                                            '<i class="fas fa-edit"></i>',
+                                            $url,
+                                            [
+                                                'class' => 'btn btn-sm btn-primary',
+                                                'title' => 'Editar',
+                                                'data-toggle' => 'tooltip',
+                                            ]
+                                        );
+                                    }
+                                    return '';
                                 },
                                 'delete' => function ($url, $model) {
                                     return Html::a(

@@ -182,6 +182,13 @@ class FaturaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        
+        // Verificar se a fatura está paga
+        if ($model->estado == 1) {
+            \Yii::$app->session->setFlash('error', 'Não é possível editar uma fatura já paga.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+        
         $metodosPagamento = FaturaSearch::getMetodosPagamentoAtivos();
         $userprofilesList = \backend\models\UserprofileSearch::getActiveOwnersList();
 

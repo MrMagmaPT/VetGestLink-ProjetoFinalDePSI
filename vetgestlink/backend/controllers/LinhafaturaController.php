@@ -75,6 +75,13 @@ class LinhafaturaController extends Controller
             if (!$fatura) {
                 throw new NotFoundHttpException('Fatura não encontrada.');
             }
+            
+            // Verificar se a fatura está paga (estado = 1)
+            if ($fatura->estado == 1) {
+                \Yii::$app->session->setFlash('error', 'Não é possível adicionar linhas a uma fatura já paga.');
+                return $this->redirect(['/fatura/view', 'id' => $fatura_id]);
+            }
+            
             $model->faturas_id = $fatura_id;
         }
         
@@ -89,6 +96,16 @@ class LinhafaturaController extends Controller
                 if ($model->medicamentos_id) {
                     $medicamento = \common\models\Medicamento::findOne($model->medicamentos_id);
                     if ($medicamento) {
+                        // Verificar stock disponível
+                        if ($medicamento->quantidade < $model->quantidade) {
+                            \Yii::$app->session->setFlash('error', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
+                            return $this->render('create', [
+                                'model' => $model,
+                                'medicamentosList' => $medicamentosList,
+                                'servicosList' => $servicosList,
+                                'marcacoesList' => $marcacoesList,
+                            ]);
+                        }
                         $model->total = $medicamento->preco * $model->quantidade;
                     }
                 } elseif ($model->servicos_id) {
@@ -106,6 +123,15 @@ class LinhafaturaController extends Controller
                 }
                 
                 if ($model->save()) {
+                    // Decrementar stock do medicamento
+                    if ($model->medicamentos_id) {
+                        $medicamento = \common\models\Medicamento::findOne($model->medicamentos_id);
+                        if ($medicamento) {
+                            $medicamento->quantidade -= $model->quantidade;
+                            $medicamento->save(false);
+                        }
+                    }
+                    
                     // Atualizar total da fatura
                     $fatura = \common\models\Fatura::findOne($model->faturas_id);
                     if ($fatura) {
@@ -143,6 +169,17 @@ class LinhafaturaController extends Controller
         $model = $this->findModel($id);
         $faturaId = $model->faturas_id;
         
+        // Verificar se a fatura está paga
+        $fatura = \common\models\Fatura::findOne($faturaId);
+        if ($fatura && $fatura->estado == 1) {
+            \Yii::$app->session->setFlash('error', 'Não é possível editar linhas de uma fatura já paga.');
+            return $this->redirect(['/fatura/view', 'id' => $faturaId]);
+        }
+        
+        // Guardar quantidade original para ajustar stock
+        $quantidadeOriginal = $model->quantidade;
+        $medicamentoIdOriginal = $model->medicamentos_id;
+        
         // Listas para dropdowns
         $medicamentosList = \backend\models\MedicamentoSearch::getMedicamentoList();
         $servicosList = \backend\models\ServicoSearch::getActiveList();
@@ -154,6 +191,38 @@ class LinhafaturaController extends Controller
                 if ($model->medicamentos_id) {
                     $medicamento = \common\models\Medicamento::findOne($model->medicamentos_id);
                     if ($medicamento) {
+                        // Se mudou o medicamento ou aumentou a quantidade, verificar stock
+                        if ($medicamentoIdOriginal != $model->medicamentos_id) {
+                            // Mudou de medicamento - devolver stock do antigo e verificar novo
+                            if ($medicamentoIdOriginal) {
+                                $medicamentoAntigo = \common\models\Medicamento::findOne($medicamentoIdOriginal);
+                                if ($medicamentoAntigo) {
+                                    $medicamentoAntigo->quantidade += $quantidadeOriginal;
+                                    $medicamentoAntigo->save(false);
+                                }
+                            }
+                            if ($medicamento->quantidade < $model->quantidade) {
+                                \Yii::$app->session->setFlash('error', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
+                                return $this->render('update', [
+                                    'model' => $model,
+                                    'medicamentosList' => $medicamentosList,
+                                    'servicosList' => $servicosList,
+                                    'marcacoesList' => $marcacoesList,
+                                ]);
+                            }
+                        } else {
+                            // Mesmo medicamento - verificar diferença de quantidade
+                            $diferenca = $model->quantidade - $quantidadeOriginal;
+                            if ($diferenca > 0 && $medicamento->quantidade < $diferenca) {
+                                \Yii::$app->session->setFlash('error', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
+                                return $this->render('update', [
+                                    'model' => $model,
+                                    'medicamentosList' => $medicamentosList,
+                                    'servicosList' => $servicosList,
+                                    'marcacoesList' => $marcacoesList,
+                                ]);
+                            }
+                        }
                         $model->total = $medicamento->preco * $model->quantidade;
                     }
                 } elseif ($model->servicos_id) {
@@ -163,14 +232,47 @@ class LinhafaturaController extends Controller
                         $model->total = $servico->valor * $model->quantidade;
                         $model->vendidoemconsulta = 0; // Serviço avulso, não em consulta
                     }
+                    // Se tinha medicamento antes e agora mudou para serviço, devolver stock
+                    if ($medicamentoIdOriginal) {
+                        $medicamentoAntigo = \common\models\Medicamento::findOne($medicamentoIdOriginal);
+                        if ($medicamentoAntigo) {
+                            $medicamentoAntigo->quantidade += $quantidadeOriginal;
+                            $medicamentoAntigo->save(false);
+                        }
+                    }
                 } elseif ($model->marcacoes_id) {
                     $marcacao = \common\models\Marcacao::findOne($model->marcacoes_id);
                     if ($marcacao && $marcacao->servicos) {
                         $model->total = $marcacao->servicos->valor * $model->quantidade;
                     }
+                    // Se tinha medicamento antes e agora mudou para marcação, devolver stock
+                    if ($medicamentoIdOriginal) {
+                        $medicamentoAntigo = \common\models\Medicamento::findOne($medicamentoIdOriginal);
+                        if ($medicamentoAntigo) {
+                            $medicamentoAntigo->quantidade += $quantidadeOriginal;
+                            $medicamentoAntigo->save(false);
+                        }
+                    }
                 }
                 
                 if ($model->save()) {
+                    // Ajustar stock do medicamento
+                    if ($model->medicamentos_id) {
+                        $medicamento = \common\models\Medicamento::findOne($model->medicamentos_id);
+                        if ($medicamento) {
+                            if ($medicamentoIdOriginal == $model->medicamentos_id) {
+                                // Mesmo medicamento - ajustar pela diferença
+                                $diferenca = $model->quantidade - $quantidadeOriginal;
+                                $medicamento->quantidade -= $diferenca;
+                                $medicamento->save(false);
+                            } else {
+                                // Medicamento novo - decrementar a quantidade total
+                                $medicamento->quantidade -= $model->quantidade;
+                                $medicamento->save(false);
+                            }
+                        }
+                    }
+                    
                     // Atualizar total da fatura
                     $fatura = \common\models\Fatura::findOne($model->faturas_id);
                     if ($fatura) {
@@ -205,9 +307,25 @@ class LinhafaturaController extends Controller
         $model = $this->findModel($id);
         $faturaId = $model->faturas_id;
         
+        // Verificar se a fatura está paga
+        $fatura = \common\models\Fatura::findOne($faturaId);
+        if ($fatura && $fatura->estado == 1) {
+            \Yii::$app->session->setFlash('error', 'Não é possível eliminar linhas de uma fatura já paga.');
+            return $this->redirect(['/fatura/view', 'id' => $faturaId]);
+        }
+        
         // Soft delete
         $model->eliminado = 1;
         if ($model->save(false)) {
+            // Devolver stock do medicamento ao eliminar linha
+            if ($model->medicamentos_id) {
+                $medicamento = \common\models\Medicamento::findOne($model->medicamentos_id);
+                if ($medicamento) {
+                    $medicamento->quantidade += $model->quantidade;
+                    $medicamento->save(false);
+                }
+            }
+            
             // Atualizar total da fatura
             $fatura = \common\models\Fatura::findOne($faturaId);
             if ($fatura) {

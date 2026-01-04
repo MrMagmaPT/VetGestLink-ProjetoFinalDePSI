@@ -45,14 +45,46 @@ class UserprofileController extends Controller
         $searchModel = new UserprofileSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
+        // Se não for admin, mostrar apenas clientes
+        if (!Yii::$app->user->can('admin')) {
+            $dataProvider->query
+                ->joinWith('user')
+                ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+                ->andWhere(['auth_assignment.item_name' => 'cliente']);
+        }
+
         // Estatísticas para a view Extras
-        $totalCount = Userprofile::find()->count();
-        $activeCount = Userprofile::find()->where(['eliminado' => 0])->count();
-        $deletedCount = Userprofile::find()->where(['eliminado' => 1])->count();
-        $recentCount = Userprofile::find()
+        $totalQuery = Userprofile::find()
             ->joinWith('user')
-            ->where(['>=', 'user.created_at', strtotime('-30 days')])
-            ->count();
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
+        
+        $activeQuery = Userprofile::find()
+            ->where(['userprofiles.eliminado' => 0])
+            ->joinWith('user')
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
+        
+        $deletedQuery = Userprofile::find()
+            ->where(['userprofiles.eliminado' => 1])
+            ->joinWith('user')
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
+        
+        $recentQuery = Userprofile::find()
+            ->joinWith('user')
+            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
+            ->where(['>=', 'user.created_at', strtotime('-30 days')]);
+
+        // Se não for admin, filtrar estatísticas apenas para clientes
+        if (!Yii::$app->user->can('admin')) {
+            $totalQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
+            $activeQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
+            $deletedQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
+            $recentQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
+        }
+
+        $totalCount = $totalQuery->count();
+        $activeCount = $activeQuery->count();
+        $deletedCount = $deletedQuery->count();
+        $recentCount = $recentQuery->count();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -118,30 +150,16 @@ class UserprofileController extends Controller
             $model = $this->findModel($id);
         }
 
-        // Guardar a role original do utilizador associado
-        $auth = Yii::$app->authManager;
-        $originalRoles = $auth->getRolesByUser($model->user_id);
-
         // Carrega as moradas associadas
         $moradas = $model->moradas ?: [];
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // Processar a role APENAS se for admin
-                if (Yii::$app->user->can('admin')) {
-                    $newRole = $this->request->post('role');
-                    if ($newRole) {
-                        // Remove todas as roles atuais
-                        $auth->revokeAll($model->user_id);
-
-                        // Atribui a nova role
-                        $role = $auth->getRole($newRole);
-                        if ($role) {
-                            $auth->assign($role, $model->user_id);
-                        }
-                    }
+                // Permitir atualizar a role apenas para admin
+                if (!Yii::$app->user->can('admin')) {
+                    // Se não for admin, restaura o valor original da role
+                    $model->role = $model->getOldAttribute('role');
                 }
-
                 // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());
 
@@ -154,6 +172,7 @@ class UserprofileController extends Controller
                 // Processa upload de imagem
                 $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
                 if ($model->imageFile && $model->imageFile->tempName && file_exists($model->imageFile->tempName)) {
+                    // uploadImage() já atualiza o atributo $model->foto internamente
                     $model->uploadImage();
                 }
 
@@ -175,8 +194,6 @@ class UserprofileController extends Controller
             'moradas' => $moradas,
         ]);
     }
-
-
 
     /**
      * Deletes an existing Userprofile model.

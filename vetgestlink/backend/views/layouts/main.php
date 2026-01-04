@@ -145,7 +145,7 @@ $this->beginPage();
                                     'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
                             <?= MenuItem::widget([
-                                    'icon' => 'fa fa-circle-user',
+                                    'icon' => 'fa fas fa-users',
                                     'text' => 'Gestao de Utilizadores',
                                     'url' => ['/userprofile/index'],
                                     'active' => Yii::$app->controller->id === 'userprofile' && Yii::$app->controller->action->id === 'index',

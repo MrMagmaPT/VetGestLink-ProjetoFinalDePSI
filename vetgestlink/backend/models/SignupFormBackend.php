@@ -170,9 +170,9 @@ class SignupFormBackend extends Model
             $morada->cidade = $this->cidade;
             $morada->principal = $this->principal ? 1 : 0;
 
-            // Verificar se a morada é válida
-            if (!$morada->validate()) {
-                Yii::error("Validação Morada falhou: " . json_encode($morada->errors));
+            // Salvar a morada
+            if (!$morada->save()) {
+                Yii::error("Erro Morada: " . json_encode($morada->errors));
                 // Se falhar, apagar Userprofile e User criados
                 $userprofile->delete();
                 $user->delete();
@@ -180,6 +180,7 @@ class SignupFormBackend extends Model
                 return null;
             }
 
+            //Debugar
             Yii::info("Morada ID {$morada->id} criada para Userprofile ID {$userprofile->id}");
 
             return $user;

@@ -153,11 +153,17 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <i class="fas fa-list text-primary"></i>
                                 Linhas da Fatura
                             </h5>
-                            <?= Html::a(
-                                '<i class="fas fa-plus"></i> Adicionar Linha',
-                                ['/linhafatura/create', 'fatura_id' => $model->id],
-                                ['class' => 'btn btn-success btn-sm']
-                            ) ?>
+                            <?php if ($model->estado == 0): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-plus"></i> Adicionar Linha',
+                                    ['/linhafatura/create', 'fatura_id' => $model->id],
+                                    ['class' => 'btn btn-success btn-sm']
+                                ) ?>
+                            <?php else: ?>
+                                <span class="badge bg-success">
+                                    <i class="fas fa-lock"></i> Fatura Paga - Não Editável
+                                </span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -243,36 +249,42 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <div class="btn-group" role="group">
-                                                        <?php 
-                                                        // Verifica se é "a ser definido" (sem marcação, serviço ou medicamento)
-                                                        $isASerDefinido = !($linha->marcacoes_id && $linha->marcacoes) 
-                                                                       && !($linha->servicos_id && $linha->servicos) 
-                                                                       && !($linha->medicamentos_id && $linha->medicamentos);
-                                                        ?>
-                                                        <?php if ($isASerDefinido): ?>
+                                                    <?php if ($model->estado == 0): ?>
+                                                        <div class="btn-group" role="group">
+                                                            <?php 
+                                                            // Verifica se é "a ser definido" (sem marcação, serviço ou medicamento)
+                                                            $isASerDefinido = !($linha->marcacoes_id && $linha->marcacoes) 
+                                                                           && !($linha->servicos_id && $linha->servicos) 
+                                                                           && !($linha->medicamentos_id && $linha->medicamentos);
+                                                            ?>
+                                                            <?php if ($isASerDefinido): ?>
+                                                                <?= Html::a(
+                                                                    '<i class="fas fa-edit"></i>',
+                                                                    ['/linhafatura/update', 'id' => $linha->id],
+                                                                    [
+                                                                        'class' => 'btn btn-warning btn-sm',
+                                                                        'title' => 'Editar',
+                                                                    ]
+                                                                ) ?>
+                                                            <?php endif; ?>
                                                             <?= Html::a(
-                                                                '<i class="fas fa-edit"></i>',
-                                                                ['/linhafatura/update', 'id' => $linha->id],
+                                                                '<i class="fas fa-trash"></i>',
+                                                                ['/linhafatura/delete', 'id' => $linha->id],
                                                                 [
-                                                                    'class' => 'btn btn-warning btn-sm',
-                                                                    'title' => 'Editar',
+                                                                    'class' => 'btn btn-danger btn-sm',
+                                                                    'title' => 'Eliminar',
+                                                                    'data' => [
+                                                                        'confirm' => 'Tem certeza que deseja eliminar esta linha?',
+                                                                        'method' => 'post',
+                                                                    ],
                                                                 ]
                                                             ) ?>
-                                                        <?php endif; ?>
-                                                        <?= Html::a(
-                                                            '<i class="fas fa-trash"></i>',
-                                                            ['/linhafatura/delete', 'id' => $linha->id],
-                                                            [
-                                                                'class' => 'btn btn-danger btn-sm',
-                                                                'title' => 'Eliminar',
-                                                                'data' => [
-                                                                    'confirm' => 'Tem certeza que deseja eliminar esta linha?',
-                                                                    'method' => 'post',
-                                                                ],
-                                                            ]
-                                                        ) ?>
-                                                    </div>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <span class="text-muted">
+                                                            <i class="fas fa-lock"></i>
+                                                        </span>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -303,11 +315,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar Fatura',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-block']
-                            ) ?>
+                            <?php if ($model->estado == 0): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar Fatura',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-block']
+                                ) ?>
+                            <?php endif; ?>
                             
                             <?= Html::a(
                                 '<i class="fas fa-print"></i> Imprimir',
