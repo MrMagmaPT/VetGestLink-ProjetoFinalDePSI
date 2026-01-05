@@ -4,6 +4,7 @@ namespace backend\tests\functional;
 
 use backend\tests\FunctionalTester;
 use common\fixtures\UserFixture;
+use common\fixtures\AuthAssignmentFixture;
 
 /**
  * Class LoginCest
@@ -22,8 +23,10 @@ class LoginCest
         return [
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'login_data.php'
-            ]
+            ],
+            'auth_assignment' => [
+                'class' => AuthAssignmentFixture::class,
+            ],
         ];
     }
     
@@ -33,12 +36,26 @@ class LoginCest
     public function loginUser(FunctionalTester $I)
     {
         $I->amOnRoute('/site/login');
-        $I->fillField('Username', 'erau');
-        $I->fillField('Password', 'password_0');
-        $I->click('login-button');
-
-        $I->see('Logout (erau)', 'form button[type=submit]');
-        $I->dontSeeLink('Login');
-        $I->dontSeeLink('Signup');
+        $I->submitForm('#login-form', [
+            'LoginForm[username]' => 'admin',
+            'LoginForm[password]' => 'password_0',
+        ]);
+        
+        // Verifica que o login foi bem-sucedido
+        $I->see('admin');
+        $I->dontSee('Login');
+        
+        // Verifica explicitamente a permissão backendAccess
+        // Tenta acessar o dashboard do backend
+        $I->amOnRoute('/site/index');
+        
+        // Confirma que não há mensagens de acesso negado
+        $I->dontSee('Acesso Negado');
+        $I->dontSee('Forbidden');
+        $I->dontSee('Entre para aceder');
+        
+        // Verifica que elementos do dashboard estão visíveis (só possível com backendAccess)
+        $I->see('Dashboard');
+        $I->see('admin');
     }
 }
