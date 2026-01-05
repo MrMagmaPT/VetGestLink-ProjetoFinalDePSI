@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                     <!-- Header com ícone -->
                     <div class="text-center mb-4">
-                        <div class="bg-info bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="bg-success bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
                             <i class="fas fa-envelope-open-text fa-2x text-white"></i>
                         </div>
                         <h1 class="h3 fw-bold mb-2"><?= Html::encode($this->title) ?></h1>

@@ -163,7 +163,8 @@ echo PageHeaderWidget::widget([
                             'headerOptions' => ['style' => 'width: 50px'],
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 120px'],
+                            'headerOptions' => ['style' => 'width: 120px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'nome',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -177,17 +178,19 @@ echo PageHeaderWidget::widget([
                             
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 120px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'valor',
                             'format' => 'raw',
                             'value' => function($model) {
                                 return '<span class="badge bg-success">' . number_format($model->valor, 2) . '€</span>';
                             },
-                            'headerOptions' => ['style' => 'width: 120px'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            
+                            
                             'filter' => false,
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 120px'],
+                            'headerOptions' => ['style' => 'width: 120px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'eliminado',
                             'label' => 'Estado',
