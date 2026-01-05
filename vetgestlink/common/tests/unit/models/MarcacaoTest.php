@@ -10,6 +10,13 @@ use common\fixtures\UserprofileFixture;
 use common\fixtures\EspecieFixture;
 use common\fixtures\RacaFixture;
 
+/**
+ * Testes do modelo Marcação.
+ * 
+ * Esta suite de testes verifica o comportamento do modelo Marcacao,
+ * incluindo validações de campos, transições de estado
+ * (pendente, realizada, cancelada) e regras de negócio.
+ */
 class MarcacaoTest extends \Codeception\Test\Unit
 {
     /**
@@ -29,8 +36,13 @@ class MarcacaoTest extends \Codeception\Test\Unit
         ];
     }
 
-    // Validação de atributos individuais
-    public function testCreateValidMarcacao()
+    /**
+     * Testa se é possível criar uma marcação com dados válidos.
+     * 
+     * Cenário: Criação de uma marcação com data, horários e estado válidos.
+     * Expectativa: A validação dos campos fornecidos deve passar sem erros.
+     */
+    public function testDeveCriarMarcacaoComDadosValidos()
     {
         $marcacao = new Marcacao([
             'data' => '2025-03-15',
@@ -45,8 +57,13 @@ class MarcacaoTest extends \Codeception\Test\Unit
         $this->assertFalse($marcacao->hasErrors('estado'));
     }
 
-    // Transição de estado - Pendente para Realizada
-    public function testEstadoTransitionToRealizada()
+    /**
+     * Testa a transição de estado de uma marcação de 'pendente' para 'realizada'.
+     * 
+     * Cenário: Uma marcação é criada como 'pendente' e depois alterada para 'realizada'.
+     * Expectativa: O estado deve mudar corretamente e aceitar diagnóstico quando realizada.
+     */
+    public function testDevePermitirTransicaoDeEstadoDePendenteParaRealizada()
     {
         $marcacao = new Marcacao([
             'data' => '2025-03-15',
