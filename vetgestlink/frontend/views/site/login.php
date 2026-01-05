@@ -62,11 +62,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         <!-- icone -->
                         <i class="fas fa-user-plus fa-3x mb-4" style="color: #4CB88A;"></i>
 
-                        <div class="d-grid mb-3 mt-auto">
+                        <div class="d-grid mb-2 mt-auto">
                             <?= Html::a(
                                 'Registar Conta',
                                 ['site/signup'],
                                 ['class' => 'btn btn btn-lg rounded-pill px-4']
+                            ) ?>
+                        </div>
+                        
+                        <div class="d-grid mt-2">
+                            <?= Html::a(
+                                '<i class="fas fa-envelope me-2"></i>Reenviar Email de Verificação',
+                                ['site/resend-verification-email'],
+                                ['class' => 'btn btn-outline-secondary btn-sm rounded-pill px-4']
                             ) ?>
                         </div>
                     </div>
