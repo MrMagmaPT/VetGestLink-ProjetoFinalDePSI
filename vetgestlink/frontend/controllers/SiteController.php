@@ -245,11 +245,11 @@ class SiteController extends Controller
             throw new BadRequestHttpException($e->getMessage());
         }
         if ($model->verifyEmail()) {
-            Yii::$app->session->setFlash('success', 'O seu email foi confirmado com sucesso!');
+            Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
             return $this->goHome();
         }
 
-        Yii::$app->session->setFlash('error', 'Desculpe, não foi possível verificar a sua conta com o token fornecido.');
+        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
         return $this->goHome();
     }
 
@@ -263,10 +263,10 @@ class SiteController extends Controller
         $model = new ResendVerificationEmailForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Verifique o seu email para mais instruções.');
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'Desculpe, não foi possível reenviar o email de verificação para o endereço fornecido.');
+            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
         }
 
         return $this->render('resendVerificationEmail', [

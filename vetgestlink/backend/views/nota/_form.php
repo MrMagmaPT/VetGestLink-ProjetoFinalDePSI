@@ -77,16 +77,22 @@ use kartik\select2\Select2;
 
             <!-- Card Ações -->
             <div class="card shadow-sm hover-shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog text-gray me-2"></i>
+                        Ações
+                    </h5>
+                </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save me-2"></i>' . ($model->isNewRecord ? 'Criar Nota' : 'Guardar Alterações'),
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times me-2"></i>Cancelar',
-                            ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['animal/view', 'id' => $model->animais_id],
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>
