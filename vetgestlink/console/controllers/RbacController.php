@@ -506,7 +506,7 @@ class RbacController extends Controller
         $cliente = $auth->createRole('cliente');
         $auth->add($cliente);
 
-        //VER Animais✳️-front 
+        //VER Animais-front
         $auth->addChild($cliente, $viewAnimals);
 
         //UPDATE da suas informação
@@ -521,7 +521,7 @@ class RbacController extends Controller
         //PAGAR suas faturas
         $auth->addChild($cliente, $payInvoices);
 
-        //CRUD Moradas e delete permanente do das moradas secundárias✳️-front
+        //CRUD Moradas e delete permanente do das moradas secundárias-front
         $auth->addChild($cliente, $createAddress);
         $auth->addChild($cliente, $viewAddresses);
         $auth->addChild($cliente, $updateAddress);
@@ -533,7 +533,7 @@ class RbacController extends Controller
         $auth->addChild($cliente, $updateNotes);
         $auth->addChild($cliente, $deleteNotes);
 
-        //CRUD Lembretes(COMPLETO)(SOFT DELETE)✳️-front 
+        //CRUD Lembretes(COMPLETO)(SOFT DELETE) - front
         $auth->addChild($cliente, $createReminders);
         $auth->addChild($cliente, $viewReminders);
         $auth->addChild($cliente, $updateReminders);    
