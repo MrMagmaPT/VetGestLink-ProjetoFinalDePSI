@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Metodopagamento;
 use backend\models\MetodopagamentoSearch;
 use yii\web\Controller;

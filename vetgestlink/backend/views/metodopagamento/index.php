@@ -134,6 +134,16 @@ echo PageHeaderWidget::widget([
                                 ['class' => 'btn btn-sm btn-outline-success']
                             ) ?>
                             <?= Html::a(
+                                '<i class="fas fa-check-circle"></i> Em Vigor',
+                                ['index', 'MetodopagamentoSearch[vigor]' => 1, 'MetodopagamentoSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-success']
+                            ) ?>
+                            <?= Html::a(
+                                '<i class="fas fa-times-circle"></i> Sem Vigor',
+                                ['index', 'MetodopagamentoSearch[vigor]' => 0, 'MetodopagamentoSearch[eliminado]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-warning']
+                            ) ?>
+                            <?= Html::a(
                                 '<i class="fas fa-times"></i> Eliminados',
                                 ['index', 'MetodopagamentoSearch[eliminado]' => 1],
                                 ['class' => 'btn btn-sm btn-outline-danger']
@@ -186,11 +196,10 @@ echo PageHeaderWidget::widget([
                             'filter' => false,
                         ],
                         [
-                            
-                            'headerOptions' => ['style' => 'width: 100px'],
+                            'headerOptions' => ['style' => 'width: 100px; text-align: center'],
                             'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'vigor',
-                            'label' => 'Estado',
+                            'label' => 'Vigor',
                             'format' => 'raw',
                             'value' => function($model) {
                                 if ($model->vigor == 1) {
@@ -198,28 +207,21 @@ echo PageHeaderWidget::widget([
                                 }
                                 return '<span class="badge bg-danger"><i class="fas fa-times"></i> Inativo</span>';
                             },
-
                             'filter' => false,
-                            // 'filter' => kartik\select2\Select2::widget([
-                            //     'model' => $searchModel,
-                            //     'attribute' => 'eliminado',
-                            //     'data' => [
-                            //         0 => 'Ativo',
-                            //         1 => 'Eliminado',
-                            //     ],
-                            //     'options' => [
-                            //         'placeholder' => 'Estado...',
-                            //         'allowClear' => true,
-                            //         'style' => 'width: 120px;',
-                            //     ],
-                            //     'pluginOptions' => [
-                            //         'allowClear' => true,
-                            //         'language' => [
-                            //             'noResults' => new \yii\web\JsExpression('function() { return "Nenhum estado encontrado"; }'),
-                            //         ],
-                            //     ],
-                            //     'bsVersion' => '5.x',
-                            // ]),
+                        ],
+                        [
+                            'headerOptions' => ['style' => 'width: 100px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'attribute' => 'eliminado',
+                            'label' => 'Eliminado',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                if ($model->eliminado == 1) {
+                                    return '<span class="badge bg-danger"><i class="fas fa-trash"></i> Eliminado</span>';
+                                }
+                                return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
+                            },
+                            'filter' => false,
                         ],
                         [
                             'class' => ActionColumn::class,
