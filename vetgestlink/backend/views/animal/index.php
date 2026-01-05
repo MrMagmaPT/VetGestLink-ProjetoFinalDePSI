@@ -263,8 +263,7 @@ echo PageHeaderWidget::widget([
                             'enableSorting' => false,
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'nome',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -277,9 +276,8 @@ echo PageHeaderWidget::widget([
                             'filter'=> false
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'userprofiles_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Dono',
                             'value' => function($model) {
                                 return $model->userprofiles->nomecompleto ?? '-';
@@ -304,9 +302,8 @@ echo PageHeaderWidget::widget([
                             // ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'especies_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Espécie',
                             'value' => function($model) {
                                 return $model->especies->nome ?? '-';
@@ -331,9 +328,8 @@ echo PageHeaderWidget::widget([
                             // ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'racas_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Raça',
                             'value' => function($model) {
                                 return $model->racas->nome ?? '-';

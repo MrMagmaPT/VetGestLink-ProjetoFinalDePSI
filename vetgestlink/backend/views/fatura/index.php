@@ -235,7 +235,7 @@ echo PageHeaderWidget::widget([
 //                         ],
                         [
                             'attribute' => 'total',
-                            'headerOptions' => ['style' => 'width: 120px; text-align: right'],
+                            'headerOptions' => ['style' => 'width: 50px; text-align: right'],
                             'contentOptions' => ['style' => 'text-align: right'],
                             'format' => ['decimal', 2],
                             'filter' => false,
@@ -279,9 +279,8 @@ echo PageHeaderWidget::widget([
                             'format' => 'raw',
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'metodospagamentos_id',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Método de Pagamento',
                             'value' => function($model) {
                                 return $model->metodospagamentos ? $model->metodospagamentos->nome : 'Não definido';

@@ -52,15 +52,32 @@ class MarcacaoController extends Controller
      */
     public function actionIndex()
     {
-        //Pegar o ID do usuário logado
-        $userId = Yii::$app->user->identity->id ?? null;
+        //Pegar o ID do perfil do usuário logado
+        $user = Yii::$app->user->identity;
+        $userProfileId = $user->userprofile->id ?? null;
 
-        // Usar o SearchModel do backend para obter marcações do usuário
-        $marcacoesUsuario = MarcacaoSearch::getByUserId($userId);
+        // Usar o SearchModel do backend para obter marcações dos animais do usuário
+        $marcacoesUsuario = MarcacaoSearch::getByUserId($userProfileId);
 
-        // Montar array de eventos para o calendário
-        $eventos = [];
+        // Obter data atual
+        $dataAtual = date('Y-m-d');
+        $horaAtual = date('H:i:s');
+
+        // Separar marcações em passadas e futuras
+        $marcacoesRealizadas = [];
+        $marcacoesPendentes = [];
+        
         foreach ($marcacoesUsuario as $marcacao) {
+            if ($marcacao->estado === 'pendente') {
+                $marcacoesPendentes[] = $marcacao;
+            } else {
+                $marcacoesRealizadas[] = $marcacao;
+            }
+        }
+
+        // Montar array de eventos para o calendário (apenas futuras)
+        $eventos = [];
+        foreach ($marcacoesPendentes as $marcacao) {
             $horario = $marcacao->horainicio . ' - ' . $marcacao->horafim;
             $animal = isset($marcacao->animais) ? $marcacao->animais->nome : 'Marcacao';
             $eventos[] = [
@@ -73,9 +90,10 @@ class MarcacaoController extends Controller
             ];
         }
 
-        // Renderizar a view com as marcações do usuário e eventos do calendário
+        // Renderizar a view com as marcações separadas
         return $this->render('index', [
-            'marcacoesUsuario' => $marcacoesUsuario,
+            'marcacoesRealizadas' => $marcacoesRealizadas,
+            'marcacoesPendentes' => $marcacoesPendentes,
             'eventos' => $eventos,
         ]);
     }

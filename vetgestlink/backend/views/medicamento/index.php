@@ -1,12 +1,10 @@
 <?php
 use common\models\Medicamento;
 use kartik\select2\Select2;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use backend\widgets\BigCardWidget;
 use backend\widgets\SmallCardWidget;
 use backend\widgets\PageHeaderWidget;
 
@@ -256,8 +254,7 @@ echo PageHeaderWidget::widget([
                                 'filter' => false
                             ],
                             [
-                                'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                                'contentOptions' => ['style' => 'text-align: center'],
+                                'headerOptions' => ['style' => 'width: 180px'],
                                 'attribute' => 'categorias_id',
                                 'label' => 'Categoria',
                                 'value' => function($model) {
