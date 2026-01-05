@@ -66,36 +66,33 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                         ]) ?>
                     </div>
                 </div>
-
+                
                 <div class="mb-3">
                     <?= Html::a('<i class="fas fa-arrow-left"></i> Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-cog text-secondary"></i>
-                            Ações
-                        </h5>
+                <div class="card shadow-sm mb-4 border-info">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-cogs"></i> Ações
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-md']
+                                ['class' => 'btn btn-primary btn-lg']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-md']
+                                ['class' => 'btn btn-secondary btn-lg']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
                                 [
-                                    'class' => 'btn btn-danger btn-md',
+                                    'class' => 'btn btn-danger btn-lg',
                                     'data' => [
                                         'confirm' => 'Tem a certeza que deseja eliminar este animal?',
                                         'method' => 'post',

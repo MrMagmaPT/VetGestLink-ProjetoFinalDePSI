@@ -80,22 +80,23 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                 </div>
             </div>
             <div class="col-md-4">
-                <?php if (Yii::$app->user->can('updateService')): ?>
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0">
-                            <i class="fas fa-cog text-secondary"></i>
-                            Ações
-                        </h5>
+                <div class="card shadow-sm mb-4 border-info">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-cogs"></i> Ações
                     </div>
-
                     <div class="card-body">
                         <div class="d-grid gap-2">
-
+                            <?php if (Yii::$app->user->can('updateService')): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-edit"></i> Editar',
+                                    ['update', 'id' => $model->id],
+                                    ['class' => 'btn btn-primary btn-md']
+                                ) ?>
+                            <?php endif; ?>
                             <?= Html::a(
-                                '<i class="fas fa-edit"></i> Editar',
-                                ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-md']
+                                '<i class="fas fa-list"></i> Ver Todas',
+                                ['index'],
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                             <?php if (Yii::$app->user->can('deleteService')): ?>
                                 <?= Html::a(
@@ -112,7 +113,6 @@ $this->params['breadcrumbs'][] = 'Visualizar';
                             <?php endif; ?>
                         </div>
                     </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

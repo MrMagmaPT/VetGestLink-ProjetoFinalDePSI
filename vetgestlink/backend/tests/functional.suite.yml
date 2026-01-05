@@ -1,7 +1,5 @@
 suite_namespace: backend\tests\functional
 actor: FunctionalTester
 modules:
-  enabled:
-    - Yii2:
-        transaction: false
-        cleanup: false
+    enabled:
+        - Yii2

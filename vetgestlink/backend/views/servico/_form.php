@@ -54,10 +54,10 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
         <!-- Card Ações -->
-        <div class="card shadow-sm">
+        <div class="card shadow-sm hover-shadow">
             <div class="card-header bg-white">
                 <h5 class="mb-0">
-                    <i class="fas fa-cog text-secondary"></i>
+                    <i class="fas fa-tasks text-secondary"></i>
                     Ações
                 </h5>
             </div>

@@ -153,7 +153,7 @@ use backend\widgets\FlashMessages;
             <div class="card shadow-sm">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-cog text-secondary"></i>
+                        <i class="fas fa-cogs text-secondary"></i>
                         Ações
                     </h5>
                 </div>
