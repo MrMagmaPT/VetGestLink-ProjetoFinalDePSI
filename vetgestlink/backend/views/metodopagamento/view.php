@@ -54,13 +54,6 @@ $this->registerCssFile('@web/static/css/view.css');
             ]) ?>
             
             <!-- Não é necessário mostrar o ID do método de pagamento em um card separado -->
-            <!-- <?= SmallCardWidget::widget([
-                'icon' => 'fa-hashtag',
-                'iconColorClass' => 'icon-purple',
-                'text' => 'ID do Método',
-                'value' => $model->id,
-                'url' => '#',
-            ]) ?> -->
         </div>
 
         <div class="row">

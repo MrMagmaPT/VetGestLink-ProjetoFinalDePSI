@@ -45,13 +45,29 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                             Informações Pessoais
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body"> 
                         <div class="row mb-3">
                             <div class="col-md-4 fw-bold text-muted">
                                 <i class="fas fa-user-circle"></i> Nome Completo:
                             </div>
                             <div class="col-md-8">
                                 <?= Html::encode($model->nomecompleto) ?>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 fw-bold text-muted">
+                                <i class="fas fa-user"></i> Username:
+                            </div>
+                            <div class="col-md-8">
+                                <?= Html::encode($model->user->username ?? 'N/A') ?>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 fw-bold text-muted">
+                                <i class="fas fa-envelope"></i> Email:
+                            </div>
+                            <div class="col-md-8">
+                                <?= Html::encode($model->user->email ?? 'N/A') ?>
                             </div>
                         </div>
                         <div class="row mb-3">
