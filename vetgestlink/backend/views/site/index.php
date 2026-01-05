@@ -61,7 +61,7 @@ $this->registerCssFile('@web/static/css/view.css');
                 echo BigCardWidget::widget([
                         'icon' => 'fa-users',
                         'iconColorClass' => 'icon-purple',
-                        'text' => 'Clientes',
+                        'text' => 'Utilizadores',
                         'value' => $totalClientes,
                         'url' => '/userprofile/index',
                 ]);

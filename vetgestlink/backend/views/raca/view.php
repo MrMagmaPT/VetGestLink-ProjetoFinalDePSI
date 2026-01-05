@@ -121,18 +121,18 @@ $this->registerCssFile('@web/static/css/view.css');
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
-                                ['class' => 'btn btn-primary btn-lg']
+                                ['class' => 'btn btn-primary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todas',
                                 ['index'],
-                                ['class' => 'btn btn-secondary btn-lg']
+                                ['class' => 'btn btn-secondary btn-md']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
                                 [
-                                    'class' => 'btn btn-danger btn-lg',
+                                    'class' => 'btn btn-danger btn-md',
                                     'data' => [
                                         'confirm' => 'Tem a certeza que deseja eliminar esta raça?',
                                         'method' => 'post',

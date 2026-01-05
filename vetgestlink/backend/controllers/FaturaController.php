@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use kartik\mpdf\Pdf;
+use yii\helpers\Url;
 
 /**
  * FaturaController implements the CRUD actions for Fatura model.
@@ -50,6 +52,11 @@ class FaturaController extends Controller
                             'actions' => ['delete'],
                             'allow' => true,
                             'roles' => ['deleteInvoice'],
+                        ],
+                        [
+                            'actions' => ['pdf'],
+                            'allow' => true,
+                            'roles' => ['viewInvoices'],
                         ],
                     ],
                 ],
@@ -246,4 +253,76 @@ class FaturaController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    /**
+     * Gera um PDF da fatura.
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionPdf(string $nome_emissor, string $nome_recep, int $id)
+    {
+        $model = $this->findModel($id);
+        $linhas = $model->linhasfaturas;
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+
+        // montar data URI para o logo (opção embutida)
+        $logoPath = \Yii::getAlias('@frontend/web/static/img/logo/logo.png');
+        $logoDataUri = '';
+        if (is_file($logoPath) && is_readable($logoPath)) {
+            $mime = mime_content_type($logoPath) ?: 'image/png';
+            $logoDataUri = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($logoPath));
+        }
+        $content = $this->renderPartial('_pdf', [
+            'model' => $model,
+            'linhas' => $linhas,
+            'nome_emissor' => $nome_emissor,
+            'nome_recep' => $nome_recep,
+            'logoDataUri' => $logoDataUri,
+        ]);
+        $cssInline = '
+        body { font-family: DejaVu Sans, sans-serif; font-size:12px; color:#222; margin:0; padding:0; }
+        .logo { margin-bottom:12px; }
+        .logo img { height:60px; }
+        .header { display:flex; justify-content:space-between; margin-bottom:20px; }
+        .company, .client { width:48%; }
+        .invoice-meta { text-align:right; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td { border:1px solid #ddd; padding:8px; vertical-align:top; }
+        th { background:#f5f5f5; text-align:left; }
+        .text-right { text-align:right; }
+        .text-center { text-align:center; }
+        .total-row td { border:none; padding-top:12px; }
+        .total-amount { font-size:1.2em; font-weight:bold; color:#0a8a00; }
+        .invoice-meta h3 { margin:0 0 8px 0; }
+        h2, h3 { margin:0 0 8px 0; }
+        .observacoes { margin-top:30px; font-size:11px; color:#666; }
+    ';
+
+        $created = $model->created_at ? date('Ymd_His', strtotime($model->created_at)) : date('Ymd_His');
+        $fileTitle = 'Fatura_' . $nome_emissor . '_' . $created;
+
+        $pdf = new Pdf([
+            'mode' => Pdf::MODE_CORE,
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_BROWSER,
+            'content' => $content,
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            'cssInline' => $cssInline,
+            'options' => [
+                'title' => $fileTitle,
+                'subject' => 'Fatura gerada pelo sistema VetGestLink',
+            ],
+            'methods' => [
+                'SetTitle' => [$fileTitle],
+                'SetHeader' => ['Fatura de Pagamento || Gerada em: ' . \Yii::$app->formatter->asDatetime(time(), 'php:d/m/Y H:i')],
+                'SetFooter' => ['|Página {PAGENO}|'],
+                'SetAuthor' => [$nome_recep],
+                'SetCreator' => ['VetGestLink'],
+            ],
+        ]);
+
+        return $pdf->render();
+    }
+
 }

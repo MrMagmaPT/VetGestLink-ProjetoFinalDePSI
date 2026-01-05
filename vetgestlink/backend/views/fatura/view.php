@@ -6,7 +6,7 @@ use backend\widgets\SmallCardWidget;
 /** @var yii\web\View $this */
 /** @var common\models\Fatura $model */
 
-$this->title = 'Fatura #' . $model->id;
+$this->title = "Fatura de {$model->userprofiles->nomecompleto}";
 $this->params['breadcrumbs'][] = ['label' => 'Faturas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -322,22 +322,22 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ['update', 'id' => $model->id],
                                     ['class' => 'btn btn-primary btn-block']
                                 ) ?>
+                            <?php endif;
+                            if ($model->estado == 1): ?>
+                                <?= Html::a('<i class="fas fa-file-pdf"></i> Exportar PDF',
+                                ['pdf',
+                                    'nome_emissor' => yii::$app->user->identity->username,
+                                    'nome_recep' => $model->userprofiles->nomecompleto,
+                                    'id' => $model->id],
+                                [
+                                    'class'=>'btn btn-secondary btn-block',
+                                    'target'=>'_blank',
+                                    'data-toggle'=>'tooltip',
+                                    'title'=>'Gera e preparar a fatura em formato PDF para impressão e envio.'
+                                ]);?>
                             <?php endif; ?>
-                            
-                            <?= Html::a(
-                                '<i class="fas fa-print"></i> Imprimir',
-                                ['print', 'id' => $model->id],
-                                ['class' => 'btn btn-info btn-block', 'target' => '_blank']
-                            ) ?>
-                            
-                            <?= Html::a(
-                                '<i class="fas fa-file-pdf"></i> Exportar PDF',
-                                ['pdf', 'id' => $model->id],
-                                ['class' => 'btn btn-secondary btn-block']
-                            ) ?>
-                            
-                            <hr>
-                            
+
+
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
