@@ -133,13 +133,30 @@ class MarcacaoSearch extends Marcacao
     }
 
     /**
-     * Retorna todas as marcações de um usuário específico.
-     * @param int $userId
+     * Retorna todas as marcações dos animais de um dono (userprofile).
+     * @param int $userProfileId ID do perfil do dono
      * @return Marcacao[]
      */
-    public static function getByUserId($userId)
+    public static function getByUserId($userProfileId)
     {
-        return Marcacao::find()->where(['userprofiles_id' => $userId])->all();
+        // Buscar IDs dos animais que pertencem ao dono
+        $animalIds = \common\models\Animal::find()
+            ->select('id')
+            ->where(['userprofiles_id' => $userProfileId])
+            ->andWhere(['eliminado' => 0])
+            ->column();
+        
+        if (empty($animalIds)) {
+            return [];
+        }
+        
+        // Buscar marcações dos animais do dono
+        return Marcacao::find()
+            ->with(['animais', 'userprofiles'])
+            ->where(['animais_id' => $animalIds])
+            ->andWhere(['eliminado' => 0])
+            ->orderBy(['data' => SORT_DESC, 'horainicio' => SORT_DESC])
+            ->all();
     }
 
     /**

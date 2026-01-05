@@ -113,9 +113,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="col-md-9">
                                 <?php
                                 $estadoClass = 'bg-secondary';
-                                if ($model->estado == 'Confirmada') $estadoClass = 'bg-success';
-                                elseif ($model->estado == 'Pendente') $estadoClass = 'bg-warning';
-                                elseif ($model->estado == 'Cancelada') $estadoClass = 'bg-danger';
+                                if ($model->estado == 'realizada') $estadoClass = 'bg-success';
+                                elseif ($model->estado == 'pendente') $estadoClass = 'bg-warning';
+                                elseif ($model->estado == 'cancelada') $estadoClass = 'bg-danger';
                                 ?>
                                 <span class="badge <?= $estadoClass ?>">
                                     <?= Html::encode($model->estado ?? 'N/A') ?>

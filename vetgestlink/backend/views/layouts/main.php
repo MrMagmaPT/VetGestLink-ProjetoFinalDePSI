@@ -240,6 +240,18 @@ $this->beginPage();
                                     'active' => Yii::$app->controller->id === 'animal' && Yii::$app->controller->action->id === 'index',
                             ]) ?>
                             <?= MenuItem::widget([
+                                    'icon' => 'fa fa-concierge-bell',
+                                    'text' => 'Serviços',
+                                    'url' => ['/servico/index'],
+                                    'active' => Yii::$app->controller->id === 'servico' && Yii::$app->controller->action->id === 'index',
+                            ]) ?>
+                            <?= MenuItem::widget([
+                                    'icon' => 'fa fa-credit-card',
+                                    'text' => 'Metodos de Pagamentos',
+                                    'url' => ['/metodopagamento/index'],
+                                    'active' => Yii::$app->controller->id === 'metodopagamento' && Yii::$app->controller->action->id === 'index',
+                            ]) ?>
+                            <?= MenuItem::widget([
                                     'icon' => 'far fa-calendar',
                                     'text' => 'Marcacoes',
                                     'url' => ['/marcacao/index'],

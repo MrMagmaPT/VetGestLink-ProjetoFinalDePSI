@@ -167,7 +167,8 @@ echo PageHeaderWidget::widget([
                         ],
                         [
                             'attribute' => 'eliminado',
-                            'headerOptions' => ['style' => 'width: 180px'],
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -197,7 +198,6 @@ echo PageHeaderWidget::widget([
                             //     ],
                             //     'bsVersion' => '5.x',
                             // ]),
-                            'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [
                             'class' => ActionColumn::class,

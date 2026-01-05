@@ -164,7 +164,7 @@ echo PageHeaderWidget::widget([
                         ],
                         [
                             'attribute' => 'nome',
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Nome da Categoria',
                             'format' => 'raw',
                             'value' => function($model) {

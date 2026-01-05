@@ -238,11 +238,12 @@ echo PageHeaderWidget::widget([
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
-                            'headerOptions' => ['style' => 'width: 180px'],
+                            'headerOptions' => ['style' => 'width: 80px'],
                         ],
                         [
                             'attribute' => 'data',
-                            'headerOptions' => ['style' => 'width: 180px'],
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'label' => 'Data',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -255,8 +256,9 @@ echo PageHeaderWidget::widget([
 //                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'horainicio',
-                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Hora Início',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -269,8 +271,9 @@ echo PageHeaderWidget::widget([
 //                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'horafim',
-                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Hora Fim',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -327,8 +330,9 @@ echo PageHeaderWidget::widget([
 //                            ]),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
                             'attribute' => 'estado',
-                            'headerOptions' => ['style' => 'width: 180px'],
                             'label' => 'Estado',
                             'format' => 'raw',
                             'value' => function($model) {
@@ -347,7 +351,6 @@ echo PageHeaderWidget::widget([
 //                                    'style' => 'width: 120px;'
 //                                ]
 //                            ),
-                            'contentOptions' => ['style' => 'text-align: center'],
                         ],
                         [
                             'class' => ActionColumn::class,

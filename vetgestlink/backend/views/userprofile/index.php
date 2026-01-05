@@ -7,7 +7,6 @@ use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use backend\widgets\SmallCardWidget;
 use yii\widgets\Pjax;
-use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use backend\widgets\PageHeaderWidget;
 
@@ -289,8 +288,7 @@ echo PageHeaderWidget::widget([
                             'enableSorting' => false,
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'nomecompleto',
                             'label' => 'Nome Completo',
                             'format' => 'raw',
@@ -354,8 +352,7 @@ echo PageHeaderWidget::widget([
                             // ]),
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'headerOptions' => ['style' => 'width: 180px'],
                             'attribute' => 'morada_cidade',
                             'label' => 'Cidade',
                             'value' => function($model) {

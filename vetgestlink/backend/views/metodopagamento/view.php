@@ -113,16 +113,20 @@ $this->registerCssFile('@web/static/css/view.css');
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
+
+                        <?php if(Yii::$app->user->can('updateMetodopagamento')): ?>
                             <?= Html::a(
                                 '<i class="fas fa-edit"></i> Editar',
                                 ['update', 'id' => $model->id],
                                 ['class' => 'btn btn-primary btn-md']
                             ) ?>
+                        <?php endif; ?>
                             <?= Html::a(
                                 '<i class="fas fa-list"></i> Ver Todos',
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
+                        <?php if(Yii::$app->user->can('deleteMetodopagamento')): ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],
@@ -134,6 +138,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                     ],
                                 ]
                             ) ?>
+                        <?php endif; ?>
                         </div>
                     </div>
                 </div>

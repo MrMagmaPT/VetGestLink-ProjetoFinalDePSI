@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use backend\widgets\FlashMessages;
 
 /** @var yii\web\View $this */
 /** @var common\models\Animal $model */

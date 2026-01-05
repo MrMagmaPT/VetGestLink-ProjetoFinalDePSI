@@ -2,9 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use common\models\Animal;
-use common\models\Userprofile;
-use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
 
 /** @var yii\web\View $this */
 /** @var common\models\Marcacao $model */
@@ -59,34 +57,40 @@ use yii\helpers\ArrayHelper;
 
                     <div class="row">
                         <div class="col-md-4">
-                            <?= $form->field($model, 'animais_id')->dropDownList(
-                                $animaisList,
-                                [
-                                    'prompt' => 'Selecione um animal',
-                                    'class' => 'form-control',
-                                    'required' => true
-                                ]
-                            )->label('<i class="fas fa-paw me-2"></i> Animal') ?>
+                            <?= $form->field($model, 'animais_id')->widget(Select2::classname(), [
+                                'data' => $animaisList,
+                                'options' => ['placeholder' => 'Selecione um animal'],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression("function () { return 'Nenhum animal encontrado'; }")
+                                    ],
+                                ],
+                            ])->label('<i class="fas fa-paw me-2"></i> Animal') ?>
                         </div>
                         <div class="col-md-4">
-                            <?= $form->field($model, 'userprofiles_id')->dropDownList(
-                                $veterinariosArray,
-                                [
-                                    'prompt' => 'Selecione um veterinário',
-                                    'class' => 'form-control',
-                                    'required' => true
-                                ]
-                            )->label('<i class="fas fa-user-md me-2"></i> Veterinário') ?>
+                            <?= $form->field($model, 'userprofiles_id')->widget(Select2::classname(), [
+                                'data' => $veterinariosArray,
+                                'options' => ['placeholder' => 'Selecione um veterinário'],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression("function () { return 'Nenhum veterinário encontrado'; }")
+                                    ],
+                                ],
+                            ])->label('<i class="fas fa-user-md me-2"></i> Veterinário') ?>
                         </div>
                         <div class="col-md-4">
-                            <?= $form->field($model, 'servicos_id')->dropDownList(
-                                $servicosList,
-                                [
-                                    'prompt' => 'Selecione um serviço',
-                                    'class' => 'form-control',
-                                    'required' => true
-                                ]
-                            )->label('<i class="fas fa-briefcase-medical me-2"></i> Serviço') ?>
+                            <?= $form->field($model, 'servicos_id')->widget(Select2::classname(), [
+                                'data' => $servicosList,
+                                'options' => ['placeholder' => 'Selecione um serviço'],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                    'language' => [
+                                        'noResults' => new \yii\web\JsExpression("function () { return 'Nenhum serviço encontrado'; }")
+                                    ],
+                                ],
+                            ])->label('<i class="fas fa-briefcase-medical me-2"></i> Serviço') ?>
                         </div>
                     </div>
 

@@ -499,6 +499,9 @@ class RbacController extends Controller
         //VISUALIZAR OS MÉTODOS DE PAGAMENTO
         $auth->addChild($rececionista, $viewPaymentMethods);
 
+        //VISUALIZAR OS SERVIÇOS
+        $auth->addChild($rececionista, $viewServices);
+
         //PERMISSÃO BACKEND
         $auth->addChild($rececionista, $backendAccess);
         //========================================================================

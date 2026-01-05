@@ -73,11 +73,13 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Métodos de Pagamento
                     </h5>
-                    <?= Html::a(
-                        '<i class="fas fa-plus"></i> Novo Método',
-                        ['create'],
-                        ['class' => 'btn btn-success']
-                    ) ?>
+                    <?php if(Yii::$app->user->can('createMetodopagamento')): ?>
+                        <?= Html::a(
+                            '<i class="fas fa-plus"></i> Novo Método',
+                            ['create'],
+                            ['class' => 'btn btn-success']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card-body">
@@ -134,14 +136,14 @@ echo PageHeaderWidget::widget([
                                 ['class' => 'btn btn-sm btn-outline-success']
                             ) ?>
                             <?= Html::a(
-                                '<i class="fas fa-check-circle"></i> Em Vigor',
-                                ['index', 'MetodopagamentoSearch[vigor]' => 1, 'MetodopagamentoSearch[eliminado]' => 0],
+                                '<i class="fas fa-check"></i> Vigore Ativos',
+                                ['index', 'MetodopagamentoSearch[vigor]' => 1],
                                 ['class' => 'btn btn-sm btn-outline-success']
                             ) ?>
                             <?= Html::a(
-                                '<i class="fas fa-times-circle"></i> Sem Vigor',
-                                ['index', 'MetodopagamentoSearch[vigor]' => 0, 'MetodopagamentoSearch[eliminado]' => 0],
-                                ['class' => 'btn btn-sm btn-outline-warning']
+                                '<i class="fas fa-check"></i> Vigore Desativos',
+                                ['index', 'MetodopagamentoSearch[vigor]' => 0],
+                                ['class' => 'btn btn-sm btn-outline-danger']
                             ) ?>
                             <?= Html::a(
                                 '<i class="fas fa-times"></i> Eliminados',
@@ -240,6 +242,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('updateMetodopagamento')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-edit"></i>',
                                         $url,
@@ -251,6 +256,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!Yii::$app->user->can('deleteMetodopagamento')) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,

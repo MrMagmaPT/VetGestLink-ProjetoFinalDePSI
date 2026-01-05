@@ -163,8 +163,7 @@ echo PageHeaderWidget::widget([
                             'headerOptions' => ['style' => 'width: 50px'],
                         ],
                         [
-                            'headerOptions' => ['style' => 'width: 120px; text-align: center'],
-                            'contentOptions' => ['style' => 'text-align: center'],
+                            'headerOptions' => ['style' => 'width: 120px'],
                             'attribute' => 'nome',
                             'format' => 'raw',
                             'value' => function($model) {
