@@ -23,7 +23,14 @@ class VerifyEmailFormTest extends \Codeception\Test\Unit
         ]);
     }
 
-    public function testVerifyWrongToken()
+    /**
+     * Testa que tokens inválidos são rejeitados na verificação de email
+     * 
+     * Verifica se o sistema lança exceção quando:
+     * - O token está vazio
+     * - O token não existe na base de dados
+     */
+    public function testDeveRejeitarTokenInvalidoNaVerificacao()
     {
         $this->tester->expectThrowable('\yii\base\InvalidArgumentException', function() {
             new VerifyEmailForm('');
@@ -34,14 +41,28 @@ class VerifyEmailFormTest extends \Codeception\Test\Unit
         });
     }
 
-    public function testAlreadyActivatedToken()
+    /**
+     * Testa que tokens já utilizados são rejeitados
+     * 
+     * Verifica se o sistema impede a reutilização de tokens de verificação
+     * que já foram usados para ativar uma conta
+     */
+    public function testDeveRejeitarTokenJaUtilizado()
     {
         $this->tester->expectThrowable('\yii\base\InvalidArgumentException', function() {
             new VerifyEmailForm('already_used_token_1548675330');
         });
     }
 
-    public function testVerifyCorrectToken()
+    /**
+     * Testa a verificação bem-sucedida de email com token válido
+     * 
+     * Verifica se:
+     * - O token válido ativa a conta do usuário
+     * - O status do usuário é alterado para ativo
+     * - Os dados do usuário estão corretos após verificação
+     */
+    public function testDeveVerificarEmailComTokenValido()
     {
         $model = new VerifyEmailForm('4ch0qbfhvWwkcuWqjN8SWRq72SOw1KYT_1548675330');
         $user = $model->verifyEmail();

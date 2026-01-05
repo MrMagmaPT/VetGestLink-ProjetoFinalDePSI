@@ -7,7 +7,11 @@ use common\models\LoginForm;
 use common\fixtures\UserFixture;
 
 /**
- * Login form test
+ * Testes do formulário de Login.
+ * 
+ * Esta suite de testes verifica o comportamento do LoginForm,
+ * incluindo validação de credenciais, autenticação de usuários,
+ * e tratamento de erros em casos de senha incorreta ou campos vazios.
  */
 class LoginFormTest extends \Codeception\Test\Unit
 {
@@ -30,7 +34,13 @@ class LoginFormTest extends \Codeception\Test\Unit
         ];
     }
 
-    public function testLoginWrongPassword()
+    /**
+     * Testa se o login falha quando a senha está incorreta.
+     * 
+     * Cenário: Tentativa de login com username correto mas senha errada.
+     * Expectativa: O método login() deve retornar false e deve haver erro no campo 'password'.
+     */
+    public function testDeveRejeitarLoginComSenhaIncorreta()
     {
         $model = new LoginForm([
             'username' => 'bayer.hudson',
@@ -41,7 +51,13 @@ class LoginFormTest extends \Codeception\Test\Unit
         verify($model->errors)->arrayHasKey('password');
     }
 
-    public function testLoginValidation()
+    /**
+     * Testa se a validação falha quando os campos estão vazios.
+     * 
+     * Cenário: Formulário de login submetido sem preencher username e password.
+     * Expectativa: A validação deve falhar e mostrar erros para ambos os campos.
+     */
+    public function testDeveValidarCamposObrigatoriosDoLogin()
     {
         $model = new LoginForm([
             'username' => '',

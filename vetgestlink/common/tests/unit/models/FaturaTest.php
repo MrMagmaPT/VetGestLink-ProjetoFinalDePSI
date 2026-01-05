@@ -7,6 +7,12 @@ use common\fixtures\FaturaFixture;
 use common\fixtures\MetodopagamentoFixture;
 use common\fixtures\UserprofileFixture;
 
+/**
+ * Testes do modelo Fatura.
+ * 
+ * Esta suite de testes verifica o comportamento do modelo Fatura,
+ * incluindo validações de campos numéricos (total) e formatos aceitos.
+ */
 class FaturaTest extends \Codeception\Test\Unit
 {
     /**
@@ -23,8 +29,13 @@ class FaturaTest extends \Codeception\Test\Unit
         ];
     }
 
-    // Validação de total (teste de número)
-    public function testCreateValidFatura()
+    /**
+     * Testa se o modelo aceita valores decimais válidos no campo total.
+     * 
+     * Cenário: Criação de uma fatura com valor decimal (75.50).
+     * Expectativa: O campo total deve aceitar o valor e a validação deve passar.
+     */
+    public function testDeveAceitarValorDecimalNoTotal()
     {
         $fatura = new Fatura([
             'total' => 75.50,
@@ -38,8 +49,13 @@ class FaturaTest extends \Codeception\Test\Unit
         $this->assertEquals(75.50, $fatura->total);
     }
 
-    // Teste de total negativo
-    public function testEstadoFatura()
+    /**
+     * Testa se o campo total aceita valores numéricos.
+     * 
+     * Cenário: Atribui um valor ao campo total.
+     * Expectativa: O valor deve ser numérico (verificação de tipo).
+     */
+    public function testTotalDeveSerNumerico()
     {
         $fatura = new Fatura(['total' => -10]);
         $fatura->validate(['total']);

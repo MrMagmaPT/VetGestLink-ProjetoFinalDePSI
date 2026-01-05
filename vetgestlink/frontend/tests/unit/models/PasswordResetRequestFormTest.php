@@ -25,14 +25,26 @@ class PasswordResetRequestFormTest extends \Codeception\Test\Unit
         ]);
     }
 
-    public function testSendMessageWithWrongEmailAddress()
+    /**
+     * Testa que o envio de email de recuperação de senha falha com email inexistente
+     * 
+     * Verifica se o sistema não envia email de recuperação quando o email
+     * não está cadastrado na base de dados
+     */
+    public function testNaoDeveEnviarEmailParaEnderecoInexistente()
     {
         $model = new PasswordResetRequestForm();
         $model->email = 'not-existing-email@example.com';
         verify($model->sendEmail())->false();
     }
 
-    public function testNotSendEmailsToInactiveUser()
+    /**
+     * Testa que o sistema não envia email de recuperação para usuários inativos
+     * 
+     * Verifica se usuários com status inativo não podem receber emails
+     * de recuperação de senha, evitando recuperação de contas desativadas
+     */
+    public function testNaoDeveEnviarEmailParaUsuarioInativo()
     {
         $user = $this->tester->grabFixture('user', 1);
         $model = new PasswordResetRequestForm();
@@ -40,7 +52,15 @@ class PasswordResetRequestFormTest extends \Codeception\Test\Unit
         verify($model->sendEmail())->false();
     }
 
-    public function testSendEmailSuccessfully()
+    /**
+     * Testa o envio bem-sucedido de email de recuperação de senha
+     * 
+     * Verifica se:
+     * - O email é enviado para usuário ativo válido
+     * - O token de recuperação de senha é gerado
+     * - O email contém os destinatários e remetentes corretos
+     */
+    public function testDeveEnviarEmailDeRecuperacaoComSucesso()
     {
         $userFixture = $this->tester->grabFixture('user', 0);
         

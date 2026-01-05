@@ -25,7 +25,13 @@ class ResendVerificationEmailFormTest extends Unit
         ]);
     }
 
-    public function testWrongEmailAddress()
+    /**
+     * Testa a validação de email inexistente no reenvio de verificação
+     * 
+     * Verifica se o sistema retorna erro apropriado quando tentamos
+     * reenviar email de verificação para um endereço não cadastrado
+     */
+    public function testDeveRejeitarEmailInexistente()
     {
         $model = new ResendVerificationEmailForm();
         $model->attributes = [
@@ -34,10 +40,16 @@ class ResendVerificationEmailFormTest extends Unit
 
         verify($model->validate())->false();
         verify($model->hasErrors())->true();
-        verify($model->getFirstError('email'))->equals('There is no user with this email address.');
+        verify($model->getFirstError('email'))->equals('Não existe nenhum utilizador com este email ou já está ativo.');
     }
 
-    public function testEmptyEmailAddress()
+    /**
+     * Testa a validação de campo email vazio
+     * 
+     * Verifica se o sistema exige que o campo email seja preenchido
+     * ao tentar reenviar email de verificação
+     */
+    public function testDeveRejeitarEmailVazio()
     {
         $model = new ResendVerificationEmailForm();
         $model->attributes = [
@@ -46,10 +58,16 @@ class ResendVerificationEmailFormTest extends Unit
 
         verify($model->validate())->false();
         verify($model->hasErrors())->true();
-        verify($model->getFirstError('email'))->equals('Email cannot be blank.');
+        verify($model->getFirstError('email'))->equals('Por favor, insira o seu email.');
     }
 
-    public function testResendToActiveUser()
+    /**
+     * Testa que não é possível reenviar verificação para usuário já ativo
+     * 
+     * Verifica se o sistema impede o reenvio de email de verificação
+     * para usuários que já tiveram suas contas ativadas
+     */
+    public function testNaoDeveReenviarParaUsuarioJaAtivo()
     {
         $model = new ResendVerificationEmailForm();
         $model->attributes = [
@@ -58,10 +76,18 @@ class ResendVerificationEmailFormTest extends Unit
 
         verify($model->validate())->false();
         verify($model->hasErrors())->true();
-        verify($model->getFirstError('email'))->equals('There is no user with this email address.');
+        verify($model->getFirstError('email'))->equals('Não existe nenhum utilizador com este email ou já está ativo.');
     }
 
-    public function testSuccessfullyResend()
+    /**
+     * Testa o reenvio bem-sucedido de email de verificação
+     * 
+     * Verifica se:
+     * - O formulário valida corretamente para usuário pendente
+     * - O email é enviado com sucesso
+     * - O email contém destinatários, remetente e token corretos
+     */
+    public function testDeveReenviarEmailDeVerificacaoComSucesso()
     {
         $model = new ResendVerificationEmailForm();
         $model->attributes = [

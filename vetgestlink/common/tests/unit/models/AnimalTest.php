@@ -8,6 +8,13 @@ use common\fixtures\EspecieFixture;
 use common\fixtures\RacaFixture;
 use common\fixtures\UserprofileFixture;
 
+/**
+ * Testes do modelo Animal.
+ * 
+ * Esta suite de testes verifica o comportamento do modelo Animal,
+ * incluindo validações de campos obrigatórios, formatos de dados,
+ * e regras de negócio relacionadas aos animais registrados no sistema.
+ */
 class AnimalTest extends \Codeception\Test\Unit
 {
     /**
@@ -25,8 +32,13 @@ class AnimalTest extends \Codeception\Test\Unit
         ];
     }
 
-    // Validação de campos obrigatórios
-    public function testValidationRequired()
+    /**
+     * Testa se o modelo valida corretamente os campos obrigatórios.
+     * 
+     * Cenário: Tentativa de criar um animal sem preencher campos obrigatórios.
+     * Expectativa: A validação deve falhar, exibindo erros para 'nome' e 'especies_id'.
+     */
+    public function testDeveValidarCamposObrigatorios()
     {
         $animal = new Animal();
         
@@ -35,8 +47,13 @@ class AnimalTest extends \Codeception\Test\Unit
         $this->assertTrue($animal->hasErrors('especies_id'));
     }
 
-    // Validação de atributos individuais
-    public function testCreateValidAnimal()
+    /**
+     * Testa se é possível criar um animal com dados válidos.
+     * 
+     * Cenário: Criação de um animal com atributos válidos (nome, data nascimento, peso, sexo).
+     * Expectativa: A validação dos campos fornecidos deve passar sem erros.
+     */
+    public function testDeveCriarAnimalComDadosValidos()
     {
         $animal = new Animal([
             'nome' => 'Bobby',
@@ -51,8 +68,13 @@ class AnimalTest extends \Codeception\Test\Unit
         $this->assertFalse($animal->hasErrors('dtanascimento'));
     }
 
-    // Teste de sexo válido
-    public function testValidSexo()
+    /**
+     * Testa se o modelo aceita valores válidos para o campo sexo.
+     * 
+     * Cenário: Teste com sexo masculino ('M') e feminino ('F').
+     * Expectativa: Ambos os valores devem ser aceitos sem erros de validação.
+     */
+    public function testDeveAceitarSexosMasculinoEFeminino()
     {
         $animal = new Animal(['sexo' => 'M']);
         $animal->validate(['sexo']);

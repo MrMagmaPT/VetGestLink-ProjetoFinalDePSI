@@ -11,6 +11,9 @@ return [
         'request' => [
             'cookieValidationKey' => 'test',
         ],
+        'session' => [
+            'class' => 'frontend\tests\unit\_support\DummySession',
+        ],
         'mailer' => [
             'messageClass' => \yii\symfonymailer\Message::class
         ]
