@@ -85,22 +85,11 @@ class FaturaController extends ActiveController
 
         $userProfileId = $this->getUserProfileId();
 
-        $query = Fatura::find()
+        $faturas = Fatura::find()
             ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
-            ->with(['linhasfaturas', 'metodospagamentos']);
-
-        // Filtros
-        $estado = Yii::$app->request->get('estado');
-        if ($estado !== null) {
-            $query->andWhere(['estado' => $estado]);
-        }
-
-        $ano = Yii::$app->request->get('ano');
-        if ($ano) {
-            $query->andWhere(['YEAR(created_at)' => $ano]);
-        }
-
-        $faturas = $query->orderBy(['created_at' => SORT_DESC])->all();
+            ->with(['linhasfaturas', 'metodospagamentos'])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
 
         $result = [];
         foreach ($faturas as $fatura) {

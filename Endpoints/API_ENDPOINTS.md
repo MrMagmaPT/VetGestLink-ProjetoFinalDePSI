@@ -480,11 +480,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 - **Endpoint**: `GET /api/fatura/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
-- **Descrição**: Lista faturas do cliente com filtros opcionais
-- **Filtros Query String**:
-  - `estado`: filtrar por estado (0=pendente, 1=paga)
-  - `ano`: filtrar por ano
-- **Exemplo**: `GET /api/fatura/all?estado=0&access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
+- **Descrição**: Lista todas as faturas do cliente (todos os estados)
 - **Resposta**:
 
 ```json
