@@ -206,6 +206,25 @@ class LembreteController extends ActiveController{
     }
 
     /**
+     * GET /lembrete/count
+     * Conta total de lembretes do cliente
+     */
+    public function actionCount()
+    {
+        $permission = Yii::$app->user->can('viewReminders');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver lembretes.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $count = Lembrete::find()
+            ->where(['userprofiles_id' => $userProfileId])
+            ->count();
+        
+        return ['count' => (int)$count];
+    }
+
+    /**
      * DELETE /lembrete/delete/{id}
      * Deletar um lembrete existente
      */

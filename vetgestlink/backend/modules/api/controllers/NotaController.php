@@ -242,6 +242,25 @@ class NotaController extends ActiveController
     }
 
     /**
+     * GET /nota/count
+     * Conta total de notas do cliente
+     */
+    public function actionCount()
+    {
+        $permission = Yii::$app->user->can('viewNotes');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver notas.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $count = Nota::find()
+            ->where(['userprofiles_id' => $userProfileId])
+            ->count();
+        
+        return ['count' => (int)$count];
+    }
+
+    /**
      * DELETE /nota/delete/{id}
      * Deletar uma nota existente
      */

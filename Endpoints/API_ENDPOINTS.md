@@ -835,7 +835,20 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 }
 ```
 
-### 7.4 Atualizar Lembrete
+### 7.4 Contar Total de Lembretes
+
+- **Endpoint**: `GET /api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
+- **Autenticação**: ✅ Requer token
+- **Descrição**: Retorna o total de lembretes do cliente
+- **Resposta**:
+
+```json
+{
+  "count": 8
+}
+```
+
+### 7.5 Atualizar Lembrete
 
 - **Endpoint**: `PUT /api/lembrete/update/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
@@ -862,7 +875,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 }
 ```
 
-### 7.5 Deletar Lembrete
+### 7.6 Deletar Lembrete
 
 - **Endpoint**: `DELETE /api/lembrete/delete/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
@@ -941,6 +954,54 @@ curl -X POST "http://localhost/api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0
 curl -X PUT "http://localhost/api/fatura/pay/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"metodospagamentos_id":1}'
+```
+
+### Atualizar Nota
+
+```bash
+curl -X PUT "http://localhost/api/nota/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"nota":"Nota atualizada via API"}'
+```
+
+### Deletar Nota
+
+```bash
+curl -X DELETE "http://localhost/api/nota/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+### Contar Notas
+
+```bash
+curl -X GET "http://localhost/api/nota/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+### Criar Lembrete
+
+```bash
+curl -X POST "http://localhost/api/lembrete/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"descricao":"Marcar consulta veterinária"}'
+```
+
+### Atualizar Lembrete
+
+```bash
+curl -X PUT "http://localhost/api/lembrete/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"descricao":"Lembrete atualizado"}'
+```
+
+### Deletar Lembrete
+
+```bash
+curl -X DELETE "http://localhost/api/lembrete/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+### Contar Lembretes
+
+```bash
+curl -X GET "http://localhost/api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
 ---
