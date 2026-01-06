@@ -17,7 +17,11 @@ echo "   Legível: " . (is_readable($uploadDir) ? 'SIM' : 'NÃO') . "\n";
 echo "   Gravável: " . (is_writable($uploadDir) ? 'SIM' : 'NÃO') . "\n";
 if (is_dir($uploadDir)) {
     echo "   Permissões: " . substr(sprintf('%o', fileperms($uploadDir)), -4) . "\n";
-    echo "   Proprietário: " . posix_getpwuid(filestat($uploadDir)['uid'])['name'] . "\n";
+    $stat = stat($uploadDir);
+    if ($stat && function_exists('posix_getpwuid')) {
+        $owner = posix_getpwuid($stat['uid']);
+        echo "   Proprietário: " . ($owner ? $owner['name'] : $stat['uid']) . "\n";
+    }
 }
 echo "\n";
 
@@ -28,7 +32,11 @@ echo "   Legível: " . (is_readable($usersDir) ? 'SIM' : 'NÃO') . "\n";
 echo "   Gravável: " . (is_writable($usersDir) ? 'SIM' : 'NÃO') . "\n";
 if (is_dir($usersDir)) {
     echo "   Permissões: " . substr(sprintf('%o', fileperms($usersDir)), -4) . "\n";
-    echo "   Proprietário: " . posix_getpwuid(filestat($usersDir)['uid'])['name'] . "\n";
+    $stat = stat($usersDir);
+    if ($stat && function_exists('posix_getpwuid')) {
+        $owner = posix_getpwuid($stat['uid']);
+        echo "   Proprietário: " . ($owner ? $owner['name'] : $stat['uid']) . "\n";
+    }
 }
 echo "\n";
 
@@ -50,10 +58,14 @@ if (file_put_contents($testFile, $testContent)) {
 echo "\n";
 
 echo "4. Usuário do processo PHP:\n";
-$processUser = posix_getpwuid(posix_geteuid());
-echo "   Usuário: " . $processUser['name'] . "\n";
-echo "   UID: " . $processUser['uid'] . "\n";
-echo "   GID: " . $processUser['gid'] . "\n";
+if (function_exists('posix_geteuid') && function_exists('posix_getpwuid')) {
+    $processUser = posix_getpwuid(posix_geteuid());
+    echo "   Usuário: " . $processUser['name'] . "\n";
+    echo "   UID: " . $processUser['uid'] . "\n";
+    echo "   GID: " . $processUser['gid'] . "\n";
+} else {
+    echo "   Funções POSIX não disponíveis\n";
+}
 echo "\n";
 
 echo "5. Configuração PHP para upload:\n";
