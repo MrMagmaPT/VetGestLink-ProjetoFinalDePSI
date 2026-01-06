@@ -121,7 +121,7 @@ class SignupForm extends Model
                 return null;
             }
 
-            // 2. Criar e salvar Userprofile (agora com user_id válido)
+            // 2. Criar Userprofile (agora com user_id válido)
             $userprofile = new Userprofile();
             $userprofile->user_id = $user->id;
             $userprofile->nomecompleto = $this->nomecompleto;
@@ -129,39 +129,7 @@ class SignupForm extends Model
             $userprofile->nif = $this->nif;
             $userprofile->telemovel = $this->telemovel;
 
-            if (!$userprofile->save()) {
-                Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                // Se falhar, apagar o User criado
-                $user->delete();
-                $this->addErrors($userprofile->getErrors());
-                return null;
-            }
-
-            // 3. Atribuir role
-            $auth = Yii::$app->authManager;
-            $clienteRole = $auth->getRole('cliente');
-
-            if ($clienteRole) {
-                $auth->assign($clienteRole, $user->id);
-            } else {
-                Yii::$app->session->setFlash('warning', 'A role "cliente" não existe no RBAC.');
-            }
-
-            // 4. Salvar Userprofile já validado
-            $userprofile->user_id = $user->id;
-            if (!$userprofile->save()) {
-                Yii::$app->session->setFlash('danger', 'Erro ao criar o perfil do utilizador.');
-                Yii::error("Erro Userprofile: " . json_encode($userprofile->errors));
-                // apagar user criado para evitar orfãos
-                try {
-                    $user->delete();
-                } catch (\Throwable $t) {
-                    Yii::error('Falha ao apagar user após erro no perfil: ' . $t->getMessage());
-                }
-                return null;
-            }
-
-            // 5. Upload de imagem de perfil (se fornecida)
+            // 3. Upload de imagem de perfil (se fornecida) ANTES de salvar
             if ($this->imageFile instanceof UploadedFile) {
                 Yii::info("SignupForm: Attempting to upload image for user {$user->id}", __METHOD__);
                 Yii::info("SignupForm: Image file name: " . $this->imageFile->name, __METHOD__);
@@ -176,20 +144,41 @@ class SignupForm extends Model
                 } else {
                     $uploaded = $userprofile->uploadImage();
                     if ($uploaded) {
-                        $uploadedFileName = $userprofile->foto ?? null; // já é apenas basename
-                        if (!$userprofile->save(false)) {
-                            Yii::error("SignupForm: Failed to save image path: " . json_encode($userprofile->errors), __METHOD__);
-                            throw new \Exception('Erro ao guardar caminho da imagem no perfil');
-                        }
-                        Yii::info("SignupForm: Image uploaded successfully and saved as: {$userprofile->foto}", __METHOD__);
+                        $uploadedFileName = $userprofile->foto ?? null;
+                        Yii::info("SignupForm: Image uploaded successfully: {$userprofile->foto}", __METHOD__);
                     } else {
                         Yii::error("SignupForm: Upload image FAILED for user {$user->id}", __METHOD__);
                         Yii::$app->session->setFlash('warning', 'O registo foi criado mas a imagem não pôde ser carregada.');
-                        // continuar sem imagem
                     }
                 }
             } else {
                 Yii::info("SignupForm: No image file provided for user {$user->id}", __METHOD__);
+            }
+
+            // 4. Salvar Userprofile (agora com a foto se foi carregada)
+            if (!$userprofile->save()) {
+                Yii::error("Erro ao salvar Userprofile: " . json_encode($userprofile->errors), __METHOD__);
+                // Se falhar, apagar o User criado e a imagem (se foi carregada)
+                if (!empty($uploadedFileName)) {
+                    try {
+                        Yii::$app->imageUploader->delete($uploadedFileName);
+                    } catch (\Throwable $t) {
+                        Yii::error("Falha ao apagar imagem: " . $t->getMessage());
+                    }
+                }
+                $user->delete();
+                $this->addErrors($userprofile->getErrors());
+                return null;
+            }
+
+            // 5. Atribuir role
+            $auth = Yii::$app->authManager;
+            $clienteRole = $auth->getRole('cliente');
+
+            if ($clienteRole) {
+                $auth->assign($clienteRole, $user->id);
+            } else {
+                Yii::$app->session->setFlash('warning', 'A role "cliente" não existe no RBAC.');
             }
 
             // 6. Criar Morada

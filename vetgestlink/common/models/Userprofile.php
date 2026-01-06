@@ -169,7 +169,9 @@ class Userprofile extends \yii\db\ActiveRecord
             return true;
         }
 
-        Yii::info('uploadImage: Starting upload for user ' . $this->id, __METHOD__);
+        // Usar user_id como identificador (mais confiável que id do profile que pode não existir ainda)
+        $userId = $this->user_id ?? $this->id ?? 'temp';
+        Yii::info('uploadImage: Starting upload for user ' . $userId, __METHOD__);
         Yii::info('uploadImage: File name: ' . $this->imageFile->name, __METHOD__);
         Yii::info('uploadImage: File size: ' . $this->imageFile->size, __METHOD__);
         Yii::info('uploadImage: File type: ' . $this->imageFile->type, __METHOD__);
@@ -181,7 +183,7 @@ class Userprofile extends \yii\db\ActiveRecord
         }
 
         // Faz upload usando o componente, retorna 'users/filename.ext' ou false
-        $result = Yii::$app->imageUploader->upload($this->imageFile, $this->id);
+        $result = Yii::$app->imageUploader->upload($this->imageFile, $userId);
         
         if ($result) {
             // Guardar apenas o nome do ficheiro na BD (basename)
@@ -191,7 +193,7 @@ class Userprofile extends \yii\db\ActiveRecord
             return true;
         }
 
-        Yii::error('uploadImage: Upload FAILED for user ' . $this->id, __METHOD__);
+        Yii::error('uploadImage: Upload FAILED for user ' . $userId, __METHOD__);
         return false;
     }
 
