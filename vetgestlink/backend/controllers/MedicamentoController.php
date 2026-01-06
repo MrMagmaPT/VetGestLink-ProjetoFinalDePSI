@@ -1,7 +1,7 @@
 <?php
 
 namespace backend\controllers;
-
+use yii;
 use common\models\Medicamento;
 use backend\models\MedicamentoSearch;
 use yii\web\Controller;
