@@ -14,7 +14,7 @@
       "tags": [],
       "examples": [],
       "request": {
-        "url": "http://localhost/vetgestlink/backend/web/api/health",
+        "url": "http://172.22.21.220/backend/web/api/health",
         "method": "GET",
         "headers": [],
         "params": [],
@@ -1747,6 +1747,6 @@
     "size": 0.009810447692871094,
     "filesCount": 39
   },
-  "exportedAt": "2026-01-06T16:37:11.730Z",
+  "exportedAt": "2026-01-06T17:20:25.483Z",
   "exportedUsing": "Bruno/3.0.1"
 }

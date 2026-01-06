@@ -15,13 +15,15 @@
         },
         "description": "",
         "url": {
-          "raw": "http://localhost/vetgestlink/backend/web/api/health",
+          "raw": "http://172.22.21.220/backend/web/api/health",
           "protocol": "http",
           "host": [
-            "localhost"
+            "172",
+            "22",
+            "21",
+            "220"
           ],
           "path": [
-            "vetgestlink",
             "backend",
             "web",
             "api",
