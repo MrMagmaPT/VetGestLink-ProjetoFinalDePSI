@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\rest\ActiveController;
+use yii\rest\Controller;
 use yii\web\Response;
 
 /**
@@ -11,7 +11,7 @@ use yii\web\Response;
  *
  * Endpoint público para verificar status do servidor.
  */
-class HealthController extends ActiveController
+class HealthController extends Controller
 {
     /**
      * @inheritdoc
@@ -48,12 +48,7 @@ class HealthController extends ActiveController
     }
 
     //Tira as ações padrões do ActiveController (index, view, create, update, delete)
-    public function actions()
-    {
-        $actions = parent::actions();
-        unset($actions['index'], $actions['view'], $actions['create'], $actions['update'], $actions['delete']);
-        return $actions;
-    }
+    // Nenhuma ação padrão, apenas o health check
     
     /**
      * GET /health
