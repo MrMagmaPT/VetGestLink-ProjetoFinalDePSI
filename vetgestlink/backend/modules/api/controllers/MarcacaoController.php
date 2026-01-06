@@ -226,10 +226,10 @@ class MarcacaoController extends Controller
     }
 
     /**
-     * GET /marcacao/data/{ano}/{mes}/{dia}
+     * GET /marcacao/data/{dia}/{mes}/{ano}
      * Lista marcações de uma data específica
      */
-    public function actionPordata($ano, $mes, $dia)
+    public function actionPordata($dia, $mes, $ano)
     {
         $permission = Yii::$app->user->can('viewAppointments');
         if (!$permission) {

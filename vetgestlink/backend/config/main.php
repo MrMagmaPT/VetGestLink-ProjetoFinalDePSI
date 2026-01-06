@@ -116,14 +116,14 @@ return [
                         'GET view/{id}' => 'view',
                         'GET count' => 'count',
                         'GET estado/{estado}' => 'porestado',
-                        'GET data/{ano}/{mes}/{dia}' => 'pordata',
+                        'GET data/{dia}/{mes}/{ano}' => 'pordata',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
                         '{estado}' => '<estado:\\w+>',
+                        '{dia}' => '<dia:\\d{1,2}>',
+                        '{mes}' => '<mes:\\d{1,2}>',
                         '{ano}' => '<ano:\\d{4}>',
-                        '{mes}' => '<mes:\\d{2}>',
-                        '{dia}' => '<dia:\\d{2}>',
                     ],
                 ],
                 // ========== FATURA CONTROLLER (Protegido) ==========
