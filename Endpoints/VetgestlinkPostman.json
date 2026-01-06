@@ -215,7 +215,7 @@
           }
         },
         {
-          "name": "All Animais com microship (NÃO TESTADO AINDA)",
+          "name": "All Animais com microship",
           "request": {
             "method": "GET",
             "header": [],
@@ -224,7 +224,7 @@
             },
             "description": "",
             "url": {
-              "raw": "http://172.22.21.220/vetgestlink/backend/web/api/animal/1/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "raw": "http://172.22.21.220/backend/web/api/animal/microchip/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
               "protocol": "http",
               "host": [
                 "172",
@@ -233,13 +233,12 @@
                 "220"
               ],
               "path": [
-                "vetgestlink",
                 "backend",
                 "web",
                 "api",
                 "animal",
-                "1",
-                "microchip"
+                "microchip",
+                "1"
               ],
               "query": [
                 {
@@ -396,7 +395,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\":\"wilcampos2003@gmail.com\"\n}",
+              "raw": "{\n  \"email\":\"mario.fernandes@ipleiria.pt\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -634,7 +633,7 @@
             },
             "description": "",
             "url": {
-              "raw": "http://172.22.21.220/backend/web/api/marcacao/data/22/02/2025?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/data/26/01/2026?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
               "protocol": "http",
               "host": [
                 "172",
@@ -648,9 +647,9 @@
                 "api",
                 "marcacao",
                 "data",
-                "22",
-                "02",
-                "2025"
+                "26",
+                "01",
+                "2026"
               ],
               "query": [
                 {
@@ -677,13 +676,15 @@
             },
             "description": "",
             "url": {
-              "raw": "http://localhost/vetgestlink/backend/web/api/lembrete/all?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
               "protocol": "http",
               "host": [
-                "localhost"
+                "172",
+                "22",
+                "21",
+                "220"
               ],
               "path": [
-                "vetgestlink",
                 "backend",
                 "web",
                 "api",
@@ -693,7 +694,7 @@
               "query": [
                 {
                   "key": "access-token",
-                  "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K"
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
                 }
               ],
               "variable": []

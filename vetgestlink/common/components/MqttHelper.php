@@ -2,10 +2,11 @@
 
 namespace common\components;
 
-use Bluerhinos\phpMQTT;
 use Yii;
+use yii\base\Component;
+use Bluerhinos\phpMQTT;
 
-class MqttHelper
+class MqttHelper extends Component
 {
     /**
      * Publica uma mensagem no broker MQTT

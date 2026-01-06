@@ -249,8 +249,8 @@
         },
         {
           "type": "http",
-          "name": "All Animais com microship (NÃO TESTADO AINDA)",
-          "filename": "All Animais com microship (NÃO TESTADO AINDA).bru",
+          "name": "All Animais com microship",
+          "filename": "All Animais com microship.bru",
           "seq": 6,
           "settings": {
             "encodeUrl": true,
@@ -259,7 +259,7 @@
           "tags": [],
           "examples": [],
           "request": {
-            "url": "http://172.22.21.220/vetgestlink/backend/web/api/animal/1/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+            "url": "http://172.22.21.220/backend/web/api/animal/microchip/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
             "method": "GET",
             "headers": [],
             "params": [
@@ -432,7 +432,7 @@
             "params": [],
             "body": {
               "mode": "json",
-              "json": "{\n  \"email\":\"wilcampos2003@gmail.com\"\n}",
+              "json": "{\n  \"email\":\"mario.fernandes@ipleiria.pt\"\n}",
               "formUrlEncoded": [],
               "multipartForm": [],
               "file": []
@@ -713,7 +713,7 @@
           "tags": [],
           "examples": [],
           "request": {
-            "url": "http://172.22.21.220/backend/web/api/marcacao/data/22/02/2025?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+            "url": "http://172.22.21.220/backend/web/api/marcacao/data/26/01/2026?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
             "method": "GET",
             "headers": [],
             "params": [
@@ -772,13 +772,13 @@
           "tags": [],
           "examples": [],
           "request": {
-            "url": "http://localhost/vetgestlink/backend/web/api/lembrete/all?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+            "url": "http://172.22.21.220/backend/web/api/lembrete/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
             "method": "GET",
             "headers": [],
             "params": [
               {
                 "name": "access-token",
-                "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+                "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
                 "type": "query",
                 "enabled": true
               }
@@ -1747,6 +1747,6 @@
     "size": 0.009810447692871094,
     "filesCount": 39
   },
-  "exportedAt": "2026-01-06T17:20:25.483Z",
+  "exportedAt": "2026-01-06T20:49:59.552Z",
   "exportedUsing": "Bruno/3.0.1"
 }
