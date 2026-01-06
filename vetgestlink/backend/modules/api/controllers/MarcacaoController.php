@@ -150,7 +150,7 @@ class MarcacaoController extends Controller
 
         $marcacao = Marcacao::find()
             ->where(['id' => $id, 'userprofiles_id' => $userProfileId, 'eliminado' => 0])
-            ->with(['animais', 'animais.especies', 'animais.racas'])
+            ->with(['animais', 'animais.especies', 'animais.racas', 'servicos'])
             ->one();
 
         if (!$marcacao) {
@@ -187,6 +187,110 @@ class MarcacaoController extends Controller
                 'peso' => (float)$marcacao->animais->peso,
                 'sexo' => $marcacao->animais->sexo,
             ],
+        ];
+    }
+
+    /**
+     * GET /marcacao/count
+     * Conta total de marcações do cliente
+     */
+    public function actionCount()
+    {
+        $permission = Yii::$app->user->can('viewConsultations');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $count = Marcacao::find()
+            ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
+            ->count();
+        
+        return ['count' => (int)$count];
+    }
+
+    /**
+     * GET /marcacao/estado/{estado}
+     * Lista marcações por estado (pendente, realizada, cancelada)
+     */
+    public function actionPorestado($estado)
+    {
+        $permission = Yii::$app->user->can('viewConsultations');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        
+        $marcacoes = Marcacao::find()
+            ->where([
+                'userprofiles_id' => $userProfileId,
+                'estado' => $estado,
+                'eliminado' => 0
+            ])
+            ->with(['animais', 'servicos'])
+            ->orderBy(['data' => SORT_DESC, 'horainicio' => SORT_DESC])
+            ->all();
+
+        $result = [];
+        foreach ($marcacoes as $marcacao) {
+            $result[] = [
+                'id' => $marcacao->id,
+                'data' => $marcacao->data,
+                'horainicio' => $marcacao->horainicio,
+                'horafim' => $marcacao->horafim,
+                'estado' => $marcacao->estado,
+                'animal_nome' => $marcacao->animais ? $marcacao->animais->nome : null,
+                'servico_nome' => $marcacao->servicos ? $marcacao->servicos->nome : null,
+                'diagnostico' => $marcacao->diagnostico,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * GET /marcacao/data/{ano}/{mes}/{dia}
+     * Lista marcações de uma data específica
+     */
+    public function actionPordata($ano, $mes, $dia)
+    {
+        $permission = Yii::$app->user->can('viewConsultations');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $data = sprintf('%04d-%02d-%02d', $ano, $mes, $dia);
+
+        $marcacoes = Marcacao::find()
+            ->where([
+                'userprofiles_id' => $userProfileId,
+                'data' => $data,
+                'eliminado' => 0
+            ])
+            ->with(['animais', 'servicos'])
+            ->orderBy(['horainicio' => SORT_ASC])
+            ->all();
+
+        $result = [];
+        foreach ($marcacoes as $marcacao) {
+            $result[] = [
+                'id' => $marcacao->id,
+                'horainicio' => $marcacao->horainicio,
+                'horafim' => $marcacao->horafim,
+                'estado' => $marcacao->estado,
+                'duracao_minutos' => $this->calcularDuracao($marcacao->horainicio, $marcacao->horafim),
+                'animal_nome' => $marcacao->animais ? $marcacao->animais->nome : null,
+                'servico_nome' => $marcacao->servicos ? $marcacao->servicos->nome : null,
+                'diagnostico' => $marcacao->diagnostico,
+            ];
+        }
+
+        return [
+            'data' => $data,
+            'total' => count($result),
+            'marcacoes' => $result,
         ];
     }
 
