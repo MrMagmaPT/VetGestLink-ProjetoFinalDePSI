@@ -27,7 +27,22 @@ $estadoIcon = $isPaid ? 'check-circle' : 'clock';
             </h2>
             <div>
                 <?= Html::a('<i class="fas fa-arrow-left"></i> Voltar', ['index'], ['class' => 'btn btn-secondary']) ?>
-                <?php if (!$isPaid): ?>
+                <?php if ($isPaid): ?>
+                    <?= Html::a(
+                        '<i class="fas fa-file-pdf"></i> Exportar PDF',
+                        ['pdf',
+                            'nome_emissor' => Yii::$app->user->identity->username,
+                            'nome_recep' => $model->userprofiles->nomecompleto,
+                            'id' => $model->id
+                        ],
+                        [
+                            'class' => 'btn btn-danger',
+                            'target' => '_blank',
+                            'data-toggle' => 'tooltip',
+                            'title' => 'Gera e prepara a fatura em formato PDF para impressão e envio.'
+                        ]
+                    ) ?>
+                <?php else: ?>
                     <?= Html::a(
                         '<i class="fas fa-money-bill-wave"></i> Pagar Agora',
                         ['pagar', 'id' => $model->id],
@@ -38,6 +53,9 @@ $estadoIcon = $isPaid ? 'check-circle' : 'clock';
                         ]
                     ) ?>
                 <?php endif; ?>
+
+
+
             </div>
         </div>
 

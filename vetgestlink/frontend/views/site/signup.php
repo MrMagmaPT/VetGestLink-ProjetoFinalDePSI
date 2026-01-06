@@ -197,27 +197,27 @@ $this->params['breadcrumbs'][] = $this->title;
                     Já tem uma conta? <?= Html::a('Entrar', ['site/login'], ['class' => 'btn btn btn-lg rounded-pill px-4']) ?>
                 </p>
 
-                //DEBUG LOG(REMOVER DEPOIS)
-                <?php if (YII_DEBUG): ?>
-                    <button type="button" onclick="autoFill()">Auto Fill</button>
 
-                    <script>
-                        function autoFill() {
-                            document.getElementById('signupform-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';
-                            document.getElementById('signupform-nomecompleto').value = 'João Silva Santos';
-                            document.getElementById('signupform-dtanascimento').value = '1990-05-15';
-                            document.getElementById('signupform-nif').value = '123456789';
-                            document.getElementById('signupform-telemovel').value = '912345678';
-                            document.getElementById('signupform-rua').value = 'Rua das Flores';
-                            document.getElementById('signupform-nporta').value = '123';
-                            document.getElementById('signupform-andar').value = '2';
-                            document.getElementById('signupform-cdpostal').value = '1234-567';
-                            document.getElementById('signupform-cxpostal').value = '1000';
-                            document.getElementById('signupform-localidade').value = 'Lisboa';
-                            document.getElementById('signupform-cidade').value = 'Lisboa';
-                        }
-                    </script>
-                <?php endif; ?>
+<!--                --><?php //if (YII_DEBUG): ?>
+<!--                    <button type="button" onclick="autoFill()">Auto Fill</button>-->
+<!---->
+<!--                    <script>-->
+<!--                        function autoFill() {-->
+<!--                            document.getElementById('signupform-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';-->
+<!--                            document.getElementById('signupform-nomecompleto').value = 'João Silva Santos';-->
+<!--                            document.getElementById('signupform-dtanascimento').value = '1990-05-15';-->
+<!--                            document.getElementById('signupform-nif').value = '123456789';-->
+<!--                            document.getElementById('signupform-telemovel').value = '912345678';-->
+<!--                            document.getElementById('signupform-rua').value = 'Rua das Flores';-->
+<!--                            document.getElementById('signupform-nporta').value = '123';-->
+<!--                            document.getElementById('signupform-andar').value = '2';-->
+<!--                            document.getElementById('signupform-cdpostal').value = '1234-567';-->
+<!--                            document.getElementById('signupform-cxpostal').value = '1000';-->
+<!--                            document.getElementById('signupform-localidade').value = 'Lisboa';-->
+<!--                            document.getElementById('signupform-cidade').value = 'Lisboa';-->
+<!--                        }-->
+<!--                    </script>-->
+<!--                --><?php //endif; ?>
 
 
             </div>

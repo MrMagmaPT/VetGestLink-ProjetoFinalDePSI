@@ -260,40 +260,40 @@ use backend\widgets\FlashMessages;
                     </div>
                 </div>
 
-                <?php if (YII_DEBUG): ?>
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-warning">
-                            <h5 class="mb-0">
-                                <i class="fas fa-bug"></i>
-                                Debug
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <button type="button" class="btn btn-warning w-100" onclick="autoFill()">
-                                <i class="fas fa-magic"></i> Auto Preencher
-                            </button>
-                        </div>
-                    </div>
-
-                    <script>
-                        function autoFill() {
-                            document.getElementById('signupformbackend-username').value = 'user' + Math.floor(Math.random() * 10000);
-                            document.getElementById('signupformbackend-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';
-                            document.getElementById('signupformbackend-password').value = '123456';
-                            document.getElementById('signupformbackend-nomecompleto').value = 'João Silva Santos';
-                            document.getElementById('signupformbackend-dtanascimento').value = '1990-05-15';
-                            document.getElementById('signupformbackend-nif').value = '123456789' + Math.floor(Math.random() * 10000);
-                            document.getElementById('signupformbackend-telemovel').value = '912345678';
-                            document.getElementById('signupformbackend-rua').value = 'Rua das Flores';
-                            document.getElementById('signupformbackend-nporta').value = '123';
-                            document.getElementById('signupformbackend-andar').value = '2';
-                            document.getElementById('signupformbackend-cdpostal').value = '1234-567';
-                            document.getElementById('signupformbackend-cxpostal').value = '1000';
-                            document.getElementById('signupformbackend-localidade').value = 'Lisboa';
-                            document.getElementById('signupformbackend-cidade').value = 'Lisboa';
-                        }
-                    </script>
-                <?php endif; ?>
+<!--                --><?php //if (YII_DEBUG): ?>
+<!--                    <div class="card shadow-sm">-->
+<!--                        <div class="card-header bg-warning">-->
+<!--                            <h5 class="mb-0">-->
+<!--                                <i class="fas fa-bug"></i>-->
+<!--                                Debug-->
+<!--                            </h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <button type="button" class="btn btn-warning w-100" onclick="autoFill()">-->
+<!--                                <i class="fas fa-magic"></i> Auto Preencher-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!---->
+<!--                    <script>-->
+<!--                        function autoFill() {-->
+<!--                            document.getElementById('signupformbackend-username').value = 'user' + Math.floor(Math.random() * 10000);-->
+<!--                            document.getElementById('signupformbackend-email').value = 'user' + Math.floor(Math.random() * 10000) + '@example.com';-->
+<!--                            document.getElementById('signupformbackend-password').value = '123456';-->
+<!--                            document.getElementById('signupformbackend-nomecompleto').value = 'João Silva Santos';-->
+<!--                            document.getElementById('signupformbackend-dtanascimento').value = '1990-05-15';-->
+<!--                            document.getElementById('signupformbackend-nif').value = '123456789' + Math.floor(Math.random() * 10000);-->
+<!--                            document.getElementById('signupformbackend-telemovel').value = '912345678';-->
+<!--                            document.getElementById('signupformbackend-rua').value = 'Rua das Flores';-->
+<!--                            document.getElementById('signupformbackend-nporta').value = '123';-->
+<!--                            document.getElementById('signupformbackend-andar').value = '2';-->
+<!--                            document.getElementById('signupformbackend-cdpostal').value = '1234-567';-->
+<!--                            document.getElementById('signupformbackend-cxpostal').value = '1000';-->
+<!--                            document.getElementById('signupformbackend-localidade').value = 'Lisboa';-->
+<!--                            document.getElementById('signupformbackend-cidade').value = 'Lisboa';-->
+<!--                        }-->
+<!--                    </script>-->
+<!--                --><?php //endif; ?>
             </div>
         </div>
 
