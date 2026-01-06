@@ -345,11 +345,13 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ## 4. MARCAÇÕES/CONSULTAS (Marcacao Controller)
 
+**Nota:** Todos os endpoints de marcações retornam apenas as marcações dos animais pertencentes ao cliente autenticado.
+
 ### 4.1 Listar Todas as Marcações
 
 - **Endpoint**: `GET /api/marcacao/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
-- **Descrição**: Lista todas as marcações do cliente (todos os estados)
+- **Descrição**: Lista todas as marcações dos animais do cliente (todos os estados)
 - **Resposta**:
 
 ```json
