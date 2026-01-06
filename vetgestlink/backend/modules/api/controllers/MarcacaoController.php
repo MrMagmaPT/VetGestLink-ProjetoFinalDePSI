@@ -70,7 +70,7 @@ class MarcacaoController extends Controller
      */
     public function actionAll()
     {
-        $permission = Yii::$app->user->can('viewConsultations');
+        $permission = Yii::$app->user->can('viewAppointments');
         // Verifica permissão   
         if (!$permission) {
             throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');

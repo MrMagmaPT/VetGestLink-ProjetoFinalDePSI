@@ -297,26 +297,22 @@ class AnimalController extends ActiveController
         $userProfileId = $this->getUserProfileId();
         $animal = Animal::find()
             ->where([
-                'microship' => $microchip,
+                'id' => $microchip,
                 'userprofiles_id' => $userProfileId,
                 'eliminado' => 0
             ])
-            ->with(['especies', 'racas'])
             ->one();
 
         if (!$animal) {
-            throw new NotFoundHttpException('Animal não encontrado com esse microchip');
+            throw new NotFoundHttpException('Animal não encontrado');
         }
+
+        // microship: 1 se tem, 0 se não tem
+        $temMicrochip = (!empty($animal->microship) && $animal->microship > 0) ? 1 : 0;
 
         return [
             'id' => $animal->id,
-            'nome' => $animal->nome,
-            'especie' => $animal->especies ? $animal->especies->nome : null,
-            'especie_id' => $animal->especies_id,
-            'raca' => $animal->racas ? $animal->racas->nome : null,
-            'microchip' => $animal->microship,
-            'peso' => (float)$animal->peso,
-            'sexo' => $animal->sexo,
+            'tem_microchip' => $temMicrochip,
         ];
     }
 

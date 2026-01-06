@@ -1,4 +1,4 @@
-# VetGestLink - Documentação da API
+﻿# VetGestLink - Documentação da API
 
 ## Informações de Autenticação
 
@@ -6,14 +6,14 @@
 
 - **Username**: `cliente1`
 - **Password**: `cliente123`
-- **Access Token**: `X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Access Token**: `L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 
 ### Autenticação
 
 A maioria dos endpoints requer autenticação via token. Inclua o token no query parameter:
 
 ```
-?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP
+?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP
 ```
 
 ---
@@ -40,7 +40,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 {
   "success": true,
   "message": "Login bem-sucedido",
-  "token": "X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP",
+  "token": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
   "user": {
     "id": 1,
     "username": "cliente1",
@@ -51,7 +51,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 1.2 Logout
 
-- **Endpoint**: `POST /api/auth/logout?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `POST /api/auth/logout?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Realiza logout do cliente
 - **Resposta**:
@@ -91,7 +91,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 2.1 Obter Perfil
 
-- **Endpoint**: `GET /api/profile?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/profile?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna dados completos do perfil do usuário autenticado
 - **Resposta**:
@@ -122,7 +122,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 2.2 Atualizar Perfil
 
-- **Endpoint**: `PUT /api/profile/update?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `PUT /api/profile/update?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Atualiza dados do perfil (nome, email, telefone e morada)
 - **Body**:
@@ -155,7 +155,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 2.3 Alterar Senha
 
-- **Endpoint**: `PUT /api/profile/password?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `PUT /api/profile/password?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Altera a senha do usuário
 - **Body**:
@@ -183,7 +183,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 3.1 Listar Todos os Animais
 
-- **Endpoint**: `GET /api/animal/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista todos os animais do cliente autenticado
 - **Resposta**:
@@ -213,10 +213,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 3.2 Ver Detalhes de um Animal
 
-- **Endpoint**: `GET /api/animal/view/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/view/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna detalhes completos de um animal específico
-- **Exemplo**: `GET /api/animal/view/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/animal/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -254,10 +254,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 3.3 Listar Notas de um Animal
 
-- **Endpoint**: `GET /api/animal/{id}/notas?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/{id}/notas?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista todas as notas de um animal específico
-- **Exemplo**: `GET /api/animal/1/notas?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/animal/1/notas?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -275,7 +275,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 3.4 Contar Total de Animais
 
-- **Endpoint**: `GET /api/animal/count?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna o total de animais do cliente
 - **Resposta**:
@@ -288,7 +288,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 3.5 Listar Nomes dos Animais
 
-- **Endpoint**: `GET /api/animal/nomes?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/nomes?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista apenas ID e nomes dos animais
 - **Resposta**:
@@ -306,33 +306,27 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 ]
 ```
 
-### 3.6 Buscar Animal por Microchip
+### 3.6 Verificar Microchip do Animal
 
-- **Endpoint**: `GET /api/animal/microchip/{microchip}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/{id}/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
-- **Descrição**: Busca animal pelo número do microchip
-- **Exemplo**: `GET /api/animal/microchip/123456789012345?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Descrição**: Verifica se o animal possui microchip (retorna 1 se possui, 0 se não possui)
+- **Exemplo**: `GET /api/animal/1/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
 {
   "id": 1,
-  "nome": "Rex",
-  "especie": "Cão",
-  "especie_id": 1,
-  "raca": "Labrador",
-  "microchip": "123456789012345",
-  "peso": 30.5,
-  "sexo": "M"
+  "tem_microchip": 1
 }
 ```
 
 ### 3.7 Listar Animais por Espécie
 
-- **Endpoint**: `GET /api/animal/especie/{especie_id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/animal/especie/{especie_id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista animais de uma espécie específica
-- **Exemplo**: `GET /api/animal/especie/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/animal/especie/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -353,7 +347,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 4.1 Listar Todas as Marcações
 
-- **Endpoint**: `GET /api/marcacao/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/marcacao/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista marcações do cliente com filtros opcionais
 - **Filtros Query String**:
@@ -362,7 +356,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
   - `data_inicio`: filtrar por data inicial
   - `data_fim`: filtrar por data final
   - `search`: buscar no diagnóstico
-- **Exemplo**: `GET /api/marcacao/all?status=pendente&access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/marcacao/all?status=pendente&access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -386,10 +380,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 4.2 Ver Detalhes de uma Marcação
 
-- **Endpoint**: `GET /api/marcacao/view/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/marcacao/view/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna detalhes completos de uma marcação
-- **Exemplo**: `GET /api/marcacao/view/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/marcacao/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -421,7 +415,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 4.3 Contar Total de Marcações
 
-- **Endpoint**: `GET /api/marcacao/count?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/marcacao/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna o total de marcações do cliente
 - **Resposta**:
@@ -434,11 +428,11 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 4.4 Listar Marcações por Estado
 
-- **Endpoint**: `GET /api/marcacao/estado/{estado}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/marcacao/estado/{estado}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista marcações por estado específico
 - **Estados**: `pendente`, `realizada`, `cancelada`
-- **Exemplo**: `GET /api/marcacao/estado/pendente?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/marcacao/estado/pendente?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -458,10 +452,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 4.5 Listar Marcações por Data
 
-- **Endpoint**: `GET /api/marcacao/data/{ano}/{mes}/{dia}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/marcacao/data/{ano}/{mes}/{dia}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista marcações de uma data específica
-- **Exemplo**: `GET /api/marcacao/data/2024/01/15?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/marcacao/data/2024/01/15?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -489,13 +483,13 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.1 Listar Todas as Faturas
 
-- **Endpoint**: `GET /api/fatura/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista faturas do cliente com filtros opcionais
 - **Filtros Query String**:
   - `estado`: filtrar por estado (0=pendente, 1=paga)
   - `ano`: filtrar por ano
-- **Exemplo**: `GET /api/fatura/all?estado=0&access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/fatura/all?estado=0&access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -515,10 +509,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.2 Ver Detalhes de uma Fatura
 
-- **Endpoint**: `GET /api/fatura/view/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/view/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna detalhes completos de uma fatura com linhas
-- **Exemplo**: `GET /api/fatura/view/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/fatura/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -558,7 +552,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.3 Listar Métodos de Pagamento
 
-- **Endpoint**: `GET /api/fatura/paymentmethods?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/paymentmethods?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista métodos de pagamento disponíveis
 - **Resposta**:
@@ -580,10 +574,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.4 Pagar Fatura
 
-- **Endpoint**: `PUT /api/fatura/pay/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `PUT /api/fatura/pay/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Marca uma fatura como paga
-- **Exemplo**: `PUT /api/fatura/pay/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `PUT /api/fatura/pay/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Body (opcional)**:
 
 ```json
@@ -610,7 +604,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.5 Contar Total de Faturas
 
-- **Endpoint**: `GET /api/fatura/count?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna o total de faturas do cliente
 - **Resposta**:
@@ -623,7 +617,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.6 Total Geral de Faturas
 
-- **Endpoint**: `GET /api/fatura/total?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/total?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna a soma total de todas as faturas
 - **Resposta**:
@@ -637,10 +631,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 5.7 Listar Faturas por Ano
 
-- **Endpoint**: `GET /api/fatura/ano/{ano}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/fatura/ano/{ano}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista faturas de um ano específico com resumo
-- **Exemplo**: `GET /api/fatura/ano/2024?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/fatura/ano/2024?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -671,7 +665,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 6.1 Listar Todas as Notas
 
-- **Endpoint**: `GET /api/nota/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/nota/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista todas as notas dos animais do cliente
 - **Resposta**:
@@ -692,10 +686,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 6.2 Ver Detalhes de uma Nota
 
-- **Endpoint**: `GET /api/nota/view/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/nota/view/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna detalhes de uma nota específica
-- **Exemplo**: `GET /api/nota/view/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/nota/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -712,7 +706,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 6.3 Criar Nova Nota
 
-- **Endpoint**: `POST /api/nota/create?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `POST /api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Cria uma nova nota para um animal
 - **Body**:
@@ -742,10 +736,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 6.4 Atualizar Nota
 
-- **Endpoint**: `PUT /api/nota/update/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `PUT /api/nota/update/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Atualiza uma nota existente
-- **Exemplo**: `PUT /api/nota/update/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `PUT /api/nota/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Body**:
 
 ```json
@@ -771,10 +765,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 6.5 Deletar Nota
 
-- **Endpoint**: `DELETE /api/nota/delete/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `DELETE /api/nota/delete/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Deleta uma nota existente
-- **Exemplo**: `DELETE /api/nota/delete/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `DELETE /api/nota/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -790,7 +784,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 7.1 Listar Todos os Lembretes
 
-- **Endpoint**: `GET /api/lembrete/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/lembrete/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Lista todos os lembretes do cliente
 - **Resposta**:
@@ -809,10 +803,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 7.2 Ver Detalhes de um Lembrete
 
-- **Endpoint**: `GET /api/lembrete/view/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `GET /api/lembrete/view/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Retorna detalhes de um lembrete específico
-- **Exemplo**: `GET /api/lembrete/view/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `GET /api/lembrete/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -827,7 +821,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 7.3 Criar Novo Lembrete
 
-- **Endpoint**: `POST /api/lembrete/create?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `POST /api/lembrete/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Cria um novo lembrete
 - **Body**:
@@ -852,10 +846,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 7.4 Atualizar Lembrete
 
-- **Endpoint**: `PUT /api/lembrete/update/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `PUT /api/lembrete/update/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Atualiza um lembrete existente
-- **Exemplo**: `PUT /api/lembrete/update/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `PUT /api/lembrete/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Body**:
 
 ```json
@@ -879,10 +873,10 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ### 7.5 Deletar Lembrete
 
-- **Endpoint**: `DELETE /api/lembrete/delete/{id}?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Endpoint**: `DELETE /api/lembrete/delete/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
 - **Descrição**: Deleta um lembrete existente
-- **Exemplo**: `DELETE /api/lembrete/delete/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP`
+- **Exemplo**: `DELETE /api/lembrete/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Resposta**:
 
 ```json
@@ -939,13 +933,13 @@ curl -X POST "http://localhost/api/auth/login" \
 ### Listar Animais
 
 ```bash
-curl -X GET "http://localhost/api/animal/all?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP"
+curl -X GET "http://localhost/api/animal/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
 ### Criar Nota
 
 ```bash
-curl -X POST "http://localhost/api/nota/create?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP" \
+curl -X POST "http://localhost/api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"animais_id":1,"nota":"Nova nota para o animal"}'
 ```
@@ -953,7 +947,7 @@ curl -X POST "http://localhost/api/nota/create?access-token=X5cQ7jY0bN1gZ4mR8tL3
 ### Pagar Fatura
 
 ```bash
-curl -X PUT "http://localhost/api/fatura/pay/1?access-token=X5cQ7jY0bN1gZ4mR8tL3hW6vK2nF9sP" \
+curl -X PUT "http://localhost/api/fatura/pay/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"metodospagamentos_id":1}'
 ```
