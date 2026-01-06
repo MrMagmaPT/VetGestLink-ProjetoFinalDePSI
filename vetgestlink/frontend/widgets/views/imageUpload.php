@@ -13,12 +13,21 @@ use yii\helpers\Html;
 /** @var $accept */
 /** @var $inputId */
 /** @var $form */
+
+// Obter a imagem atual do modelo, se existir
+$currentImage = $defaultImage;
+if ($model && method_exists($model, 'getImageUrl')) {
+    $modelImage = $model->getImageUrl();
+    if (!empty($modelImage)) {
+        $currentImage = $modelImage;
+    }
+}
 ?>
 
 <div class="text-center">
     <div style="margin-bottom: 15px; cursor: pointer; position: relative; display: inline-block;" onclick="document.getElementById('<?= $inputId ?>').click();">
         <img id="<?= $previewId ?>" 
-             src="<?= $defaultImage ?>" 
+             src="<?= $currentImage ?>" 
              alt="Foto de Perfil" 
              style="width: <?= $imageSize ?>px; height: <?= $imageSize ?>px; border: 3px solid <?= $borderColor ?>; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;">
         <div class="image-upload-overlay" style="position: absolute; top: 0; left: 0; width: <?= $imageSize ?>px; height: <?= $imageSize ?>px; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; background: rgba(0,0,0,0.5);">

@@ -163,25 +163,35 @@ class Userprofile extends \yii\db\ActiveRecord
      */
     public function uploadImage()
     {
-        // imageFile pode ser null
+        // Se não há ficheiro para upload, retorna true (não é erro)
         if (!$this->imageFile instanceof UploadedFile) {
-            return false;
+            Yii::info('uploadImage: No file to upload', __METHOD__);
+            return true;
         }
 
-        // Apaga imagem antiga
-        if (!empty($this->foto)) {
+        Yii::info('uploadImage: Starting upload for user ' . $this->id, __METHOD__);
+        Yii::info('uploadImage: File name: ' . $this->imageFile->name, __METHOD__);
+        Yii::info('uploadImage: File size: ' . $this->imageFile->size, __METHOD__);
+        Yii::info('uploadImage: File type: ' . $this->imageFile->type, __METHOD__);
+
+        // Apaga imagem antiga (se existir e não for a default)
+        if (!empty($this->foto) && !Yii::$app->imageUploader->isDefault($this->foto)) {
+            Yii::info('uploadImage: Deleting old photo: ' . $this->foto, __METHOD__);
             Yii::$app->imageUploader->delete($this->foto);
         }
 
         // Faz upload usando o componente, retorna 'users/filename.ext' ou false
         $result = Yii::$app->imageUploader->upload($this->imageFile, $this->id);
+        
         if ($result) {
             // Guardar apenas o nome do ficheiro na BD (basename)
             // Se o componente retornou 'users/name.ext' guardamos apenas 'name.ext'
             $this->foto = basename($result);
-            return $result; // Retorna o caminho completo para o controller
+            Yii::info('uploadImage: Upload successful. Saved as: ' . $this->foto, __METHOD__);
+            return true;
         }
 
+        Yii::error('uploadImage: Upload FAILED for user ' . $this->id, __METHOD__);
         return false;
     }
 
@@ -190,11 +200,15 @@ class Userprofile extends \yii\db\ActiveRecord
      */
     public function getImageUrl()
     {
+        // Verificar se o componente está disponível
+        if (!Yii::$app->has('imageUploader')) {
+            Yii::error('getImageUrl: imageUploader component not found', __METHOD__);
+            return null;
+        }
+
         // Se não houver foto no perfil, usa default.jpg dentro do subdir configurado no ImageUploader
         if (empty($this->foto)) {
-            if (!Yii::$app->has('imageUploader')) {
-                return null;
-            }
+            Yii::info('getImageUrl: No photo set for user ' . $this->id . ', using default', __METHOD__);
             $sub = trim(Yii::$app->imageUploader->subdir, '/');
             $storedPath = $sub !== '' ? $sub . '/default.jpg' : 'default.jpg';
         } else {
@@ -206,9 +220,12 @@ class Userprofile extends \yii\db\ActiveRecord
                 $sub = trim(Yii::$app->imageUploader->subdir, '/');
                 $storedPath = ($sub !== '' ? $sub . '/' : '') . $photo;
             }
+            Yii::info('getImageUrl: Using photo: ' . $this->foto . ' -> storedPath: ' . $storedPath, __METHOD__);
         }
 
-        return Yii::$app->imageUploader->getUrl($storedPath);
+        $url = Yii::$app->imageUploader->getUrl($storedPath);
+        Yii::info('getImageUrl: Final URL: ' . $url, __METHOD__);
+        return $url;
     }
 
     

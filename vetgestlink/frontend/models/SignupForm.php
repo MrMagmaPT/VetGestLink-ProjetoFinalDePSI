@@ -90,12 +90,12 @@ class SignupForm extends Model
 
     public function signup()
     {
-        // Carrega o ficheiro antes da validação para que a regra 'file' funcione
-        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
-
+        // NÃO carregar o ficheiro aqui - deve ser carregado no controller
+        // $this->imageFile já deve ter sido definido antes de chamar este método
+        
         if (!$this->validate()) {
             Yii::$app->session->setFlash('danger', 'Existem erros no formulário. Verifique os campos novamente.');
-            Yii::error("Validação falhou: " . json_encode($this->errors));
+            Yii::error("Validação falhou: " . json_encode($this->errors), __METHOD__);
             return null;
         }
 
@@ -162,20 +162,34 @@ class SignupForm extends Model
             }
 
             // 5. Upload de imagem de perfil (se fornecida)
-            if ($this->imageFile) {
+            if ($this->imageFile instanceof UploadedFile) {
+                Yii::info("SignupForm: Attempting to upload image for user {$user->id}", __METHOD__);
+                Yii::info("SignupForm: Image file name: " . $this->imageFile->name, __METHOD__);
+                Yii::info("SignupForm: Image file size: " . $this->imageFile->size, __METHOD__);
+                
                 $userprofile->imageFile = $this->imageFile;
-                $uploaded = $userprofile->uploadImage();
-                if ($uploaded) {
-                    $uploadedFileName = $userprofile->foto ?? null; // já é apenas basename
-                    if (!$userprofile->save(false)) {
-                        Yii::error("Não foi possível guardar o path da imagem no Userprofile: " . json_encode($userprofile->errors));
-                        throw new \Exception('Erro ao guardar caminho da imagem no perfil');
-                    }
-                    Yii::info("Imagem de perfil carregada e caminho guardado para Userprofile ID {$userprofile->id}");
+                
+                // Validar o ficheiro antes do upload
+                if (!$userprofile->validate(['imageFile'])) {
+                    Yii::error("SignupForm: Image validation failed: " . json_encode($userprofile->errors), __METHOD__);
+                    Yii::$app->session->setFlash('warning', 'A imagem não pôde ser carregada. Verifique o formato e tamanho.');
                 } else {
-                    Yii::warning("Upload de imagem falhou para Userprofile ID {$userprofile->id}");
-                    // continuar sem imagem
+                    $uploaded = $userprofile->uploadImage();
+                    if ($uploaded) {
+                        $uploadedFileName = $userprofile->foto ?? null; // já é apenas basename
+                        if (!$userprofile->save(false)) {
+                            Yii::error("SignupForm: Failed to save image path: " . json_encode($userprofile->errors), __METHOD__);
+                            throw new \Exception('Erro ao guardar caminho da imagem no perfil');
+                        }
+                        Yii::info("SignupForm: Image uploaded successfully and saved as: {$userprofile->foto}", __METHOD__);
+                    } else {
+                        Yii::error("SignupForm: Upload image FAILED for user {$user->id}", __METHOD__);
+                        Yii::$app->session->setFlash('warning', 'O registo foi criado mas a imagem não pôde ser carregada.');
+                        // continuar sem imagem
+                    }
                 }
+            } else {
+                Yii::info("SignupForm: No image file provided for user {$user->id}", __METHOD__);
             }
 
             // 6. Criar Morada

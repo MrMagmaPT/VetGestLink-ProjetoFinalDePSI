@@ -22,11 +22,24 @@ $editId = $model->id ?? $user->id ?? null;
 // avatar: usa foto ou default (imageUploader quando disponível)
 $avatarUrl = $model->getImageUrl();
 
+// Debug temporário - remover depois
+if (YII_DEBUG) {
+    Yii::info('VIEW: User ID: ' . ($model->id ?? 'null'), __METHOD__);
+    Yii::info('VIEW: Foto field value: ' . ($model->foto ?? 'null'), __METHOD__);
+    Yii::info('VIEW: Avatar URL: ' . ($avatarUrl ?? 'null'), __METHOD__);
+}
+
+// Fallback se a URL estiver vazia
+if (empty($avatarUrl)) {
+    $avatarUrl = Yii::getAlias('@uploadsUrl') . '/users/default.jpg';
+}
+
 // atributos da imagem
 $imgAttr = [
     'alt' => Html::encode($model->nomecompleto ?? $user->username ?? 'Usuário'),
     'class' => 'bg-white',
-    'style' => 'width:72px;height:72px;object-fit:cover;border-radius:50%;display:inline-block;'
+    'style' => 'width:72px;height:72px;object-fit:cover;border-radius:50%;display:inline-block;',
+    'onerror' => "this.onerror=null; this.src='" . Yii::getAlias('@uploadsUrl') . "/users/default.jpg';"
 ];
 
 ?>

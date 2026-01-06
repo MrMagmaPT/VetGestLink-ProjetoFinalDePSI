@@ -31,7 +31,7 @@ $avatarUrl = $model->getImageUrl();
                         'attribute' => 'imageFile',
                         'form' => $form,
                         'previewId' => 'image-preview-signup',
-                        'defaultImage' => Yii::getAlias('@web') . '/uploads/users/default.jpg',
+                        'defaultImage' => Yii::getAlias('@uploadsUrl') . '/users/default.jpg',
                         'imageSize' => 80,
                         'borderColor' => '#28a745',
                     ]) ?>

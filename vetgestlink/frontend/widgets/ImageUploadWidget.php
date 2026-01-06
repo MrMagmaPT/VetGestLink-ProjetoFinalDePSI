@@ -28,7 +28,7 @@ class ImageUploadWidget extends Widget
         }
         
         if ($this->defaultImage === null) {
-            $this->defaultImage = \Yii::getAlias('@web') . '/uploads/users/default.jpg';
+            $this->defaultImage = \Yii::getAlias('@uploadsUrl') . '/users/default.jpg';
         }
     }
 

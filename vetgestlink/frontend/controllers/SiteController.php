@@ -164,6 +164,15 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
+            // Carregar arquivo de imagem ANTES de chamar signup()
+            $model->imageFile = \yii\web\UploadedFile::getInstance($model, 'imageFile');
+            
+            if ($model->imageFile) {
+                Yii::info('SiteController::actionSignup - Image file received: ' . $model->imageFile->name, __METHOD__);
+            } else {
+                Yii::info('SiteController::actionSignup - No image file received', __METHOD__);
+            }
+            
             $signupResult = $model->signup();
             if ($signupResult) {
                 Yii::$app->session->setFlash('success', 'Obrigado por se registar. Por favor verifique o seu email.');

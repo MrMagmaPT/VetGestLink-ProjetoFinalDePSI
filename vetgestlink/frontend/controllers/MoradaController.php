@@ -70,9 +70,19 @@ class MoradaController extends Controller
         $model->principal = 0;
 
         // Processa o formulário de criação
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Morada adicionada com sucesso.');
-            return $this->redirect(['/userprofile/update']);
+        if ($model->load(Yii::$app->request->post())) {
+            // Se esta morada for definida como principal, remover principal das outras
+            if ($model->principal == 1) {
+                Morada::updateAll(
+                    ['principal' => 0],
+                    ['userprofiles_id' => $profile->id]
+                );
+            }
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Morada adicionada com sucesso.');
+                return $this->redirect(['/userprofile/update']);
+            }
         }
 
         // Renderiza o formulário de criação
@@ -102,9 +112,22 @@ class MoradaController extends Controller
         }
 
         // Processa o formulário de atualização
-        if ($moradaAtualizada->load(Yii::$app->request->post()) && $moradaAtualizada->save()) {
-            Yii::$app->session->setFlash('success', 'Morada atualizada com sucesso.');
-            return $this->redirect(['/userprofile/update']);
+        if ($moradaAtualizada->load(Yii::$app->request->post())) {
+            // Se esta morada for definida como principal, remover principal das outras
+            if ($moradaAtualizada->principal == 1) {
+                Morada::updateAll(
+                    ['principal' => 0],
+                    ['AND', 
+                        ['userprofiles_id' => $profile->id],
+                        ['!=', 'id', $moradaAtualizada->id]
+                    ]
+                );
+            }
+            
+            if ($moradaAtualizada->save()) {
+                Yii::$app->session->setFlash('success', 'Morada atualizada com sucesso.');
+                return $this->redirect(['/userprofile/update']);
+            }
         }
 
         // Renderiza o formulário de atualização

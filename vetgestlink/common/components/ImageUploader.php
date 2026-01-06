@@ -37,35 +37,43 @@ class ImageUploader extends Component
     public function upload(UploadedFile $file, $id = null)
     {
         if (!$file instanceof UploadedFile) {
-            Yii::error('ImageUploader::upload - file is not UploadedFile');
+            Yii::error('ImageUploader::upload - file is not UploadedFile', __METHOD__);
             return false;
         }
 
         try {
             $base = Yii::getAlias($this->uploadPath);
+            Yii::info('ImageUploader::upload - Base path resolved: ' . $base, __METHOD__);
         } catch (\Exception $e) {
-            Yii::error('ImageUploader::upload - invalid uploadPath alias: ' . $e->getMessage());
+            Yii::error('ImageUploader::upload - invalid uploadPath alias: ' . $e->getMessage(), __METHOD__);
             return false;
         }
 
         $sub = trim((string)$this->subdir, '/\\');
         $dir = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ($sub === '' ? '' : $sub . DIRECTORY_SEPARATOR);
 
+        Yii::info('ImageUploader::upload - Target directory: ' . $dir, __METHOD__);
+
         // cria diretório se necessário
         if (!is_dir($dir)) {
+            Yii::warning('ImageUploader::upload - Directory does not exist, attempting to create: ' . $dir, __METHOD__);
             if (!@mkdir($dir, 0775, true) && !is_dir($dir)) {
-                Yii::error('ImageUploader::upload - failed to create directory: ' . $dir);
+                Yii::error('ImageUploader::upload - FAILED to create directory: ' . $dir, __METHOD__);
                 return false;
             }
+            Yii::info('ImageUploader::upload - Directory created successfully', __METHOD__);
         }
 
         // verifica permissões de escrita
         if (!is_writable($dir)) {
+            Yii::warning('ImageUploader::upload - Directory not writable, attempting chmod: ' . $dir, __METHOD__);
             @chmod($dir, 0775);
             if (!is_writable($dir)) {
-                Yii::error('ImageUploader::upload - directory not writable: ' . $dir);
+                Yii::error('ImageUploader::upload - Directory STILL not writable after chmod: ' . $dir, __METHOD__);
+                Yii::error('ImageUploader::upload - Current permissions: ' . substr(sprintf('%o', fileperms($dir)), -4), __METHOD__);
                 return false;
             }
+            Yii::info('ImageUploader::upload - Directory is now writable', __METHOD__);
         }
 
         $ext = $file->extension ? '.' . $file->extension : '';
@@ -75,11 +83,15 @@ class ImageUploader extends Component
             $full = $dir . $name;
         } while (basename($name) === $this->defaultImage || file_exists($full));
 
+        Yii::info('ImageUploader::upload - Target file: ' . $full, __METHOD__);
+
         if (!$file->saveAs($full)) {
-            Yii::error('ImageUploader::upload - saveAs failed for: ' . $full);
+            Yii::error('ImageUploader::upload - saveAs FAILED for: ' . $full, __METHOD__);
+            Yii::error('ImageUploader::upload - File error: ' . $file->error, __METHOD__);
             return false;
         }
 
+        Yii::info('ImageUploader::upload - Upload successful: ' . ($sub === '' ? $name : $sub . '/' . $name), __METHOD__);
         return ($sub === '' ? $name : $sub . '/' . $name);
     }
 
