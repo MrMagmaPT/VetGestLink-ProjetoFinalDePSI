@@ -81,9 +81,9 @@ class MarcacaoController extends Controller
 
         $marcacoes = Marcacao::find()
             ->joinWith(['animais'])
-            ->where(['animais.userprofiles_id' => $userProfileId, 'marcacao.eliminado' => 0])
+            ->where(['animais.userprofiles_id' => $userProfileId, 'marcacoes.eliminado' => 0])
             ->with(['animais.especies', 'servicos'])
-            ->orderBy(['marcacao.data' => SORT_DESC, 'marcacao.horainicio' => SORT_DESC])
+            ->orderBy(['marcacoes.data' => SORT_DESC, 'marcacoes.horainicio' => SORT_DESC])
             ->all();
 
         $result = [];
@@ -123,7 +123,7 @@ class MarcacaoController extends Controller
 
         $marcacao = Marcacao::find()
             ->joinWith(['animais'])
-            ->where(['marcacao.id' => $id, 'animais.userprofiles_id' => $userProfileId, 'marcacao.eliminado' => 0])
+            ->where(['marcacoes.id' => $id, 'animais.userprofiles_id' => $userProfileId, 'marcacoes.eliminado' => 0])
             ->with(['animais.especies', 'animais.racas', 'servicos'])
             ->one();
 
@@ -178,7 +178,7 @@ class MarcacaoController extends Controller
         $userProfileId = $this->getUserProfileId();
         $count = Marcacao::find()
             ->joinWith(['animais'])
-            ->where(['animais.userprofiles_id' => $userProfileId, 'marcacao.eliminado' => 0])
+            ->where(['animais.userprofiles_id' => $userProfileId, 'marcacoes.eliminado' => 0])
             ->count();
         
         return ['count' => (int)$count];
@@ -201,11 +201,11 @@ class MarcacaoController extends Controller
             ->joinWith(['animais'])
             ->where([
                 'animais.userprofiles_id' => $userProfileId,
-                'marcacao.estado' => $estado,
-                'marcacao.eliminado' => 0
+                'marcacoes.estado' => $estado,
+                'marcacoes.eliminado' => 0
             ])
             ->with(['servicos'])
-            ->orderBy(['marcacao.data' => SORT_DESC, 'marcacao.horainicio' => SORT_DESC])
+            ->orderBy(['marcacoes.data' => SORT_DESC, 'marcacoes.horainicio' => SORT_DESC])
             ->all();
 
         $result = [];
@@ -243,11 +243,11 @@ class MarcacaoController extends Controller
             ->joinWith(['animais'])
             ->where([
                 'animais.userprofiles_id' => $userProfileId,
-                'marcacao.data' => $data,
-                'marcacao.eliminado' => 0
+                'marcacoes.data' => $data,
+                'marcacoes.eliminado' => 0
             ])
             ->with(['servicos'])
-            ->orderBy(['marcacao.horainicio' => SORT_ASC])
+            ->orderBy(['marcacoes.horainicio' => SORT_ASC])
             ->all();
 
         $result = [];
