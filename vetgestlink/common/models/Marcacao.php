@@ -193,6 +193,17 @@ class Marcacao extends \yii\db\ActiveRecord
 
 
     /**
+     * Verifica se a marcação já tem fatura associada
+     * @return bool
+     */
+    public function temFatura()
+    {
+        return Linhafatura::find()
+            ->where(['marcacoes_id' => $this->id])
+            ->exists();
+    }
+
+    /**
      * @return string
      */
     public function displayEstado()
@@ -338,5 +349,149 @@ class Marcacao extends \yii\db\ActiveRecord
         } else {
             file_put_contents("debug.output", "Time out!");
         }
+    }
+
+    /**
+     * Processa os medicamentos associados à marcação durante o update
+     * @param array $medicamentosData Array com IDs e quantidades dos medicamentos ['medicamento_id' => quantidade]
+     * @param Fatura $fatura Objeto da fatura associada
+     * @return array ['success' => bool, 'errors' => array]
+     */
+    public function processarMedicamentos($medicamentosData, $fatura)
+    {
+        $errors = [];
+        
+        // Obter medicamentos atuais (já associados à marcação)
+        $medicamentosAtuaisMap = [];
+        $linhasAtuais = Linhafatura::find()
+            ->where([
+                'marcacoes_id' => $this->id, 
+                'vendidoemconsulta' => 1, 
+                'eliminado' => 0
+            ])
+            ->andWhere(['IS NOT', 'medicamentos_id', null])
+            ->all();
+        
+        foreach ($linhasAtuais as $linha) {
+            $medicamentosAtuaisMap[$linha->medicamentos_id] = [
+                'linha_id' => $linha->id,
+                'quantidade' => $linha->quantidade
+            ];
+        }
+        
+        $medicamentosProcessados = [];
+        
+        // Processar cada medicamento selecionado
+        if (!empty($medicamentosData)) {
+            foreach ($medicamentosData as $medicamentoId => $quantidade) {
+                if ($quantidade <= 0) continue;
+                
+                $medicamento = Medicamento::findOne($medicamentoId);
+                if (!$medicamento) {
+                    $errors[] = "Medicamento com ID {$medicamentoId} não encontrado.";
+                    continue;
+                }
+                
+                // Se já existe, atualizar quantidade
+                if (isset($medicamentosAtuaisMap[$medicamentoId])) {
+                    $linhaExistente = Linhafatura::findOne($medicamentosAtuaisMap[$medicamentoId]['linha_id']);
+                    if ($linhaExistente) {
+                        $quantidadeAnterior = $linhaExistente->quantidade;
+                        $diferenca = $quantidade - $quantidadeAnterior;
+                        
+                        if ($diferenca != 0) {
+                            // Verificar stock suficiente para aumento
+                            if ($diferenca > 0 && !$medicamento->temStockSuficiente($diferenca)) {
+                                $errors[] = "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}";
+                                continue;
+                            }
+                            
+                            // Atualizar stock
+                            if ($diferenca > 0) {
+                                $medicamento->decrementarStock($diferenca);
+                            } else {
+                                $medicamento->incrementarStock(abs($diferenca));
+                            }
+                            
+                            // Atualizar linha
+                            $linhaExistente->quantidade = $quantidade;
+                            $linhaExistente->total = $linhaExistente->calcularTotal();
+                            $linhaExistente->save(false);
+                        }
+                        
+                        $medicamentosProcessados[] = $medicamentoId;
+                    }
+                } else {
+                    // Criar nova linha
+                    if (!$medicamento->temStockSuficiente($quantidade)) {
+                        $errors[] = "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}";
+                        continue;
+                    }
+                    
+                    $novaLinha = new Linhafatura();
+                    $novaLinha->marcacoes_id = $this->id;
+                    $novaLinha->medicamentos_id = $medicamentoId;
+                    $novaLinha->quantidade = $quantidade;
+                    $novaLinha->vendidoemconsulta = 1;
+                    $novaLinha->faturas_id = $fatura->id;
+                    $novaLinha->total = $novaLinha->calcularTotal();
+                    
+                    if ($novaLinha->save(false)) {
+                        $medicamento->decrementarStock($quantidade);
+                        $medicamentosProcessados[] = $medicamentoId;
+                    }
+                }
+            }
+        }
+        
+        // Remover medicamentos desmarcados
+        foreach ($medicamentosAtuaisMap as $medicamentoId => $info) {
+            if (!in_array($medicamentoId, $medicamentosProcessados)) {
+                // Restaurar stock
+                $medicamento = Medicamento::findOne($medicamentoId);
+                if ($medicamento) {
+                    $medicamento->incrementarStock($info['quantidade']);
+                }
+                
+                // Eliminar linha
+                $linha = Linhafatura::findOne($info['linha_id']);
+                if ($linha) {
+                    $linha->delete();
+                }
+            }
+        }
+        
+        return [
+            'success' => empty($errors),
+            'errors' => $errors
+        ];
+    }
+
+    /**
+     * Cria a fatura inicial para a marcação
+     * @return Fatura|null
+     */
+    public function criarFaturaInicial()
+    {
+        $fatura = new Fatura();
+        $fatura->data = date('Y-m-d');
+        $fatura->estado = 0; // Não paga
+        $fatura->metodopagamentos_id = 1; // Método padrão
+        $fatura->total = 0; // Será atualizado depois
+        
+        if ($fatura->save(false)) {
+            // Criar linha com o serviço da marcação
+            $linha = new Linhafatura();
+            $linha->marcacoes_id = $this->id;
+            $linha->faturas_id = $fatura->id;
+            $linha->quantidade = 1;
+            $linha->vendidoemconsulta = 1;
+            $linha->total = $linha->calcularTotal();
+            $linha->save(false);
+            
+            return $fatura;
+        }
+        
+        return null;
     }
 }

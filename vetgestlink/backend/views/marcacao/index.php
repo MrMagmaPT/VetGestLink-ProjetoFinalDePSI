@@ -353,6 +353,21 @@ echo PageHeaderWidget::widget([
 //                            ),
                         ],
                         [
+                            'headerOptions' => ['style' => 'width: 180px; text-align: center'],
+                            'contentOptions' => ['style' => 'text-align: center'],
+                            'attribute' => 'eliminado',
+                            'label' => 'Eliminado',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                if ($model->eliminado == 1) {
+                                    return '<span class="badge bg-danger"><i class="fas fa-times"></i> Eliminado</span>';
+                                }
+                                return '<span class="badge bg-success"><i class="fas fa-check"></i> Ativo</span>';
+                            },
+                            'filter' => false,
+                        ],
+                        
+                        [
                             'class' => ActionColumn::class,
                             'header' => 'Ações',
                             'template' => '<div style="display: flex; gap: 8px; justify-content: center;">{view}{update}{delete}</div>',
@@ -380,6 +395,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if ($model->eliminado == 1) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,

@@ -111,6 +111,24 @@ class MarcacaoSearch extends Marcacao
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getPendenteCount()
+    {
+        return Marcacao::find()->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])->count();
+    }
+
+    public static function getRealizadaCount()
+    {
+        return Marcacao::find()->where(['estado' => Marcacao::ESTADO_REALIZADA, 'eliminado' => 0])->count();
+    }
+
+    public static function getCanceladaCount()
+    {
+        return Marcacao::find()->where(['estado' => Marcacao::ESTADO_CANCELADA, 'eliminado' => 0])->count();
+    }
+
+    /**
      * Lista [id => nome] de animais para filtros
      */
     public static function getAnimaisList()
@@ -238,6 +256,61 @@ class MarcacaoSearch extends Marcacao
             'id',
             'nomecompleto'
         );
+    }
+
+    /**
+     * Estatísticas para dashboard - marcações de hoje
+     */
+    public static function getTotalHojeCount()
+    {
+        $dataHoje = date('Y-m-d');
+        return Marcacao::find()
+            ->where(['DATE(data)' => $dataHoje])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+    }
+
+    /**
+     * Últimas 5 marcações para dashboard
+     */
+    public static function getUltimasMarcacoes($limit = 5)
+    {
+        return Marcacao::find()
+            ->where(['eliminado' => 0])
+            ->orderBy(['data' => SORT_DESC])
+            ->limit($limit)
+            ->all();
+    }
+
+    /**
+     * Lista de marcações pendentes para dashboard
+     */
+    public static function getMarcacoesPendentesList()
+    {
+        return Marcacao::find()
+            ->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * Lista de marcações de hoje para dashboard
+     */
+    public static function getMarcacoesHojeList()
+    {
+        $dataHoje = date('Y-m-d');
+        return Marcacao::find()
+            ->where(['DATE(data)' => $dataHoje, 'eliminado' => 0])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * Total de marcações não eliminadas
+     */
+    public static function getTotalCount()
+    {
+        return Marcacao::find()->where(['eliminado' => 0])->count();
     }
 
 }

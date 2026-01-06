@@ -101,6 +101,29 @@ class AnimalSearch extends Animal
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Animal::find()->where(['eliminado' => 0])->count();
+    }
+
+    public static function getMachoCount()
+    {
+        return Animal::find()->where(['eliminado' => 0, 'sexo' => 'M'])->count();
+    }
+
+    public static function getFemeaCount()
+    {
+        return Animal::find()->where(['eliminado' => 0, 'sexo' => 'F'])->count();
+    }
+
+    public static function getMicrochipCount()
+    {
+        return Animal::find()->where(['eliminado' => 0, 'microship' => 1])->count();
+    }
+
+    /**
      * Buscar nome do animal por ID
      * @param int $id
      * @return string|null

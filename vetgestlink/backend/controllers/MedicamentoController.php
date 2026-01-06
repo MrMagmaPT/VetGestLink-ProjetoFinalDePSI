@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Medicamento;
 use backend\models\MedicamentoSearch;
 use yii\web\Controller;
@@ -74,19 +75,10 @@ class MedicamentoController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas
-        $totalCount = Medicamento::find()->where(['eliminado' => 0])->count();
-        $stockCritico = Medicamento::find()
-            ->where(['<', 'quantidade', 5])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $stockBaixo = Medicamento::find()
-            ->where(['between', 'quantidade', 5, 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $stockBom = Medicamento::find()
-            ->where(['>', 'quantidade', 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
+        $totalCount = MedicamentoSearch::getTotalCount();
+        $stockCritico = MedicamentoSearch::getStockCriticoCount();
+        $stockBaixo = MedicamentoSearch::getStockBaixoCount();
+        $stockBom = MedicamentoSearch::getStockBomCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

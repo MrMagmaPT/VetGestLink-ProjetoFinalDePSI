@@ -102,6 +102,19 @@ class RacaSearch extends Raca
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return \common\models\Raca::find()->where(['eliminado' => 0])->count();
+    }
+
+    public static function getDeletedCount()
+    {
+        return \common\models\Raca::find()->where(['eliminado' => 1])->count();
+    }
+
+    /**
      * @deprecated Use getActiveList() instead
      */
     public static function getRacasList()

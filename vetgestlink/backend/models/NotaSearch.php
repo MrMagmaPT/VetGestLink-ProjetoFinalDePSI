@@ -97,4 +97,17 @@ class NotaSearch extends Nota
         $nota = Nota::findOne($id);
         return $nota ? $nota->nota : null;
     }
+
+    /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Nota::find()->count();
+    }
+
+    public static function getRecentCount()
+    {
+        return Nota::find()->where(['>=', 'created_at', date('Y-m-d H:i:s', strtotime('-7 days'))])->count();
+    }
 }

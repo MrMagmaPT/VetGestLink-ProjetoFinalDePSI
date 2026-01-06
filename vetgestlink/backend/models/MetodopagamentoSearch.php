@@ -98,6 +98,24 @@ class MetodopagamentoSearch extends Metodopagamento
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Metodopagamento::find()->count();
+    }
+
+    public static function getActiveCount()
+    {
+        return Metodopagamento::find()->where(['vigor' => 1])->count();
+    }
+
+    public static function getInactiveCount()
+    {
+        return Metodopagamento::find()->where(['vigor' => 0])->count();
+    }
+
+    /**
      * Buscar nome do método de pagamento por ID
      */
     public static function getNameById($id)

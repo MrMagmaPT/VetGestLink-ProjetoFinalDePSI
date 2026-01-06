@@ -102,6 +102,24 @@ class ServicoSearch extends Servico
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Servico::find()->where(['eliminado' => 0])->count();
+    }
+
+    public static function getDeletedCount()
+    {
+        return Servico::find()->where(['eliminado' => 1])->count();
+    }
+
+    public static function getAverageValue()
+    {
+        return Servico::find()->where(['eliminado' => 0])->average('valor');
+    }
+
+    /**
      * @deprecated Use getNameById() instead
      */
     public static function getServicoNameById($id)

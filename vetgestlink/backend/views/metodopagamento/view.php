@@ -126,7 +126,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                        <?php if(Yii::$app->user->can('deleteMetodopagamento')): ?>
+                        <?php if(Yii::$app->user->can('deleteMetodopagamento') && $model->eliminado != 1): ?>
                             <?= Html::a(
                                 '<i class="fas fa-trash"></i> Eliminar',
                                 ['delete', 'id' => $model->id],

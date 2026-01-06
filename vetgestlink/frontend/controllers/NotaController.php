@@ -1,9 +1,9 @@
 <?php
 namespace frontend\controllers;
 
+use Yii;
 use common\models\Animal;
 use common\models\Nota;
-use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

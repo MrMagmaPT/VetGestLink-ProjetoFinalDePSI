@@ -129,4 +129,136 @@ class Linhafatura extends \yii\db\ActiveRecord
         return true;
     }
 
+    /**
+     * Calcula o total da linha baseado no tipo (medicamento/serviço/marcação)
+     * @return float|null
+     */
+    public function calcularTotal()
+    {
+        if ($this->medicamentos_id) {
+            $medicamento = $this->getMedicamentos()->one();
+            return $medicamento ? $medicamento->preco * $this->quantidade : 0;
+        } elseif ($this->servicos_id) {
+            $servico = $this->getServicos()->one();
+            return $servico ? $servico->valor * $this->quantidade : 0;
+        } elseif ($this->marcacoes_id) {
+            $marcacao = $this->getMarcacoes()->one();
+            return ($marcacao && $marcacao->servicos) ? $marcacao->servicos->valor * $this->quantidade : 0;
+        }
+        return 0;
+    }
+
+    /**
+     * Valida e prepara a linha antes de salvar
+     * Calcula o total automaticamente
+     * @return bool
+     */
+    public function prepararParaSalvar()
+    {
+        // Calcular total automaticamente
+        $this->total = $this->calcularTotal();
+        
+        // Validar stock de medicamento
+        if ($this->medicamentos_id) {
+            $medicamento = Medicamento::findOne($this->medicamentos_id);
+            if (!$medicamento) {
+                $this->addError('medicamentos_id', 'Medicamento não encontrado.');
+                return false;
+            }
+            
+            if (!$medicamento->temStockSuficiente($this->quantidade)) {
+                $this->addError('quantidade', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Gere o stock ao criar uma nova linha
+     * @return bool
+     */
+    public function processarStockAoCriar()
+    {
+        if ($this->medicamentos_id) {
+            $medicamento = Medicamento::findOne($this->medicamentos_id);
+            if ($medicamento) {
+                return $medicamento->decrementarStock($this->quantidade);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Gere o stock ao atualizar uma linha existente
+     * @param int $quantidadeOriginal Quantidade anterior
+     * @param int|null $medicamentoIdOriginal ID do medicamento anterior (se mudou)
+     * @return array ['success' => bool, 'error' => string|null]
+     */
+    public function processarStockAoAtualizar($quantidadeOriginal, $medicamentoIdOriginal = null)
+    {
+        // Se mudou de medicamento
+        if ($medicamentoIdOriginal && $medicamentoIdOriginal != $this->medicamentos_id) {
+            // Devolver stock do medicamento antigo
+            $medicamentoAntigo = Medicamento::findOne($medicamentoIdOriginal);
+            if ($medicamentoAntigo) {
+                $medicamentoAntigo->incrementarStock($quantidadeOriginal);
+            }
+            
+            // Decrementar stock do novo medicamento
+            if ($this->medicamentos_id) {
+                $medicamento = Medicamento::findOne($this->medicamentos_id);
+                if ($medicamento) {
+                    if (!$medicamento->temStockSuficiente($this->quantidade)) {
+                        return [
+                            'success' => false,
+                            'error' => "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}"
+                        ];
+                    }
+                    $medicamento->decrementarStock($this->quantidade);
+                }
+            }
+        } elseif ($this->medicamentos_id && $medicamentoIdOriginal == $this->medicamentos_id) {
+            // Mesmo medicamento - ajustar pela diferença
+            $diferenca = $this->quantidade - $quantidadeOriginal;
+            if ($diferenca != 0) {
+                $medicamento = Medicamento::findOne($this->medicamentos_id);
+                if ($medicamento) {
+                    if ($diferenca > 0 && !$medicamento->temStockSuficiente($diferenca)) {
+                        return [
+                            'success' => false,
+                            'error' => "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}"
+                        ];
+                    }
+                    $medicamento->quantidade -= $diferenca;
+                    $medicamento->save(false);
+                }
+            }
+        } elseif (!$this->medicamentos_id && $medicamentoIdOriginal) {
+            // Mudou de medicamento para serviço/marcação - devolver stock
+            $medicamentoAntigo = Medicamento::findOne($medicamentoIdOriginal);
+            if ($medicamentoAntigo) {
+                $medicamentoAntigo->incrementarStock($quantidadeOriginal);
+            }
+        }
+        
+        return ['success' => true, 'error' => null];
+    }
+
+    /**
+     * Devolve o stock ao eliminar a linha
+     * @return bool
+     */
+    public function devolverStock()
+    {
+        if ($this->medicamentos_id) {
+            $medicamento = Medicamento::findOne($this->medicamentos_id);
+            if ($medicamento) {
+                return $medicamento->incrementarStock($this->quantidade);
+            }
+        }
+        return true;
+    }
+
 }

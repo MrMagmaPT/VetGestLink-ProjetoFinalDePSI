@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Fatura;
 use common\models\Linhafatura;
 use backend\models\FaturaSearch;
@@ -82,9 +83,9 @@ class FaturaController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Contadores para cards
-        $totalCount = Fatura::find()->count();
-        $paidCount = Fatura::find()->where(['estado' => 1, 'eliminado' => 0])->count();
-        $pendingCount = Fatura::find()->where(['estado' => 0, 'eliminado' => 0])->count();
+        $totalCount = FaturaSearch::getTotalCount();
+        $paidCount = FaturaSearch::getPaidCount();
+        $pendingCount = FaturaSearch::getPendingCount();
 
         // Listas para Select2
         $faturasList = FaturaSearch::getFaturasListForIndex();

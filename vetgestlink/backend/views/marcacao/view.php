@@ -293,11 +293,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             
                             <?php 
                             // Verificar se a marcação está realizada e ainda não tem fatura
-                            $temFatura = \common\models\Linhafatura::find()
-                                ->where(['marcacoes_id' => $model->id])
-                                ->exists();
-                            
-                            if ($model->estado === \common\models\Marcacao::ESTADO_REALIZADA && !$temFatura): 
+                            if ($model->estado === \common\models\Marcacao::ESTADO_REALIZADA && !$model->temFatura()): 
                             ?>
                                 <?= Html::a(
                                     '<i class="fas fa-file-invoice-dollar"></i> Gerar Fatura',
@@ -317,17 +313,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-md',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar esta marcação?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php if ($model->eliminado != 1): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar esta marcação?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -337,18 +337,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]);?>
                             <?php endif; ?>
 
-
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-block',
-                                    'data' => [
-                                        'confirm' => 'Tem certeza que deseja eliminar esta fatura?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php if ($model->eliminado != 1): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-block',
+                                        'data' => [
+                                            'confirm' => 'Tem certeza que deseja eliminar esta fatura?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

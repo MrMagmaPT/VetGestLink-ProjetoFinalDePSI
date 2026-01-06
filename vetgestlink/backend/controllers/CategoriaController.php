@@ -2,8 +2,10 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Categoria;
 use backend\models\CategoriaSearch;
+use backend\models\MedicamentoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,11 +73,9 @@ class CategoriaController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas
-        $totalCount = Categoria::find()->where(['eliminado' => 0])->count();
-        $deletedCount = Categoria::find()->where(['eliminado' => 1])->count();
-        $medicamentosCount = \common\models\Medicamento::find()
-            ->where(['eliminado' => 0])
-            ->count();
+        $totalCount = CategoriaSearch::getTotalCount();
+        $deletedCount = CategoriaSearch::getDeletedCount();
+        $medicamentosCount = MedicamentoSearch::getTotalCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -96,15 +96,9 @@ class CategoriaController extends Controller
     {
         $model = $this->findModel($id);
         
-        // Buscar medicamentos ativos desta categoria (eager loading)
-        $medicamentosAtivos = \common\models\Medicamento::find()
-            ->where(['categorias_id' => $id, 'eliminado' => 0])
-            ->limit(10)
-            ->all();
-        
-        $medicamentosCount = \common\models\Medicamento::find()
-            ->where(['categorias_id' => $id, 'eliminado' => 0])
-            ->count();
+        // Buscar medicamentos ativos desta categoria
+        $medicamentosAtivos = $model->getMedicamentosAtivos(10);
+        $medicamentosCount = $model->getMedicamentosAtivosCount();
         
         return $this->render('view', [
             'model' => $model,

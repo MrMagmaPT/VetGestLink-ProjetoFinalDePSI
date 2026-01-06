@@ -8,13 +8,14 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use common\models\Userprofile;
-use common\models\Animal;
-use common\models\Marcacao;
-use common\models\Fatura;
 use common\models\Medicamento;
 use common\models\Categoria;
-use common\models\Raca;
-use common\models\Especie;
+use backend\models\AnimalSearch;
+use backend\models\MarcacaoSearch;
+use backend\models\FaturaSearch;
+use backend\models\UserprofileSearch;
+use backend\models\RacaSearch;
+use backend\models\EspecieSearch;
 
 class SiteController extends Controller
 {
@@ -59,32 +60,18 @@ class SiteController extends Controller
         $userType = $this->getusertype($userId);
 
         // Estatísticas de Clientes e Animais
-        $totalClientes = Userprofile::find()->where(['eliminado' => 0])->count();
-        $totalAnimais = Animal::find()->where(['eliminado' => 0])->count();
+        $totalClientes = UserprofileSearch::getActiveCount();
+        $totalAnimais = AnimalSearch::getTotalCount();
 
         // Estatísticas de Medicamentos
-        $totalMedicamentos = Medicamento::find()->where(['eliminado' => 0])->count();
-        $totalMedicamentosEmStock = Medicamento::find()
-            ->where(['>', 'quantidade', 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $totalMedicamentosBaixoStock = Medicamento::find()
-            ->where(['between', 'quantidade', 5, 9])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $totalMedicamentosCriticoStock = Medicamento::find()
-            ->where(['<', 'quantidade', 5])
-            ->andWhere(['eliminado' => 0])
-            ->count();
+        $stockStats = Medicamento::getStockStats();
+        $totalMedicamentos = $stockStats['total'];
+        $totalMedicamentosEmStock = $stockStats['emStock'];
+        $totalMedicamentosBaixoStock = $stockStats['baixoStock'];
+        $totalMedicamentosCriticoStock = $stockStats['critico'];
 
         // Alertas de medicamentos críticos
-        $medicamentosCriticos = Medicamento::find()
-            ->select(['nome', 'quantidade'])
-            ->where(['<', 'quantidade', 5])
-            ->andWhere(['eliminado' => 0])
-            ->orderBy(['quantidade' => SORT_ASC])
-            ->asArray()
-            ->all();
+        $medicamentosCriticos = Medicamento::getMedicamentosCriticos();
 
         $alertasMedicamentosCriticoStock = array_map(function ($m) {
             return [
@@ -94,72 +81,28 @@ class SiteController extends Controller
         }, $medicamentosCriticos);
 
         // Estatísticas de Categorias, Raças e Espécies
-        $totalCategorias = Categoria::find()->where(['eliminado' => 0])->count();
-        $totalRacas = Raca::find()->where(['eliminado' => 0])->count();
-        $totalEspecies = Especie::find()->where(['eliminado' => 0])->count();
+        $totalCategorias = Categoria::getTotalCount();
+        $totalRacas = RacaSearch::getTotalCount();
+        $totalEspecies = EspecieSearch::getTotalCount();
 
         // Estatísticas de Marcações
-        $dataHoje = date('Y-m-d');
-        $totalmarcacoesHoje = Marcacao::find()
-            ->where(['DATE(data)' => $dataHoje])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $totalmarcacoesPendentes = Marcacao::find()
-            ->where(['estado' => Marcacao::ESTADO_PENDENTE])
-            ->andWhere(['eliminado' => 0])
-            ->count();
+        $totalmarcacoesHoje = MarcacaoSearch::getTotalHojeCount();
+        $totalmarcacoesPendentes = MarcacaoSearch::getPendenteCount();
 
         // Listas de Marcações
-        $ultimasMarcacoes = Marcacao::find()
-            ->where(['eliminado' => 0])
-            ->orderBy(['data' => SORT_DESC])
-            ->limit(5)
-            ->all();
-        $marcacoesPendentes = Marcacao::find()
-            ->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])
-            ->asArray()
-            ->all();
-        $marcacoesHoje = Marcacao::find()
-            ->where(['DATE(data)' => $dataHoje, 'eliminado' => 0])
-            ->asArray()
-            ->all();
-
-        $totalmarcacoes = Marcacao::find()->where(['eliminado' => 0])->count();
-        
-
-    
+        $ultimasMarcacoes = MarcacaoSearch::getUltimasMarcacoes();
+        $marcacoesPendentes = MarcacaoSearch::getMarcacoesPendentesList();
+        $marcacoesHoje = MarcacaoSearch::getMarcacoesHojeList();
+        $totalmarcacoes = MarcacaoSearch::getTotalCount();
 
         // Estatísticas Financeiras do Mês
-        $inicioMes = strtotime(date('Y-m-01 00:00:00'));
-        $fimMes = strtotime(date('Y-m-t 23:59:59'));
-
-        $faturasDoMes = Fatura::find()
-            ->where(['between', 'created_at', $inicioMes, $fimMes])
-            ->andWhere(['eliminado' => 0])
-            ->count();
-        $receitaMensal = Fatura::find()
-            ->where(['between', 'created_at', $inicioMes, $fimMes])
-            ->andWhere(['eliminado' => 0])
-            ->sum('total') ?? 0;
+        $faturasDoMes = FaturaSearch::getFaturasDoMesCount();
+        $receitaMensal = FaturaSearch::getReceitaMensal();
 
         // Dados para o gráfico de faturamento dos últimos 12 meses
-        $dadosFaturamento = [];
-        $labelsMeses = [];
-        
-        $anoAtual = date('Y');
-        $nomesMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-        
-        for ($mes = 1; $mes <= 12; $mes++) {
-            // Buscar faturas usando YEAR() e MONTH() do MySQL
-            $totalMes = Fatura::find()
-                ->where(['YEAR(created_at)' => $anoAtual])
-                ->andWhere(['MONTH(created_at)' => $mes])
-                ->andWhere(['eliminado' => 0, 'estado' => 1]) // Apenas faturas pagas
-                ->sum('total') ?? 0;
-            
-            $dadosFaturamento[] = (float)$totalMes;
-            $labelsMeses[] = $nomesMeses[$mes - 1];
-        }
+        $dadosGrafico = FaturaSearch::getDadosFaturamentoAnual();
+        $dadosFaturamento = $dadosGrafico['data'];
+        $labelsMeses = $dadosGrafico['labels'];
 
         return $this->render('index', [
             'usertype' => $userType,

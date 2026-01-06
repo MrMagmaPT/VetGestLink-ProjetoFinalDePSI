@@ -105,6 +105,24 @@ class FaturaSearch extends Fatura
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Fatura::find()->count();
+    }
+
+    public static function getPaidCount()
+    {
+        return Fatura::find()->where(['estado' => 1, 'eliminado' => 0])->count();
+    }
+
+    public static function getPendingCount()
+    {
+        return Fatura::find()->where(['estado' => 0, 'eliminado' => 0])->count();
+    }
+
+    /**
      * @deprecated Use getList() instead
      */
     public function getFaturasList()
@@ -181,4 +199,60 @@ class FaturaSearch extends Fatura
             1 => 'Paga'
         ];
     }
-}
+
+    /**
+     * Estatísticas para dashboard - faturas do mês
+     */
+    public static function getFaturasDoMesCount()
+    {
+        $inicioMes = strtotime(date('Y-m-01 00:00:00'));
+        $fimMes = strtotime(date('Y-m-t 23:59:59'));
+        
+        return Fatura::find()
+            ->where(['between', 'created_at', $inicioMes, $fimMes])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+    }
+
+    /**
+     * Receita mensal total
+     */
+    public static function getReceitaMensal()
+    {
+        $inicioMes = strtotime(date('Y-m-01 00:00:00'));
+        $fimMes = strtotime(date('Y-m-t 23:59:59'));
+        
+        return Fatura::find()
+            ->where(['between', 'created_at', $inicioMes, $fimMes])
+            ->andWhere(['eliminado' => 0])
+            ->sum('total') ?? 0;
+    }
+
+    /**
+     * Dados de faturamento dos últimos 12 meses para gráfico
+     * @return array ['labels' => [...], 'data' => [...]]
+     */
+    public static function getDadosFaturamentoAnual()
+    {
+        $anoAtual = date('Y');
+        $nomesMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        
+        $dadosFaturamento = [];
+        $labelsMeses = [];
+        
+        for ($mes = 1; $mes <= 12; $mes++) {
+            $totalMes = Fatura::find()
+                ->where(['YEAR(created_at)' => $anoAtual])
+                ->andWhere(['MONTH(created_at)' => $mes])
+                ->andWhere(['eliminado' => 0, 'estado' => 1]) // Apenas faturas pagas
+                ->sum('total') ?? 0;
+            
+            $dadosFaturamento[] = (float)$totalMes;
+            $labelsMeses[] = $nomesMeses[$mes - 1];
+        }
+        
+        return [
+            'labels' => $labelsMeses,
+            'data' => $dadosFaturamento
+        ];
+    }}

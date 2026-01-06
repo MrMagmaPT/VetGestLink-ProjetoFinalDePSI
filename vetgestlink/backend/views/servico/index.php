@@ -255,8 +255,9 @@ echo PageHeaderWidget::widget([
                                 'delete' => function ($url, $model) {
                                     if (!Yii::$app->user->can('deleteService')) {
                                         return '';
-                                    }
-                                    return Html::a(
+                                    }                                    if ($model->eliminado == 1) {
+                                        return '';
+                                    }                                    return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,
                                         [

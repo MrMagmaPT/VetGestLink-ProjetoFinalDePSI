@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Raca;
 use backend\models\RacaSearch;
 use yii\web\Controller;
@@ -74,8 +75,8 @@ class RacaController extends Controller
         $especiesAtivas = RacaSearch::getEspeciesAtivasList();
         
         // Estatísticas
-        $totalCount = \common\models\Raca::find()->where(['eliminado' => 0])->count();
-        $deletedCount = \common\models\Raca::find()->where(['eliminado' => 1])->count();
+        $totalCount = RacaSearch::getTotalCount();
+        $deletedCount = RacaSearch::getDeletedCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

@@ -183,7 +183,7 @@ echo PageHeaderWidget::widget([
                             'label' => 'Medicamentos',
                             'format' => 'raw',
                             'value' => function($model) {
-                                $count = $model->getMedicamentos()->where(['eliminado' => 0])->count();
+                                $count = $model->getMedicamentosAtivosCount();
                                 if ($count > 0) {
                                     return '<span class="badge bg-info"><i class="fas fa-pills"></i> ' . $count . '</span>';
                                 }
@@ -253,6 +253,9 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
+                                    if ($model->eliminado == 1) {
+                                        return '';
+                                    }
                                     return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,
