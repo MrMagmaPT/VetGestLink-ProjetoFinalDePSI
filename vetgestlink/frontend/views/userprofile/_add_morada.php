@@ -14,7 +14,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-6 mx-auto">
         <div class="card p-3">
             <?php $action = $model->isNewRecord ? ['morada/create'] : ['morada/update', 'id' => $model->id]; ?>
-            <?php $form = ActiveForm::begin(['action' => $action]); ?>
+            <?php $form = ActiveForm::begin([
+                'action' => $action,
+                'fieldConfig' => [
+                    'errorOptions' => ['class' => 'text-danger'],
+                ],
+            ]); ?>
 
             <h5 class="mb-3"><?= $model->id ? 'Editar Morada' : 'Adicionar Morada' ?></h5>
             <?= $form->errorSummary($model) ?>

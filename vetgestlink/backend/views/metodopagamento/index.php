@@ -73,11 +73,13 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Métodos de Pagamento
                     </h5>
-                    <?= Html::a(
-                        '<i class="fas fa-plus"></i> Novo Método',
-                        ['create'],
-                        ['class' => 'btn btn-success']
-                    ) ?>
+                    <?php if(Yii::$app->user->can('createPaymentMethod')): ?>
+                        <?= Html::a(
+                            '<i class="fas fa-plus"></i> Novo Método',
+                            ['create'],
+                            ['class' => 'btn btn-success']
+                        ) ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card-body">
