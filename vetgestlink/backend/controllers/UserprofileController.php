@@ -127,7 +127,20 @@ class UserprofileController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // Role não faz parte do Userprofile, então removemos essa verificação
+                // Processa a role se for admin
+                if (Yii::$app->user->can('admin')) {
+                    $rolePost = $this->request->post('role');
+                    if ($rolePost) {
+                        $auth = Yii::$app->authManager;
+                        // Remover roles antigas
+                        $auth->revokeAll($model->user_id);
+                        // Atribuir nova role
+                        $role = $auth->getRole($rolePost);
+                        if ($role) {
+                            $auth->assign($role, $model->user_id);
+                        }
+                    }
+                }
                 
                 // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());

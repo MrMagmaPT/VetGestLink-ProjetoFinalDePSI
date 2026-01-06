@@ -54,9 +54,17 @@ class AnimalController extends Controller
     {
         // Obtém o ID do usuário logado
         $userId = Yii::$app->user->identity->id ?? null;
+        
+        // Buscar o Userprofile do usuário logado
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            Yii::$app->session->setFlash('error', 'Perfil de usuário não encontrado.');
+            return $this->render('index', ['animaisUsuario' => []]);
+        }
 
         // Buscar animais do usuário através do AnimalSearch do backend
-        $animaisUsuario = AnimalSearch::getByUserId($userId);
+        $animaisUsuario = AnimalSearch::getByUserId($userprofile->id);
 
         // Renderizar a view
         return $this->render('index', [
@@ -94,7 +102,16 @@ class AnimalController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Animal::findOne(['id' => $id])) !== null) {
+        // Buscar o Userprofile do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            throw new NotFoundHttpException('Perfil de usuário não encontrado.');
+        }
+        
+        // Buscar o animal apenas se pertencer ao usuário logado
+        if (($model = Animal::findOne(['id' => $id, 'userprofiles_id' => $userprofile->id, 'eliminado' => 0])) !== null) {
             return $model;
         }
 

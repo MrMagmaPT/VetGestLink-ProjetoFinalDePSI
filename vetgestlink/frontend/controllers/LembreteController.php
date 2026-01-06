@@ -59,9 +59,17 @@ class LembreteController extends Controller
     {
         // Obtém o ID do usuário logado
         $userId = Yii::$app->user->identity->id ?? null;
+        
+        // Buscar o Userprofile do usuário logado
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            Yii::$app->session->setFlash('error', 'Perfil de usuário não encontrado.');
+            return $this->render('index', ['lembretesUsuario' => []]);
+        }
 
         // Buscar os lembretes do usuário através do LembreteSearch do backend
-        $lembretesUsuario = LembreteSearch::getByUserId($userId);
+        $lembretesUsuario = LembreteSearch::getByUserId($userprofile->id);
 
         // Renderizar a view com os lembretes do usuário
         // E passar o userId para a criação de novos lembretes
@@ -174,7 +182,16 @@ class LembreteController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Lembrete::findOne(['id' => $id])) !== null) {
+        // Buscar o Userprofile do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            throw new NotFoundHttpException('Perfil de usuário não encontrado.');
+        }
+        
+        // Buscar o lembrete apenas se pertencer ao usuário logado
+        if (($model = Lembrete::findOne(['id' => $id, 'userprofiles_id' => $userprofile->id])) !== null) {
             return $model;
         }
 

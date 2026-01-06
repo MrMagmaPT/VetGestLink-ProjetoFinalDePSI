@@ -473,11 +473,20 @@ class Marcacao extends \yii\db\ActiveRecord
      */
     public function criarFaturaInicial()
     {
+        // Obter o dono do animal (userprofile) através da marcação
+        $animal = $this->animais;
+        $userprofileId = $animal ? $animal->userprofiles_id : null;
+        
+        if (!$userprofileId) {
+            return null; // Não pode criar fatura sem dono
+        }
+        
         $fatura = new Fatura();
         $fatura->data = date('Y-m-d');
         $fatura->estado = 0; // Não paga
         $fatura->metodopagamentos_id = 1; // Método padrão
         $fatura->total = 0; // Será atualizado depois
+        $fatura->userprofiles_id = $userprofileId; // Associar ao dono do animal
         
         if ($fatura->save(false)) {
             // Criar linha com o serviço da marcação

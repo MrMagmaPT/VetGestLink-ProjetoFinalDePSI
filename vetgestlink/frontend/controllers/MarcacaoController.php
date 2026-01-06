@@ -52,12 +52,23 @@ class MarcacaoController extends Controller
      */
     public function actionIndex()
     {
-        //Pegar o ID do perfil do usuário logado
-        $user = Yii::$app->user->identity;
-        $userProfileId = $user->userprofile->id ?? null;
+        // Obtém o ID do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
+        
+        // Buscar o Userprofile do usuário logado
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            Yii::$app->session->setFlash('error', 'Perfil de usuário não encontrado.');
+            return $this->render('index', [
+                'marcacoesRealizadas' => [],
+                'marcacoesPendentes' => [],
+                'eventos' => [],
+            ]);
+        }
 
         // Usar o SearchModel do backend para obter marcações dos animais do usuário
-        $marcacoesUsuario = MarcacaoSearch::getByUserId($userProfileId);
+        $marcacoesUsuario = MarcacaoSearch::getByUserId($userprofile->id);
 
         // Obter data atual
         $dataAtual = date('Y-m-d');
@@ -123,8 +134,24 @@ class MarcacaoController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Marcacao::findOne(['id' => $id])) !== null) {
-            return $model;
+        // Buscar o Userprofile do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            throw new NotFoundHttpException('Perfil de usuário não encontrado.');
+        }
+        
+        // Buscar marcação e verificar se o animal pertence ao usuário
+        $model = Marcacao::find()
+            ->where(['id' => $id, 'eliminado' => 0])
+            ->one();
+            
+        if ($model !== null) {
+            // Verificar se o animal da marcação pertence ao usuário
+            if ($model->animais && $model->animais->userprofiles_id == $userprofile->id) {
+                return $model;
+            }
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');

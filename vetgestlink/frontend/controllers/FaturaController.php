@@ -60,9 +60,17 @@ class FaturaController extends Controller
     {
         // Obtém o ID do usuário logado 
         $userId = Yii::$app->user->identity->id ?? null;
+        
+        // Buscar o Userprofile do usuário logado
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            Yii::$app->session->setFlash('error', 'Perfil de usuário não encontrado.');
+            return $this->render('index', ['faturasUsuario' => []]);
+        }
     
         // Usar o SearchModel do backend para obter faturas do usuário
-        $faturasUsuario = FaturaSearch::getByUserId($userId);
+        $faturasUsuario = FaturaSearch::getByUserId($userprofile->id);
         
         // Renderizar a view com o dataProvider
         return $this->render('index', [
@@ -131,7 +139,16 @@ class FaturaController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Fatura::findOne(['id' => $id])) !== null) {
+        // Buscar o Userprofile do usuário logado
+        $userId = Yii::$app->user->identity->id ?? null;
+        $userprofile = \common\models\Userprofile::findOne(['user_id' => $userId, 'eliminado' => 0]);
+        
+        if (!$userprofile) {
+            throw new NotFoundHttpException('Perfil de usuário não encontrado.');
+        }
+        
+        // Buscar a fatura apenas se pertencer ao usuário logado
+        if (($model = Fatura::findOne(['id' => $id, 'userprofiles_id' => $userprofile->id, 'eliminado' => 0])) !== null) {
             return $model;
         }
 

@@ -151,7 +151,7 @@ class FaturaSearch extends Fatura
     public static function getByUserId($userId)
     {
         return Fatura::find()
-            ->where(['userprofiles_id' => $userId])
+            ->where(['userprofiles_id' => $userId, 'eliminado' => 0])
             ->orderBy(['created_at' => SORT_DESC])
             ->all();
     }

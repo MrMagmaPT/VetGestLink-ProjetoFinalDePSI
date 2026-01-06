@@ -214,7 +214,16 @@ class MarcacaoController extends Controller
             if ($model->save()) {
                 // Processar medicamentos apenas se a marcação está "realizada"
                 if ($model->estado === \common\models\Marcacao::ESTADO_REALIZADA) {
-                    $medicamentosSelecionados = $this->request->post('medicamentos', []);
+                    $medicamentosPost = $this->request->post('medicamentos', []);
+                    
+                    // Transformar formato do formulário ['id' => ['quantidade' => valor]] 
+                    // para formato esperado pelo método ['id' => valor]
+                    $medicamentosSelecionados = [];
+                    foreach ($medicamentosPost as $medicamentoId => $dados) {
+                        if (isset($dados['quantidade']) && $dados['quantidade'] > 0) {
+                            $medicamentosSelecionados[$medicamentoId] = (int)$dados['quantidade'];
+                        }
+                    }
                     
                     // Encontrar ou criar fatura para esta marcação
                     $linhaFatura = \common\models\Linhafatura::find()
