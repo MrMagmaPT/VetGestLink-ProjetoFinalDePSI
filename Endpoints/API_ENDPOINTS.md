@@ -725,7 +725,20 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 }
 ```
 
-### 6.4 Atualizar Nota
+### 6.4 Contar Total de Notas
+
+- **Endpoint**: `GET /api/nota/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
+- **Autenticação**: ✅ Requer token
+- **Descrição**: Retorna o total de notas do cliente
+- **Resposta**:
+
+```json
+{
+  "count": 25
+}
+```
+
+### 6.5 Atualizar Nota
 
 - **Endpoint**: `PUT /api/nota/update/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
@@ -754,7 +767,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 }
 ```
 
-### 6.5 Deletar Nota
+### 6.6 Deletar Nota
 
 - **Endpoint**: `DELETE /api/nota/delete/{id}?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
@@ -926,84 +939,282 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 ## Exemplos de Uso com cURL
 
-### Login
+**Base URL**: `http://172.22.21.220/backend/web/api`
+
+### 1. AUTENTICAÇÃO
+
+#### Login
 
 ```bash
-curl -X POST "http://localhost/api/auth/login" \
+curl -X POST "http://172.22.21.220/backend/web/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"cliente1","password":"cliente123"}'
 ```
 
-### Listar Animais
+#### Logout
 
 ```bash
-curl -X GET "http://localhost/api/animal/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+curl -X POST "http://172.22.21.220/backend/web/api/auth/logout?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
-### Criar Nota
+#### Recuperar Senha
 
 ```bash
-curl -X POST "http://localhost/api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+curl -X POST "http://172.22.21.220/backend/web/api/auth/forgot" \
   -H "Content-Type: application/json" \
-  -d '{"animais_id":1,"nota":"Nova nota para o animal"}'
+  -d '{"email":"cliente1@example.com"}'
 ```
 
-### Pagar Fatura
+---
+
+### 2. PERFIL
+
+#### Obter Perfil
 
 ```bash
-curl -X PUT "http://localhost/api/fatura/pay/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+curl -X GET "http://172.22.21.220/backend/web/api/profile?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Atualizar Perfil
+
+```bash
+curl -X PUT "http://172.22.21.220/backend/web/api/profile/update?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"nomecompleto":"Cliente Atualizado","email":"novoemail@example.com","telemovel":"912345678","morada":{"rua":"Nova Rua","nporta":"456","cdpostal":"2000-200","localidade":"Porto"}}'
+```
+
+#### Alterar Senha
+
+```bash
+curl -X PUT "http://172.22.21.220/backend/web/api/profile/password?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"current_password":"cliente123","new_password":"novasenha123"}'
+```
+
+---
+
+### 3. ANIMAIS
+
+#### Listar Todos os Animais
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Ver Detalhes de um Animal
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Notas de um Animal
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/1/notas?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Contar Total de Animais
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Nomes dos Animais
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/nomes?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Verificar Microchip
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/1/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Animais por Espécie
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/animal/especie/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+---
+
+### 4. MARCAÇÕES
+
+#### Listar Todas as Marcações
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/marcacao/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Ver Detalhes de uma Marcação
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/marcacao/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Contar Total de Marcações
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/marcacao/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Marcações por Estado
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/marcacao/estado/pendente?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Marcações por Data
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/marcacao/data/15/01/2024?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+---
+
+### 5. FATURAS
+
+#### Listar Todas as Faturas
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Ver Detalhes de uma Fatura
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Métodos de Pagamento
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/paymentmethods?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Pagar Fatura
+
+```bash
+curl -X PUT "http://172.22.21.220/backend/web/api/fatura/pay/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"metodospagamentos_id":1}'
 ```
 
-### Atualizar Nota
+#### Contar Total de Faturas
 
 ```bash
-curl -X PUT "http://localhost/api/nota/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Total Geral de Faturas
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/total?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Listar Faturas por Ano
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/fatura/ano/2024?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+---
+
+### 6. NOTAS
+
+#### Listar Todas as Notas
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/nota/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Ver Detalhes de uma Nota
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/nota/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Criar Nova Nota
+
+```bash
+curl -X POST "http://172.22.21.220/backend/web/api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+  -H "Content-Type: application/json" \
+  -d '{"animais_id":1,"nota":"Nova nota para o animal"}'
+```
+
+#### Contar Total de Notas
+
+```bash
+curl -X GET "http://172.22.21.220/backend/web/api/nota/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Atualizar Nota
+
+```bash
+curl -X PUT "http://172.22.21.220/backend/web/api/nota/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"nota":"Nota atualizada via API"}'
 ```
 
-### Deletar Nota
+#### Deletar Nota
 
 ```bash
-curl -X DELETE "http://localhost/api/nota/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+curl -X DELETE "http://172.22.21.220/backend/web/api/nota/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
-### Contar Notas
+---
+
+### 7. LEMBRETES
+
+#### Listar Todos os Lembretes
 
 ```bash
-curl -X GET "http://localhost/api/nota/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+curl -X GET "http://172.22.21.220/backend/web/api/lembrete/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
-### Criar Lembrete
+#### Ver Detalhes de um Lembrete
 
 ```bash
-curl -X POST "http://localhost/api/lembrete/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+curl -X GET "http://172.22.21.220/backend/web/api/lembrete/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Criar Novo Lembrete
+
+```bash
+curl -X POST "http://172.22.21.220/backend/web/api/lembrete/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"descricao":"Marcar consulta veterinária"}'
 ```
 
-### Atualizar Lembrete
+#### Contar Total de Lembretes
 
 ```bash
-curl -X PUT "http://localhost/api/lembrete/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
+curl -X GET "http://172.22.21.220/backend/web/api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+```
+
+#### Atualizar Lembrete
+
+```bash
+curl -X PUT "http://172.22.21.220/backend/web/api/lembrete/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP" \
   -H "Content-Type: application/json" \
   -d '{"descricao":"Lembrete atualizado"}'
 ```
 
-### Deletar Lembrete
+#### Deletar Lembrete
 
 ```bash
-curl -X DELETE "http://localhost/api/lembrete/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+curl -X DELETE "http://172.22.21.220/backend/web/api/lembrete/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
 ```
 
-### Contar Lembretes
+---
+
+### 8. HEALTH CHECK
+
+#### Verificar Status do Servidor
 
 ```bash
-curl -X GET "http://localhost/api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
-```
-
+curl -X GET "http://172.22.21.220/backend/web/api/health"
 ---
 
 ## Notas Importantes
@@ -1017,5 +1228,6 @@ curl -X GET "http://localhost/api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7j
 
 ---
 
-**Última Atualização**: Janeiro 2026  
+**Última Atualização**: Janeiro 2026
 **Versão da API**: 1.0.0
+```
