@@ -121,7 +121,6 @@ class UserprofileController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($user = $model->signup()) {
-                Yii::$app->session->setFlash('success', 'Utilizador criado com sucesso!');
                 return $this->redirect(['view', 'id' => $user->userprofile->id]);
             }
         }
@@ -155,11 +154,8 @@ class UserprofileController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // Permitir atualizar a role apenas para admin
-                if (!Yii::$app->user->can('admin')) {
-                    // Se não for admin, restaura o valor original da role
-                    $model->role = $model->getOldAttribute('role');
-                }
+                // Role não faz parte do Userprofile, então removemos essa verificação
+                
                 // Carrega os dados das moradas
                 Model::loadMultiple($moradas, $this->request->post());
 

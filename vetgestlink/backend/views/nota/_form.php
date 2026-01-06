@@ -11,7 +11,10 @@ use kartik\select2\Select2;
 
 <div class="nota-form">
     <?php $form = ActiveForm::begin([
-        'options' => ['class' => 'needs-validation']
+        'options' => ['class' => 'needs-validation'],
+        'fieldConfig' => [
+            'errorOptions' => ['class' => 'text-danger fw-bold', 'style' => 'color: #dc3545 !important; font-size: 0.875rem; margin-top: 0.25rem;'],
+        ],
     ]); ?>
 
     <div class="row">

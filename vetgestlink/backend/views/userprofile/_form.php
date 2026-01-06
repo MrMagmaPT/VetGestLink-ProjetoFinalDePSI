@@ -15,7 +15,11 @@ use yii\widgets\ActiveForm;
         'options' => [
             'enctype' => 'multipart/form-data',
             'class' => 'needs-validation'
-        ]
+            
+        ],
+        'fieldConfig' => [
+                    'errorOptions' => ['class' => 'text-danger'],
+                ],
     ]); ?>
 
     <div class="row">

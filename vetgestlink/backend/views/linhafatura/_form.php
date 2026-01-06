@@ -28,7 +28,11 @@ $('#linhafatura-servicos_id').on('change', function() {
 
 <div class="linhafatura-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'fieldConfig' => [
+            'errorOptions' => ['class' => 'text-danger fw-bold', 'style' => 'color: #dc3545 !important; font-size: 0.875rem; margin-top: 0.25rem;'],
+        ],
+    ]); ?>
 
     <div class="row">
         <div class="col-md-8">

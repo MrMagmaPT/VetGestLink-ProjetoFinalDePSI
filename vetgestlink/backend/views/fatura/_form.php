@@ -13,7 +13,12 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <div class="faturas-form">
-    <?php $form = ActiveForm::begin(['options' => ['class' => 'needs-validation']]); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => ['class' => 'needs-validation'],
+        'fieldConfig' => [
+            'errorOptions' => ['class' => 'text-danger fw-bold', 'style' => 'color: #dc3545 !important; font-size: 0.875rem; margin-top: 0.25rem;'],
+        ],
+    ]); ?>
 
     <div class="row">
         <!-- Coluna Esquerda - Formulário -->

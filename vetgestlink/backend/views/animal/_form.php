@@ -21,6 +21,7 @@ use kartik\select2\Select2;
             // Erro em vermelho abaixo do campo
             'fieldConfig' => [
                 'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
+                'errorOptions' => ['class' => 'text-danger fw-bold', 'style' => 'color: #dc3545 !important; font-size: 0.875rem; margin-top: 0.25rem;'],
             ],
     ]); ?>
 

@@ -20,6 +20,7 @@ use backend\widgets\FlashMessages;
                 ],
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n<div class=\"text-danger\">{error}</div>",
+                    'errorOptions' => ['class' => 'text-danger'],
                 ],
         ]); ?>
 

@@ -11,17 +11,6 @@ use common\models\Userprofile;
  */
 class UserprofileSearch extends Userprofile
 {
-    /**
-     * Retorna lista [id => nomecompleto] de donos ativos para Select2
-     */
-    public static function getActiveOwnersList()
-    {
-        $owners = \common\models\Userprofile::find()
-            ->where(['eliminado' => 0])
-            ->orderBy('nomecompleto')
-            ->all();
-        return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
-    }
     // Atributos públicos para pesquisa de moradas
     public $morada_rua;
     public $morada_nporta;
@@ -132,6 +121,18 @@ class UserprofileSearch extends Userprofile
             return $userprofile->user->username;
         }
         return null;
+    }
+
+    /**
+     * Retorna lista [id => nomecompleto] de donos ativos para Select2
+     */
+    public static function getActiveOwnersList()
+    {
+        $owners = Userprofile::find()
+            ->where(['eliminado' => 0])
+            ->orderBy('nomecompleto')
+            ->all();
+        return \yii\helpers\ArrayHelper::map($owners, 'id', 'nomecompleto');
     }
 
     /**
