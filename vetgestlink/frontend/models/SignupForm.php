@@ -142,13 +142,18 @@ class SignupForm extends Model
                     Yii::error("SignupForm: Image validation failed: " . json_encode($userprofile->errors), __METHOD__);
                     Yii::$app->session->setFlash('warning', 'A imagem não pôde ser carregada. Verifique o formato e tamanho.');
                 } else {
+                    // Log detalhado antes do upload
+                    Yii::info("SignupForm: File validation passed, starting upload...", __METHOD__);
+                    Yii::info("SignupForm: File error status: " . ($this->imageFile->hasError ? 'HAS ERROR' : 'OK'), __METHOD__);
+                    
                     $uploaded = $userprofile->uploadImage();
                     if ($uploaded) {
                         $uploadedFileName = $userprofile->foto ?? null;
                         Yii::info("SignupForm: Image uploaded successfully: {$userprofile->foto}", __METHOD__);
                     } else {
                         Yii::error("SignupForm: Upload image FAILED for user {$user->id}", __METHOD__);
-                        Yii::$app->session->setFlash('warning', 'O registo foi criado mas a imagem não pôde ser carregada.');
+                        Yii::error("SignupForm: Please check runtime/logs for detailed ImageUploader errors", __METHOD__);
+                        Yii::$app->session->setFlash('warning', 'O registo foi criado mas a imagem não pôde ser carregada. Verifique os logs para mais detalhes.');
                     }
                 }
             } else {

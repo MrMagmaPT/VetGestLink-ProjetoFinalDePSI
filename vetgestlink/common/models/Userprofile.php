@@ -182,6 +182,12 @@ class Userprofile extends \yii\db\ActiveRecord
             Yii::$app->imageUploader->delete($this->foto);
         }
 
+        // Validar se o arquivo é válido antes do upload
+        if ($this->imageFile->hasError) {
+            Yii::error('uploadImage: File has error code: ' . $this->imageFile->error, __METHOD__);
+            return false;
+        }
+
         // Faz upload usando o componente, retorna 'users/filename.ext' ou false
         $result = Yii::$app->imageUploader->upload($this->imageFile, $userId);
         
@@ -194,6 +200,7 @@ class Userprofile extends \yii\db\ActiveRecord
         }
 
         Yii::error('uploadImage: Upload FAILED for user ' . $userId, __METHOD__);
+        Yii::error('uploadImage: Check application logs for detailed error from ImageUploader component', __METHOD__);
         return false;
     }
 

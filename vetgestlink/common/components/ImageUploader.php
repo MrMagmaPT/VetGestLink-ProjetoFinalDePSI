@@ -87,7 +87,12 @@ class ImageUploader extends Component
 
         if (!$file->saveAs($full)) {
             Yii::error('ImageUploader::upload - saveAs FAILED for: ' . $full, __METHOD__);
-            Yii::error('ImageUploader::upload - File error: ' . $file->error, __METHOD__);
+            Yii::error('ImageUploader::upload - File error code: ' . $file->error, __METHOD__);
+            Yii::error('ImageUploader::upload - File hasError: ' . ($file->hasError ? 'YES' : 'NO'), __METHOD__);
+            Yii::error('ImageUploader::upload - File tempName: ' . $file->tempName, __METHOD__);
+            Yii::error('ImageUploader::upload - File size: ' . $file->size, __METHOD__);
+            Yii::error('ImageUploader::upload - Directory writable: ' . (is_writable($dir) ? 'YES' : 'NO'), __METHOD__);
+            Yii::error('ImageUploader::upload - Directory exists: ' . (is_dir($dir) ? 'YES' : 'NO'), __METHOD__);
             return false;
         }
 
