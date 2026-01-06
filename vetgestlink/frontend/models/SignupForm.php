@@ -145,11 +145,12 @@ class SignupForm extends Model
                     // Log detalhado antes do upload
                     Yii::info("SignupForm: File validation passed, starting upload...", __METHOD__);
                     Yii::info("SignupForm: File error status: " . ($this->imageFile->hasError ? 'HAS ERROR' : 'OK'), __METHOD__);
+                    Yii::info("SignupForm: File temp name: " . $this->imageFile->tempName, __METHOD__);
                     
                     $uploaded = $userprofile->uploadImage();
                     if ($uploaded) {
-                        $uploadedFileName = $userprofile->foto ?? null;
-                        Yii::info("SignupForm: Image uploaded successfully: {$userprofile->foto}", __METHOD__);
+                        $uploadedFileName = $userprofile->foto;
+                        Yii::info("SignupForm: Image uploaded successfully: {$uploadedFileName}", __METHOD__);
                     } else {
                         Yii::error("SignupForm: Upload image FAILED for user {$user->id}", __METHOD__);
                         Yii::error("SignupForm: Please check runtime/logs for detailed ImageUploader errors", __METHOD__);
