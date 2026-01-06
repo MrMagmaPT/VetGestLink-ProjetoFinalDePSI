@@ -338,7 +338,7 @@ echo PageHeaderWidget::widget([
                                         );
                                     },
                                     'delete' => function ($url, $model) {
-                                        if (!Yii::$app->user->can('deleteMedication')) {
+                                        if (!Yii::$app->user->can('deleteMedication') || $model->eliminado == 1) {
                                             return '';
                                         }
                                         return Html::a(

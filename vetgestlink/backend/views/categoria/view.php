@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Categorias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->nome;
 
 // Contagem de medicamentos
-$medicamentosCount = $model->getMedicamentos()->where(['eliminado' => 0])->count();
+$medicamentosCount = $model->getMedicamentosAtivosCount();
 ?>
 
 <?php
@@ -151,17 +151,19 @@ echo PageHeaderWidget::widget([
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                            <?= Html::a(
-                                '<i class="fas fa-trash"></i> Eliminar',
-                                ['delete', 'id' => $model->id],
-                                [
-                                    'class' => 'btn btn-danger btn-md',
-                                    'data' => [
-                                        'confirm' => 'Tem a certeza que deseja eliminar esta categoria?',
-                                        'method' => 'post',
-                                    ],
-                                ]
-                            ) ?>
+                            <?php if ($model->eliminado != 1): ?>
+                                <?= Html::a(
+                                    '<i class="fas fa-trash"></i> Eliminar',
+                                    ['delete', 'id' => $model->id],
+                                    [
+                                        'class' => 'btn btn-danger btn-md',
+                                        'data' => [
+                                            'confirm' => 'Tem a certeza que deseja eliminar esta categoria?',
+                                            'method' => 'post',
+                                        ],
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

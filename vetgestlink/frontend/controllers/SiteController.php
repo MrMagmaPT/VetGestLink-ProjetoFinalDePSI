@@ -73,9 +73,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //obter todos os serviços ordenados por nome
-        $servicos = \common\models\Servico::find()
-            ->orderBy(['nome' => SORT_ASC])
-            ->all();
+        $servicos = \common\models\Servico::getAllOrdenadosPorNome();
 
         return $this->render('index', [
             'servicos' => $servicos,

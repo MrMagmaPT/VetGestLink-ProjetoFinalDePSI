@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use yii\base\Model;
 use common\models\Userprofile;
 use backend\models\UserprofileSearch;
@@ -10,7 +11,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use backend\models\SignupFormBackend;
-use Yii;
 
 /**
  * UserprofileController implements the CRUD actions for Userprofile model.
@@ -53,38 +53,11 @@ class UserprofileController extends Controller
                 ->andWhere(['auth_assignment.item_name' => 'cliente']);
         }
 
-        // Estatísticas para a view Extras
-        $totalQuery = Userprofile::find()
-            ->joinWith('user')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
-        
-        $activeQuery = Userprofile::find()
-            ->where(['userprofiles.eliminado' => 0])
-            ->joinWith('user')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
-        
-        $deletedQuery = Userprofile::find()
-            ->where(['userprofiles.eliminado' => 1])
-            ->joinWith('user')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id');
-        
-        $recentQuery = Userprofile::find()
-            ->joinWith('user')
-            ->innerJoin('auth_assignment', 'auth_assignment.user_id = user.id')
-            ->where(['>=', 'user.created_at', strtotime('-30 days')]);
-
-        // Se não for admin, filtrar estatísticas apenas para clientes
-        if (!Yii::$app->user->can('admin')) {
-            $totalQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
-            $activeQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
-            $deletedQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
-            $recentQuery->andWhere(['auth_assignment.item_name' => 'cliente']);
-        }
-
-        $totalCount = $totalQuery->count();
-        $activeCount = $activeQuery->count();
-        $deletedCount = $deletedQuery->count();
-        $recentCount = $recentQuery->count();
+        // Estatísticas para a view
+        $totalCount = UserprofileSearch::getTotalCount();
+        $activeCount = UserprofileSearch::getActiveCount();
+        $deletedCount = UserprofileSearch::getDeletedCount();
+        $recentCount = UserprofileSearch::getRecentCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

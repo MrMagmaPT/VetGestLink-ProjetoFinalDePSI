@@ -135,5 +135,3 @@ $avatarUrl = $model->getImageUrl();
         </div>
     </div>
 </div>
-
-

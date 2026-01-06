@@ -63,4 +63,15 @@ class Servico extends \yii\db\ActiveRecord
         return $this->hasMany(Marcacao::class, ['servicos_id' => 'id']);
     }
 
+    /**
+     * Retorna todos os serviços ordenados por nome para listagem pública
+     * @return Servico[]
+     */
+    public static function getAllOrdenadosPorNome()
+    {
+        return self::find()
+            ->orderBy(['nome' => SORT_ASC])
+            ->all();
+    }
+
 }

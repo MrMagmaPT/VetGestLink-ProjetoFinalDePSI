@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Servico;
 use backend\models\ServicoSearch;
 use yii\web\Controller;
@@ -53,9 +54,9 @@ class ServicoController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         
         // Estatísticas
-        $totalCount = Servico::find()->where(['eliminado' => 0])->count();
-        $deletedCount = Servico::find()->where(['eliminado' => 1])->count();
-        $avgValue = Servico::find()->where(['eliminado' => 0])->average('valor');
+        $totalCount = ServicoSearch::getTotalCount();
+        $deletedCount = ServicoSearch::getDeletedCount();
+        $avgValue = ServicoSearch::getAverageValue();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

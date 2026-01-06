@@ -477,7 +477,7 @@ echo PageHeaderWidget::widget([
 
                                 
                                 'delete' => function ($url, $model) {
-                                    if (Yii::$app->user->can('deleteAnimal')) {
+                                    if (Yii::$app->user->can('deleteAnimal') && $model->eliminado != 1) {
                                         return Html::a(
                                             '<i class="fas fa-trash"></i>',
                                             $url,
@@ -490,6 +490,7 @@ echo PageHeaderWidget::widget([
                                             ]
                                         );
                                     }
+                                    return '';
                                 },
                             ],
                             'urlCreator' => function ($action, Animal $model, $key, $index, $column) {

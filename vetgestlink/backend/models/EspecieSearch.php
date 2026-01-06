@@ -101,6 +101,19 @@ class EspecieSearch extends Especie
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Especie::find()->where(['eliminado' => 0])->count();
+    }
+
+    public static function getDeletedCount()
+    {
+        return Especie::find()->where(['eliminado' => 1])->count();
+    }
+
+    /**
      * @deprecated Use getActiveList() instead
      */
     public static function getEspeciesList()

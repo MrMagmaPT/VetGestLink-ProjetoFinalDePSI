@@ -317,7 +317,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                     ['class' => 'btn btn-primary btn-md']
                                 ) ?>
                             <?php endif; ?>
-                            <?php if (Yii::$app->user->can('deleteAnimal')): ?>
+                            <?php if (Yii::$app->user->can('deleteAnimal') && $model->eliminado != 1): ?>
                                 <?= Html::a(
                                     '<i class="fas fa-trash"></i> Eliminar',
                                     ['delete', 'id' => $model->id],

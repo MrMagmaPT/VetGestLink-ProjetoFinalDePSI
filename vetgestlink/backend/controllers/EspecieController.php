@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Especie;
 use backend\models\EspecieSearch;
 use yii\web\Controller;
@@ -74,8 +75,8 @@ class EspecieController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
         
         // Estatísticas
-        $totalCount = \common\models\Especie::find()->where(['eliminado' => 0])->count();
-        $deletedCount = \common\models\Especie::find()->where(['eliminado' => 1])->count();
+        $totalCount = EspecieSearch::getTotalCount();
+        $deletedCount = EspecieSearch::getDeletedCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

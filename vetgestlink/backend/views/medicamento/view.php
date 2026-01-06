@@ -145,7 +145,7 @@ $this->registerCssFile('@web/static/css/view.css');
                                 ['index'],
                                 ['class' => 'btn btn-secondary btn-md']
                             ) ?>
-                            <?php if (Yii::$app->user->can('deleteMedication')): ?>
+                            <?php if (Yii::$app->user->can('deleteMedication') && $model->eliminado != 1): ?>
                                 <?= Html::a(
                                     '<i class="fas fa-trash"></i> Eliminar',
                                     ['delete', 'id' => $model->id],

@@ -98,7 +98,7 @@ $this->beginPage();
                         <?php
                         $userImage = null;
                         if (!Yii::$app->user->isGuest) {
-                            $userprofile = isset($userprofile) ? $userprofile : \common\models\Userprofile::findOne(['user_id' => Yii::$app->user->id]);
+                            $userprofile = isset($userprofile) ? $userprofile : Yii::$app->user->identity->userprofile;
                             if ($userprofile && !empty($userprofile->getImageUrl())) {
                                 $userImage = $userprofile->getImageUrl();
                             }

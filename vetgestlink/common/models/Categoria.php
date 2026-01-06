@@ -60,4 +60,35 @@ class Categoria extends \yii\db\ActiveRecord
         return $this->hasMany(Medicamento::class, ['categorias_id' => 'id']);
     }
 
+    /**
+     * Retorna a contagem de medicamentos ativos da categoria
+     * @return int
+     */
+    public function getMedicamentosAtivosCount()
+    {
+        return $this->getMedicamentos()->where(['eliminado' => 0])->count();
+    }
+
+    /**
+     * Retorna medicamentos ativos desta categoria (limitado)
+     * @param int $limit Limite de registos
+     * @return Medicamento[]
+     */
+    public function getMedicamentosAtivos($limit = 10)
+    {
+        return $this->getMedicamentos()
+            ->where(['eliminado' => 0])
+            ->limit($limit)
+            ->all();
+    }
+
+    /**
+     * Retorna contagem total de categorias ativas
+     * @return int
+     */
+    public static function getTotalCount()
+    {
+        return self::find()->where(['eliminado' => 0])->count();
+    }
+
 }

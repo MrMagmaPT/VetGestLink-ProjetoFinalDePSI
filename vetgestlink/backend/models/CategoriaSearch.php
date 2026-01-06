@@ -101,6 +101,19 @@ class CategoriaSearch extends Categoria
     }
 
     /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Categoria::find()->where(['eliminado' => 0])->count();
+    }
+
+    public static function getDeletedCount()
+    {
+        return Categoria::find()->where(['eliminado' => 1])->count();
+    }
+
+    /**
      * @deprecated Use getActiveList() instead
      */
     public function getCategoriasList()

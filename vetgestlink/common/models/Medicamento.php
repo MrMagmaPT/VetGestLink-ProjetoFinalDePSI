@@ -114,4 +114,67 @@ class Medicamento extends \yii\db\ActiveRecord
         return $this->getCategorias()->one();
     }
 
+    /**
+     * Estatísticas de stock para dashboard
+     */
+    public static function getStockStats()
+    {
+        return [
+            'total' => self::find()->where(['eliminado' => 0])->count(),
+            'emStock' => self::find()->where(['>', 'quantidade', 9])->andWhere(['eliminado' => 0])->count(),
+            'baixoStock' => self::find()->where(['between', 'quantidade', 5, 9])->andWhere(['eliminado' => 0])->count(),
+            'critico' => self::find()->where(['<', 'quantidade', 5])->andWhere(['eliminado' => 0])->count(),
+        ];
+    }
+
+    /**
+     * Retorna medicamentos com stock crítico
+     */
+    public static function getMedicamentosCriticos()
+    {
+        return self::find()
+            ->select(['nome', 'quantidade'])
+            ->where(['<', 'quantidade', 5])
+            ->andWhere(['eliminado' => 0])
+            ->orderBy(['quantidade' => SORT_ASC])
+            ->asArray()
+            ->all();
+    }
+
+    /**
+     * Verifica se há stock suficiente
+     * @param int $quantidade Quantidade necessária
+     * @return bool
+     */
+    public function temStockSuficiente($quantidade)
+    {
+        return $this->quantidade >= $quantidade;
+    }
+
+    /**
+     * Decrementa o stock do medicamento
+     * @param int $quantidade Quantidade a decrementar
+     * @return bool True se bem sucedido, False se stock insuficiente
+     */
+    public function decrementarStock($quantidade)
+    {
+        if (!$this->temStockSuficiente($quantidade)) {
+            return false;
+        }
+        
+        $this->quantidade -= $quantidade;
+        return $this->save(false);
+    }
+
+    /**
+     * Incrementa o stock do medicamento (devolução)
+     * @param int $quantidade Quantidade a incrementar
+     * @return bool
+     */
+    public function incrementarStock($quantidade)
+    {
+        $this->quantidade += $quantidade;
+        return $this->save(false);
+    }
+
 }

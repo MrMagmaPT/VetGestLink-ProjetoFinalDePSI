@@ -74,16 +74,14 @@ class AnimalController extends Controller
      */
     public function actionIndex()
     {
-
-
         $searchModel = new AnimalSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas
-        $totalCount = Animal::find()->where(['eliminado' => 0])->count();
-        $machoCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'M'])->count();
-        $femeaCount = Animal::find()->where(['eliminado' => 0, 'sexo' => 'F'])->count();
-        $microchipCount = Animal::find()->where(['eliminado' => 0, 'microship' => 1])->count();
+        $totalCount = AnimalSearch::getTotalCount();
+        $machoCount = AnimalSearch::getMachoCount();
+        $femeaCount = AnimalSearch::getFemeaCount();
+        $microchipCount = AnimalSearch::getMicrochipCount();
         
         // Listas para filtros Select2
         $animaisList = AnimalSearch::getAnimaisListForIndex();
@@ -217,6 +215,7 @@ class AnimalController extends Controller
     }
 
 
+    //Não usados foi usado pra debbugar estatisticas
     private static function getusertype($userId) {
         if (!$userId) {
             return 0;

@@ -153,6 +153,9 @@ echo PageHeaderWidget::widget([
                                     ]);
                                 },
                                 'delete' => function ($url, $model) {
+                                    if ($model->eliminado == 1) {
+                                        return '';
+                                    }
                                     return Html::a('<i class="fas fa-trash"></i>', $url, [
                                         'title' => 'Eliminar',
                                         'class' => 'btn btn-sm btn-danger',

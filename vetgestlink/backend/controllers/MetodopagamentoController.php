@@ -43,9 +43,9 @@ class MetodopagamentoController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas
-        $totalCount = Metodopagamento::find()->count();
-        $activeCount = Metodopagamento::find()->where(['vigor' => 1])->count();
-        $inactiveCount = Metodopagamento::find()->where(['vigor' => 0])->count();
+        $totalCount = MetodopagamentoSearch::getTotalCount();
+        $activeCount = MetodopagamentoSearch::getActiveCount();
+        $inactiveCount = MetodopagamentoSearch::getInactiveCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

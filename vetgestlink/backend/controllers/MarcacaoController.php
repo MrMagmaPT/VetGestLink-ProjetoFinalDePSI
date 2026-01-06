@@ -2,13 +2,13 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Marcacao;
 use backend\models\MarcacaoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use Yii;
 
 /**
  * MarcacaoController implements the CRUD actions for Marcacao model.
@@ -82,9 +82,9 @@ class MarcacaoController extends Controller
 
         // Estatísticas para a view
         $totalCount = $dataProvider->getTotalCount();
-        $pendenteCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_PENDENTE, 'eliminado' => 0])->count();
-        $realizadaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_REALIZADA, 'eliminado' => 0])->count();
-        $canceladaCount = Marcacao::find()->where(['estado' => Marcacao::ESTADO_CANCELADA, 'eliminado' => 0])->count();
+        $pendenteCount = MarcacaoSearch::getPendenteCount();
+        $realizadaCount = MarcacaoSearch::getRealizadaCount();
+        $canceladaCount = MarcacaoSearch::getCanceladaCount();
         
         // Listas para filtros Select2
         $datasList = MarcacaoSearch::getDatasListForIndex();
@@ -212,11 +212,11 @@ class MarcacaoController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             if ($model->save()) {
-                // Process medications only if appointment is "realizada"
+                // Processar medicamentos apenas se a marcação está "realizada"
                 if ($model->estado === \common\models\Marcacao::ESTADO_REALIZADA) {
                     $medicamentosSelecionados = $this->request->post('medicamentos', []);
                     
-                    // Find or create a fatura for this marcacao
+                    // Encontrar ou criar fatura para esta marcação
                     $linhaFatura = \common\models\Linhafatura::find()
                         ->where(['marcacoes_id' => $model->id, 'eliminado' => 0])
                         ->andWhere(['IS NOT', 'faturas_id', null])
@@ -228,108 +228,30 @@ class MarcacaoController extends Controller
                     }
                     
                     if (!$fatura) {
-                        // Create a temporary invoice for this appointment
-                        $fatura = new \common\models\Fatura();
-                        $fatura->total = 0; // Will be updated later
-                        $fatura->userprofiles_id = $model->userprofiles_id;
-                        $fatura->metodospagamentos_id = 1; // Default payment method, adjust as needed
-                        $fatura->estado = 'pendente';
-                        
-                        if (!$fatura->save()) {
+                        // Criar fatura inicial
+                        $fatura = $model->criarFaturaInicial();
+                        if (!$fatura) {
                             Yii::$app->session->setFlash('error', 'Erro ao criar fatura para os medicamentos.');
                             return $this->redirect(['view', 'id' => $model->id]);
                         }
                     }
                     
-                    // Track which medications are still selected
-                    $medicamentosProcessados = [];
+                    // Processar medicamentos (adicionar, atualizar, remover)
+                    $resultado = $model->processarMedicamentos($medicamentosSelecionados, $fatura);
                     
-                    // Process selected medications
-                    foreach ($medicamentosSelecionados as $medicamentoId => $dados) {
-                        if (isset($dados['quantidade']) && $dados['quantidade'] > 0) {
-                            $quantidade = (int)$dados['quantidade'];
-                            $medicamento = \common\models\Medicamento::findOne($medicamentoId);
-                            
-                            if ($medicamento) {
-                                // Check if this medication was already used
-                                if (isset($medicamentosAtuaisMap[$medicamentoId])) {
-                                    // Update existing line
-                                    $linhaExistente = \common\models\Linhafatura::findOne($medicamentosAtuaisMap[$medicamentoId]['linha_id']);
-                                    $quantidadeAnterior = $medicamentosAtuaisMap[$medicamentoId]['quantidade'];
-                                    $diferenca = $quantidade - $quantidadeAnterior;
-                                    
-                                    if ($diferenca != 0) {
-                                        // Check if there's enough stock for increase
-                                        if ($diferenca > 0 && $medicamento->quantidade < $diferenca) {
-                                            Yii::$app->session->setFlash('error', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
-                                            continue;
-                                        }
-                                        
-                                        // Update stock
-                                        $medicamento->quantidade -= $diferenca;
-                                        $medicamento->save(false);
-                                        
-                                        // Update linha
-                                        $linhaExistente->quantidade = $quantidade;
-                                        $linhaExistente->total = $quantidade * $medicamento->preco;
-                                        $linhaExistente->save(false);
-                                    }
-                                    
-                                    $medicamentosProcessados[] = $medicamentoId;
-                                } else {
-                                    // Create new line
-                                    // Check stock
-                                    if ($medicamento->quantidade < $quantidade) {
-                                        Yii::$app->session->setFlash('error', "Stock insuficiente para {$medicamento->nome}. Disponível: {$medicamento->quantidade}");
-                                        continue;
-                                    }
-                                    
-                                    $novaLinha = new \common\models\Linhafatura();
-                                    $novaLinha->marcacoes_id = $model->id;
-                                    $novaLinha->medicamentos_id = $medicamentoId;
-                                    $novaLinha->quantidade = $quantidade;
-                                    $novaLinha->total = $quantidade * $medicamento->preco;
-                                    $novaLinha->vendidoemconsulta = 1;
-                                    $novaLinha->faturas_id = $fatura->id;
-                                    
-                                    if ($novaLinha->save(false)) {
-                                        // Decrement stock
-                                        $medicamento->quantidade -= $quantidade;
-                                        $medicamento->save(false);
-                                        
-                                        $medicamentosProcessados[] = $medicamentoId;
-                                    }
-                                }
-                            }
+                    // Mostrar erros se houver
+                    if (!$resultado['success']) {
+                        foreach ($resultado['errors'] as $error) {
+                            Yii::$app->session->setFlash('error', $error);
                         }
                     }
                     
-                    // Remove medications that were unselected
-                    foreach ($medicamentosAtuaisMap as $medicamentoId => $info) {
-                        if (!in_array($medicamentoId, $medicamentosProcessados)) {
-                            // Restore stock
-                            $medicamento = \common\models\Medicamento::findOne($medicamentoId);
-                            if ($medicamento) {
-                                $medicamento->quantidade += $info['quantidade'];
-                                $medicamento->save(false);
-                            }
-                            
-                            // Delete linha
-                            $linha = \common\models\Linhafatura::findOne($info['linha_id']);
-                            if ($linha) {
-                                $linha->delete();
-                            }
-                        }
-                    }
-                    
-                    // Update fatura total amount
-                    if (isset($fatura)) {
-                        $totalFatura = \common\models\Linhafatura::find()
-                            ->where(['faturas_id' => $fatura->id, 'eliminado' => 0])
-                            ->sum('total');
-                        $fatura->total = $totalFatura ?: 0;
-                        $fatura->save(false);
-                    }
+                    // Atualizar total da fatura
+                    $totalFatura = \common\models\Linhafatura::find()
+                        ->where(['faturas_id' => $fatura->id, 'eliminado' => 0])
+                        ->sum('total');
+                    $fatura->total = $totalFatura ?: 0;
+                    $fatura->save(false);
                 }
 
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -392,26 +314,13 @@ class MarcacaoController extends Controller
             return $this->redirect(['/fatura/view', 'id' => $faturaExistente->faturas_id]);
         }
         
-        // Criar nova fatura
-        $fatura = new \common\models\Fatura();
-        $fatura->userprofiles_id = $marcacao->animais->userprofiles_id ?? null;
-        $fatura->estado = 0; // Pendente
-        $fatura->total = $marcacao->servicos->valor ?? 0;
+        // Criar fatura inicial usando método do Model
+        $fatura = $marcacao->criarFaturaInicial();
         
-        if ($fatura->save()) {
-            // Criar linha de fatura para o serviço da marcação
-            $linha = new \common\models\Linhafatura();
-            $linha->faturas_id = $fatura->id;
-            $linha->marcacoes_id = $marcacao->id;
-            $linha->quantidade = 1;
-            $linha->total = $marcacao->servicos->valor ?? 0;
-            $linha->vendidoemconsulta = 1;
-            
-            if ($linha->save()) {
-                $fatura->atualizarTotal();
-                Yii::$app->session->setFlash('success', 'Fatura gerada com sucesso!');
-                return $this->redirect(['/fatura/view', 'id' => $fatura->id]);
-            }
+        if ($fatura) {
+            $fatura->atualizarTotal();
+            Yii::$app->session->setFlash('success', 'Fatura gerada com sucesso!');
+            return $this->redirect(['/fatura/view', 'id' => $fatura->id]);
         }
         
         Yii::$app->session->setFlash('error', 'Erro ao gerar fatura.');

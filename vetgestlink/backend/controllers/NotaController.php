@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use Yii;
 use common\models\Nota;
 use backend\models\NotaSearch;
 use yii\web\Controller;
@@ -42,8 +43,8 @@ class NotaController extends Controller
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         // Estatísticas
-        $totalCount = Nota::find()->count();
-        $recentCount = Nota::find()->where(['>=', 'created_at', date('Y-m-d H:i:s', strtotime('-7 days'))])->count();
+        $totalCount = NotaSearch::getTotalCount();
+        $recentCount = NotaSearch::getRecentCount();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

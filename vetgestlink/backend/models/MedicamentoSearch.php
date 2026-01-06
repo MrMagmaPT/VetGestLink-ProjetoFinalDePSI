@@ -130,4 +130,44 @@ class MedicamentoSearch extends Medicamento
             }
         );
     }
-}
+
+    /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalCount()
+    {
+        return Medicamento::find()->where(['eliminado' => 0])->count();
+    }
+
+    /**
+     * Conta medicamentos com stock crítico (< 5)
+     */
+    public static function getStockCriticoCount()
+    {
+        return Medicamento::find()
+            ->where(['<', 'quantidade', 5])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+    }
+
+    /**
+     * Conta medicamentos com stock baixo (entre 5 e 9)
+     */
+    public static function getStockBaixoCount()
+    {
+        return Medicamento::find()
+            ->where(['between', 'quantidade', 5, 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+    }
+
+    /**
+     * Conta medicamentos com stock bom (> 9)
+     */
+    public static function getStockBomCount()
+    {
+        return Medicamento::find()
+            ->where(['>', 'quantidade', 9])
+            ->andWhere(['eliminado' => 0])
+            ->count();
+    }}

@@ -142,7 +142,7 @@ echo PageHeaderWidget::widget([
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
-                    'summary' => ' <b>Mostrando {begin} - {end} espécies</b>',
+                    'summary' => ' <b>Mostrando {begin} - {end}</b>',
                     'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
                     //Mudar a mensagem quando não houver resultados
                     'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
@@ -244,8 +244,9 @@ echo PageHeaderWidget::widget([
                                 'delete' => function ($url, $model) {
                                     if (!Yii::$app->user->can('deleteSpecies')) {
                                         return '';
-                                    }
-                                    return Html::a(
+                                    }                                    if ($model->eliminado == 1) {
+                                        return '';
+                                    }                                    return Html::a(
                                         '<i class="fas fa-trash"></i>',
                                         $url,
                                         [

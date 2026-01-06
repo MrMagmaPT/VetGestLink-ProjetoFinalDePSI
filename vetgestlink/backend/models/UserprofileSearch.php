@@ -191,4 +191,46 @@ class UserprofileSearch extends Userprofile
             ->all();
     }
 
+    /**
+     * Estatísticas para dashboard
+     */
+    public static function getTotalActiveCount()
+    {
+        return Userprofile::find()->where(['eliminado' => 0])->count();
+    }
+
+    /**
+     * Conta total de userprofiles (incluindo eliminados)
+     */
+    public static function getTotalCount()
+    {
+        return Userprofile::find()->count();
+    }
+
+    /**
+     * Conta userprofiles ativos (não eliminados)
+     */
+    public static function getActiveCount()
+    {
+        return Userprofile::find()->where(['eliminado' => 0])->count();
+    }
+
+    /**
+     * Conta userprofiles eliminados
+     */
+    public static function getDeletedCount()
+    {
+        return Userprofile::find()->where(['eliminado' => 1])->count();
+    }
+
+    /**
+     * Conta userprofiles recentes (últimos 30 dias)
+     */
+    public static function getRecentCount()
+    {
+        return Userprofile::find()
+            ->where(['>=', 'created_at', date('Y-m-d', strtotime('-30 days'))])
+            ->count();
+    }
+
 }

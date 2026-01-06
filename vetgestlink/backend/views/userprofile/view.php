@@ -225,17 +225,19 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                                     ['index'],
                                     ['class' => 'btn btn-secondary btn-sm'] // Alterado para btn-sm
                                 ) ?>
-                                <?= Html::a(
-                                    '<i class="fas fa-trash"></i> Eliminar',
-                                    ['delete', 'id' => $model->id],
-                                    [
-                                        'class' => 'btn btn-danger btn-sm', // Alterado para btn-sm
-                                        'data' => [
-                                            'confirm' => 'Tem a certeza que deseja eliminar este perfil?',
-                                            'method' => 'post',
-                                        ],
-                                    ]
-                                ) ?>
+                                <?php if ($model->eliminado != 1): ?>
+                                    <?= Html::a(
+                                        '<i class="fas fa-trash"></i> Eliminar',
+                                        ['delete', 'id' => $model->id],
+                                        [
+                                            'class' => 'btn btn-danger btn-sm', // Alterado para btn-sm
+                                            'data' => [
+                                                'confirm' => 'Tem a certeza que deseja eliminar este perfil?',
+                                                'method' => 'post',
+                                            ],
+                                        ]
+                                    ) ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
