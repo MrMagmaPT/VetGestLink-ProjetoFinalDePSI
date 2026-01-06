@@ -6,7 +6,7 @@ use yii\helpers\Url;
 $title = $title ?? 'Default Sidebar Title';
 $items = $items ?? [
     ['label' => 'Dashboard', 'url' => ['/dashboard'], 'icon' => 'fa-tachometer-alt'],
-    ['label' => 'Settings', 'url' => ['/settings'], 'icon' => 'fa-cogs'],
+    ['label' => 'Settings', 'url' => ['/settings'], 'icon' => 'fa-cog'],
 ];
 ?>
 
