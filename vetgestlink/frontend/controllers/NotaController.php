@@ -61,8 +61,12 @@ class NotaController extends Controller
             ]);
         }
 
-        // Pegar todas as notas associadas ao animal
-        $allnotas = $animal->notas;
+        // Pegar todas as notas associadas ao animal com eager loading do userprofile
+        $allnotas = Nota::find()
+            ->where(['animais_id' => $animalId])
+            ->with('userprofiles')
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
 
         return $this->render('index', [
             'animal' => $animal,

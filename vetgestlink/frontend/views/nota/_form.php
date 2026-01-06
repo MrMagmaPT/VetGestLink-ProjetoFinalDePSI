@@ -5,32 +5,54 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Nota $model */
 ?>
-<div class="nota-form d-flex justify-content-center align-items-center" style="min-height: 60vh;">
-    <div class="card shadow-sm w-100" style="max-width: 500px;">
-        <div class="card-header bg-white text-center">
-            <h5 class="mb-0">
-                <i class="fa-regular fa-sticky-note text-primary"></i>
-                <?= $model->isNewRecord ? 'Criar Nota' : 'Atualizar Nota' ?>
-            </h5>
-        </div>
-        <div class="card-body">
-            <?php $form = ActiveForm::begin([
-        'fieldConfig' => [
-            'errorOptions' => ['class' => 'text-danger fw-bold', 'style' => 'color: #dc3545 !important; font-size: 0.875rem; margin-top: 0.25rem;'],
-        ],
-    ]); ?>
+<div class="nota-form py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-gradient bg-primary text-white text-center py-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-sticky-note me-2"></i>
+                            <?= $model->isNewRecord ? 'Criar Nota' : 'Atualizar Nota' ?>
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <?php $form = ActiveForm::begin([
+                            'fieldConfig' => [
+                                'errorOptions' => ['class' => 'invalid-feedback d-block'],
+                            ],
+                        ]); ?>
 
-            <?= $form->field($model, 'nota')->textarea([
-                'rows' => 5,
-                'placeholder' => 'Digite sua nota aqui...'
-            ])->label('Nota') ?>
+                        <div class="mb-4">
+                            <?= $form->field($model, 'nota')->textarea([
+                                'rows' => 8,
+                                'class' => 'form-control',
+                                'placeholder' => 'Digite o conteúdo da nota aqui...'
+                            ])->label('<i class="fas fa-pen me-2"></i>Conteúdo da Nota', ['class' => 'form-label fw-bold']) ?>
+                        </div>
 
-            <div class="form-group mt-3 d-flex justify-content-between">
-                <?= Html::submitButton($model->isNewRecord ? 'Criar Nota' : 'Atualizar Nota', ['class' => 'btn btn-primary rounded-pill']) ?>
-                <?= Html::a('Cancelar', ['index', 'animalId' => $model->animais_id], ['class' => 'btn btn-secondary rounded-pill']) ?>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-4">
+                            <?= Html::a(
+                                '<i class="fas fa-times me-2"></i>Cancelar',
+                                ['index', 'animalId' => $model->animais_id],
+                                ['class' => 'btn btn-outline-secondary']
+                            ) ?>
+                            <?= Html::submitButton(
+                                ($model->isNewRecord ? '<i class="fas fa-save me-2"></i>Criar Nota' : '<i class="fas fa-check me-2"></i>Atualizar Nota'),
+                                ['class' => 'btn btn-primary']
+                            ) ?>
+                        </div>
+
+                        <?php ActiveForm::end(); ?>
+                    </div>
+                </div>
+                
+                <!-- Dica -->
+                <div class="alert alert-info mt-3 shadow-sm border-0">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <small><strong>Dica:</strong> Use notas para registrar observações importantes sobre o animal.</small>
+                </div>
             </div>
-
-            <?php ActiveForm::end(); ?>
         </div>
     </div>
 </div>
