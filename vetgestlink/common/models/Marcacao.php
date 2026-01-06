@@ -473,9 +473,9 @@ class Marcacao extends \yii\db\ActiveRecord
 
         $myJSON = json_encode($myObj);
         if ($insert) {
-            MqttHelper::publish("INSERT_".$this->animais->getDonoNome()."_MARCACAO", $myJSON);
+            MqttHelper::publish("INSERT_".$this->animais->userprofiles_id."_MARCACAO", $myJSON);
         } else {
-            MqttHelper::publish("UPDATE_".$this->animais->getDonoNome()."_MARCACAO", $myJSON);
+            MqttHelper::publish("UPDATE_".$this->animais->userprofiles_id."_MARCACAO", $myJSON);
         }
     }
 
@@ -485,7 +485,7 @@ class Marcacao extends \yii\db\ActiveRecord
         $myObj = new \stdClass();
         $myObj->id = $this->id;
         $myJSON = json_encode($myObj);
-        MqttHelper::publish("DELETE_".$this->animais->getDonoNome()."_MARCACAO", $myJSON);
+        MqttHelper::publish("DELETE_".$this->animais->userprofiles_id."_MARCACAO", $myJSON);
     }
 
 }
