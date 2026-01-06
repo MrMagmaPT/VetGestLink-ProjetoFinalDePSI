@@ -113,7 +113,7 @@ class MarcacaoController extends Controller
      */ 
     public function actionView($id)
     {
-        $permission = Yii::$app->user->can('viewConsultations');
+        $permission = Yii::$app->user->can('viewAppointments');
         // Verifica permissão
         if (!$permission) {
             throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
@@ -170,7 +170,7 @@ class MarcacaoController extends Controller
      */
     public function actionCount()
     {
-        $permission = Yii::$app->user->can('viewConsultations');
+        $permission = Yii::$app->user->can('viewAppointments');
         if (!$permission) {
             throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
         }
@@ -190,7 +190,7 @@ class MarcacaoController extends Controller
      */
     public function actionPorestado($estado)
     {
-        $permission = Yii::$app->user->can('viewConsultations');
+        $permission = Yii::$app->user->can('viewAppointments');
         if (!$permission) {
             throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
         }
@@ -231,7 +231,7 @@ class MarcacaoController extends Controller
      */
     public function actionPordata($ano, $mes, $dia)
     {
-        $permission = Yii::$app->user->can('viewConsultations');
+        $permission = Yii::$app->user->can('viewAppointments');
         if (!$permission) {
             throw new UnauthorizedHttpException('Você não tem permissão para ver marcações.');
         }
