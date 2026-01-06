@@ -77,12 +77,12 @@ use common\models\Especie;
                     <div class="d-grid gap-2">
                         <?= Html::submitButton(
                             '<i class="fas fa-save"></i> Guardar',
-                            ['class' => 'btn btn-success btn-lg']
+                            ['class' => 'btn btn-success btn-md']
                         ) ?>
                         <?= Html::a(
                             '<i class="fas fa-times"></i> Cancelar',
                             ['index'],
-                            ['class' => 'btn btn-secondary btn-lg']
+                            ['class' => 'btn btn-secondary btn-md']
                         ) ?>
                     </div>
                 </div>

@@ -33,14 +33,16 @@ use yii\widgets\ActiveForm;
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <?= $form->field($model, 'eliminado')->dropDownList([
-                            0 => 'Ativo',
-                            1 => 'Eliminado',
-                        ], ['class' => 'form-control']) ?>
+                <?php if (!$model->isNewRecord): ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?= $form->field($model, 'eliminado')->dropDownList([
+                                0 => 'Ativo',
+                                1 => 'Eliminado',
+                            ], ['class' => 'form-control']) ?>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

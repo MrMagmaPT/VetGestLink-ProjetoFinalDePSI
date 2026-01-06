@@ -263,7 +263,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </div>
                             <div class="col-md-9">
                                 <?= $model->userprofiles ? Html::a(
-                                    Html::encode($model->userprofiles->nomecompleto),
+                                    Html::encode($model->animais->getDonoNome()),
                                     ['/userprofile/view', 'id' => $model->userprofiles->id],
                                     ['class' => 'text-decoration-none']
                                 ) : '-' ?>

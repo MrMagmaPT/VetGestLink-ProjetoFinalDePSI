@@ -254,7 +254,7 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'update' => function ($url, $model) {
-                                    if (!Yii::$app->user->can('updateMetodopagamento')) {
+                                    if (!Yii::$app->user->can('updatePaymentMethod')) {
                                         return '';
                                     }
                                     return Html::a(
@@ -268,7 +268,7 @@ echo PageHeaderWidget::widget([
                                     );
                                 },
                                 'delete' => function ($url, $model) {
-                                    if (!Yii::$app->user->can('deleteMetodopagamento')) {
+                                    if (!Yii::$app->user->can('deletePaymentMethod')) {
                                         return '';
                                     }                                    if ($model->eliminado == 1) {
                                         return '';
