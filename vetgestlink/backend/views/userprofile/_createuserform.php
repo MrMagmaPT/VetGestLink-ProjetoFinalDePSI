@@ -260,7 +260,6 @@ use backend\widgets\FlashMessages;
                 </div>
 
                 <?php if (YII_DEBUG): ?>
-                    <!-- Card Debug -->
                     <div class="card shadow-sm">
                         <div class="card-header bg-warning">
                             <h5 class="mb-0">
@@ -275,8 +274,6 @@ use backend\widgets\FlashMessages;
                         </div>
                     </div>
 
-
-                    <!--Debug Script-->
                     <script>
                         function autoFill() {
                             document.getElementById('signupformbackend-username').value = 'user' + Math.floor(Math.random() * 10000);

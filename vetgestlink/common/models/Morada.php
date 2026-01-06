@@ -55,13 +55,28 @@ class Morada extends \yii\db\ActiveRecord
     {
         return [
             [['andar', 'cxpostal'], 'default', 'value' => null],
-            [['rua', 'nporta', 'cdpostal', 'cidade', 'localidade', 'principal', 'userprofiles_id'], 'required'],
+
+            ['rua', 'required', 'message' => 'O campo Rua é obrigatório.'],
+            ['nporta', 'required', 'message' => 'O campo Número da Porta é obrigatório.'],
+            ['cdpostal', 'required', 'message' => 'O campo Código Postal é obrigatório.'],
+            ['cidade', 'required', 'message' => 'O campo Cidade é obrigatório.'],
+            ['localidade', 'required', 'message' => 'O campo Localidade é obrigatório.'],
+            [['principal', 'userprofiles_id'], 'required'],
+
             [['principal', 'userprofiles_id'], 'integer'],
+            ['nporta', 'integer', 'message' => 'O Número da Porta deve ser um número válido.'],
+            ['andar', 'integer', 'message' => 'O Andar deve ser um número válido.'],
+
+            ['cdpostal', 'match', 'pattern' => '/^\d{4}-\d{3}$/', 'message' => 'O Código Postal deve ter o formato 0000-000.'],
+
             [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade'], 'string', 'max' => 45],
+
             [['created_at', 'updated_at'], 'safe'],
+
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
     }
+
 
     /**
      * {@inheritdoc}

@@ -73,7 +73,7 @@ echo PageHeaderWidget::widget([
                         <i class="fas fa-list"></i>
                         Lista de Métodos de Pagamento
                     </h5>
-                    <?php if(Yii::$app->user->can('createMetodopagamento')): ?>
+                    <?php if(Yii::$app->user->can('createPaymentMethod')): ?>
                         <?= Html::a(
                             '<i class="fas fa-plus"></i> Novo Método',
                             ['create'],

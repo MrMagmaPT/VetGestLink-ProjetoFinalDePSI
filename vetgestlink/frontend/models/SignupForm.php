@@ -43,18 +43,25 @@ class SignupForm extends Model
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este email já está registado.'],
 
             ['password', 'required', 'message' => 'O campo Palavra-passe é obrigatório.'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'string', 'min' => 6 , 'message' => 'A palavra-passe deve ter pelo menos 6 caracteres.'],
 
             ['nomecompleto', 'required', 'message' => 'O campo Nome Completo é obrigatório.'],
             ['dtanascimento', 'required', 'message' => 'O campo Data de Nascimento é obrigatório.'],
+
             ['nif', 'required', 'message' => 'O campo NIF é obrigatório.'],
-            ['nif', 'string', 'length' => 9],
+            ['nif', 'string', 'min' => 9, 'max' => 9,'message' => 'O NIF deve ter exatamente 9 dígitos.', 'tooShort' => 'O NIF deve ter exatamente 9 dígitos.', 'tooLong' => 'O NIF deve ter exatamente 9 dígitos.'],
+
             ['telemovel', 'required', 'message' => 'O campo Telemóvel é obrigatório.'],
-            ['telemovel', 'string', 'length' => 9],
+            ['telemovel', 'string', 'min' => 9, 'max' => 9, 'message' => 'O Telemóvel deve ter exatamente 9 dígitos.', 'tooShort' => 'O Telemóvel deve ter exatamente 9 dígitos.', 'tooLong' => 'O Telemóvel deve ter exatamente 9 dígitos.'],
 
             ['rua', 'required', 'message' => 'O campo Rua é obrigatório.'],
+
             ['nporta', 'required', 'message' => 'O campo Número da Porta é obrigatório.'],
+            ['nporta', 'integer', 'message' => 'O Número da Porta deve ser um número válido.'],
+
             ['cdpostal', 'required', 'message' => 'O campo Código Postal é obrigatório.'],
+            ['cdpostal', 'match', 'pattern' => '/^\d{4}-\d{3}$/', 'message' => 'O Código Postal deve ter o formato 0000-000.'],
+
             ['localidade', 'required', 'message' => 'O campo Localidade é obrigatório.'],
             ['cidade', 'required', 'message' => 'O campo Cidade é obrigatório.'],
             [['andar', 'cxpostal'], 'safe'],

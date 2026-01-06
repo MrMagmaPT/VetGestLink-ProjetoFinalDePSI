@@ -33,45 +33,51 @@ class SignupFormBackend extends Model
     {
         return [
             ['username', 'trim'],
-            ['username', 'required', 'message' => 'O nome de utilizador é obrigatório.'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este nome de utilizador já existe.'],
+            ['username', 'required', 'message' => 'O campo Nome de Utilizador é obrigatório.'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este nome de utilizador já está em uso.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
-            ['email', 'required', 'message' => 'O email é obrigatório.'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este email já está registado.'],
+            ['email', 'required', 'message' => 'O campo Email é obrigatório.'],
+            ['email', 'email', 'message' => 'Por favor, insira um endereço de email válido.'],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Este endereço de email já está em uso.'],
 
-            ['password', 'required', 'message' => 'A palavra-passe é obrigatória.'],
-            ['password', 'string', 'min' => 6],
+            ['password', 'required', 'message' => 'O campo Password é obrigatório.'],
+            ['password', 'string', 'min' => 6, 'tooShort' => 'A password deve ter no mínimo 6 caracteres.'],
 
-            ['nomecompleto', 'required', 'message' => 'O nome completo é obrigatório.'],
-            ['dtanascimento', 'required', 'message' => 'A data de nascimento é obrigatória.'],
-            ['nif', 'required', 'message' => 'O NIF é obrigatório.'],
-            ['telemovel', 'required', 'message' => 'O telemóvel é obrigatório.'],
-            ['nomecompleto', 'string', 'max' => 45],
+            ['nomecompleto', 'required', 'message' => 'O campo Nome Completo é obrigatório.'],
+            ['nomecompleto', 'string', 'max' => 100],
+
+            ['dtanascimento', 'required', 'message' => 'O campo Data de Nascimento é obrigatório.'],
             ['dtanascimento', 'date', 'format' => 'php:Y-m-d'],
-            ['nif', 'string', 'length' => 9],
-            ['telemovel', 'string', 'length' => 9],
 
-            ['rua', 'required', 'message' => 'A rua é obrigatória.'],
-            ['nporta', 'required', 'message' => 'O número da porta é obrigatório.'],
-            ['cdpostal', 'required', 'message' => 'O código postal é obrigatório.'],
-            ['localidade', 'required', 'message' => 'A localidade é obrigatória.'],
-            ['cidade', 'required', 'message' => 'A cidade é obrigatória.'],
+            ['nif', 'required', 'message' => 'O campo NIF é obrigatório.'],
+            ['nif', 'match', 'pattern' => '/^\d{9}$/', 'message' => 'O NIF deve conter exatamente 9 dígitos.'],
 
-            // MUDANÇA: Ajustar max para 45 caracteres (conforme tabela)
-            [['rua', 'localidade', 'cidade'], 'string', 'max' => 45],
-            [['nporta', 'andar', 'cxpostal', 'cdpostal'], 'string', 'max' => 45],
+            ['telemovel', 'required', 'message' => 'O campo Telemóvel é obrigatório.'],
+            ['telemovel', 'match', 'pattern' => '/^9\d{8}$/', 'message' => 'O Telemóvel deve começar com 9 e ter 9 dígitos.'],
 
+            ['rua', 'required', 'message' => 'O campo Rua é obrigatório.'],
+            ['nporta', 'required', 'message' => 'O campo Número da Porta é obrigatório.'],
+            ['nporta', 'integer', 'message' => 'O Número da Porta deve ser um número válido.'],
+            ['andar', 'integer', 'message' => 'O Andar deve ser um número válido.'],
+            ['cdpostal', 'required', 'message' => 'O campo Código Postal é obrigatório.'],
+            ['cdpostal', 'match', 'pattern' => '/^\d{4}-\d{3}$/', 'message' => 'O Código Postal deve ter o formato 0000-000.'],
+            ['cidade', 'required', 'message' => 'O campo Cidade é obrigatório.'],
+            ['localidade', 'required', 'message' => 'O campo Localidade é obrigatório.'],
+
+            [['rua', 'nporta', 'andar', 'cdpostal', 'cidade', 'cxpostal', 'localidade'], 'string', 'max' => 45],
+            [['andar', 'cxpostal'], 'default', 'value' => null],
             ['principal', 'boolean'],
             ['principal', 'default', 'value' => 1],
 
-            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'wrongExtension' => 'Apenas ficheiros PNG, JPG ou JPEG são permitidos.'],
+            ['imageFile', 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'maxSize' => 1024 * 1024 * 2],
+
             ['role', 'string'],
+            ['role', 'default', 'value' => 'cliente'],
         ];
     }
+
 
     public function attributeLabels()
     {

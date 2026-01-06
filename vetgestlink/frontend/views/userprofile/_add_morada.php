@@ -28,11 +28,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
                     </div>
                 </div>
-
                 <!-- Body -->
                 <div class="card-body p-4">
                     <?php $action = $model->isNewRecord ? ['morada/create'] : ['morada/update', 'id' => $model->id]; ?>
-                    <?php $form = ActiveForm::begin(['action' => $action]); ?>
+                    <?php $form = ActiveForm::begin([
+                        'action' => $action,
+                        'fieldConfig' => [
+                            'errorOptions' => ['class' => 'text-danger'],
+                        ],
+                    ]); ?>
 
                     <?= $form->errorSummary($model, ['class' => 'alert alert-danger rounded-3']) ?>
                     <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
