@@ -152,10 +152,20 @@ class SignupFormBackend extends Model
             Yii::info("Userprofile ID {$userprofile->id} criado");
 
             // 4. Upload de imagem de perfil (se fornecida)
-            if ($this->imageFile) {
+            if ($this->imageFile instanceof UploadedFile) {
+                Yii::info("SignupFormBackend: Attempting to upload image for user {$user->id}", __METHOD__);
                 $userprofile->imageFile = $this->imageFile;
-                $userprofile->uploadImage();
-                Yii::info("Imagem de perfil carregada para Userprofile ID {$userprofile->id}");
+                
+                if ($userprofile->uploadImage()) {
+                    // Salvar o caminho da imagem na BD
+                    if ($userprofile->save(false)) {
+                        Yii::info("SignupFormBackend: Image uploaded and saved: {$userprofile->foto}", __METHOD__);
+                    } else {
+                        Yii::error("SignupFormBackend: Failed to save image path: " . json_encode($userprofile->errors), __METHOD__);
+                    }
+                } else {
+                    Yii::error("SignupFormBackend: Image upload failed for user {$user->id}", __METHOD__);
+                }
             }
 
             // 5. Criar Morada
