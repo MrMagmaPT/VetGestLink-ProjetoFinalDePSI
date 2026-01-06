@@ -92,9 +92,10 @@ class NotaController extends ActiveController
         $userProfileId = $this->getUserProfileId();
 
         $notas = Nota::find()
-            ->where(['userprofiles_id' => $userProfileId])
-            ->with(['animais', 'userprofiles'])
-            ->orderBy(['created_at' => SORT_DESC])
+            ->joinWith(['animais'])
+            ->where(['animais.userprofiles_id' => $userProfileId])
+            ->with(['userprofiles'])
+            ->orderBy(['notas.created_at' => SORT_DESC])
             ->all();
 
         $result = [];
