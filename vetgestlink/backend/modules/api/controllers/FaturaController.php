@@ -146,7 +146,7 @@ class FaturaController extends ActiveController
                 } elseif ($linha->marcacoes_id && $linha->marcacoes) {
                     $descricao = $linha->marcacoes->servicos ? $linha->marcacoes->servicos->nome : 'Serviço';
                     $tipo = 'servico';
-                    $precoUnitario = $linha->marcacoes->servicos ? (float)$linha->marcacoes->servicos->preco : 0;
+                    $precoUnitario = $linha->marcacoes->servicos ? (float)$linha->marcacoes->servicos->valor : 0;
                 } else {
                     $descricao = 'Item';
                     $tipo = 'outro';
