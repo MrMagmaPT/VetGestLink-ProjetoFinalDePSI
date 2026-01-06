@@ -211,9 +211,16 @@ class NotaController extends ActiveController
 
         $userProfileId = $this->getUserProfileId();
 
+        // Verificar se a nota existe
+        $notaExiste = Nota::findOne(['id' => $id]);
+        if (!$notaExiste) {
+            throw new NotFoundHttpException('Nota não encontrada');
+        }
+
+        // Verificar se a nota pertence ao usuário
         $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
         if (!$nota) {
-            throw new NotFoundHttpException('Nota não encontrada');
+            throw new UnauthorizedHttpException('Você só pode atualizar suas próprias notas.');
         }
 
         $data = Yii::$app->request->post();
@@ -242,6 +249,45 @@ class NotaController extends ActiveController
     }
 
     /**
+     * DELETE /nota/delete/{id}
+     * Deletar uma nota existente
+     */
+    public function actionDelete($id)
+    {
+
+        $permission = Yii::$app->user->can('deleteNotes');
+        // Verifica permissão
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para deletar notas.');
+        }
+
+
+        $userProfileId = $this->getUserProfileId();
+
+        // Verificar se a nota existe
+        $notaExiste = Nota::findOne(['id' => $id]);
+        if (!$notaExiste) {
+            throw new NotFoundHttpException('Nota não encontrada');
+        }
+
+        // Verificar se a nota pertence ao usuário
+        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
+        if (!$nota) {
+            throw new UnauthorizedHttpException('Você só pode deletar suas próprias notas.');
+        }
+
+        // Delete real
+        if (!$nota->delete()) {
+            throw new \yii\web\ServerErrorHttpException('Erro ao deletar nota');
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Nota deletada com sucesso',
+        ];
+    }
+
+    /**
      * GET /nota/count
      * Conta total de notas do cliente
      */
@@ -260,36 +306,6 @@ class NotaController extends ActiveController
         return ['count' => (int)$count];
     }
 
-    /**
-     * DELETE /nota/delete/{id}
-     * Deletar uma nota existente
-     */
-    public function actionDelete($id)
-    {
-
-        $permission = Yii::$app->user->can('deleteNotes');
-        // Verifica permissão
-        if (!$permission) {
-            throw new UnauthorizedHttpException('Você não tem permissão para deletar notas.');
-        }
-
-
-        $userProfileId = $this->getUserProfileId();
-
-        $nota = Nota::findOne(['id' => $id, 'userprofiles_id' => $userProfileId]);
-        if (!$nota) {
-            throw new NotFoundHttpException('Nota não encontrada');
-        }
-
-        // Delete real
-        if (!$nota->delete()) {
-            throw new \yii\web\ServerErrorHttpException('Erro ao deletar nota');
-        }
-
-        return [
-            'success' => true,
-            'message' => 'Nota deletada com sucesso',
-        ];
-    }
+  
 }
 
