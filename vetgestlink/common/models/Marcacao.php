@@ -6,6 +6,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use Bluerhinos\phpMQTT;
+use common\components\MqttHelper;
 
 /**
  * This is the model class for table "marcacao".
@@ -299,58 +300,6 @@ class Marcacao extends \yii\db\ActiveRecord
         return $servico ? $servico->nome : null;
     }
 
-
-    // Publicar alterações no MQTT após salvar ou deletar
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        // Obter dados relevantes da marcação
-        $myObj = new \stdClass();
-        $myObj->id = $this->id;
-        $myObj->data = $this->data;
-        $myObj->horainicio = $this->horainicio;
-        $myObj->horafim = $this->horafim;
-        $myObj->estado = $this->estado;
-        $myObj->servicos_id = $this->servicos_id;
-        $myObj->animais_id = $this->animais_id;
-        $myObj->userprofiles_id = $this->userprofiles_id;
-        $myObj->diagnostico = $this->diagnostico;
-        $myObj->created_at = $this->created_at;
-        $myObj->updated_at = $this->updated_at;
-        
-        $myJSON = json_encode($myObj);
-        if ($insert) {
-            $this->FazPublishNoMosquitto("INSERT", $myJSON);
-        } else {
-            $this->FazPublishNoMosquitto("UPDATE", $myJSON);
-        }
-    }
-
-    public function afterDelete()
-    {
-        parent::afterDelete();
-        $myObj = new \stdClass();
-        $myObj->id = $this->id;
-        $myJSON = json_encode($myObj);
-        $this->FazPublishNoMosquitto("DELETE", $myJSON);
-    }
-
-    public function FazPublishNoMosquitto($canal, $msg)
-    {
-        $server = "127.0.0.1";
-        $port = 1883;
-        $username = ""; // defina se necessário
-        $password = ""; // defina se necessário
-        $client_id = "phpMQTT-publisher"; // deve ser único
-        $mqtt = new phpmqtt($server, $port, $client_id);
-        if ($mqtt->connect(true, NULL, $username, $password)) {
-            $mqtt->publish($canal, $msg, 0);
-            $mqtt->close();
-        } else {
-            file_put_contents("debug.output", "Time out!");
-        }
-    }
-
     /**
      * Processa os medicamentos associados à marcação durante o update
      * @param array $medicamentosData Array com IDs e quantidades dos medicamentos ['medicamento_id' => quantidade]
@@ -503,4 +452,40 @@ class Marcacao extends \yii\db\ActiveRecord
         
         return null;
     }
+
+    // Publicar alterações no MQTT após salvar ou deletar
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        // Obter dados relevantes da marcação
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->data = $this->data;
+        $myObj->horainicio = $this->horainicio;
+        $myObj->horafim = $this->horafim;
+        $myObj->estado = $this->estado;
+        $myObj->servicos_id = $this->servicos_id;
+        $myObj->animais_id = $this->animais_id;
+        $myObj->userprofiles_id = $this->userprofiles_id;
+        $myObj->diagnostico = $this->diagnostico;
+        $myObj->created_at = $this->created_at;
+        $myObj->updated_at = $this->updated_at;
+
+        $myJSON = json_encode($myObj);
+        if ($insert) {
+            MqttHelper::publish("INSERT_".$this->userprofiles_id."_MARCACAO", $myJSON);
+        } else {
+            MqttHelper::publish("UPDATE_".$this->userprofiles_id."_MARCACAO", $myJSON);
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myJSON = json_encode($myObj);
+        MqttHelper::publish("DELETE_".$this->userprofiles_id."_MARCACAO", $myJSON);
+    }
+
 }
