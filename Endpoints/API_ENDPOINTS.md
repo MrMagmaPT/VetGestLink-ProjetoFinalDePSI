@@ -349,14 +349,7 @@ A maioria dos endpoints requer autenticação via token. Inclua o token no query
 
 - **Endpoint**: `GET /api/marcacao/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
 - **Autenticação**: ✅ Requer token
-- **Descrição**: Lista marcações do cliente com filtros opcionais
-- **Filtros Query String**:
-  - `status`: filtrar por estado (pendente/realizada/cancelada)
-  - `animal_id`: filtrar por animal
-  - `data_inicio`: filtrar por data inicial
-  - `data_fim`: filtrar por data final
-  - `search`: buscar no diagnóstico
-- **Exemplo**: `GET /api/marcacao/all?status=pendente&access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP`
+- **Descrição**: Lista todas as marcações do cliente (todos os estados)
 - **Resposta**:
 
 ```json

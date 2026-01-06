@@ -79,39 +79,11 @@ class MarcacaoController extends Controller
 
         $userProfileId = $this->getUserProfileId();
 
-        $query = Marcacao::find()
+        $marcacoes = Marcacao::find()
             ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
-            ->with(['animais', 'animais.especies']);
-
-        // Filtros
-        $status = Yii::$app->request->get('status');
-        if ($status) {
-            $query->andWhere(['estado' => $status]);
-        }
-
-        $animalId = Yii::$app->request->get('animal_id');
-        if ($animalId) {
-            $query->andWhere(['animais_id' => $animalId]);
-        }
-
-        $dataInicio = Yii::$app->request->get('data_inicio');
-        if ($dataInicio) {
-            $query->andWhere(['>=', 'data', $dataInicio]);
-        }
-
-        $dataFim = Yii::$app->request->get('data_fim');
-        if ($dataFim) {
-            $query->andWhere(['<=', 'data', $dataFim]);
-        }
-
-        $search = Yii::$app->request->get('search');
-        if ($search) {
-            $query->andWhere(['or',
-                ['like', 'diagnostico', $search],
-            ]);
-        }
-
-        $marcacoes = $query->orderBy(['data' => SORT_DESC, 'horainicio' => SORT_DESC])->all();
+            ->with(['animais', 'animais.especies'])
+            ->orderBy(['data' => SORT_DESC, 'horainicio' => SORT_DESC])
+            ->all();
 
         $result = [];
         foreach ($marcacoes as $marcacao) {
