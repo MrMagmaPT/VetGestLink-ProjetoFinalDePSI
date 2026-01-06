@@ -134,7 +134,7 @@ class FaturaController extends Controller
             $marcacao = \common\models\Marcacao::findOne($marcacao_id);
             if ($marcacao && $marcacao->estado === \common\models\Marcacao::ESTADO_REALIZADA) {
                 $model->userprofiles_id = $marcacao->animais->userprofiles_id ?? null;
-                $model->estado = 0; // Pendente
+                $model->estado = '0'; // Pendente
                 $model->total = $marcacao->servicos->valor ?? 0;
             }
         }
@@ -192,7 +192,7 @@ class FaturaController extends Controller
         $model = $this->findModel($id);
         
         // Verificar se a fatura está paga
-        if ($model->estado == 1) {
+        if ($model->estado == '1') {
             \Yii::$app->session->setFlash('error', 'Não é possível editar uma fatura já paga.');
             return $this->redirect(['view', 'id' => $model->id]);
         }

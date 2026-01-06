@@ -13,14 +13,14 @@ use yii\db\Expression;
  * @property int $id
  * @property float $total
  * @property string $created_at
- * @property int $estado
+ * @property string $estado
  * @property int $metodospagamentos_id
  * @property int $userprofiles_id
  * @property int $eliminado
  *
  * @property Linhafatura[] $linhasfaturas
  * @property Metodopagamento $metodospagamentos
- * @property Userprofile $userprofile
+ * @property Userprofile $userprofiles
  */
 class Fatura extends ActiveRecord
 {
@@ -57,7 +57,8 @@ class Fatura extends ActiveRecord
             [['total', 'estado', 'userprofiles_id'], 'required'],
             [['created_at'], 'safe'],
             [['total'], 'number'],
-            [['estado', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
+            [['metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
+            [['estado'], 'string', 'max' => 45],
             // exist validator aceita null (não valida quando o valor é null)
             [['metodospagamentos_id'], 'exist', 'skipOnError' => true, 'targetClass' => Metodopagamento::class, 'targetAttribute' => ['metodospagamentos_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
@@ -276,7 +277,7 @@ class Fatura extends ActiveRecord
         // Criar a fatura
         $fatura = new self();
         $fatura->userprofiles_id = $clienteId;
-        $fatura->estado = 0; // Pendente
+        $fatura->estado = '0'; // Pendente
         $fatura->total = $valorServico;
         $fatura->metodospagamentos_id = null; // Será definido quando a fatura for paga
         

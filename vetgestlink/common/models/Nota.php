@@ -15,8 +15,8 @@ use yii\db\Expression;
  * @property int $userprofiles_id
  * @property int $animais_id
  *
- * @property Animal $animal
- * @property Userprofile $userprofile
+ * @property Animal $animais
+ * @property Userprofile $userprofiles
  */
 class Nota extends \yii\db\ActiveRecord
 {
@@ -52,7 +52,7 @@ class Nota extends \yii\db\ActiveRecord
             [['nota', 'animais_id', 'userprofiles_id'], 'required'],
             [['nota'], 'string', 'max' => 500],
             [['animais_id', 'userprofiles_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at'], 'safe'],
             [['animais_id'], 'exist', 'skipOnError' => true, 'targetClass' => Animal::class, 'targetAttribute' => ['animais_id' => 'id']],
             [['userprofiles_id'], 'exist', 'skipOnError' => true, 'targetClass' => Userprofile::class, 'targetAttribute' => ['userprofiles_id' => 'id']],
         ];
@@ -67,7 +67,6 @@ class Nota extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nota' => 'Nota',
             'created_at' => 'Criado em',
-            'updated_at' => 'Atualizado em',
             'userprofiles_id' => 'Utilizador',
             'animais_id' => 'Animal',
         ];

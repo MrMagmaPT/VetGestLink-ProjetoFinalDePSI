@@ -95,9 +95,15 @@ return [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
                         'GET {id}/notas' => 'notas',
+                        'GET count' => 'count',
+                        'GET nomes' => 'nomes',
+                        'GET microchip/{microchip}' => 'pormicrochip',
+                        'GET especie/{especie_id}' => 'porespecie',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
+                        '{microchip}' => '<microchip:\\d+>',
+                        '{especie_id}' => '<especie_id:\\d+>',
                     ],
                 ],
                 // ========== MARCACAO CONTROLLER (Protegido) ==========
@@ -108,9 +114,16 @@ return [
                     'extraPatterns' => [
                         'GET all' => 'all',
                         'GET view/{id}' => 'view',
+                        'GET count' => 'count',
+                        'GET estado/{estado}' => 'porestado',
+                        'GET data/{ano}/{mes}/{dia}' => 'pordata',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
+                        '{estado}' => '<estado:\\w+>',
+                        '{ano}' => '<ano:\\d{4}>',
+                        '{mes}' => '<mes:\\d{2}>',
+                        '{dia}' => '<dia:\\d{2}>',
                     ],
                 ],
                 // ========== FATURA CONTROLLER (Protegido) ==========
@@ -123,9 +136,13 @@ return [
                         'GET view/{id}' => 'view',
                         'GET paymentmethods' => 'paymentmethods',
                         'PUT pay/{id}' => 'pay',
+                        'GET count' => 'count',
+                        'GET total' => 'total',
+                        'GET ano/{ano}' => 'porano',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\d+>',
+                        '{ano}' => '<ano:\\d{4}>',
                     ],
                 ],
                 // ========== NOTA CONTROLLER (Protegido - CRUD Completo) ==========

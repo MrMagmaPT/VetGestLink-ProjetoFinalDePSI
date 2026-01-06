@@ -165,7 +165,6 @@ class AnimalController extends ActiveController
                 'id' => $nota->id,
                 'texto' => $nota->nota,
                 'created_at' => $nota->created_at,
-                'updated_at' => $nota->updated_at,
                 'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : 'N/A',
             ];
         }
@@ -237,12 +236,124 @@ class AnimalController extends ActiveController
                 'animais_id' => $nota->animais_id,
                 'userprofiles_id' => $nota->userprofiles_id,
                 'created_at' => $nota->created_at,
-                'updated_at' => $nota->updated_at,
                 'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : 'N/A',
             ];
         }
 
         return $result;
     }
+
+    /**
+     * GET /animal/count
+     * Conta total de animais do cliente
+     */
+    public function actionCount()
+    {
+        $permission = Yii::$app->user->can('viewAnimals');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $count = Animal::find()
+            ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
+            ->count();
+        
+        return ['count' => (int)$count];
+    }
+
+    /**
+     * GET /animal/nomes
+     * Lista apenas ID e nomes dos animais
+     */
+    public function actionNomes()
+    {
+        $permission = Yii::$app->user->can('viewAnimals');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $nomes = Animal::find()
+            ->select(['id', 'nome'])
+            ->where(['userprofiles_id' => $userProfileId, 'eliminado' => 0])
+            ->asArray()
+            ->all();
+        
+        return $nomes;
+    }
+
+    /**
+     * GET /animal/microchip/{microchip}
+     * Buscar animal por número de microchip
+     */
+    public function actionPormicrochip($microchip)
+    {
+        $permission = Yii::$app->user->can('viewAnimals');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $animal = Animal::find()
+            ->where([
+                'microship' => $microchip,
+                'userprofiles_id' => $userProfileId,
+                'eliminado' => 0
+            ])
+            ->with(['especies', 'racas'])
+            ->one();
+
+        if (!$animal) {
+            throw new NotFoundHttpException('Animal não encontrado com esse microchip');
+        }
+
+        return [
+            'id' => $animal->id,
+            'nome' => $animal->nome,
+            'especie' => $animal->especies ? $animal->especies->nome : null,
+            'especie_id' => $animal->especies_id,
+            'raca' => $animal->racas ? $animal->racas->nome : null,
+            'microchip' => $animal->microship,
+            'peso' => (float)$animal->peso,
+            'sexo' => $animal->sexo,
+        ];
+    }
+
+    /**
+     * GET /animal/especie/{especie_id}
+     * Lista animais por espécie
+     */
+    public function actionPorespecie($especie_id)
+    {
+        $permission = Yii::$app->user->can('viewAnimals');
+        if (!$permission) {
+            throw new UnauthorizedHttpException('Você não tem permissão para visualizar animais.');
+        }
+
+        $userProfileId = $this->getUserProfileId();
+        $animais = Animal::find()
+            ->where([
+                'especies_id' => $especie_id,
+                'userprofiles_id' => $userProfileId,
+                'eliminado' => 0
+            ])
+            ->with(['racas'])
+            ->all();
+
+        $result = [];
+        foreach ($animais as $animal) {
+            $result[] = [
+                'id' => $animal->id,
+                'nome' => $animal->nome,
+                'raca' => $animal->racas ? $animal->racas->nome : null,
+                'peso' => (float)$animal->peso,
+                'sexo' => $animal->sexo,
+            ];
+        }
+
+        return $result;
+    }
 }
+
 

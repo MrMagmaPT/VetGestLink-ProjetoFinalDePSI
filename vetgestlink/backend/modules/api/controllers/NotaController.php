@@ -107,7 +107,6 @@ class NotaController extends ActiveController
                 'userprofiles_id' => $nota->userprofiles_id,
                 'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : null,
                 'created_at' => $nota->created_at,
-                'updated_at' => $nota->updated_at,
             ];
         }
 
@@ -145,7 +144,6 @@ class NotaController extends ActiveController
             'userprofiles_id' => $nota->userprofiles_id,
             'autor' => $nota->userprofiles ? $nota->userprofiles->nomecompleto : null,
             'created_at' => $nota->created_at,
-            'updated_at' => $nota->updated_at,
         ];
     }
 
@@ -239,7 +237,6 @@ class NotaController extends ActiveController
                 'nota' => $nota->nota,
                 'animais_id' => $nota->animais_id,
                 'userprofiles_id' => $nota->userprofiles_id,
-                'updated_at' => $nota->updated_at,
             ],
         ];
     }

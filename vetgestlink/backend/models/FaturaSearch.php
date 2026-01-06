@@ -17,9 +17,9 @@ class FaturaSearch extends Fatura
     public function rules()
     {
         return [
-            [['id', 'estado', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
+            [['id', 'metodospagamentos_id', 'userprofiles_id', 'eliminado'], 'integer'],
             [['total'], 'number'],
-            [['created_at'], 'safe'],
+            [['created_at', 'estado'], 'safe'],
         ];
     }
 
@@ -114,12 +114,12 @@ class FaturaSearch extends Fatura
 
     public static function getPaidCount()
     {
-        return Fatura::find()->where(['estado' => 1, 'eliminado' => 0])->count();
+        return Fatura::find()->where(['estado' => '1', 'eliminado' => 0])->count();
     }
 
     public static function getPendingCount()
     {
-        return Fatura::find()->where(['estado' => 0, 'eliminado' => 0])->count();
+        return Fatura::find()->where(['estado' => '0', 'eliminado' => 0])->count();
     }
 
     /**
@@ -195,8 +195,8 @@ class FaturaSearch extends Fatura
     public static function getEstadosListForIndex()
     {
         return [
-            0 => 'Pendente',
-            1 => 'Paga'
+            '0' => 'Pendente',
+            '1' => 'Paga'
         ];
     }
 
@@ -244,7 +244,7 @@ class FaturaSearch extends Fatura
             $totalMes = Fatura::find()
                 ->where(['YEAR(created_at)' => $anoAtual])
                 ->andWhere(['MONTH(created_at)' => $mes])
-                ->andWhere(['eliminado' => 0, 'estado' => 1]) // Apenas faturas pagas
+                ->andWhere(['eliminado' => 0, 'estado' => '1']) // Apenas faturas pagas
                 ->sum('total') ?? 0;
             
             $dadosFaturamento[] = (float)$totalMes;
