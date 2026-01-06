@@ -242,18 +242,20 @@ class FaturaController extends ActiveController
 
         $body = Yii::$app->request->getBodyParams();
         
-        // Validar método de pagamento (opcional, mas recomendado)
-        if (isset($body['metodospagamentos_id'])) {
-            $metodoPagamento = Metodopagamento::find()
-                ->where(['id' => $body['metodospagamentos_id'], 'vigor' => 1, 'eliminado' => 0])
-                ->one();
-
-            if (!$metodoPagamento) {
-                throw new BadRequestHttpException('Método de pagamento inválido');
-            }
-
-            $fatura->metodospagamentos_id = $body['metodospagamentos_id'];
+        // Validar método de pagamento (obrigatório)
+        if (!isset($body['metodospagamentos_id'])) {
+            throw new BadRequestHttpException('Método de pagamento é obrigatório');
         }
+
+        $metodoPagamento = Metodopagamento::find()
+            ->where(['id' => $body['metodospagamentos_id'], 'vigor' => 1, 'eliminado' => 0])
+            ->one();
+
+        if (!$metodoPagamento) {
+            throw new BadRequestHttpException('Método de pagamento inválido');
+        }
+
+        $fatura->metodospagamentos_id = $body['metodospagamentos_id'];
 
         // Alterar estado para pago ('1')
         $fatura->estado = '1';
