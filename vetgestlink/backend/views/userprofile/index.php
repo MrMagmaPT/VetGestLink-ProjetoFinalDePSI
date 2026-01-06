@@ -264,7 +264,7 @@ echo PageHeaderWidget::widget([
                     'layout' => "<div class='text-center'>{summary}</div>\n{items}\n{pager}",
                     'emptyText' => '<div class="alert alert-warning text-center mb-0">Nenhum perfil encontrado com esse nome.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
-		    'pager' => [
+		            'pager' => [
                         'class' => 'yii\bootstrap5\LinkPager',
                         'options' => ['class' => 'pagination justify-content-center'],
                         'linkOptions' => ['class' => 'page-link'],

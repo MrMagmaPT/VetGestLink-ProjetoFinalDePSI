@@ -150,6 +150,18 @@ echo PageHeaderWidget::widget([
                     //Mudar a mensagem quando não houver resultados
                     'emptyText' => '<div class="alert alert-warning text-center mb-0">Não foi encontrado.</div>',
                     'tableOptions' => ['class' => 'table table-hover table-striped mb-0'],
+                    'pager' => [
+                        'class' => 'yii\bootstrap5\LinkPager',
+                        'options' => ['class' => 'pagination justify-content-center'],
+                        'linkOptions' => ['class' => 'page-link'],
+                        'activePageCssClass' => 'active',
+                        'disabledPageCssClass' => 'disabled',
+                        'prevPageLabel' => '<i class="fas fa-chevron-left"></i> Anterior',
+                        'nextPageLabel' => 'Próximo <i class="fas fa-chevron-right"></i>',
+                        'firstPageLabel' => '<i class="fas fa-angle-double-left"></i> Primeiro',
+                        'lastPageLabel' => 'Último <i class="fas fa-angle-double-right"></i>',
+                        'maxButtonCount' => 5,
+                    ],
                     'columns' => [
                         [
                             'class' => 'yii\grid\SerialColumn',
