@@ -1,0 +1,1536 @@
+{
+  "info": {
+    "name": "Vetgestlink",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "auth": {
+          "type": "noauth"
+        },
+        "description": "",
+        "url": {
+          "raw": "http://localhost/vetgestlink/backend/web/api/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "path": [
+            "vetgestlink",
+            "backend",
+            "web",
+            "api",
+            "health"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Animais",
+      "item": [
+        {
+          "name": "All Animais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Animais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "view",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Notas de um Animal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/1/notas?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "1",
+                "notas"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Count Animais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "count"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "All Animais Nomes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/nomes?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "nomes"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "All Animais com microship (NÃO TESTADO AINDA)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/vetgestlink/backend/web/api/animal/1/microchip?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "vetgestlink",
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "1",
+                "microchip"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "All Animais por Especie",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/animal/especie/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "animal",
+                "especie",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "This request retrieves a list of users from the JSONPlaceholder API.",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cliente1\",\n  \"password\": \"cliente123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/auth/logout?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "auth",
+                "logout"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Recuperação de senha",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/auth/forgot",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "auth",
+                "forgot"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\":\"wilcampos2003@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marcacoes",
+      "item": [
+        {
+          "name": "All Marcacoes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Marcacao",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "view",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Count Marcacoes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "count"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "List Marcacoes Pendentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/estado/pendente?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "estado",
+                "pendente"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "List Maracoes Realizadas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/estado/realizada?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "estado",
+                "realizada"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "List Marcacoes Canceladas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/estado/cancelada?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "estado",
+                "cancelada"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "List Maracoes por Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/marcacao/data/22/02/2025?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "marcacao",
+                "data",
+                "22",
+                "02",
+                "2025"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lembretes",
+      "item": [
+        {
+          "name": "All Lembretes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://localhost/vetgestlink/backend/web/api/lembrete/all?access-token=Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "vetgestlink",
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "Dk1NERy7Yt2hgVFDQqOsPgA-FVdxAR9K"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Create Lembrete",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "create"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\":\"l22ol\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete lembrete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/delete/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "delete",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Lembrete",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "view",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Lembrete",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "update",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\":\"lol\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Count Lembrete",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/lembrete/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "lembrete",
+                "count"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Faturas",
+      "item": [
+        {
+          "name": "All Faturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Faturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "view",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "MetodoPagamentos",
+          "item": [
+            {
+              "name": "All MetodosPagamentos",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://172.22.21.220/backend/web/api/fatura/paymentmethods?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+                  "protocol": "http",
+                  "host": [
+                    "172",
+                    "22",
+                    "21",
+                    "220"
+                  ],
+                  "path": [
+                    "backend",
+                    "web",
+                    "api",
+                    "fatura",
+                    "paymentmethods"
+                  ],
+                  "query": [
+                    {
+                      "key": "access-token",
+                      "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                    }
+                  ],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pay Fatura",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/pay/14?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "pay",
+                "14"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metodospagamentos_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Count Faturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "count"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Total Geral de Faturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/total?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "total"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "List Faturas po Ano(created_at)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/fatura/ano/2026?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "fatura",
+                "ano",
+                "2026"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/profile/update?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "profile",
+                "update"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nomecompleto\": \"Carlos Mendes\",\n    \"email\": \"carlos.mendes@email.com\",\n    \"telemovel\": \"912 345 678\",\n    \"morada\": {\n      \"rua\": \"Rua das Acácias\",\n      \"nporta\": \"45\",\n      \"cdpostal\": \"1000-100\",\n      \"localidade\": \"Lisboa\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "View Perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/profile?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "profile"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Mudar Senha",
+          "item": [
+            {
+              "name": "Mudar Senha",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "http://172.22.21.220/backend/web/api/profile/password?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+                  "protocol": "http",
+                  "host": [
+                    "172",
+                    "22",
+                    "21",
+                    "220"
+                  ],
+                  "path": [
+                    "backend",
+                    "web",
+                    "api",
+                    "profile",
+                    "password"
+                  ],
+                  "query": [
+                    {
+                      "key": "access-token",
+                      "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                    }
+                  ],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"current_password\": \"cliente123\",\n  \"new_password\": \"cliente1234\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Notas",
+      "item": [
+        {
+          "name": "All Notas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/all?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Create Nota",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/create?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "create"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"animais_id\": 1,\n  \"nota\": \"Texto da nota aqui\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Nota",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/delete/3?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "delete",
+                "3"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "View Nota",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/view/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "view",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Nota",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/update/1?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "update",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nota\": \"Texto atualizado da nota\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Count Notas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "",
+            "url": {
+              "raw": "http://172.22.21.220/backend/web/api/nota/count?access-token=L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP",
+              "protocol": "http",
+              "host": [
+                "172",
+                "22",
+                "21",
+                "220"
+              ],
+              "path": [
+                "backend",
+                "web",
+                "api",
+                "nota",
+                "count"
+              ],
+              "query": [
+                {
+                  "key": "access-token",
+                  "value": "L3hW6vK2nF9sX5cQ7jY0bN1gZ4mR8tP"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": []
+}
