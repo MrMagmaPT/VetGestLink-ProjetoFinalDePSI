@@ -310,7 +310,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">
-                            <i class="fas fa-cogs text-primary"></i>
+                            <i class="fas fa-cog text-primary"></i>
                             Ações
                         </h5>
                     </div>

@@ -70,7 +70,7 @@ use yii\widgets\ActiveForm;
             <div class="card shadow-sm hover-shadow">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-cogs text-secondary me-2"></i>
+                        <i class="fas fa-cog text-secondary me-2"></i>
                         Ações
                     </h5>
                 </div>

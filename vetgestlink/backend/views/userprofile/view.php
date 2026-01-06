@@ -209,7 +209,7 @@ $this->params['breadcrumbs'][] = $model->nomecompleto;
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-white">
                         <h5 class="mb-0">
-                            <i class="fas fa-cogs"></i>
+                            <i class="fas fa-cog"></i>
                             Ações
                         </h5>
                     </div>
