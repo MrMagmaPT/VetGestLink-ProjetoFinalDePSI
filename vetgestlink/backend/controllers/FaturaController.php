@@ -268,7 +268,7 @@ class FaturaController extends Controller
 
         // montar data URI para o logo (opção embutida)
         $logoDataUri = '';
-        $logoPath = \Yii::getAlias('@frontend/web/static/img/logo/logo.png');
+        $logoPath = \Yii::getAlias('@frontend/web/static/img/logo/logo_fatura.svg');
         if (is_file($logoPath) && is_readable($logoPath)) {
             $mime = mime_content_type($logoPath) ?: 'image/png';
             $logoDataUri = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($logoPath));
