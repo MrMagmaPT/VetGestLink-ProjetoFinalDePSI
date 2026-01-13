@@ -453,10 +453,11 @@ class Marcacao extends \yii\db\ActiveRecord
         return null;
     }
 
-    // Publicar alterações no MQTT após salvar ou deletar
+     // Publicar alterações no MQTT após salvar ou deletar
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
+        
         // Obter dados relevantes da marcação
         $myObj = new \stdClass();
         $myObj->id = $this->id;
@@ -466,26 +467,64 @@ class Marcacao extends \yii\db\ActiveRecord
         $myObj->estado = $this->estado;
         $myObj->servicos_id = $this->servicos_id;
         $myObj->animais_id = $this->animais_id;
-        $myObj->userprofiles_id = $this->userprofiles_id;
+        $myObj->userprofiles_id = $this->userprofiles_id; // ID do Veterinário
         $myObj->diagnostico = $this->diagnostico;
         $myObj->created_at = $this->created_at;
         $myObj->updated_at = $this->updated_at;
 
-        $myJSON = json_encode($myObj);
-        if ($insert) {
-            MqttHelper::publish("INSERT_".$this->userprofiles_id."_MARCACAO", $myJSON);
+        // CORREÇÃO: Obter o ID do Cliente (Dono do Animal)
+        $clienteId = null;
+        if ($this->animais) {
+            $clienteId = $this->animais->userprofiles_id;
         } else {
-            MqttHelper::publish("UPDATE_".$this->userprofiles_id."_MARCACAO", $myJSON);
+            // Tenta buscar via relação se não estiver carregada
+            $animal = $this->getAnimais()->one();
+            if ($animal) {
+                $clienteId = $animal->userprofiles_id;
+            }
+        }
+
+        // Só envia se tivermos um cliente identificado
+        if ($clienteId) {
+            $myJSON = json_encode($myObj);
+            
+            // Adiciona o ID do cliente ao JSON para validação extra na App
+            $myObj->id_cliente = $clienteId;
+            $myJSON = json_encode($myObj);
+
+            if ($insert) {
+                // Envia para o tópico do CLIENTE
+                MqttHelper::publish("INSERT_" . $clienteId . "_MARCACAO", $myJSON);
+            } else {
+                MqttHelper::publish("UPDATE_" . $clienteId . "_MARCACAO", $myJSON);
+            }
         }
     }
 
     public function afterDelete()
     {
         parent::afterDelete();
+        
         $myObj = new \stdClass();
         $myObj->id = $this->id;
-        $myJSON = json_encode($myObj);
-        MqttHelper::publish("DELETE_".$this->userprofiles_id."_MARCACAO", $myJSON);
+        
+        // CORREÇÃO: Obter o ID do Cliente para notificar a remoção
+        $clienteId = null;
+        // Nota: No afterDelete o registo já foi apagado, mas os dados ainda estão em memória no $this
+        if ($this->animais) {
+            $clienteId = $this->animais->userprofiles_id;
+        } else {
+            $animal = $this->getAnimais()->one();
+            if ($animal) {
+                $clienteId = $animal->userprofiles_id;
+            }
+        }
+
+        if ($clienteId) {
+            $myJSON = json_encode($myObj);
+            MqttHelper::publish("DELETE_" . $clienteId . "_MARCACAO", $myJSON);
+        }
     }
+
 
 }
