@@ -161,7 +161,7 @@ class Userprofile extends \yii\db\ActiveRecord
      * Upload da foto do utilizador usando o componente ImageUploader
      * @return bool
      */
-    public function uploadImage()
+       public function uploadImage()
     {
         // Se não há ficheiro para upload, retorna true (não é erro)
         if (!$this->imageFile instanceof UploadedFile) {
@@ -170,16 +170,22 @@ class Userprofile extends \yii\db\ActiveRecord
         }
 
         // Usar user_id como identificador (mais confiável que id do profile que pode não existir ainda)
-        $userId = $this->user_id ?? $this->id ?? 'temp';
-        Yii::info('uploadImage: Starting upload for user ' . $userId, __METHOD__);
-        Yii::info('uploadImage: File name: ' . $this->imageFile->name, __METHOD__);
-        Yii::info('uploadImage: File size: ' . $this->imageFile->size, __METHOD__);
-        Yii::info('uploadImage: File type: ' . $this->imageFile->type, __METHOD__);
+        $userId = $this->user_id ?? $this->id;
+        if (!$userId) {
+            Yii::error('uploadImage: Could not determine user ID for photo upload.', __METHOD__);
+            return false; // Cannot proceed without a user ID
+        }
 
-        // Apaga imagem antiga (se existir e não for a default)
-        if (!empty($this->foto) && !Yii::$app->imageUploader->isDefault($this->foto)) {
-            Yii::info('uploadImage: Deleting old photo: ' . $this->foto, __METHOD__);
-            Yii::$app->imageUploader->delete($this->foto);
+        Yii::info('uploadImage: Starting upload for user ' . $userId, __METHOD__);
+        
+        // Apaga todas as imagens antigas do utilizador para garantir que só existe uma
+        $basePath = Yii::getAlias(Yii::$app->imageUploader->uploadPath) . DIRECTORY_SEPARATOR . trim(Yii::$app->imageUploader->subdir, '/\\') . DIRECTORY_SEPARATOR;
+        $oldFiles = glob($basePath . "user_{$userId}_*.*");
+        if (!empty($oldFiles)) {
+            Yii::info('uploadImage: Deleting old photos for user ' . $userId . ': ' . implode(', ', $oldFiles), __METHOD__);
+            foreach ($oldFiles as $oldFile) {
+                @unlink($oldFile);
+            }
         }
 
         // Validar se o arquivo é válido antes do upload
@@ -193,14 +199,12 @@ class Userprofile extends \yii\db\ActiveRecord
         
         if ($result) {
             // Guardar apenas o nome do ficheiro na BD (basename)
-            // Se o componente retornou 'users/name.ext' guardamos apenas 'name.ext'
             $this->foto = basename($result);
             Yii::info('uploadImage: Upload successful. Saved as: ' . $this->foto, __METHOD__);
             return true;
         }
 
         Yii::error('uploadImage: Upload FAILED for user ' . $userId, __METHOD__);
-        Yii::error('uploadImage: Check application logs for detailed error from ImageUploader component', __METHOD__);
         return false;
     }
 

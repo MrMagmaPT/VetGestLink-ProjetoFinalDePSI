@@ -218,17 +218,29 @@ class Animal extends \yii\db\ActiveRecord
      * Upload da imagem do animal usando o componente ImageUploader
      * @return bool
      */
-    public function uploadImage()
+   public function uploadImage()
     {
         if ($this->imageFile) {
-            $data = date('Ymd');
-            $ext = $this->imageFile->extension;
-            $fileName = "animal_{$this->id}_{$data}.{$ext}";
             $basePath = Yii::getAlias('@uploads') . '/animais/';
+
+            // Garante que o diretório de destino existe
             if (!is_dir($basePath)) {
                 mkdir($basePath, 0775, true);
             }
+
+            // Procura e apaga imagens antigas para este animal para garantir que apenas uma existe
+            $oldFiles = glob($basePath . "animal_{$this->id}_*.*");
+            if (!empty($oldFiles)) {
+                foreach ($oldFiles as $oldFile) {
+                    @unlink($oldFile);
+                }
+            }
+
+            $data = date('Ymd');
+            $ext = $this->imageFile->extension;
+            $fileName = "animal_{$this->id}_{$data}.{$ext}";
             $fullPath = $basePath . $fileName;
+
             if ($this->imageFile->saveAs($fullPath)) {
                 $this->foto = $fileName;
                 return $this->save(false);

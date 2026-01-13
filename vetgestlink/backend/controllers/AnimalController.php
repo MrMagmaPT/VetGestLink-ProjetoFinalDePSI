@@ -162,7 +162,6 @@ class AnimalController extends Controller
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($model->imageFile) {
-                $model->deleteImage(); // remove imagem antiga
                 $model->uploadImage();
             }
             return $this->redirect(['view', 'id' => $model->id]);
