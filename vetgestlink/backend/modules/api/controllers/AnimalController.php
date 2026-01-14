@@ -94,9 +94,16 @@ class AnimalController extends ActiveController
             if ($animal->dtanascimento) {
                 $nascimento = new \DateTime($animal->dtanascimento);
                 $hoje = new \DateTime();
-                $idade = $hoje->diff($nascimento)->y;
-            }
+                $intervalo = $hoje->diff($nascimento);
 
+                if ($intervalo->y >= 1) {
+                    $idade = $intervalo->y . ($intervalo->y > 1 ? ' anos' : ' ano');
+                } elseif ($intervalo->m >= 1) {
+                    $idade = $intervalo->m . ($intervalo->m > 1 ? ' meses' : ' mês');
+                } else {
+                    $idade = $intervalo->d . ($intervalo->d > 1 ? ' dias' : ' dia');
+                }
+            }
             // Obter URL da foto com tratamento de erro
             $fotoUrl = null;
             try {
@@ -151,11 +158,19 @@ class AnimalController extends ActiveController
             throw new NotFoundHttpException('Animal não encontrado');
         }
 
-        $idade = null;
+       $idade = null;
         if ($animal->dtanascimento) {
             $nascimento = new \DateTime($animal->dtanascimento);
             $hoje = new \DateTime();
-            $idade = $hoje->diff($nascimento)->y;
+            $intervalo = $hoje->diff($nascimento);
+
+            if ($intervalo->y >= 1) {
+                $idade = $intervalo->y . ($intervalo->y > 1 ? ' anos' : ' ano');
+            } elseif ($intervalo->m >= 1) {
+                $idade = $intervalo->m . ($intervalo->m > 1 ? ' meses' : ' mês');
+            } else {
+                $idade = $intervalo->d . ($intervalo->d > 1 ? ' dias' : ' dia');
+            }
         }
 
         // Buscar notas do animal
