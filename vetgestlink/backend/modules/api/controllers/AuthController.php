@@ -240,17 +240,13 @@ class AuthController extends Controller
             }
         }
 
-
-        //Para Enviar para o frontend
-        $resetLink = 'http://172.22.21.220/frontend/site/reset-password?token=' . $user->password_reset_token;
-
         // Enviar email
         try {
             $sent = Yii::$app
                 ->mailer
                 ->compose(
                     ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
-                    ['user' => $user, 'resetLink' => $resetLink]
+                    ['user' => $user]
                 )
                 ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' - Recuperação de Senha'])
                 ->setTo($user->email)
