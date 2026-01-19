@@ -457,7 +457,19 @@ class Marcacao extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        
+
+        // Se a marcação for cancelada, marcar a fatura associada como eliminada
+        if (!$insert && isset($changedAttributes['estado']) && $this->estado === self::ESTADO_CANCELADA) {
+            $linhaFatura = Linhafatura::findOne(['marcacoes_id' => $this->id]);
+            if ($linhaFatura && $linhaFatura->faturas_id) {
+                $fatura = Fatura::findOne($linhaFatura->faturas_id);
+                if ($fatura) {
+                    $fatura->eliminado = 1;
+                    $fatura->save(false, ['eliminado']);
+                }
+            }
+        }
+
         // Obter dados relevantes da marcação
         $myObj = new \stdClass();
         $myObj->id = $this->id;
