@@ -64,6 +64,14 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/matematica',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET raizdois' => 'raizdois',
+                    ],
+                ],
                 // ========== AUTH CONTROLLER (Público) ==========
                 [
                     'class' => 'yii\rest\UrlRule',
