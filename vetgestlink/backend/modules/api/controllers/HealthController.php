@@ -13,6 +13,7 @@ use yii\web\Response;
  */
 class HealthController extends Controller
 {
+    public $modelClass = 'common\models\Servico';
     /**
      * @inheritdoc
      */
