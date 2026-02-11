@@ -27,39 +27,13 @@ class MarcacaoController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewAppointments', 'viewConsultations'],
-                        ],
-                        [
-                            'actions' => ['view'],
-                            'allow' => true,
-                            'roles' => ['viewAppointments', 'viewConsultations'],
-                        ],
-                        [
-                            'actions' => ['create'],
-                            'allow' => true,
-                            'roles' => ['createAppointment', 'createConsultation'],
-                        ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['updateAppointment', 'updateConsultation'],
-                        ],
-                        [
-                            'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['deleteAppointment', 'deleteConsultation'],
-                        ],
-                        [
-                            'actions' => ['gerar-fatura'],
-                            'allow' => true,
-                            'roles' => ['createInvoice'],
+                            'roles' => ['veterinario', 'rececionista'],
                         ],
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                         'gerar-fatura' => ['POST'],

@@ -27,34 +27,19 @@ class MedicamentoController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index'],
+                            'actions' => ['index', 'view'],
                             'allow' => true,
-                            'roles' => ['viewMedications'],
+                            'roles' => ['admin', 'veterinario'],
                         ],
                         [
-                            'actions' => ['view'],
+                            'actions' => ['create', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['viewMedications'],
-                        ],
-                        [
-                            'actions' => ['create'],
-                            'allow' => true,
-                            'roles' => ['createMedication'],
-                        ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['updateMedication'],
-                        ],
-                        [
-                            'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['deleteMedication'],
+                            'roles' => ['admin'],
                         ],
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],

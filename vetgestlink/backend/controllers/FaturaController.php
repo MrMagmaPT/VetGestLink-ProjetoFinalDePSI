@@ -30,39 +30,13 @@ class FaturaController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewInvoices'],
-                        ],
-                        [
-                            'actions' => ['view'],
-                            'allow' => true,
-                            'roles' => ['viewInvoices'],
-                        ],
-                        [
-                            'actions' => ['create'],
-                            'allow' => true,
-                            'roles' => ['createInvoice'],
-                        ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['updateInvoice'],
-                        ],
-                        [
-                            'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['deleteInvoice'],
-                        ],
-                        [
-                            'actions' => ['pdf'],
-                            'allow' => true,
-                            'roles' => ['viewInvoices'],
+                            'roles' => ['rececionista', 'cliente'],
                         ],
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],

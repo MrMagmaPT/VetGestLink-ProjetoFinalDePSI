@@ -27,34 +27,13 @@ class CategoriaController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index'],
                             'allow' => true,
-                            'roles' => ['viewMedicationCategories'],
-                        ],
-                        [
-                            'actions' => ['view'],
-                            'allow' => true,
-                            'roles' => ['viewMedicationCategories'],
-                        ],
-                        [
-                            'actions' => ['create'],
-                            'allow' => true,
-                            'roles' => ['createMedicationCategory'],
-                        ],
-                        [
-                            'actions' => ['update'],
-                            'allow' => true,
-                            'roles' => ['updateMedicationCategory'],
-                        ],
-                        [
-                            'actions' => ['delete'],
-                            'allow' => true,
-                            'roles' => ['deleteMedicationCategory'],
+                            'roles' => ['admin'],
                         ],
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],

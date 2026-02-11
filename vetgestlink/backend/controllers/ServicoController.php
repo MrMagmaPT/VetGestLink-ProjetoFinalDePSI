@@ -27,18 +27,23 @@ class ServicoController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
+                            'actions' => ['index', 'view'],
                             'allow' => true,
-                            'roles' => ['viewServices'],
+                            'roles' => ['admin', 'veterinario', 'rececionista'],
+                        ],
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['admin'],
                         ],
                     ],
                 ],
                 'verbs' => [
-                    'class' => VerbFilter::className(),
+                    'class' => VerbFilter::class,
                     'actions' => [
                         'delete' => ['POST'],
                     ],
                 ],
-                
             ]
         );
     }
