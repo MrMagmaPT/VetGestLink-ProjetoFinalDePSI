@@ -53,15 +53,27 @@ $email_emissor = Yii::$app->user->identity->email ?? '';
                 <td class="text-center"><?= $i++ ?></td>
                 <td>
                     <?php
-                    if ($linha->marcacoes && $linha->marcacoes->servicos) {
-                        echo Html::encode($linha->marcacoes->servicos->nome
-                            . ($linha->marcacoes->animais ? ' - ' . $linha->marcacoes->animais->nome : ''));
-                    } elseif ($linha->servicos) {
-                        echo Html::encode($linha->servicos->nome);
-                    } elseif ($linha->medicamentos) {
+                    // Prioridade: Medicamento > Serviço > Marcação
+                    if ($linha->medicamentos_id && $linha->medicamentos) {
                         echo Html::encode($linha->medicamentos->nome);
+                        if ($linha->medicamentos->descricao) {
+                            echo '<br><small style="color:#666;">' . Html::encode($linha->medicamentos->descricao) . '</small>';
+                        }
+                        if ($linha->marcacoes_id && $linha->marcacoes) {
+                            echo '<br><small style="color:#666;">Marcação #' . $linha->marcacoes_id . '</small>';
+                        }
+                    } elseif ($linha->servicos_id && $linha->servicos) {
+                        echo Html::encode($linha->servicos->nome);
+                        if ($linha->marcacoes_id && $linha->marcacoes) {
+                            echo '<br><small style="color:#666;">Marcação #' . $linha->marcacoes_id . '</small>';
+                        }
+                    } elseif ($linha->marcacoes_id && $linha->marcacoes) {
+                        $marcacao = $linha->marcacoes;
+                        $servico = $marcacao->servicos ? $marcacao->servicos->nome : 'Serviço';
+                        $animal = $marcacao->animais ? ' - ' . $marcacao->animais->nome : '';
+                        echo Html::encode($servico . $animal);
                     } else {
-                        echo Html::encode($linha->descricao ?? 'Item');
+                        echo '<span style="color:#f0ad4e;">Item a ser definido</span>';
                     }
                     ?>
                 </td>

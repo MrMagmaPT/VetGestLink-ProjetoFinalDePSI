@@ -348,17 +348,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ) ?>
                             <?php endif;
                             if ($model->estado == 1): ?>
-                                <?= Html::a('<i class="fas fa-file-pdf"></i> Exportar PDF',
-                                ['pdf',
-                                    'nome_emissor' => yii::$app->user->identity->username,
-                                    'nome_recep' => $model->userprofiles->nomecompleto,
-                                    'id' => $model->id],
-                                [
-                                    'class'=>'btn btn-secondary btn-block',
-                                    'target'=>'_blank',
-                                    'data-toggle'=>'tooltip',
-                                    'title'=>'Gera e preparar a fatura em formato PDF para impressão e envio.'
-                                ]);?>
+                                <?= Html::a(
+                                    '<i class="fas fa-file-pdf"></i> Exportar PDF',
+                                    ['pdf', 'id' => $model->id, 'nome_emissor' => Yii::$app->user->identity->username, 'nome_recep' => $model->userprofiles->nomecompleto],
+                                    [
+                                        'class' => 'btn btn-secondary btn-block',
+                                        'target' => '_blank',
+                                        'data-toggle' => 'tooltip',
+                                        'title' => 'Gera a fatura em PDF para impressão/envio.',
+                                    ]
+                                ) ?>
                             <?php endif; ?>
 
                             <?php if ($model->eliminado != 1): ?>
