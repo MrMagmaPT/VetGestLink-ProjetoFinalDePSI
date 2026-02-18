@@ -198,8 +198,41 @@ $this->params['breadcrumbs'][] = $this->title;
                                             <tr>
                                                 <td><?= $contador++ ?></td>
                                                 <td>
-                                                    <?php if ($linha->marcacoes_id && $linha->marcacoes): ?>
-                                                        <?php 
+                                                    <?php if ($linha->medicamentos_id && $linha->medicamentos): ?>
+                                                        <i class="fas fa-pills text-info"></i>
+                                                        <?= Html::a(
+                                                            Html::encode($linha->medicamentos->nome),
+                                                            ['/medicamento/view', 'id' => $linha->medicamentos->id],
+                                                            ['class' => 'text-decoration-none']
+                                                        ) ?>
+                                                        <?php if ($linha->medicamentos->descricao): ?>
+                                                            <br><small class="text-muted"><?= Html::encode($linha->medicamentos->descricao) ?></small>
+                                                        <?php endif; ?>
+                                                        <?php if ($linha->marcacoes_id && $linha->marcacoes): ?>
+                                                            <br><small class="text-muted">
+                                                                <i class="fas fa-calendar-check"></i>
+                                                                <?= Html::a(
+                                                                    'Marcação #' . $linha->marcacoes_id,
+                                                                    ['/marcacao/view', 'id' => $linha->marcacoes_id],
+                                                                    ['class' => 'text-decoration-none']
+                                                                ) ?>
+                                                            </small>
+                                                        <?php endif; ?>
+                                                    <?php elseif ($linha->servicos_id && $linha->servicos): ?>
+                                                        <i class="fas fa-briefcase-medical text-success"></i>
+                                                        <?= Html::encode($linha->servicos->nome) ?>
+                                                        <?php if ($linha->marcacoes_id && $linha->marcacoes): ?>
+                                                            <br><small class="text-muted">
+                                                                <i class="fas fa-calendar-check"></i>
+                                                                <?= Html::a(
+                                                                    'Marcação #' . $linha->marcacoes_id,
+                                                                    ['/marcacao/view', 'id' => $linha->marcacoes_id],
+                                                                    ['class' => 'text-decoration-none']
+                                                                ) ?>
+                                                            </small>
+                                                        <?php endif; ?>
+                                                    <?php elseif ($linha->marcacoes_id && $linha->marcacoes): ?>
+                                                        <?php
                                                         $marcacao = $linha->marcacoes;
                                                         $servico = $marcacao->servicos ? $marcacao->servicos->nome : 'Serviço';
                                                         $animal = $marcacao->animais ? ' - ' . $marcacao->animais->nome : '';
@@ -210,21 +243,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                                             ['/marcacao/view', 'id' => $linha->marcacoes_id],
                                                             ['class' => 'text-decoration-none']
                                                         ) ?>
-                                                        <small class="text-muted">(Marcação)</small>
-                                                    <?php elseif ($linha->medicamentos_id && $linha->medicamentos): ?>
-                                                        <i class="fas fa-pills text-info"></i>
-                                                        <?= Html::a(
-                                                            Html::encode($linha->medicamentos->nome),
-                                                            ['/medicamento/view', 'id' => $linha->medicamentos->id],
-                                                            ['class' => 'text-decoration-none']
-                                                        ) ?>
-                                                        <?php if ($linha->medicamentos->descricao): ?>
-                                                            <br><small class="text-muted"><?= Html::encode($linha->medicamentos->descricao) ?></small>
-                                                        <?php endif; ?>
-                                                    <?php elseif ($linha->servicos_id && $linha->servicos): ?>
-                                                        <i class="fas fa-briefcase-medical text-success"></i>
-                                                        <?= Html::encode($linha->servicos->nome) ?>
-                                                        <small class="text-muted">(Serviço)</small>
                                                     <?php else: ?>
                                                         <span class="text-warning">
                                                             <i class="fas fa-exclamation-triangle"></i>
